@@ -3,6 +3,7 @@ package network;
 import implementations.policies.ShortestPathLabel;
 import implementations.protocols.BGPNodeFactory;
 import network.exceptions.NodeExistsException;
+import network.exceptions.NodeNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void addAnyNode_NetworkContainsAddedNode() throws NodeExistsException {
+    public void addAnyNode_NetworkContainsAddedNode() throws Exception {
         Integer[] expectedIds = {0};
         network.addNode(0);
 
@@ -65,7 +66,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void addAny2Nodes_NetworkContainsThe2Nodes() throws NodeExistsException {
+    public void addAny2Nodes_NetworkContainsThe2Nodes() throws Exception {
         Integer[] expectedIds = {0, 1};
         network.addNode(0); network.addNode(1);
 
@@ -73,7 +74,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void addTheSameNodeTwice_NetworkContainsAddedNode() throws NodeExistsException {
+    public void addTheSameNodeTwice_NetworkContainsAddedNode() throws Exception {
         network.addNode(0);
 
         thrown.expect(NodeExistsException.class);
@@ -82,13 +83,31 @@ public class NetworkTest {
     }
 
     @Test
-    public void link2ExistingNodes_NetworkContainsLinkBetweenThe2Nodes() throws NodeExistsException {
+    public void link2ExistingNodes_NetworkContainsLinkBetweenThe2Nodes() throws Exception {
         network.addNode(0); network.addNode(1);
 
         Link[] expectedLinks = { Factory.createLink(network, 0, 1) };
         network.link(0, 1, Factory.createLabel());
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
+    }
+
+    @Test
+    public void linkExistingSourceToNonExistingDestination_ThrowsNodeNotFoundException() throws Exception {
+        network.addNode(1);
+
+        thrown.expect(NodeNotFoundException.class);
+        thrown.expectMessage("node with id '0' does not exist");
+        network.link(0, 1, Factory.createLabel());
+    }
+
+    @Test
+    public void linkNonExistingSourceToExistingDestination_ThrowsNodeNotFoundException() throws Exception {
+        network.addNode(1);
+
+        thrown.expect(NodeNotFoundException.class);
+        thrown.expectMessage("node with id '0' does not exist");
+        network.link(0, 1, Factory.createLabel());
     }
 
 }

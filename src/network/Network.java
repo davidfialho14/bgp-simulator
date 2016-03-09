@@ -1,6 +1,7 @@
 package network;
 
 import network.exceptions.NodeExistsException;
+import network.exceptions.NodeNotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,10 +44,16 @@ public class Network {
      * @param srcId id of the source node.
      * @param destId id of the destination node.
      * @param label label to be associated with the link.
+     * @throws NodeNotFoundException if one of the ids does not correspond to an existing node.
      */
-    public void link(int srcId, int destId, Label label) {
+    public void link(int srcId, int destId, Label label) throws NodeNotFoundException {
         Node sourceNode = nodes.get(srcId);
         Node destinationNode = nodes.get(destId);
+
+        if (sourceNode == null || destinationNode == null) {
+            int invalidId = sourceNode == null ? srcId : destId;
+            throw new NodeNotFoundException(String.format("node with id '%d' does not exist", invalidId));
+        }
 
         Link link = new Link(sourceNode, destinationNode, label);
         sourceNode.addOutLink(link);
