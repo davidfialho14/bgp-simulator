@@ -110,4 +110,15 @@ public class NetworkTest {
         network.link(0, 1, Factory.createLabel());
     }
 
+    @Test
+    public void linkSameNodesTwice_NetworkContainsBothLinks() throws Exception {
+        network.addNode(0); network.addNode(1);
+        network.link(0, 1, Factory.createLabel());  // first link
+
+        Link[] expectedLinks = { Factory.createLink(network, 0, 1), Factory.createLink(network, 0, 1) };
+        network.link(0, 1, Factory.createLabel());  // same link twice
+
+        assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
+    }
+
 }
