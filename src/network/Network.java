@@ -1,5 +1,7 @@
 package network;
 
+import network.exceptions.NodeExistsException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,11 +19,14 @@ public class Network {
 	}
 
 	/**
-	 * Adds a new node to the network with the given id.
-	 * @param id id of the node to be added to the network.
-	 */
-	public void addNode(int id) {
-		nodes.add(nodeFactory.createNode(this, id));
+     * Adds a new node to the network with the given id.
+     * @param id id of the node to be added to the network.
+     * @throws NodeExistsException if a node with the given id already exists in the network.
+     */
+	public void addNode(int id) throws NodeExistsException {
+		if (!nodes.add(nodeFactory.createNode(this, id))) {
+            throw new NodeExistsException(String.format("node with id '%d' already exists", id));
+        }
 	}
 
     /**
