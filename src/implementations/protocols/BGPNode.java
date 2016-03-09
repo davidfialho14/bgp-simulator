@@ -6,8 +6,7 @@ import network.Node;
 public class BGPNode extends Node {
 
     /**
-     * @param network
-     * @param id
+     * @see network.Node#Node(network.Network, int)
      */
     BGPNode(Network network, int id) {
         super(network, id);

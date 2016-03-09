@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class Network {
 
-	private Set<Node> nodes = new HashSet<>();  // each node must be unique in the network
+    private Map<Integer, Node> nodes = new HashMap<>();   // each node must be unique in the network
 	private NodeFactory nodeFactory;
 
 	/**
@@ -24,7 +24,7 @@ public class Network {
      * @throws NodeExistsException if a node with the given id already exists in the network.
      */
 	public void addNode(int id) throws NodeExistsException {
-		if (!nodes.add(nodeFactory.createNode(this, id))) {
+		if (nodes.putIfAbsent(id, nodeFactory.createNode(this, id)) != null) {
             throw new NodeExistsException(String.format("node with id '%d' already exists", id));
         }
 	}
@@ -33,10 +33,33 @@ public class Network {
      * Return a collection with the ids of all the nodes in the network.
      * @return collection with the ids of all the nodes in the network.
      */
-	public Collection<Integer> getIds() {
-		return nodes.stream()
-                .map(Node::getId)
-                .collect(Collectors.toList());
+	public Set<Integer> getIds() {
+		return nodes.keySet();
 	}
 
+    /**
+     * Creates a link between the node with id srcId and the node with id destId.
+     * The link is also associated with the given label.
+     * @param srcId id of the source node.
+     * @param destId id of the destination node.
+     * @param label label to be associated with the link.
+     */
+    public void link(int srcId, int destId, Label label) {
+        Node sourceNode = nodes.get(srcId);
+        Node destinationNode = nodes.get(destId);
+
+        Link link = new Link(sourceNode, destinationNode, label);
+        sourceNode.addOutLink(link);
+        destinationNode.addInLink(link);
+    }
+
+    /**
+     * Returns a list with all the links in the network.
+     * @return list with the links in the network.
+     */
+    public Collection<Link> getLinks() {
+        return nodes.values().stream()
+                .flatMap(node -> node.getInLinks().stream())
+                .collect(Collectors.toList());
+    }
 }

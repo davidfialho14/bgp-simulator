@@ -1,11 +1,17 @@
 package network;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public abstract class Node {
 
     private Network network;	// network who created the node
 
     protected int id;   // id must be unique in each network
+    protected List<Node> outNeighbours = new ArrayList<>();
+    protected List<Link> inLinks = new ArrayList<>();
 
 	/**
      * @param network   network who created the node.
@@ -23,6 +29,30 @@ public abstract class Node {
 	public int getId() {
 		return this.id;
 	}
+
+    /**
+     * Adds a new out-link to the node.
+     * @param link link to be added as out-link.
+     */
+    public void addOutLink(Link link) {
+        outNeighbours.add(link.getDestination());
+    }
+
+    /**
+     * Adds a new in-link to the node.
+     * @param link link to be added as in-link.
+     */
+    public void addInLink(Link link) {
+        inLinks.add(link);
+    }
+
+    /**
+     * Returns a collection with all the in-links of the node.
+     * @return collection with all the in-links of the node.
+     */
+    public Collection<Link> getInLinks() {
+        return inLinks;
+    }
 
     @Override
     public boolean equals(Object o) {
