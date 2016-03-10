@@ -50,6 +50,37 @@ public class RouteTableTest {
         assertThat(table.getAttribute(destination, defaultNeighbour), is(nullValue()));
     }
 
+    @Test
+    public void setPathForNonExistingDestination_PathWasSetToPairDestinationNeighbour() throws Exception {
+        Node destination = new Node(null, 1, null); // any destination node
+
+        PathAttribute expectedPath = new PathAttribute();
+        table.setPath(destination, defaultNeighbour, new PathAttribute());
+
+        assertThat(table.getPath(destination, defaultNeighbour), equalTo(expectedPath));
+    }
+
+    @Test
+    public void setPathForExistingDestination_PathChanged() throws Exception {
+        Node destination = new Node(null, 1, null); // any destination node
+        table.setPath(destination, defaultNeighbour, new PathAttribute());
+
+        PathAttribute expectedPath = new PathAttribute(new Node(null, 2, null)); // expect different path
+        table.setPath(destination, defaultNeighbour, new PathAttribute(new Node(null, 2, null)));
+
+        assertThat(table.getPath(destination, defaultNeighbour), equalTo(expectedPath));
+    }
+
+    @Test
+    public void setPathForNonExistingNeighbour_GetPathReturnsNull() throws Exception {
+        Node destination = new Node(null, 1, null); // any destination node
+        Node nonExistingNeighbour = new Node(null, 1, null);
+
+        table.setPath(destination, nonExistingNeighbour, new PathAttribute(destination));
+
+        assertThat(table.getPath(destination, defaultNeighbour), is(nullValue()));
+    }
+
     // TODO clear method
 
 }

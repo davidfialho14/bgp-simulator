@@ -33,7 +33,7 @@ public class RouteTable {
             // destination if not in the route table yet
             try {
                 routes.get(neighbour).put(destination,
-                        new Route(destination, attribute, new PathAttribute(destination)));
+                        new Route(destination, attribute, null));
             } catch (NullPointerException e2) {
                 // the neighbour does not exist in the table
                 // ignore set
@@ -42,8 +42,18 @@ public class RouteTable {
     }
 
     public void setPath(Node destination, Node neighbour, PathAttribute path) {
-        // TODO - implement RouteTable.setPath
-        throw new UnsupportedOperationException();
+        try {
+            routes.get(neighbour).get(destination).setPath(path);
+        } catch (NullPointerException e1) {
+            // destination if not in the route table yet
+            try {
+                routes.get(neighbour).put(destination,
+                        new Route(destination, null, path));
+            } catch (NullPointerException e2) {
+                // the neighbour does not exist in the table
+                // ignore set
+            }
+        }
     }
 
     public Attribute getAttribute(Node destination, Node neighbour) {
@@ -56,8 +66,12 @@ public class RouteTable {
     }
 
     public PathAttribute getPath(Node destination, Node neighbour) {
-        // TODO - implement RouteTable.getPath
-        throw new UnsupportedOperationException();
+        try {
+            return routes.get(neighbour).get(destination).getPath();
+        } catch (NullPointerException e) {
+            // neighbour or destination do not exist
+            return null;
+        }
     }
 
     public void clear() {

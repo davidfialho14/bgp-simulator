@@ -149,6 +149,7 @@ public class Node {
 
             for (Link inLink : inLinks) {
                 // !! it must be exported a new instance (a copy) of Route
+                // TODO the exported path must also be a copy
                 export(inLink, new Route(this, selectedAttribute, selectedPath));
             }
         }

@@ -16,6 +16,10 @@ public class Route implements Comparable<Route> {
         this.attribute = attribute;
     }
 
+    public void setPath(PathAttribute path) {
+        this.path = path;
+    }
+
     public Node getDestination() {
         return destination;
     }
