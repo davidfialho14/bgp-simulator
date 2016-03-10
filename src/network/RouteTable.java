@@ -13,9 +13,11 @@ public class RouteTable {
         the maps in the constructor.
      */
     private Map<Node, Map<Node, Route>> routes;
+    private Collection<Node> outNeighbours;
     private AttributeFactory attributeFactory;  // used to create invalid routes
 
     public RouteTable(Collection<Node> outNeighbours, AttributeFactory attributeFactory) {
+        this.outNeighbours = outNeighbours;
         routes = new HashMap<>(outNeighbours.size());
 
         // create maps for each neighbour
@@ -27,16 +29,25 @@ public class RouteTable {
     }
 
     public void setAttribute(Node destination, Node neighbour, Attribute attribute) {
-        try {
-            routes.get(neighbour).get(destination).setAttribute(attribute);
-        } catch (NullPointerException e1) {
-            // destination if not in the route table yet
+
+        Map<Node, Route> row = routes.get(neighbour);
+        if (row != null) {
+            // neighbour exists
             try {
-                routes.get(neighbour).put(destination,
-                        new Route(destination, attribute, null));
-            } catch (NullPointerException e2) {
-                // the neighbour does not exist in the table
-                // ignore set
+                row.get(destination).setAttribute(attribute);
+            } catch (NullPointerException e1) {
+                // destination does not added yet
+                // add an invalid route for each neighbour
+                for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
+                    if (entry.getKey().equals(neighbour)) {
+                        entry.getValue().put(destination,
+                                new Route(destination, attribute, PathAttribute.createInvalid()));
+                    } else {
+                        entry.getValue().put(destination,
+                                new Route(destination,
+                                        attributeFactory.createInvalid(), PathAttribute.createInvalid()));
+                    }
+                }
             }
         }
     }
@@ -48,7 +59,7 @@ public class RouteTable {
             // destination if not in the route table yet
             try {
                 routes.get(neighbour).put(destination,
-                        new Route(destination, null, path));
+                        new Route(destination, attributeFactory.createInvalid(), path));
             } catch (NullPointerException e2) {
                 // the neighbour does not exist in the table
                 // ignore set
@@ -75,8 +86,7 @@ public class RouteTable {
     }
 
     public void clear() {
-        // TODO - implement RouteTable.clear
-        throw new UnsupportedOperationException();
+        routes.clear();
     }
 
     public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {

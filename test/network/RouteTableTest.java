@@ -3,6 +3,7 @@ package network;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -16,7 +17,7 @@ public class RouteTableTest {
     @Before
     public void setUp() throws Exception {
         defaultNeighbour = new Node(null, 0, null);
-        table = new RouteTable(Collections.singletonList(defaultNeighbour), null);
+        table = new RouteTable(Collections.singletonList(defaultNeighbour), ComponentFactory.createAttributeFactory());
     }
 
     @Test
@@ -79,6 +80,23 @@ public class RouteTableTest {
         table.setPath(destination, nonExistingNeighbour, new PathAttribute(destination));
 
         assertThat(table.getPath(destination, defaultNeighbour), is(nullValue()));
+    }
+
+    @Test
+    public void getAttributeNotSetForExistingDestination_ReturnsInvalidAttribute() throws Exception {
+        defaultNeighbour = new Node(null, 0, null);
+        Node otherNeighbour = new Node(null, 1, null);  // neighbour for which the attribute was not yet set
+        Node[] neighbours = {defaultNeighbour, otherNeighbour};
+        table = new RouteTable(Arrays.asList(neighbours), ComponentFactory.createAttributeFactory());
+
+        // add the destination
+        Node destination = new Node(null, 2, null); // any destination node
+        table.setAttribute(destination, defaultNeighbour, ComponentFactory.createAttribute(0));
+
+        // expect invalid attribute
+        Attribute expectedAttribute = ComponentFactory.createAttributeFactory().createInvalid();
+
+        assertThat(table.getAttribute(destination, otherNeighbour), equalTo(expectedAttribute));
     }
 
     // TODO clear method
