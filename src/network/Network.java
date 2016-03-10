@@ -10,8 +10,9 @@ public class Network {
 
     private Map<Integer, Node> nodes = new HashMap<>();   // each node must be unique in the network
 	private NodeFactory nodeFactory;
+    AttributeFactory attrFactory;   // Node class must be able to access this factory
 
-	/**
+    /**
 	 * Creates a new empty network.
 	 * @param nodeFactory factory used to create nodes for the network.
 	 */
