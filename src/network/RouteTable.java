@@ -2,8 +2,9 @@ package network;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class RouteTable {
 
@@ -42,25 +43,12 @@ public class RouteTable {
      */
     public void setAttribute(Node destination, Node neighbour, Attribute attribute) {
 
-        Map<Node, Route> row = routes.get(neighbour);
-        if (row != null) {
-            // neighbour exists
-            try {
-                row.get(destination).setAttribute(attribute);
-            } catch (NullPointerException e1) {
-                // destination does not added yet
-                // add an invalid route for each neighbour
-                for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
-                    if (entry.getKey().equals(neighbour)) {
-                        entry.getValue().put(destination,
-                                new Route(destination, attribute, PathAttribute.createInvalid()));
-                    } else {
-                        entry.getValue().put(destination,
-                                new Route(destination,
-                                        attributeFactory.createInvalid(), PathAttribute.createInvalid()));
-                    }
-                }
-            }
+        try {
+            set(destination, neighbour, (route, p) -> route.setAttribute(attribute), attribute);
+        } catch (NullPointerException e1) {
+            // destination was not added yet
+            addDestination(destination);
+            routes.get(neighbour).get(destination).setAttribute(attribute);
         }
     }
 
@@ -73,16 +61,35 @@ public class RouteTable {
      */
     public void setPath(Node destination, Node neighbour, PathAttribute path) {
         try {
-            routes.get(neighbour).get(destination).setPath(path);
+            set(destination, neighbour, (route, p) -> route.setPath(path), path);
         } catch (NullPointerException e1) {
-            // destination if not in the route table yet
-            try {
-                routes.get(neighbour).put(destination,
-                        new Route(destination, attributeFactory.createInvalid(), path));
-            } catch (NullPointerException e2) {
-                // the neighbour does not exist in the table
-                // ignore set
-            }
+            // destination was not added yet
+            addDestination(destination);
+            routes.get(neighbour).get(destination).setPath(path);
+        }
+    }
+
+    /**
+     * @throws NullPointerException if the destination node does not exist.
+     */
+    private void set(Node destination, Node neighbour,
+                     BiConsumer<Route, Attribute> setter, Attribute attributeToset) {
+        Map<Node, Route> row = routes.get(neighbour);
+        if (row != null) {
+            // neighbour exists
+            setter.accept(row.get(destination), attributeToset); // set the attribute
+        }
+    }
+
+    /**
+     * Adds a new destination to the table by assigning invalid routes for all neighbours for that destination.
+     * @param destination destination to be added.
+     */
+    private void addDestination(Node destination) {
+        // add an invalid route for each neighbour
+        for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
+            entry.getValue().put(destination,
+                    new Route(destination, attributeFactory.createInvalid(), PathAttribute.createInvalid()));
         }
     }
 

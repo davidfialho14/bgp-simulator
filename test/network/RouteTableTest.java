@@ -99,6 +99,23 @@ public class RouteTableTest {
         assertThat(table.getAttribute(destination, otherNeighbour), equalTo(expectedAttribute));
     }
 
+    @Test
+    public void getPathNotSetForExistingDestination_ReturnsInvalidPath() throws Exception {
+        defaultNeighbour = new Node(null, 0, null);
+        Node otherNeighbour = new Node(null, 1, null);  // neighbour for which the attribute was not yet set
+        Node[] neighbours = {defaultNeighbour, otherNeighbour};
+        table = new RouteTable(Arrays.asList(neighbours), ComponentFactory.createAttributeFactory());
+
+        // add the destination
+        Node destination = new Node(null, 2, null); // any destination node
+        table.setPath(destination, defaultNeighbour, new PathAttribute(destination));
+
+        // expect invalid attribute
+        PathAttribute expectedPath = PathAttribute.createInvalid();
+
+        assertThat(table.getPath(destination, otherNeighbour), equalTo(expectedPath));
+    }
+
     // TODO clear method
 
 }
