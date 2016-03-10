@@ -15,16 +15,18 @@ public class Node {
 
     // fields used during simulation
     private RouteTable routeTable;
+    private Protocol protocol;
 
-	/**
+    /**
      * @param network   network who created the node.
 	 * @param id    id to assign to the node.
 	 */
     // TODO add a protocol to the constructor
     // TODO make the constructor public and remove the classes NodeFactory, BGPNode, BGPNodeFactory
-    protected Node(Network network, int id) {
+    protected Node(Network network, int id, Protocol protocol) {
 		this.network = network;
 		this.id = id;
+        this.protocol = protocol;
 	}
 
     /**
