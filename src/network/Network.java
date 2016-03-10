@@ -10,10 +10,11 @@ public class Network {
 
     private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
 	private ProtocolFactory protocolFactory;            // factory for protocols to be used by the nodes
+    AttributeFactory attrFactory;                       // Node class must be able to access this factory
 
     /**
 	 * Creates a new empty network.
-	 * @param nodeFactory factory used to create nodes for the network.
+	 * @param protocolFactory factory used to create the protocols to be assigned to the nodes.
 	 */
 	public Network(ProtocolFactory protocolFactory) {
 		this.protocolFactory = protocolFactory;

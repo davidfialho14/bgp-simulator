@@ -1,4 +1,4 @@
-package implementations.policies;
+package implementations.policies.shortestpath;
 
 import network.Label;
 

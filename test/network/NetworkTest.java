@@ -8,10 +8,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import protocols.DummyProtocolFactory;
 
-import java.util.Collection;
-
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class NetworkTest {
 
@@ -57,8 +55,7 @@ public class NetworkTest {
         Link[] expectedLinks = { Factory.createLink(network, 0, 1) };
         network.link(0, 1, null);
 
-        Collection<Link> actualLinks = network.getLinks();
-        assertThat(actualLinks, containsInAnyOrder(expectedLinks));
+        assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
     }
 
     @Test
