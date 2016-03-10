@@ -90,4 +90,14 @@ public class NetworkTest {
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
     }
 
+    @Test
+    public void linkWithSourceEqualToDestination_NetworkContainsLink() throws Exception {
+        network.addNode(0);
+
+        Link[] expectedLinks = { Factory.createLink(network, 0, 0) };
+        network.link(0, 0, null);
+
+        assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
+    }
+
 }
