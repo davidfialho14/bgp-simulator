@@ -131,4 +131,24 @@ public class RouteTableTest {
         assertThat(table.getSelectedRoute(destination, null), is(route));
     }
 
+    @Test
+    public void getSelectedRouteIgnoringTheNeighbourWithPreferredRoute_ReturnsTheOtherRoute() throws Exception {
+        Node[] neighbours = ComponentFactory.createRandomNode(2);
+        RouteTable table = createRouteTable(neighbours);
+        Node destination = ComponentFactory.createRandomNode();
+
+        // add a route to the table
+        Route preferredRoute = new Route(destination, ComponentFactory.createAttribute(0),
+                new PathAttribute(ComponentFactory.createRandomNode()));
+        table.setAttribute(destination, neighbours[0], preferredRoute.getAttribute());
+        table.setPath(destination, neighbours[0], preferredRoute.getPath());
+
+        Route otherRoute = new Route(destination, ComponentFactory.createAttribute(1),
+                new PathAttribute(ComponentFactory.createRandomNode()));
+        table.setAttribute(destination, neighbours[1], otherRoute.getAttribute());
+        table.setPath(destination, neighbours[1], otherRoute.getPath());
+
+        assertThat(table.getSelectedRoute(destination, neighbours[0]), is(otherRoute));
+    }
+
 }

@@ -24,8 +24,8 @@ public class ShortestPathAttribute implements Attribute {
 
     @Override
     public int compareTo(Attribute attribute) {
-        // TODO - implement ShortestPathAttribute.compareTo
-        throw new UnsupportedOperationException();
+        ShortestPathAttribute other = (ShortestPathAttribute) attribute;
+        return this.length - other.length;
     }
 
     @Override

@@ -55,8 +55,18 @@ public class PathAttribute implements Attribute {
 
     @Override
     public int compareTo(Attribute attribute) {
-        // TODO - implement PathAttribute.compareTo
-        throw new UnsupportedOperationException();
+        PathAttribute other = (PathAttribute) attribute;
+        int comparison = this.path.size() - other.path.size();
+
+        if (comparison == 0) {
+            if(this.path.equals(other.path)) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else {
+            return comparison;
+        }
     }
 
     @Override
