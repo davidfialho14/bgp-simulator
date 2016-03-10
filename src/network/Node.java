@@ -23,8 +23,6 @@ public class Node {
      * @param network   network who created the node.
 	 * @param id    id to assign to the node.
 	 */
-    // TODO add a protocol to the constructor
-    // TODO make the constructor public and remove the classes NodeFactory, BGPNode, BGPNodeFactory
     protected Node(Network network, int id, Protocol protocol) {
 		this.network = network;
 		this.id = id;
@@ -90,7 +88,7 @@ public class Node {
         try {
             routeTable.clear();
         } catch (NullPointerException e) {
-            routeTable = new RouteTable(outNeighbours);
+            routeTable = new RouteTable(outNeighbours, network.attrFactory);
         }
 
         for (Link inLink : inLinks) {
@@ -149,6 +147,7 @@ public class Node {
 
             for (Link inLink : inLinks) {
                 // !! it must be exported a new instance (a copy) of Route
+                // TODO the exported path must also be a copy
                 export(inLink, new Route(this, selectedAttribute, selectedPath));
             }
         }
