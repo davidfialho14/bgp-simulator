@@ -66,6 +66,30 @@ public class RouteTableTest {
         assertThat(table.getAttribute(destination, notSetNeighbour).isInvalid(), is(true));
     }
 
-    // TODO clear method
+    @Test
+    public void clearTableWithOnly1AttributeSet_GetAttributeForSamePairReturnsNull() throws Exception {
+        Node neighbour = new Node(null, 0, null);
+        RouteTable table = createRouteTable(neighbour);
+        Node destination = new Node(null, 1, null);
+        table.setAttribute(destination, neighbour, ComponentFactory.createAttribute(0));
+
+        table.clear();
+
+        assertThat(table.getAttribute(destination, neighbour), is(nullValue()));
+    }
+
+    @Test
+    public void afterClearingTableSetAttributeToExistingNeighbour_GetAttributeReturnsSetAttribute() throws Exception {
+        Node neighbour = new Node(null, 0, null);
+        RouteTable table = createRouteTable(neighbour);
+        Node destination = new Node(null, 1, null);
+        table.setAttribute(destination, neighbour, ComponentFactory.createAttribute(0));
+        table.clear();
+
+        Attribute expectedAttribute = ComponentFactory.createAttribute(0);
+        table.setAttribute(destination, neighbour, ComponentFactory.createAttribute(0));
+
+        assertThat(table.getAttribute(destination, neighbour), is(expectedAttribute));
+    }
 
 }

@@ -94,15 +94,6 @@ public class RouteTable {
         }
     }
 
-    private Attribute get(Node destination, Node neighbour, Function<Route, Attribute> getter) {
-        try {
-            return getter.apply(routes.get(neighbour).get(destination));
-        } catch (NullPointerException e) {
-            // neighbour or destination do not exist
-            return null;
-        }
-    }
-
     /**
      * Returns the attribute associated with the given destination and neighbour pair. If the destination or the
      * neighbour do not exist in the table it will be returned null.
@@ -125,8 +116,20 @@ public class RouteTable {
         return (PathAttribute) get(destination, neighbour, (Route::getPath));
     }
 
+    private Attribute get(Node destination, Node neighbour, Function<Route, Attribute> getter) {
+        try {
+            return getter.apply(routes.get(neighbour).get(destination));
+        } catch (NullPointerException e) {
+            // neighbour or destination do not exist
+            return null;
+        }
+    }
+
+    /**
+     * Clears all the routes and destinations from the table. It keeps the neighbours.
+     */
     public void clear() {
-        routes.clear();
+        routes.values().forEach(Map<Node, Route>::clear);
     }
 
     public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {
