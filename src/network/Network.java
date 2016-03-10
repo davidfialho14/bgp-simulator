@@ -8,15 +8,15 @@ import java.util.stream.Collectors;
 
 public class Network {
 
-    private Map<Integer, Node> nodes = new HashMap<>();   // each node must be unique in the network
-	private NodeFactory nodeFactory;
+    private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
+	private ProtocolFactory protocolFactory;            // factory for protocols to be used by the nodes
 
-	/**
+    /**
 	 * Creates a new empty network.
 	 * @param nodeFactory factory used to create nodes for the network.
 	 */
-	public Network(NodeFactory nodeFactory) {
-		this.nodeFactory = nodeFactory;
+	public Network(ProtocolFactory protocolFactory) {
+		this.protocolFactory = protocolFactory;
 	}
 
 	/**
@@ -25,7 +25,8 @@ public class Network {
      * @throws NodeExistsException if a node with the given id already exists in the network.
      */
 	public void addNode(int id) throws NodeExistsException {
-		if (nodes.putIfAbsent(id, nodeFactory.createNode(this, id)) != null) {
+        Node node = new Node(this, id, protocolFactory.createProtocol(id));
+		if (nodes.putIfAbsent(id, node) != null) {
             throw new NodeExistsException(String.format("node with id '%d' already exists", id));
         }
 	}

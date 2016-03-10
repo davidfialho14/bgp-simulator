@@ -1,7 +1,7 @@
 package network;
 
 import implementations.policies.ShortestPathLabel;
-import implementations.protocols.BGPNodeFactory;
+import implementations.protocols.BGPProtocolFactory;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import org.junit.Before;
@@ -24,8 +24,9 @@ public class NetworkTest {
      * The created elements are guaranteed to be able to work together.
      */
     private static class Factory {
-        static NodeFactory createNodeFactory() {
-            return new BGPNodeFactory();
+
+        static ProtocolFactory createProtocolFactory() {
+            return new BGPProtocolFactory();
         }
 
         /**
@@ -45,16 +46,17 @@ public class NetworkTest {
          * @return link instance.
          */
         static Link createLink(Network network, int srcId, int destId) {
-            NodeFactory factory = createNodeFactory();
+            ProtocolFactory factory = createProtocolFactory();
 
             // do not care about the link length
-            return new Link(factory.createNode(network, srcId), factory.createNode(network, destId), createLabel());
+            return new Link(new Node(network, srcId, factory.createProtocol(srcId)),
+                    new Node(network, destId, factory.createProtocol(destId)), createLabel());
         }
     }
 
     @Before
     public void setUp() throws Exception {
-        network = new Network(Factory.createNodeFactory());
+        network = new Network(Factory.createProtocolFactory());
     }
 
     @Test

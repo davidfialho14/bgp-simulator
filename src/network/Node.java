@@ -5,21 +5,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class Node {
+public class Node {
 
-    private Network network;	// network who created the node
+    private Network network;    // network who created the node
 
-    protected int id;   // id must be unique in each network
-    protected List<Node> outNeighbours = new ArrayList<>();
-    protected List<Link> inLinks = new ArrayList<>();
+    private int id;   // id must be unique in each network
+    private List<Node> outNeighbours = new ArrayList<>();
+    private List<Link> inLinks = new ArrayList<>();
 
-	/**
+    // fields used during simulation
+    private Protocol protocol;
+
+    /**
      * @param network   network who created the node.
 	 * @param id    id to assign to the node.
 	 */
-    protected Node(Network network, int id) {
+    // TODO add a protocol to the constructor
+    // TODO make the constructor public and remove the classes NodeFactory, BGPNode, BGPNodeFactory
+    protected Node(Network network, int id, Protocol protocol) {
 		this.network = network;
 		this.id = id;
+        this.protocol = protocol;
 	}
 
     /**
