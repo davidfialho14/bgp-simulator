@@ -114,7 +114,7 @@ public class Node {
             path = learnedRoute.getPath();
             path.add(link.getDestination());    // add exporter to the path
         } else {
-            path = new PathAttribute();
+            path = PathAttribute.createInvalid();
         }
 
         Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
@@ -127,7 +127,7 @@ public class Node {
             }
 
             attribute = network.attrFactory.createInvalid();
-            path = new PathAttribute();
+            path = PathAttribute.createInvalid();
         } else {
             // there is no loop
             if (attribute.compareTo(exclRoute.getAttribute()) < 0) {
@@ -142,13 +142,12 @@ public class Node {
         routeTable.setAttribute(learnedRoute.getDestination(), link.getDestination(), attribute);
         routeTable.setPath(learnedRoute.getDestination(), link.getDestination(), path);
 
-        if (previousSelectedAttribute.compareTo(selectedAttribute) != 0 &&
-                previousSelectedPath.compareTo(selectedPath) != 0) {
+        if (!previousSelectedAttribute.equals(selectedAttribute) &&
+                !previousSelectedPath.equals(selectedPath)) {
 
             for (Link inLink : inLinks) {
                 // !! it must be exported a new instance (a copy) of Route
-                // TODO the exported path must also be a copy
-                export(inLink, new Route(this, selectedAttribute, selectedPath));
+                export(inLink, new Route(this, selectedAttribute, new PathAttribute(selectedPath)));
             }
         }
     }

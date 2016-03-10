@@ -12,19 +12,26 @@ public class PathAttribute implements Attribute {
 
     private static final PathAttribute INVALID = invalid();
 
-    private LinkedHashSet<Node> path = new LinkedHashSet<>();   // must be a LinkedHashSet in order to preserve insertion order
-
-    // TODO replace the default constructor with the static method createInvalid()
-    // TODO make the default constructor private
+    private LinkedHashSet<Node> path;   // must be a LinkedHashSet in order to preserve insertion order
 
     /**
      * Constructs an empty path.
      */
     public PathAttribute() {
+        this.path = new LinkedHashSet<>();
     }
 
     public PathAttribute(Node node) {
+        this.path = new LinkedHashSet<>(1);
         path.add(node);
+    }
+
+    /**
+     * Copy constructor.
+     * @param path path to be copied.
+     */
+    public PathAttribute(PathAttribute path) {
+        this.path = new LinkedHashSet<>(path.path);
     }
 
     /**
