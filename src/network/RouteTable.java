@@ -16,6 +16,11 @@ public class RouteTable {
     private Collection<Node> outNeighbours;
     private AttributeFactory attributeFactory;  // used to create invalid routes
 
+    /**
+     * Constructs a new empty route table. Defines the neighbours included in the route table.
+     * @param outNeighbours out neighbours of the route table.
+     * @param attributeFactory factory used to generate invalid attributes.
+     */
     public RouteTable(Collection<Node> outNeighbours, AttributeFactory attributeFactory) {
         this.outNeighbours = outNeighbours;
         routes = new HashMap<>(outNeighbours.size());
@@ -28,6 +33,13 @@ public class RouteTable {
         this.attributeFactory = attributeFactory;
     }
 
+    /**
+     * Sets a the given attribute to the given destination and neighbour pair. If the neighbour does not exists in the
+     * table calling this method will not change anything.
+     * @param destination destination node to be assigned the attribute.
+     * @param neighbour neighbour node to be assigned the attribute.
+     * @param attribute attribute to be set.
+     */
     public void setAttribute(Node destination, Node neighbour, Attribute attribute) {
 
         Map<Node, Route> row = routes.get(neighbour);
@@ -52,6 +64,13 @@ public class RouteTable {
         }
     }
 
+    /**
+     * Sets a the given path to the given destination and neighbour pair. If the neighbour does not exists in the
+     * table calling this method will not change anything.
+     * @param destination destination node to be assigned the path.
+     * @param neighbour neighbour node to be assigned the path.
+     * @param path attribute to be set.
+     */
     public void setPath(Node destination, Node neighbour, PathAttribute path) {
         try {
             routes.get(neighbour).get(destination).setPath(path);
@@ -67,6 +86,13 @@ public class RouteTable {
         }
     }
 
+    /**
+     * Returns the attribute associated with the given destination and neighbour pair. If the destination or the
+     * neighbour do not exist in the table it will be returned null.
+     * @param destination destination to get attribute.
+     * @param neighbour neighbour to get attribute.
+     * @return attribute associated with the given pair or null if one of them does not exist.
+     */
     public Attribute getAttribute(Node destination, Node neighbour) {
         try {
             return routes.get(neighbour).get(destination).getAttribute();
@@ -76,6 +102,13 @@ public class RouteTable {
         }
     }
 
+    /**
+     * Returns the path associated with the given destination and neighbour pair. If the destination or the
+     * neighbour do not exist in the table it will be returned null.
+     * @param destination destination to get path.
+     * @param neighbour neighbour to get path.
+     * @return path associated with the given pair or null if one of them does not exist.
+     */
     public PathAttribute getPath(Node destination, Node neighbour) {
         try {
             return routes.get(neighbour).get(destination).getPath();
