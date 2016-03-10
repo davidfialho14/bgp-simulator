@@ -29,10 +29,15 @@ public class RouteTable {
     public void setAttribute(Node destination, Node neighbour, Attribute attribute) {
         try {
             routes.get(neighbour).get(destination).setAttribute(attribute);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e1) {
             // destination if not in the route table yet
-            routes.get(neighbour).put(destination,
-                    new Route(destination, attribute, new PathAttribute(destination)));
+            try {
+                routes.get(neighbour).put(destination,
+                        new Route(destination, attribute, new PathAttribute(destination)));
+            } catch (NullPointerException e2) {
+                // the neighbour does not exist in the table
+                // ignore set
+            }
         }
     }
 
@@ -42,7 +47,12 @@ public class RouteTable {
     }
 
     public Attribute getAttribute(Node destination, Node neighbour) {
-        return routes.get(neighbour).get(destination).getAttribute();
+        try {
+            return routes.get(neighbour).get(destination).getAttribute();
+        } catch (NullPointerException e) {
+            // neighbour or destination do not exist
+            return null;
+        }
     }
 
     public PathAttribute getPath(Node destination, Node neighbour) {

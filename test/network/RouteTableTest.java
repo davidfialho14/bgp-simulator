@@ -3,10 +3,9 @@ package network;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class RouteTableTest {
@@ -41,9 +40,16 @@ public class RouteTableTest {
         assertThat(table.getAttribute(destination, defaultNeighbour), equalTo(expectedAttribute));
     }
 
-    // set attribute for destination that does not exist (neighbour exists)
-    // set attribute for destination that exists (neighbour exists)
-    // set attribute for neighbour that does not exist (destination exists)
+    @Test
+    public void setAttributeForNonExistingNeighbour_GetAttributeReturnsNull() throws Exception {
+        Node destination = new Node(null, 1, null); // any destination node
+        Node nonExistingNeighbour = new Node(null, 1, null);
+
+        table.setAttribute(destination, nonExistingNeighbour, ComponentFactory.createAttribute(0));
+
+        assertThat(table.getAttribute(destination, defaultNeighbour), is(nullValue()));
+    }
+
     // TODO clear method
 
 }
