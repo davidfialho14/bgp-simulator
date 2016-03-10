@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class RouteTable {
 
@@ -93,6 +94,15 @@ public class RouteTable {
         }
     }
 
+    private Attribute get(Node destination, Node neighbour, Function<Route, Attribute> getter) {
+        try {
+            return getter.apply(routes.get(neighbour).get(destination));
+        } catch (NullPointerException e) {
+            // neighbour or destination do not exist
+            return null;
+        }
+    }
+
     /**
      * Returns the attribute associated with the given destination and neighbour pair. If the destination or the
      * neighbour do not exist in the table it will be returned null.
@@ -101,12 +111,7 @@ public class RouteTable {
      * @return attribute associated with the given pair or null if one of them does not exist.
      */
     public Attribute getAttribute(Node destination, Node neighbour) {
-        try {
-            return routes.get(neighbour).get(destination).getAttribute();
-        } catch (NullPointerException e) {
-            // neighbour or destination do not exist
-            return null;
-        }
+        return get(destination, neighbour, (Route::getAttribute));
     }
 
     /**
@@ -117,12 +122,7 @@ public class RouteTable {
      * @return path associated with the given pair or null if one of them does not exist.
      */
     public PathAttribute getPath(Node destination, Node neighbour) {
-        try {
-            return routes.get(neighbour).get(destination).getPath();
-        } catch (NullPointerException e) {
-            // neighbour or destination do not exist
-            return null;
-        }
+        return (PathAttribute) get(destination, neighbour, (Route::getPath));
     }
 
     public void clear() {
