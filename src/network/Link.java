@@ -62,4 +62,9 @@ public class Link {
         result = 31 * result + (label != null ? label.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Link(" + source + "->" + destination + ", " + label + ')';
+    }
 }
