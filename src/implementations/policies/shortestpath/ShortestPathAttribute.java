@@ -19,8 +19,7 @@ public class ShortestPathAttribute implements Attribute {
 
     @Override
     public boolean isInvalid() {
-        // TODO - implement ShortestPathAttribute.isInvalid
-        throw new UnsupportedOperationException();
+        return length == null;
     }
 
     @Override

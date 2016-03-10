@@ -63,10 +63,7 @@ public class RouteTableTest {
         Node destination = new Node(null, 2, null);
         table.setAttribute(destination, existingNeighbour, ComponentFactory.createAttribute(0));
 
-        // expect invalid attribute
-        Attribute expectedAttribute = ComponentFactory.createAttributeFactory().createInvalid();
-
-        assertThat(table.getAttribute(destination, notSetNeighbour), equalTo(expectedAttribute));
+        assertThat(table.getAttribute(destination, notSetNeighbour).isInvalid(), is(true));
     }
 
     // TODO clear method
