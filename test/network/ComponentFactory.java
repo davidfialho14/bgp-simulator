@@ -62,4 +62,26 @@ public class ComponentFactory {
         return new ShortestPathAttributeFactory();
     }
 
+    /**
+     * Creates nodes with random id. The ids will never repeat between calls.
+     * @return new node instance.
+     */
+    private static int nodeId = 0;
+    static Node createRandomNode() {
+        return new Node(null, nodeId++, null);
+    }
+
+    /**
+     * Creates n nodes with random ids. The ids will never repeat between calls.
+     * @return array with the created nodes.
+     */
+    static Node[] createRandomNode(int n) {
+        Node[] nodes = new Node[n];
+        for (int i = 0; i < n; i++) {
+            nodes[i] = new Node(null, nodeId++, null);
+        }
+
+        return nodes;
+    }
+
 }

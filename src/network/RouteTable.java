@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class RouteTable {
@@ -15,20 +14,20 @@ public class RouteTable {
         the maps in the constructor.
      */
     private Map<Node, Map<Node, Route>> routes;
-    private Collection<Node> outNeighbours;
+    private Collection<Node> neighbours;
     private AttributeFactory attributeFactory;  // used to create invalid routes
 
     /**
      * Constructs a new empty route table. Defines the neighbours included in the route table.
-     * @param outNeighbours out neighbours of the route table.
+     * @param neighbours out neighbours of the route table.
      * @param attributeFactory factory used to generate invalid attributes.
      */
-    public RouteTable(Collection<Node> outNeighbours, AttributeFactory attributeFactory) {
-        this.outNeighbours = outNeighbours;
-        routes = new HashMap<>(outNeighbours.size());
+    public RouteTable(Collection<Node> neighbours, AttributeFactory attributeFactory) {
+        this.neighbours = neighbours;
+        routes = new HashMap<>(neighbours.size());
 
         // create maps for each neighbour
-        for (Node outNeighbour : outNeighbours) {
+        for (Node outNeighbour : neighbours) {
             routes.put(outNeighbour, new HashMap<>());
         }
 
@@ -129,12 +128,22 @@ public class RouteTable {
      * Clears all the routes and destinations from the table. It keeps the neighbours.
      */
     public void clear() {
-        routes.values().forEach(Map<Node, Route>::clear);
+        routes.values().forEach(Map::clear);
     }
 
     public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {
-        // TODO - implement RouteTable.getSelectedRoute
-        throw new UnsupportedOperationException();
+        Route preferredRoute = null;
+        for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
+            Node neighbour = entry.getKey();
+            Route route = entry.getValue().get(destination);
+
+            if (!neighbour.equals(ignoredNeighbour) &&
+                    (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
+                preferredRoute = route;
+            }
+        }
+
+        return preferredRoute;
     }
 
 }

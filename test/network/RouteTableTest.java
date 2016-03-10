@@ -92,4 +92,43 @@ public class RouteTableTest {
         assertThat(table.getAttribute(destination, neighbour), is(expectedAttribute));
     }
 
+    @Test
+    public void getSelectedRouteWithNonExistingDestination_ReturnsNull() throws Exception {
+        Node neighbour = new Node(null, 0, null);
+        RouteTable table = createRouteTable(neighbour);
+        Node destination = new Node(null, 1, null);
+
+        assertThat(table.getSelectedRoute(destination, null), is(nullValue()));
+    }
+
+    @Test
+    public void getSelectedRouteWithOnly1Neighbour_ReturnsRouteOfTheOnlyNeighbour() throws Exception {
+        Node neighbour = new Node(null, 0, null);
+        RouteTable table = createRouteTable(neighbour);
+        Node destination = new Node(null, 1, null);
+
+        // add a route to the table
+        Route route = new Route(destination, ComponentFactory.createAttribute(0),
+                new PathAttribute(new Node(null, 2, null)));
+        table.setAttribute(destination, neighbour, route.getAttribute());
+        table.setPath(destination, neighbour, route.getPath());
+
+        assertThat(table.getSelectedRoute(destination, null), is(route));
+    }
+
+    @Test
+    public void getSelectedRouteWith2Neighbours_ReturnsPreferredRouteOfTheTwo() throws Exception {
+        Node[] neighbours = ComponentFactory.createRandomNode(2);
+        RouteTable table = createRouteTable(neighbours);
+        Node destination = ComponentFactory.createRandomNode();
+
+        // add a route to the table
+        Route route = new Route(destination, ComponentFactory.createAttribute(0),
+                new PathAttribute(ComponentFactory.createRandomNode()));
+        table.setAttribute(destination, neighbours[0], route.getAttribute());
+        table.setPath(destination, neighbours[0], route.getPath());
+
+        assertThat(table.getSelectedRoute(destination, null), is(route));
+    }
+
 }

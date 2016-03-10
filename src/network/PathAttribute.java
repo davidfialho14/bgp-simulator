@@ -4,7 +4,13 @@ import java.util.LinkedHashSet;
 
 public class PathAttribute implements Attribute {
 
-    private static final PathAttribute INVALID = new PathAttribute();
+    private static PathAttribute invalid() {
+        PathAttribute path = new PathAttribute();
+        path.path = null;
+        return path;
+    }
+
+    private static final PathAttribute INVALID = invalid();
 
     private LinkedHashSet<Node> path = new LinkedHashSet<>();   // must be a LinkedHashSet in order to preserve insertion order
 
@@ -44,8 +50,7 @@ public class PathAttribute implements Attribute {
 
     @Override
     public boolean isInvalid() {
-        // TODO - implement PathAttribute.isInvalid
-        throw new UnsupportedOperationException();
+        return path == null;
     }
 
     @Override
