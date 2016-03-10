@@ -9,4 +9,10 @@ public interface AttributeFactory {
      */
     Attribute createSelf(Node node);
 
+    /**
+     * Creates an invalid attribute instance for an attribute implementation.
+     * @return invalid attribute instance.
+     */
+    Attribute createInvalid();
+
 }
