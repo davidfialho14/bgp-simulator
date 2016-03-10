@@ -90,7 +90,7 @@ public class Node {
         try {
             routeTable.clear();
         } catch (NullPointerException e) {
-            routeTable = new RouteTable(outNeighbours);
+            routeTable = new RouteTable(outNeighbours, network.attrFactory);
         }
 
         for (Link inLink : inLinks) {

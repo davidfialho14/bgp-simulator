@@ -1,14 +1,19 @@
 package network;
 
-public class Route {
+public class Route implements Comparable<Route> {
 
     private Node destination;
     private Attribute attribute;
     private PathAttribute path;
 
-    public Route(Node destination, Attribute attribute, PathAttribute pathAttribute) {
-        // TODO - implement Route.Route
-        throw new UnsupportedOperationException();
+    public Route(Node destination, Attribute attribute, PathAttribute path) {
+        this.destination = destination;
+        this.attribute = attribute;
+        this.path = path;
+    }
+
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
     }
 
     public Node getDestination() {
@@ -22,4 +27,11 @@ public class Route {
     public PathAttribute getPath() {
         return path;
     }
+
+    @Override
+    public int compareTo(Route route) {
+        // TODO - implement Route.compareTo
+        throw new UnsupportedOperationException();
+    }
+
 }

@@ -1,6 +1,8 @@
 package network;
 
-import implementations.policies.ShortestPathLabel;
+import implementations.policies.shortestpath.ShortestPathAttribute;
+import implementations.policies.shortestpath.ShortestPathLabel;
+import implementations.policies.shortestpath.ShortestPathAttributeFactory;
 import implementations.protocols.BGPProtocolFactory;
 
 /**
@@ -36,4 +38,28 @@ public class ComponentFactory {
         return new Link(new Node(network, srcId, factory.createProtocol(srcId)),
                 new Node(network, destId, factory.createProtocol(destId)), createLabel());
     }
+
+    /**
+     * Creates an arbitrary attribute. To be used when there is the need for an attribute instance but its value
+     * does not matter.
+     * @return new attribute instance.
+     */
+    static Attribute createAttribute() {
+        return new ShortestPathAttribute(0);
+    }
+
+    /**
+     * Creates an attribute instance. To be used to create specific attributes in order to be able to compare them.
+     * Two attributes created with the same id will be equal and two attributes created with different ids will be
+     * not equal.
+     * @return new attribute instance.
+     */
+    static Attribute createAttribute(int id) {
+        return new ShortestPathAttribute(id);
+    }
+
+    static AttributeFactory createAttributeFactory() {
+        return new ShortestPathAttributeFactory();
+    }
+
 }
