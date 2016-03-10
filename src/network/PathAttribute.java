@@ -51,8 +51,7 @@ public class PathAttribute implements Attribute {
     }
 
     public boolean contains(Node node) {
-        // TODO - implement PathAttribute.contains
-        throw new UnsupportedOperationException();
+        return path.contains(node);
     }
 
     @Override
