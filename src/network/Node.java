@@ -78,4 +78,10 @@ public class Node {
         result = 31 * result + id;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Node(" + id + ')';
+    }
+
 }
