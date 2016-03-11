@@ -67,4 +67,12 @@ public class PathAttributeTest {
         assertThat(pathWithTwoNodes1And2.compareTo(pathWithNode1), greaterThan(0));
     }
 
+    @Test
+    public void contains_InvalidPath_ReturnsFalse() throws Exception {
+        PathAttribute invalidPath = PathAttribute.createInvalid();
+        Node node = Factory.createRandomNode();
+
+        assertThat(invalidPath.contains(node), is(false));
+    }
+
 }
