@@ -95,4 +95,13 @@ public class PathAttribute implements Attribute {
     public int hashCode() {
         return path != null ? path.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        if (isInvalid()) {
+            return "Path[•]";
+        } else {
+            return "Path" + path;
+        }
+    }
 }

@@ -50,4 +50,9 @@ public class DummyAttribute implements Attribute {
         else if (!this.isInvalid() && other.isInvalid()) return -1;
         else return other.value - this.value;
     }
+
+    @Override
+    public String toString() {
+        return "DummyAttribute(" + value + ')';
+    }
 }

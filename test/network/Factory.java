@@ -34,9 +34,19 @@ class Factory {
     }
 
     /**
-     * Creates n node instances with different arbitrary ids. The network and protocol are initialized with null.
-     * To be used when the id of the nodes is not important and the network and protocol are not used.
-     * @return arrays with n node instances.
+     * Creates a node instance with the specified id. The network and protocol are initialized with null.
+     * To be used when the id of node is important and the network and protocol are not used.
+     * @return new node instance.
+     */
+    static Node createNode(int id) {
+        return new Node(null, id, null);
+    }
+
+    /**
+     * Creates n node instances with different ids. The returned nodes are ordered by id from the smaller id to the
+     * higher. The network and protocol are initialized with null. To be used when the ids of the nodes is important
+     * but the network and protocol are not used.
+     * @return array with n node instances.
      */
     static Node[] createNodes(int n) {
         Node[] nodes = new Node[n];
@@ -45,6 +55,41 @@ class Factory {
         }
 
         return nodes;
+    }
+
+    // used to create random nodes
+    private static int nodeId = 0;
+
+    /**
+     * Creates nodes with random id. The ids will never repeat between calls.
+     * @return new node instance.
+     */
+    static Node createRandomNode() {
+        return new Node(null, nodeId++, null);
+    }
+
+    /**
+     * Creates n nodes with random ids. The ids will never repeat between calls.
+     * @return array with the created nodes.
+     */
+    static Node[] createRandomNode(int n) {
+        Node[] nodes = new Node[n];
+        for (int i = 0; i < n; i++) {
+            nodes[i] = new Node(null, nodeId++, null);
+        }
+
+        return nodes;
+    }
+
+    /**
+     * Creates n node instances with different random ids. The is no order in the returned nodes. The network and
+     * protocol are initialized with null. To be used when the ids of the nodes is important but the network and
+     * protocol are not used. This method only exists for clarity in the test code, it indicates explicitly that the
+     * nodes created are random.
+     * @return array with n node instances.
+     */
+    static Node[] createRandomNodes(int n) {
+        return createNodes(n);
     }
 
 }
