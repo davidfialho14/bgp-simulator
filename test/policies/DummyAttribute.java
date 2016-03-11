@@ -55,4 +55,19 @@ public class DummyAttribute implements Attribute {
     public String toString() {
         return "DummyAttribute(" + value + ')';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DummyAttribute that = (DummyAttribute) o;
+
+        return value != null ? value.equals(that.value) : that.value == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return value != null ? value.hashCode() : 0;
+    }
 }

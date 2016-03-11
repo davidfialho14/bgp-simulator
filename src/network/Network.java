@@ -10,7 +10,7 @@ public class Network {
 
     private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
 	private ProtocolFactory protocolFactory;            // factory for protocols to be used by the nodes
-    AttributeFactory attrFactory;                       // Node class must be able to access this factory
+    private AttributeFactory attrFactory;                       // Node class must be able to access this factory
 
     /**
 	 * Creates a new empty network.
@@ -72,4 +72,19 @@ public class Network {
                 .flatMap(node -> node.getInLinks().stream())
                 .collect(Collectors.toList());
     }
+
+    AttributeFactory getAttrFactory() {
+        return attrFactory;
+    }
+
+    /**
+     * Exports a route through the given link. The route is put in the network's scheduler.
+     * @param link link to export the route to.
+     * @param route route to be exported.
+     */
+    void export(Link link, Route route) {
+        // TODO - implement Node.export
+        throw new UnsupportedOperationException();
+    }
+
 }
