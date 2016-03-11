@@ -1,9 +1,7 @@
 package network;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Node {
 
@@ -16,8 +14,8 @@ public class Node {
     // fields used during simulation
     RouteTable routeTable;
     Protocol protocol;
-    Attribute selectedAttribute;    // currently selected attribute
-    PathAttribute selectedPath;     // currently selected path
+    Map<Node, Attribute> selectedAttributes;    // currently selected attribute
+    Map<Node, PathAttribute> selectedPaths;     // currently selected path
 
     /**
      * @param network   network who created the node.
@@ -89,16 +87,34 @@ public class Node {
     }
 
     /**
-     * Resets the route table and exports the node's self route to all of its in-neighbours.
-     * This method must be called before simulating the network and should only be called by the network class.
+     * Resets the route table and the selected routes. This method must be called before simulating the network and 
+     * should only be called by the network class.
      */
-    void start() {
+    void startTable() {
         try {
             routeTable.clear();
         } catch (NullPointerException e) {
             routeTable = new RouteTable(outNeighbours, network.getAttrFactory());
         }
 
+        try {
+            selectedAttributes.clear();
+        } catch (NullPointerException e) {
+            selectedAttributes = new HashMap<>();
+        }
+
+        try {
+            selectedPaths.clear();
+        } catch (NullPointerException e) {
+            selectedPaths = new HashMap<>();
+        }
+    }
+
+    /**
+     * Exports the node's self route to all of its in-neighbours. This method must be called before simulating the 
+     * network and should only be called by the network class.
+     */
+    void exportSelf() {
         for (Link inLink : inLinks) {
             network.export(inLink,
                     new Route(this, network.getAttrFactory().createSelf(this), new PathAttribute(this)));
@@ -113,8 +129,8 @@ public class Node {
      */
     public void learn(Link link, Route learnedRoute) {
         // store previous attribute and path selections to check if the selected changed
-        Attribute previousSelectedAttribute = selectedAttribute;
-        Attribute previousSelectedPath = selectedPath;
+        Attribute previousSelectedAttribute = selectedAttributes.get(learnedRoute.getDestination());
+        PathAttribute previousSelectedPath = selectedPaths.get(learnedRoute.getDestination());
 
         Attribute attribute = protocol.extend(link, learnedRoute.getAttribute());
 
@@ -127,6 +143,9 @@ public class Node {
         }
 
         Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
+
+        Attribute selectedAttribute = previousSelectedAttribute;
+        PathAttribute selectedPath = previousSelectedPath;
 
         if (path.contains(this)) {
             // there is a loop
@@ -148,6 +167,8 @@ public class Node {
             }
         }
 
+        selectedAttributes.put(learnedRoute.getDestination(), selectedAttribute);
+        selectedPaths.put(learnedRoute.getDestination(), selectedPath);
         routeTable.setAttribute(learnedRoute.getDestination(), link.getDestination(), attribute);
         routeTable.setPath(learnedRoute.getDestination(), link.getDestination(), path);
 

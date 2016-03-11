@@ -11,9 +11,7 @@ import policies.DummyAttributeFactory;
 import policies.DummyLabel;
 import protocols.DummyProtocol;
 
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NodeTest {
@@ -25,6 +23,7 @@ public class NodeTest {
     @Mock
     private RouteTable stubRouteTable;
 
+    private DummyAttributeFactory attributeFactory = new DummyAttributeFactory();
     private Node node;
     private Node exportingNode;
     private Node destination;
@@ -42,14 +41,10 @@ public class NodeTest {
         reset(stubRouteTable);
     }
 
-    private Node createNodeWithEmptyRouteTable(Network network) {
-        Node node = new Node(network, 0, this.stubProtocol);
-        node.routeTable = stubRouteTable;
-        return node;
-    }
-
     private void setNodeLinkedBothWaysWithANeighbourAndWithEmptyTable() {
-        node = createNodeWithEmptyRouteTable(mockNetwork);
+        node = new Node(mockNetwork, 0, this.stubProtocol);
+        node.startTable();
+        node.routeTable = stubRouteTable;
         exportingNode = new Node(mockNetwork, 1, stubProtocol);
         destination = new Node(mockNetwork, 2, stubProtocol);
         outLink = new Link(node, exportingNode, new DummyLabel());
@@ -63,9 +58,11 @@ public class NodeTest {
     learn_ValidRouteWhenNodeHasNoValidRouteForDestination_ExportsExtendedValidRoute()
             throws Exception {
         setNodeLinkedBothWaysWithANeighbourAndWithEmptyTable();
+        node.selectedAttributes.put(destination, attributeFactory.createInvalid());
+        node.selectedPaths.put(destination, PathAttribute.createInvalid());
         Route learnedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         when(stubProtocol.extend(outLink, learnedRoute.getAttribute())).thenReturn(new DummyAttribute());
-        Route selectedRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route selectedRoute = Route.createInvalid(destination, attributeFactory);
         when(stubRouteTable.getSelectedRoute(destination, exportingNode)).thenReturn(selectedRoute);
 
         Route extendedRoute = new Route(destination, new DummyAttribute(), new PathAttribute(exportingNode));
@@ -76,18 +73,18 @@ public class NodeTest {
 
     @Test
     public void
-    learn_InvalidRouteWhenNodeHasNoValidRouteForDestination_ExportsInvalidRoute() throws Exception {
+    learn_InvalidRouteWhenNodeHasNoValidRouteForDestination_ExportsIsNotCalled() throws Exception {
         setNodeLinkedBothWaysWithANeighbourAndWithEmptyTable();
-        DummyAttributeFactory attributeFactory = new DummyAttributeFactory();
+        node.selectedAttributes.put(destination, attributeFactory.createInvalid());
+        node.selectedPaths.put(destination, PathAttribute.createInvalid());
         Route learnedRoute = Route.createInvalid(destination, attributeFactory);
         when(stubProtocol.extend(outLink, learnedRoute.getAttribute())).thenReturn(attributeFactory.createInvalid());
         Route selectedRoute = Route.createInvalid(destination, attributeFactory);
-        when(stubRouteTable.getSelectedRoute(destination, exportingNode)).thenReturn(selectedRoute);
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(selectedRoute);
 
-        Route extendedRoute = Route.createInvalid(destination, attributeFactory);
         node.learn(outLink, learnedRoute);
 
-        verify(mockNetwork).export(inLink, extendedRoute);
+        verify(mockNetwork, never()).export(any(), any());
     }
 
     // TODO learns route not preferred -> does not export
