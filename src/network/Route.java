@@ -16,6 +16,10 @@ public class Route implements Comparable<Route> {
         return new Route(destination, factory.createInvalid(), PathAttribute.createInvalid());
     }
 
+    /**
+     * Checks if the route is invalid. A route is considered invalid if the attribute or the path are invalid.
+     * @return true if the route is invalid and false otherwise.
+     */
     public boolean isInvalid() {
         return attribute.isInvalid() || path.isInvalid();
     }
@@ -42,21 +46,15 @@ public class Route implements Comparable<Route> {
 
     @Override
     public int compareTo(Route other) {
-        if (!this.isInvalid() && other.isInvalid()) {
-            return -1;
-        } else if (this.isInvalid() && other.isInvalid()) {
-            return 0;
-        } else if(this.isInvalid() && !other.isInvalid()) {
-            return 1;
-        } else {
-            // both routes are valid
-            int comparison = this.attribute.compareTo(other.attribute);
-            if (comparison == 0) {
-                return this.path.compareTo(other.path);
-            } else {
-                return comparison;
-            }
-        }
+        if (this.isInvalid() && other.isInvalid()) return 0;
+        else if (!this.isInvalid() && other.isInvalid()) return 1;
+        else if (this.isInvalid() && !other.isInvalid()) return -1;
+
+        int attrComparison = this.attribute.compareTo(other.attribute);
+        if (attrComparison == 0)
+            return path.compareTo(other.path);
+        else
+            return attrComparison;
     }
 
     @Override
