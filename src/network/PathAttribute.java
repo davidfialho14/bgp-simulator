@@ -40,7 +40,8 @@ public class PathAttribute implements Attribute {
      * @param path path to be copied.
      */
     public PathAttribute(PathAttribute path) {
-        this.path = new LinkedHashSet<>(path.path);
+        if (!path.isInvalid())
+            this.path = new LinkedHashSet<>(path.path);
     }
 
     /**
@@ -60,11 +61,7 @@ public class PathAttribute implements Attribute {
     }
 
     public boolean contains(Node node) {
-        if (isInvalid()) {
-            return false;
-        } else {
-            return path.contains(node);
-        }
+        return !isInvalid() && path.contains(node);
     }
 
     @Override

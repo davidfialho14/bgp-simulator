@@ -75,4 +75,13 @@ public class PathAttributeTest {
         assertThat(invalidPath.contains(node), is(false));
     }
 
+    @Test
+    public void copyConstructor_InvalidPath_ConstructsInvalidPath() throws Exception {
+        PathAttribute invalidPath = PathAttribute.createInvalid();
+
+        PathAttribute pathCopy = new PathAttribute(invalidPath);
+
+        assertThat(pathCopy.isInvalid(), is(true));
+    }
+
 }
