@@ -120,6 +120,11 @@ public class RouteTableTest {
         assertThat(table.getSelectedRoute(destination, null), is(nullValue()));
     }
 
+    private void setRoute(RouteTable table, Node destination, Node neighbour, Route route) {
+        table.setAttribute(destination, neighbour, route.getAttribute());
+        table.setPath(destination, neighbour, route.getPath());
+    }
+
     @Test
     public void
     getSelectedRoute_TableWithOneNeighbourWithAttr0_ReturnsRouteWithAttr0() throws Exception {
@@ -127,8 +132,7 @@ public class RouteTableTest {
         RouteTable table = createRouteTable(neighbour);
         Node destination = Factory.createRandomNode();
         Route route = new Route(destination, new DummyAttribute(), new PathAttribute());
-        table.setAttribute(destination, neighbour, route.getAttribute());
-        table.setPath(destination, neighbour, route.getPath());
+        setRoute(table, destination, neighbour, route);
 
         assertThat(table.getSelectedRoute(destination, null), is(route));
     }
@@ -141,8 +145,7 @@ public class RouteTableTest {
         RouteTable table = createRouteTable(neighbours);
         Node destination = Factory.createRandomNode();
         Route route = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        table.setAttribute(destination, neighbours[0], route.getAttribute());
-        table.setPath(destination, neighbours[0], route.getPath());
+        setRoute(table, destination, neighbours[0], route);
 
         assertThat(table.getSelectedRoute(destination, null), is(route));
     }
@@ -154,11 +157,9 @@ public class RouteTableTest {
         RouteTable table = createRouteTable(neighbours);
         Node destination = Factory.createRandomNode();
         Route routeWithAttr0 = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        table.setAttribute(destination, neighbours[0], routeWithAttr0.getAttribute());
-        table.setPath(destination, neighbours[0], routeWithAttr0.getPath());
+        setRoute(table, destination, neighbours[0], routeWithAttr0);
         Route routeWithAttr1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        table.setAttribute(destination, neighbours[1], routeWithAttr1.getAttribute());
-        table.setPath(destination, neighbours[1], routeWithAttr1.getPath());
+        setRoute(table, destination, neighbours[1], routeWithAttr1);
 
         assertThat(table.getSelectedRoute(destination, null), is(routeWithAttr1));
     }
@@ -171,11 +172,9 @@ public class RouteTableTest {
         RouteTable table = createRouteTable(neighbours);
         Node destination = Factory.createRandomNode();
         Route routeWithAttr0 = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        table.setAttribute(destination, neighbours[0], routeWithAttr0.getAttribute());
-        table.setPath(destination, neighbours[0], routeWithAttr0.getPath());
+        setRoute(table, destination, neighbours[0], routeWithAttr0);
         Route routeWithAttr1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        table.setAttribute(destination, neighbours[1], routeWithAttr1.getAttribute());
-        table.setPath(destination, neighbours[1], routeWithAttr1.getPath());
+        setRoute(table, destination, neighbours[1], routeWithAttr1);
 
         assertThat(table.getSelectedRoute(destination, neighbours[1]), is(routeWithAttr0));
     }
