@@ -40,7 +40,8 @@ public class PathAttribute implements Attribute {
      * @param path path to be copied.
      */
     public PathAttribute(PathAttribute path) {
-        this.path = new LinkedHashSet<>(path.path);
+        if (!path.isInvalid())
+            this.path = new LinkedHashSet<>(path.path);
     }
 
     /**
