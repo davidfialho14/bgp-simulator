@@ -60,7 +60,11 @@ public class PathAttribute implements Attribute {
     }
 
     public boolean contains(Node node) {
-        return path.contains(node);
+        if (isInvalid()) {
+            return false;
+        } else {
+            return path.contains(node);
+        }
     }
 
     @Override
