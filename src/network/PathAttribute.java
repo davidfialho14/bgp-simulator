@@ -1,16 +1,20 @@
 package network;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 
 public class PathAttribute implements Attribute {
 
-    private static PathAttribute invalid() {
+    private static final PathAttribute INVALID;
+
+    /**
+     * Initializes the INVALID
+     */
+    static {
         PathAttribute path = new PathAttribute();
         path.path = null;
-        return path;
+        INVALID = path;
     }
-
-    private static final PathAttribute INVALID = invalid();
 
     private LinkedHashSet<Node> path;   // must be a LinkedHashSet in order to preserve insertion order
 
@@ -24,6 +28,11 @@ public class PathAttribute implements Attribute {
     public PathAttribute(Node node) {
         this.path = new LinkedHashSet<>(1);
         path.add(node);
+    }
+
+    public PathAttribute(Node[] nodes) {
+        this.path = new LinkedHashSet<>();
+        Collections.addAll(path, nodes);
     }
 
     /**
@@ -59,20 +68,17 @@ public class PathAttribute implements Attribute {
         return path == null;
     }
 
+    /**
+     * Compares the path to another path. The comparison only takes into account the number of nodes in the path
+     * the nodes it contains are not taken into account.
+     * @param attribute path attribute to be compared with.
+     * @return a negative integer, zero, or a positive integer as this path is less than, equal to or greater than
+     * the specified object.
+     */
     @Override
     public int compareTo(Attribute attribute) {
         PathAttribute other = (PathAttribute) attribute;
-        int comparison = this.path.size() - other.path.size();
-
-        if (comparison == 0) {
-            if(this.path.equals(other.path)) {
-                return 0;
-            } else {
-                return -1;
-            }
-        } else {
-            return comparison;
-        }
+        return this.path.size() - other.path.size();
     }
 
     @Override
@@ -83,11 +89,19 @@ public class PathAttribute implements Attribute {
         PathAttribute that = (PathAttribute) o;
 
         return path != null ? path.equals(that.path) : that.path == null;
-
     }
 
     @Override
     public int hashCode() {
         return path != null ? path.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        if (isInvalid()) {
+            return "Path[•]";
+        } else {
+            return "Path" + path;
+        }
     }
 }
