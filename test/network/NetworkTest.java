@@ -20,7 +20,7 @@ public class NetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        network = new Network(new DummyProtocolFactory());
+        network = new Network(new DummyProtocolFactory(), null);
     }
 
     @Test

@@ -16,8 +16,9 @@ public class Network {
 	 * Creates a new empty network.
 	 * @param protocolFactory factory used to create the protocols to be assigned to the nodes.
 	 */
-	public Network(ProtocolFactory protocolFactory) {
+	public Network(ProtocolFactory protocolFactory, AttributeFactory attrFactory) {
 		this.protocolFactory = protocolFactory;
+        this.attrFactory = attrFactory;
 	}
 
 	/**
