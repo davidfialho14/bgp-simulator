@@ -20,20 +20,20 @@ public class RouteTest {
 
     @Test
     public void
-    compareTo_InvalidRouteWithValidRoute_Lesser() throws Exception {
+    compareTo_InvalidRouteWithValidRoute_Greater() throws Exception {
         Route invalidRoute = Route.createInvalid(null, new DummyAttributeFactory());
         Route validRoute = new Route(null, new DummyAttribute(), new PathAttribute());
 
-        assertThat(invalidRoute.compareTo(validRoute), lessThan(0));
+        assertThat(invalidRoute.compareTo(validRoute), greaterThan(0));
     }
 
     @Test
     public void
-    compareTo_ValidRouteWithInvalidRoute_Greater() throws Exception {
+    compareTo_ValidRouteWithInvalidRoute_Lesser() throws Exception {
         Route validRoute = new Route(null, new DummyAttribute(), new PathAttribute());
         Route invalidRoute = Route.createInvalid(null, new DummyAttributeFactory());
 
-        assertThat(validRoute.compareTo(invalidRoute), greaterThan(0));
+        assertThat(validRoute.compareTo(invalidRoute), lessThan(0));
     }
 
     @Test

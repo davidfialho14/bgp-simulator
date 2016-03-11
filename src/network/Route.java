@@ -47,8 +47,8 @@ public class Route implements Comparable<Route> {
     @Override
     public int compareTo(Route other) {
         if (this.isInvalid() && other.isInvalid()) return 0;
-        else if (!this.isInvalid() && other.isInvalid()) return 1;
-        else if (this.isInvalid() && !other.isInvalid()) return -1;
+        else if (!this.isInvalid() && other.isInvalid()) return -1;
+        else if (this.isInvalid() && !other.isInvalid()) return 1;
 
         int attrComparison = this.attribute.compareTo(other.attribute);
         if (attrComparison == 0)
@@ -78,4 +78,10 @@ public class Route implements Comparable<Route> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Route(" + destination +
+                       ", " + attribute +
+                       ", " + path + ')';
+    }
 }
