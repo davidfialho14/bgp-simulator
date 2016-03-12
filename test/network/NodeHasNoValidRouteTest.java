@@ -32,7 +32,7 @@ public class NodeHasNoValidRouteTest extends NodeTest {
 
         node.learn(outLink, learnedRoute);
 
-        verify(mockNetwork).export(inLink, extendedRoute);
+        verify(mockNetwork).export(any(), eq(extendedRoute));
     }
 
     @Test
