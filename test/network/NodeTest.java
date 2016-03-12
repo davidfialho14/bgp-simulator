@@ -53,7 +53,4 @@ public class NodeTest {
         reset(stubRouteTable);
     }
 
-    // TODO last two test but for same neighbour
-    // TODO learns route that extends to invalid route -> not exported
-
 }
