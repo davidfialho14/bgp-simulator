@@ -63,7 +63,7 @@ public class NodeTest {
         Route learnedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         when(stubProtocol.extend(outLink, learnedRoute.getAttribute())).thenReturn(new DummyAttribute());
         Route selectedRoute = Route.createInvalid(destination, attributeFactory);
-        when(stubRouteTable.getSelectedRoute(destination, exportingNode)).thenReturn(selectedRoute);
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(selectedRoute);
 
         Route extendedRoute = new Route(destination, new DummyAttribute(), new PathAttribute(exportingNode));
         node.learn(outLink, learnedRoute);
@@ -87,6 +87,44 @@ public class NodeTest {
         verify(mockNetwork, never()).export(any(), any());
     }
 
-    // TODO learns route not preferred -> does not export
+    @Test
+    public void
+    learn_Route1FromNeighbour1ExtendsToRoutePreferredToCurrentSelectedRouteFromOtherNeighbour_ExportsExtendedRoute1()
+            throws Exception {
+        setNodeLinkedBothWaysWithANeighbourAndWithEmptyTable();
+        Route selectedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        node.selectedAttributes.put(destination, selectedRoute.getAttribute());
+        node.selectedPaths.put(destination, selectedRoute.getPath());
+        Route learnedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
+        Attribute extendedAttribute = new DummyAttribute(1);
+        when(stubProtocol.extend(outLink, learnedRoute.getAttribute())).thenReturn(extendedAttribute);
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(selectedRoute);
+
+        Route extendedRoute = new Route(destination, extendedAttribute, new PathAttribute(exportingNode));
+        node.learn(outLink, learnedRoute);
+
+        verify(mockNetwork).export(inLink, extendedRoute);
+    }
+
+    @Test
+    public void
+    learn_Route1FromNeighbour1ExtendsToRouteNotPreferredToCurrentSelectedRouteFromOtherNeighbour_ExportsNotCalled()
+            throws Exception {
+        setNodeLinkedBothWaysWithANeighbourAndWithEmptyTable();
+        Route selectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        node.selectedAttributes.put(destination, selectedRoute.getAttribute());
+        node.selectedPaths.put(destination, selectedRoute.getPath());
+        Route learnedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
+        Attribute extendedAttribute = new DummyAttribute(0);
+        when(stubProtocol.extend(outLink, learnedRoute.getAttribute())).thenReturn(extendedAttribute);
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(selectedRoute);
+
+        node.learn(outLink, learnedRoute);
+
+        verify(mockNetwork, never()).export(any(), any());
+    }
+
+    // TODO last two test but for same neighbour
+    // TODO learns route that extends to invalid route -> not exported
 
 }
