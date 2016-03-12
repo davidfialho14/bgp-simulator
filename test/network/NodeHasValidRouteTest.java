@@ -75,7 +75,7 @@ public class NodeHasValidRouteTest extends NodeTest {
     @Test
     public void
     learn_FromSelectedNeighbourRouteWhichExtendsToRoute1EqualToSelected_DoesNotExport() throws Exception {
-        Route selectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        Route selectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(exportingNode));
         Route extendedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(exportingNode));
         setup(selectedRoute, learnedRoute.getAttribute(), extendedRoute.getAttribute());
         when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(
@@ -145,6 +145,21 @@ public class NodeHasValidRouteTest extends NodeTest {
         node.learn(outLink, learnedRoute);
 
         verify(mockNetwork, never()).export(any(), any());
+    }
+
+    @Test
+    public void
+    learn_FromSelectedNeighbourRouteWhichExtendsToInvalidAndOtherNeighbourHasValidRoute1DiffFromPrevious_ExportsRoute1()
+            throws Exception {
+        Route previouslySelected = new Route(destination, new DummyAttribute(2), new PathAttribute());
+        Route selectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        Route extendedRoute = Route.createInvalid(destination, attributeFactory);
+        setup(previouslySelected, learnedRoute.getAttribute(), extendedRoute.getAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(selectedRoute);
+
+        node.learn(outLink, learnedRoute);
+
+        verify(mockNetwork).export(inLink, selectedRoute);
     }
 
 }
