@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import policies.DummyAttribute;
 import policies.DummyAttributeFactory;
 import policies.DummyLabel;
 import protocols.DummyProtocol;
@@ -28,6 +29,7 @@ public class NodeTest {
     protected Node destination;
     protected Link outLink;
     protected Link inLink;
+    protected Route learnedRoute;
 
     @Before
     public void setUp() throws Exception {
@@ -42,6 +44,7 @@ public class NodeTest {
         node.addOutLink(outLink);
         inLink = new Link(exportingNode, node, new DummyLabel());
         node.addInLink(inLink);
+        learnedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
     }
 
     @After
