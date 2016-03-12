@@ -25,7 +25,7 @@ public class NodeHasNoValidRouteTest extends NodeTest {
             throws Exception {
         Route extendedRoute = new Route(destination, new DummyAttribute(), new PathAttribute(exportingNode));
         Route learnedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
-        when(stubProtocol.extend(outLink, learnedRoute.getAttribute())).thenReturn(extendedRoute.getAttribute());
+        when(stubProtocol.extend(any(), any())).thenReturn(extendedRoute.getAttribute());
         when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(
                 Route.createInvalid(destination, attributeFactory)
         );
@@ -39,7 +39,7 @@ public class NodeHasNoValidRouteTest extends NodeTest {
     public void
     learn_InvalidRouteFromAnyNeighbour_ExportsIsNotCalled() throws Exception {
         Route learnedRoute = Route.createInvalid(destination, attributeFactory);
-        when(stubProtocol.extend(outLink, attributeFactory.createInvalid())).thenReturn(learnedRoute.getAttribute());
+        when(stubProtocol.extend(any(), any())).thenReturn(attributeFactory.createInvalid());
         when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(
                 Route.createInvalid(destination, attributeFactory)
         );
