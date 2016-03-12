@@ -1,6 +1,8 @@
 package policies;
 
+import network.Attribute;
 import network.Label;
+import network.Link;
 
 public class DummyLabel implements Label {
 
@@ -14,4 +16,8 @@ public class DummyLabel implements Label {
         return 31;
     }
 
+    @Override
+    public Attribute extend(Link link, Attribute attribute) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -5,4 +5,7 @@ package network;
  */
 public interface Label {
     // TODO equals and hashcode must be implemented
+
+    Attribute extend(Link link, Attribute attribute);
+
 }

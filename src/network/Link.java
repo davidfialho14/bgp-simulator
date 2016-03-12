@@ -42,6 +42,15 @@ public class Link {
         return label;
     }
 
+    /**
+     * Extends the given attribute.
+     * @param attribute attribute to be extended.
+     * @return extended attribute.
+     */
+    public Attribute extend(Attribute attribute) {
+        return label.extend(this, attribute);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,6 +1,8 @@
 package implementations.policies.shortestpath;
 
+import network.Attribute;
 import network.Label;
+import network.Link;
 
 public class ShortestPathLabel implements Label {
 
@@ -8,6 +10,18 @@ public class ShortestPathLabel implements Label {
 
     public ShortestPathLabel(int length) {
         this.length = length;
+    }
+
+    /**
+     * It returns a ShortestPathAttribute with the length equal to the sum of the given attribute length and the
+     * label length.
+     * @param link link used to extend.
+     * @param attribute attribute to be extended.
+     * @return extended attribute.
+     */
+    @Override
+    public Attribute extend(Link link, Attribute attribute) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
