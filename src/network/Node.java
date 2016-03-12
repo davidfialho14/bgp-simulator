@@ -173,7 +173,7 @@ public class Node {
         routeTable.setPath(learnedRoute.getDestination(), link.getDestination(), path);
 
         if (previousSelectedAttribute == null ||
-                    !previousSelectedAttribute.equals(selectedAttribute) &&
+                    !previousSelectedAttribute.equals(selectedAttribute) ||
                             !previousSelectedPath.equals(selectedPath)) {
 
             for (Link inLink : inLinks) {
