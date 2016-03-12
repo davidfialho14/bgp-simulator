@@ -7,7 +7,7 @@ public class DummyProtocolFactory implements ProtocolFactory {
 
     @Override
     public Protocol createProtocol(int id) {
-        return null;
+        return new DummyProtocol();
     }
 
 }

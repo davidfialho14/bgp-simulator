@@ -25,8 +25,8 @@ class Factory {
     }
 
     /**
-     * Creates a node instance with an arbitrary id. The network and protocol are initialized with null.
-     * To be used when the id of node is not important and the network and protocol are not used.
+     * Creates a node instance with an arbitrary id. The network and stubProtocol are initialized with null.
+     * To be used when the id of node is not important and the network and stubProtocol are not used.
      * @return new node instance.
      */
     static Node createNode() {
@@ -34,8 +34,8 @@ class Factory {
     }
 
     /**
-     * Creates a node instance with the specified id. The network and protocol are initialized with null.
-     * To be used when the id of node is important and the network and protocol are not used.
+     * Creates a node instance with the specified id. The network and stubProtocol are initialized with null.
+     * To be used when the id of node is important and the network and stubProtocol are not used.
      * @return new node instance.
      */
     static Node createNode(int id) {
@@ -44,8 +44,8 @@ class Factory {
 
     /**
      * Creates n node instances with different ids. The returned nodes are ordered by id from the smaller id to the
-     * higher. The network and protocol are initialized with null. To be used when the ids of the nodes is important
-     * but the network and protocol are not used.
+     * higher. The network and stubProtocol are initialized with null. To be used when the ids of the nodes is important
+     * but the network and stubProtocol are not used.
      * @return array with n node instances.
      */
     static Node[] createNodes(int n) {
@@ -83,8 +83,8 @@ class Factory {
 
     /**
      * Creates n node instances with different random ids. The is no order in the returned nodes. The network and
-     * protocol are initialized with null. To be used when the ids of the nodes is important but the network and
-     * protocol are not used. This method only exists for clarity in the test code, it indicates explicitly that the
+     * stubProtocol are initialized with null. To be used when the ids of the nodes is important but the network and
+     * stubProtocol are not used. This method only exists for clarity in the test code, it indicates explicitly that the
      * nodes created are random.
      * @return array with n node instances.
      */

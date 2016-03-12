@@ -1,9 +1,7 @@
 package network;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Node {
 
@@ -14,10 +12,10 @@ public class Node {
     private List<Link> inLinks = new ArrayList<>();
 
     // fields used during simulation
-    private RouteTable routeTable;
-    private Protocol protocol;
-    private Attribute selectedAttribute;    // currently selected attribute
-    private PathAttribute selectedPath;     // currently selected path
+    RouteTable routeTable;
+    Protocol protocol;
+    Map<Node, Attribute> selectedAttributes;    // currently selected attribute
+    Map<Node, PathAttribute> selectedPaths;     // currently selected path
 
     /**
      * @param network   network who created the node.
@@ -61,6 +59,14 @@ public class Node {
         return inLinks;
     }
 
+    /**
+     * Returns a collection with all the out-neighbours of the node.
+     * @return collection with all the out-neighbours of the node.
+     */
+    public Collection<Node> getOutNeighbours() {
+        return outNeighbours;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,18 +87,37 @@ public class Node {
     }
 
     /**
-     * Resets the route table and exports the node's self route to all of its in-neighbours.
-     * This method must be called before simulating the network and should only be called by the network class.
+     * Resets the route table and the selected routes. This method must be called before simulating the network and 
+     * should only be called by the network class.
      */
-    void start() {
+    void startTable() {
         try {
             routeTable.clear();
         } catch (NullPointerException e) {
-            routeTable = new RouteTable(outNeighbours, network.attrFactory);
+            routeTable = new RouteTable(outNeighbours, network.getAttrFactory());
         }
 
+        try {
+            selectedAttributes.clear();
+        } catch (NullPointerException e) {
+            selectedAttributes = new HashMap<>();
+        }
+
+        try {
+            selectedPaths.clear();
+        } catch (NullPointerException e) {
+            selectedPaths = new HashMap<>();
+        }
+    }
+
+    /**
+     * Exports the node's self route to all of its in-neighbours. This method must be called before simulating the 
+     * network and should only be called by the network class.
+     */
+    void exportSelf() {
         for (Link inLink : inLinks) {
-            export(inLink, new Route(this, network.attrFactory.createSelf(this), new PathAttribute(this)));
+            network.export(inLink,
+                    new Route(this, network.getAttrFactory().createSelf(this), new PathAttribute(this)));
         }
     }
 
@@ -104,8 +129,8 @@ public class Node {
      */
     public void learn(Link link, Route learnedRoute) {
         // store previous attribute and path selections to check if the selected changed
-        Attribute previousSelectedAttribute = selectedAttribute;
-        Attribute previousSelectedPath = selectedPath;
+        Attribute previousSelectedAttribute = selectedAttributes.get(learnedRoute.getDestination());
+        PathAttribute previousSelectedPath = selectedPaths.get(learnedRoute.getDestination());
 
         Attribute attribute = protocol.extend(link, learnedRoute.getAttribute());
 
@@ -119,6 +144,9 @@ public class Node {
 
         Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
 
+        Attribute selectedAttribute = previousSelectedAttribute;
+        PathAttribute selectedPath = previousSelectedPath;
+
         if (path.contains(this)) {
             // there is a loop
             if (protocol.isOscillation(link, learnedRoute, attribute, path, exclRoute)) {
@@ -126,11 +154,11 @@ public class Node {
                 protocol.setParameters(link, learnedRoute, attribute, path, exclRoute);
             }
 
-            attribute = network.attrFactory.createInvalid();
+            attribute = network.getAttrFactory().createInvalid();
             path = PathAttribute.createInvalid();
         } else {
             // there is no loop
-            if (attribute.compareTo(exclRoute.getAttribute()) < 0) {
+            if (exclRoute == null || attribute.compareTo(exclRoute.getAttribute()) < 0) {
                 selectedAttribute = attribute;
                 selectedPath = path;
             } else {
@@ -139,27 +167,21 @@ public class Node {
             }
         }
 
+        selectedAttributes.put(learnedRoute.getDestination(), selectedAttribute);
+        selectedPaths.put(learnedRoute.getDestination(), selectedPath);
         routeTable.setAttribute(learnedRoute.getDestination(), link.getDestination(), attribute);
         routeTable.setPath(learnedRoute.getDestination(), link.getDestination(), path);
 
-        if (!previousSelectedAttribute.equals(selectedAttribute) &&
-                !previousSelectedPath.equals(selectedPath)) {
+        if (previousSelectedAttribute == null ||
+                    !previousSelectedAttribute.equals(selectedAttribute) &&
+                            !previousSelectedPath.equals(selectedPath)) {
 
             for (Link inLink : inLinks) {
                 // !! it must be exported a new instance (a copy) of Route
-                export(inLink, new Route(this, selectedAttribute, new PathAttribute(selectedPath)));
+                network.export(inLink,
+                        new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath)));
             }
         }
-    }
-
-    /**
-     * Exports a route through the given link. The route is put in the network's scheduler.
-     * @param link link to export the route to.
-     * @param route route to be exported.
-     */
-    private void export(Link link, Route route) {
-        // TODO - implement Node.export
-        throw new UnsupportedOperationException();
     }
 
     @Override
