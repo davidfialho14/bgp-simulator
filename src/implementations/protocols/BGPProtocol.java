@@ -6,20 +6,17 @@ public class BGPProtocol implements Protocol {
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        // TODO - implement BGPProtocol.extend
-        throw new UnsupportedOperationException();
+        return link.extend(attribute);
     }
 
     @Override
     public boolean isOscillation(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute) {
-        // TODO - implement BGPProtocol.isOscillation
-        throw new UnsupportedOperationException();
+        return false;
     }
 
     @Override
     public void setParameters(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute) {
-        // TODO - implement BGPProtocol.setParameters
-        throw new UnsupportedOperationException();
+        // ignore
     }
 
 }
