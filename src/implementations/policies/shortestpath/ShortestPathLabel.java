@@ -21,7 +21,12 @@ public class ShortestPathLabel implements Label {
      */
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        throw new UnsupportedOperationException();
+        if (attribute.isInvalid()) {
+            return new ShortestPathAttribute();
+        } else {
+            ShortestPathAttribute shortestPathAttribute = (ShortestPathAttribute) attribute;
+            return new ShortestPathAttribute(length + shortestPathAttribute.length);
+        }
     }
 
     @Override
