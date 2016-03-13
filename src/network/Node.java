@@ -67,6 +67,14 @@ public class Node {
         return outNeighbours;
     }
 
+    /**
+     * Returns the node's current route table.
+     * @return route table.
+     */
+    public RouteTable getRouteTable() {
+        return routeTable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -8,8 +8,7 @@ public class ShortestPathAttributeFactory implements AttributeFactory {
 
     @Override
     public Attribute createSelf(Node node) {
-        // TODO - implement ShortestPathAttributeFactory.createSelf
-        throw new UnsupportedOperationException();
+        return new ShortestPathAttribute(0);
     }
 
     @Override

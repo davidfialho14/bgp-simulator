@@ -44,4 +44,12 @@ public class ShortestPathAttribute implements Attribute {
         return length != null ? length.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        if (length == null) {
+            return "SP(•)";
+        } else {
+            return "SP(" + length + ')';
+        }
+    }
 }

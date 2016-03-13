@@ -43,6 +43,10 @@ public class Network {
 		return nodes.keySet();
 	}
 
+    public Collection<Node> getNodes() {
+        return nodes.values();
+    }
+
     /**
      * Creates a link between the node with id srcId and the node with id destId.
      * The link is also associated with the given label.
@@ -76,8 +80,16 @@ public class Network {
     }
 
     public void process() {
-        // TODO - implement Network.process
-        throw new UnsupportedOperationException();
+        for (Node node : nodes.values()) {
+            node.startTable();
+            node.exportSelf();
+        }
+
+        ExportedRoute exportedRoute;
+        while ((exportedRoute = scheduler.get()) != null) {
+            Node learningNode = exportedRoute.getLink().getSource();
+            learningNode.learn(exportedRoute.getLink(), exportedRoute.getRoute());
+        }
     }
 
     AttributeFactory getAttrFactory() {
@@ -90,8 +102,7 @@ public class Network {
      * @param route route to be exported.
      */
     void export(Link link, Route route) {
-        // TODO - implement Network.export
-        throw new UnsupportedOperationException();
+        scheduler.schedule(link, route);
     }
 
 }
