@@ -92,6 +92,21 @@ public class Network {
         }
     }
 
+    public void process(Node destination) {
+        for (Node node : nodes.values()) {
+            node.startTable();
+            if (node.equals(destination)) {
+                node.exportSelf();
+            }
+        }
+
+        ExportedRoute exportedRoute;
+        while ((exportedRoute = scheduler.get()) != null) {
+            Node learningNode = exportedRoute.getLink().getSource();
+            learningNode.learn(exportedRoute.getLink(), exportedRoute.getRoute());
+        }
+    }
+
     AttributeFactory getAttrFactory() {
         return attrFactory;
     }
