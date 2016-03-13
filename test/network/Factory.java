@@ -6,7 +6,7 @@ import protocols.DummyProtocolFactory;
  * Factory class to create instances necessary for abstract and interface classes necessary to build a network.
  * The created elements are guaranteed to be able to work together.
  */
-class Factory {
+public class Factory {
 
     /**
      * Creates a link between two nodes of a network with dummy label. It creates the nodes from the ids.
@@ -16,7 +16,7 @@ class Factory {
      * @param destId id of the destination node.
      * @return link instance.
      */
-    static Link createLink(Network network, int srcId, int destId) {
+    public static Link createLink(Network network, int srcId, int destId) {
         ProtocolFactory factory = new DummyProtocolFactory();
 
         // do not care about the link length
@@ -29,7 +29,7 @@ class Factory {
      * To be used when the id of node is not important and the network and stubProtocol are not used.
      * @return new node instance.
      */
-    static Node createNode() {
+    public static Node createNode() {
         return new Node(null, 0, null);
     }
 
@@ -38,7 +38,7 @@ class Factory {
      * To be used when the id of node is important and the network and stubProtocol are not used.
      * @return new node instance.
      */
-    static Node createNode(int id) {
+    public static Node createNode(int id) {
         return new Node(null, id, null);
     }
 
@@ -48,7 +48,7 @@ class Factory {
      * but the network and stubProtocol are not used.
      * @return array with n node instances.
      */
-    static Node[] createNodes(int n) {
+    public static Node[] createNodes(int n) {
         Node[] nodes = new Node[n];
         for (int i = 0; i < n; i++) {
             nodes[i] = new Node(null, i, null);
@@ -64,7 +64,7 @@ class Factory {
      * Creates nodes with random id. The ids will never repeat between calls.
      * @return new node instance.
      */
-    static Node createRandomNode() {
+    public static Node createRandomNode() {
         return new Node(null, nodeId++, null);
     }
 
@@ -72,7 +72,7 @@ class Factory {
      * Creates n nodes with random ids. The ids will never repeat between calls.
      * @return array with the created nodes.
      */
-    static Node[] createRandomNode(int n) {
+    public static Node[] createRandomNode(int n) {
         Node[] nodes = new Node[n];
         for (int i = 0; i < n; i++) {
             nodes[i] = new Node(null, nodeId++, null);
@@ -88,7 +88,7 @@ class Factory {
      * nodes created are random.
      * @return array with n node instances.
      */
-    static Node[] createRandomNodes(int n) {
+    public static Node[] createRandomNodes(int n) {
         return createNodes(n);
     }
 

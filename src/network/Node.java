@@ -136,8 +136,6 @@ public class Node {
      * @param learnedRoute exported route to be learned.
      */
     public void learn(Link link, Route learnedRoute) {
-        System.out.println(this + ": LEARNED " + learnedRoute + "from " + link.getDestination());
-
         // store previous attribute and path selections to check if the selected changed
         Attribute previousSelectedAttribute = selectedAttributes.get(learnedRoute.getDestination());
         PathAttribute previousSelectedPath = selectedPaths.get(learnedRoute.getDestination());
@@ -151,6 +149,8 @@ public class Node {
         } else {
             path = PathAttribute.createInvalid();
         }
+
+        System.out.println(this + ": LEARNED " + learnedRoute + "from " + link.getDestination());
 
         Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
 
