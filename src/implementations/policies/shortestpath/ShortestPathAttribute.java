@@ -13,6 +13,11 @@ public class ShortestPathAttribute implements Attribute {
     ShortestPathAttribute() {
     }
 
+    // TODO replace all calls to default constructor with the new createInvalid() method
+    static ShortestPathAttribute createInvalid() {
+        return new ShortestPathAttribute();
+    }
+
     public ShortestPathAttribute(int length) {
         this.length = length;
     }
