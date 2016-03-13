@@ -21,7 +21,7 @@ public class Node {
      * @param network   network who created the node.
 	 * @param id    id to assign to the node.
 	 */
-    protected Node(Network network, int id, Protocol protocol) {
+    public Node(Network network, int id, Protocol protocol) {
 		this.network = network;
 		this.id = id;
         this.protocol = protocol;
@@ -136,6 +136,8 @@ public class Node {
      * @param learnedRoute exported route to be learned.
      */
     public void learn(Link link, Route learnedRoute) {
+        System.out.println(this + ": LEARNED " + learnedRoute + "from " + link.getDestination());
+
         // store previous attribute and path selections to check if the selected changed
         Attribute previousSelectedAttribute = selectedAttributes.get(learnedRoute.getDestination());
         PathAttribute previousSelectedPath = selectedPaths.get(learnedRoute.getDestination());
@@ -175,6 +177,7 @@ public class Node {
             }
         }
 
+        System.out.println(this + ": SELECTED (" + selectedAttribute + ", " + selectedPath + ")");
         selectedAttributes.put(learnedRoute.getDestination(), selectedAttribute);
         selectedPaths.put(learnedRoute.getDestination(), selectedPath);
         routeTable.setAttribute(learnedRoute.getDestination(), link.getDestination(), attribute);
@@ -186,8 +189,11 @@ public class Node {
 
             for (Link inLink : inLinks) {
                 // !! it must be exported a new instance (a copy) of Route
-                network.export(inLink,
-                        new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath)));
+                Route exported =
+                        new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath));
+                network.export(inLink, exported);
+
+                System.out.println(this + ": EXPORTED " + exported + " to " + inLink.getSource());
             }
         }
     }
