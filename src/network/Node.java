@@ -154,9 +154,6 @@ public class Node {
 
         Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
 
-        Attribute selectedAttribute = previousSelectedAttribute;
-        PathAttribute selectedPath = previousSelectedPath;
-
         if (path.contains(this)) {
             // there is a loop
             if (protocol.isOscillation(link, learnedRoute, attribute, path, exclRoute)) {
@@ -166,15 +163,17 @@ public class Node {
 
             attribute = network.getAttrFactory().createInvalid();
             path = PathAttribute.createInvalid();
+        }
+
+        Attribute selectedAttribute;
+        PathAttribute selectedPath;
+
+        if (exclRoute == null || attribute.compareTo(exclRoute.getAttribute()) < 0) {
+            selectedAttribute = attribute;
+            selectedPath = path;
         } else {
-            // there is no loop
-            if (exclRoute == null || attribute.compareTo(exclRoute.getAttribute()) < 0) {
-                selectedAttribute = attribute;
-                selectedPath = path;
-            } else {
-                selectedAttribute = exclRoute.getAttribute();
-                selectedPath = exclRoute.getPath();
-            }
+            selectedAttribute = exclRoute.getAttribute();
+            selectedPath = exclRoute.getPath();
         }
 
         System.out.println(this + ": SELECTED (" + selectedAttribute + ", " + selectedPath + ")");

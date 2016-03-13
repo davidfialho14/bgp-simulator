@@ -163,4 +163,48 @@ public class NodeHasValidRouteTest extends NodeTest {
         verify(mockNetwork).export(any(), eq(selectedRoute));
     }
 
+    @Test
+    public void
+    learn_FromSelectedNeighbourRouteWithCycleAndOtherNeighbourHasValidRoute1_ExportsRoute1() throws Exception {
+        Route previouslySelected = new Route(destination, new DummyAttribute(1), new PathAttribute(destination));
+        Route exclSelectedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(destination));
+        Route extendedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        learnedRoute.getPath().add(node);   // put cycle in the learned route
+        setup(previouslySelected, learnedRoute.getAttribute(), extendedRoute.getAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exclSelectedRoute);
+
+        node.learn(outLink, learnedRoute);
+
+        verify(mockNetwork).export(any(), eq(exclSelectedRoute));
+    }
+
+    @Test
+    public void
+    learn_FromSelectedNeighbourRouteWithCycleAndOtherNeighbourHasInvalidRoute_ExportsInvalidRoute() throws Exception {
+        Route previouslySelected = new Route(destination, new DummyAttribute(1), new PathAttribute(destination));
+        Route exclSelectedRoute = Route.createInvalid(destination, attributeFactory);
+        Route extendedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        learnedRoute.getPath().add(node);   // put cycle in the learned route
+        setup(previouslySelected, learnedRoute.getAttribute(), extendedRoute.getAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exclSelectedRoute);
+
+        node.learn(outLink, learnedRoute);
+
+        verify(mockNetwork).export(any(), eq(Route.createInvalid(destination, attributeFactory)));
+    }
+
+    @Test
+    public void
+    learn_FromSelectedNeighbourRouteWithCycleAndThereIsNoOtherNeighbour_ExportsInvalidRoute() throws Exception {
+        Route previouslySelected = new Route(destination, new DummyAttribute(1), new PathAttribute(destination));
+        Route extendedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        learnedRoute.getPath().add(node);   // put cycle in the learned route
+        setup(previouslySelected, learnedRoute.getAttribute(), extendedRoute.getAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(null);
+
+        node.learn(outLink, learnedRoute);
+
+        verify(mockNetwork).export(any(), eq(Route.createInvalid(destination, attributeFactory)));
+    }
+
 }
