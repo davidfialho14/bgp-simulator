@@ -21,7 +21,7 @@ public class Node {
      * @param network   network who created the node.
 	 * @param id    id to assign to the node.
 	 */
-    protected Node(Network network, int id, Protocol protocol) {
+    public Node(Network network, int id, Protocol protocol) {
 		this.network = network;
 		this.id = id;
         this.protocol = protocol;
@@ -65,6 +65,14 @@ public class Node {
      */
     public Collection<Node> getOutNeighbours() {
         return outNeighbours;
+    }
+
+    /**
+     * Returns the node's current route table.
+     * @return route table.
+     */
+    public RouteTable getRouteTable() {
+        return routeTable;
     }
 
     @Override
@@ -142,10 +150,9 @@ public class Node {
             path = PathAttribute.createInvalid();
         }
 
-        Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
+        System.out.println(this + ": LEARNED " + learnedRoute + "from " + link.getDestination());
 
-        Attribute selectedAttribute = previousSelectedAttribute;
-        PathAttribute selectedPath = previousSelectedPath;
+        Route exclRoute = routeTable.getSelectedRoute(learnedRoute.getDestination(), link.getDestination());
 
         if (path.contains(this)) {
             // there is a loop
@@ -156,17 +163,20 @@ public class Node {
 
             attribute = network.getAttrFactory().createInvalid();
             path = PathAttribute.createInvalid();
-        } else {
-            // there is no loop
-            if (exclRoute == null || attribute.compareTo(exclRoute.getAttribute()) < 0) {
-                selectedAttribute = attribute;
-                selectedPath = path;
-            } else {
-                selectedAttribute = exclRoute.getAttribute();
-                selectedPath = exclRoute.getPath();
-            }
         }
 
+        Attribute selectedAttribute;
+        PathAttribute selectedPath;
+
+        if (exclRoute == null || attribute.compareTo(exclRoute.getAttribute()) < 0) {
+            selectedAttribute = attribute;
+            selectedPath = path;
+        } else {
+            selectedAttribute = exclRoute.getAttribute();
+            selectedPath = exclRoute.getPath();
+        }
+
+        System.out.println(this + ": SELECTED (" + selectedAttribute + ", " + selectedPath + ")");
         selectedAttributes.put(learnedRoute.getDestination(), selectedAttribute);
         selectedPaths.put(learnedRoute.getDestination(), selectedPath);
         routeTable.setAttribute(learnedRoute.getDestination(), link.getDestination(), attribute);
@@ -178,8 +188,11 @@ public class Node {
 
             for (Link inLink : inLinks) {
                 // !! it must be exported a new instance (a copy) of Route
-                network.export(inLink,
-                        new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath)));
+                Route exported =
+                        new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath));
+                network.export(inLink, exported);
+
+                System.out.println(this + ": EXPORTED " + exported + " to " + inLink.getSource());
             }
         }
     }

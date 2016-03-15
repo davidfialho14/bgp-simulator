@@ -13,6 +13,11 @@ public class ShortestPathAttribute implements Attribute {
     ShortestPathAttribute() {
     }
 
+    // TODO replace all calls to default constructor with the new createInvalid() method
+    static ShortestPathAttribute createInvalid() {
+        return new ShortestPathAttribute();
+    }
+
     public ShortestPathAttribute(int length) {
         this.length = length;
     }
@@ -24,6 +29,10 @@ public class ShortestPathAttribute implements Attribute {
 
     @Override
     public int compareTo(Attribute attribute) {
+        if (this.isInvalid() && attribute.isInvalid()) return 0;
+        else if (this.isInvalid() && !attribute.isInvalid()) return 1;
+        else if (!this.isInvalid() && attribute.isInvalid()) return -1;
+
         ShortestPathAttribute other = (ShortestPathAttribute) attribute;
         return this.length - other.length;
     }
@@ -44,4 +53,12 @@ public class ShortestPathAttribute implements Attribute {
         return length != null ? length.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        if (length == null) {
+            return "SP(•)";
+        } else {
+            return "SP(" + length + ')';
+        }
+    }
 }

@@ -1,8 +1,8 @@
 package network;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import dnl.utils.text.table.TextTable;
+
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -15,6 +15,7 @@ public class RouteTable {
      */
     private Map<Node, Map<Node, Route>> routes;
     private Collection<Node> neighbours;
+    private List<Node> destinations = new ArrayList<>();
     private AttributeFactory attributeFactory;  // used to create invalid routes
 
     /**
@@ -91,6 +92,8 @@ public class RouteTable {
             entry.getValue().put(destination,
                     new Route(destination, attributeFactory.createInvalid(), PathAttribute.createInvalid()));
         }
+
+        destinations.add(destination);
     }
 
     /**
@@ -144,6 +147,23 @@ public class RouteTable {
         }
 
         return preferredRoute;
+    }
+
+    public TextTable getPrintableTable() {
+        Object[] neighboursArray = neighbours.toArray();
+        String[] columns = new String[neighbours.size()];
+        for (int i = 0; i < neighbours.size(); i++) {
+            columns[i] = neighboursArray[i].toString();
+        }
+
+        Route[][] table = new Route[destinations.size()][neighbours.size()];
+        for (int i = 0; i < destinations.size(); i++) {
+            for (int j = 0; j < neighbours.size(); j++) {
+                table[i][j] = routes.get(neighboursArray[j]).get(destinations.get(i));
+            }
+        }
+
+        return new TextTable(columns, table);
     }
 
 }

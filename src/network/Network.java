@@ -10,15 +10,17 @@ public class Network {
 
     private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
 	private ProtocolFactory protocolFactory;            // factory for protocols to be used by the nodes
-    private AttributeFactory attrFactory;                       // Node class must be able to access this factory
+    private AttributeFactory attrFactory;               // Node class must be able to access this factory
+    private Scheduler scheduler;
 
     /**
 	 * Creates a new empty network.
 	 * @param protocolFactory factory used to create the protocols to be assigned to the nodes.
 	 */
-	public Network(ProtocolFactory protocolFactory, AttributeFactory attrFactory) {
+	public Network(ProtocolFactory protocolFactory, AttributeFactory attrFactory, Scheduler scheduler) {
 		this.protocolFactory = protocolFactory;
         this.attrFactory = attrFactory;
+        this.scheduler = scheduler;
 	}
 
 	/**
@@ -40,6 +42,10 @@ public class Network {
 	public Set<Integer> getIds() {
 		return nodes.keySet();
 	}
+
+    public Collection<Node> getNodes() {
+        return nodes.values();
+    }
 
     /**
      * Creates a link between the node with id srcId and the node with id destId.
@@ -73,6 +79,34 @@ public class Network {
                 .collect(Collectors.toList());
     }
 
+    public void process() {
+        for (Node node : nodes.values()) {
+            node.startTable();
+            node.exportSelf();
+        }
+
+        ExportedRoute exportedRoute;
+        while ((exportedRoute = scheduler.get()) != null) {
+            Node learningNode = exportedRoute.getLink().getSource();
+            learningNode.learn(exportedRoute.getLink(), exportedRoute.getRoute());
+        }
+    }
+
+    public void process(Node destination) {
+        for (Node node : nodes.values()) {
+            node.startTable();
+            if (node.equals(destination)) {
+                node.exportSelf();
+            }
+        }
+
+        ExportedRoute exportedRoute;
+        while ((exportedRoute = scheduler.get()) != null) {
+            Node learningNode = exportedRoute.getLink().getSource();
+            learningNode.learn(exportedRoute.getLink(), exportedRoute.getRoute());
+        }
+    }
+
     AttributeFactory getAttrFactory() {
         return attrFactory;
     }
@@ -83,8 +117,7 @@ public class Network {
      * @param route route to be exported.
      */
     void export(Link link, Route route) {
-        // TODO - implement Node.export
-        throw new UnsupportedOperationException();
+        scheduler.schedule(link, route);
     }
 
 }
