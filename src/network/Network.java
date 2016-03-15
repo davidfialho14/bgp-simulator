@@ -99,12 +99,12 @@ public class Network {
         processLoop();
     }
 
-    private ScheduledRoute scheduledRoute;  // current scheduled route during process
+    private ScheduledRoute currentScheduledRoute;  // current scheduled route during process
 
     private void processLoop() {
-        while ((scheduledRoute = scheduler.get()) != null) {
-            Node learningNode = scheduledRoute.getLink().getSource();
-            learningNode.learn(scheduledRoute.getLink(), scheduledRoute.getRoute());
+        while ((currentScheduledRoute = scheduler.get()) != null) {
+            Node learningNode = currentScheduledRoute.getLink().getSource();
+            learningNode.learn(currentScheduledRoute.getLink(), currentScheduledRoute.getRoute());
         }
     }
 
@@ -118,7 +118,15 @@ public class Network {
      * @param route route to be exported.
      */
     void export(Link link, Route route) {
-        scheduler.put(new ScheduledRoute(route, link, scheduledRoute.getTimestamp()));
+        long timestamp;
+        if (currentScheduledRoute == null) {
+            // exporting self route
+            timestamp = 0;
+        } else {
+            timestamp = currentScheduledRoute.getTimestamp();
+        }
+
+        scheduler.put(new ScheduledRoute(route, link, timestamp));
     }
 
 }
