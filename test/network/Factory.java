@@ -1,5 +1,7 @@
 package network;
 
+import policies.DummyAttribute;
+import policies.DummyLabel;
 import protocols.DummyProtocolFactory;
 
 /**
@@ -22,6 +24,16 @@ public class Factory {
         // do not care about the link length
         return new Link(new Node(network, srcId, factory.createProtocol(srcId)),
                 new Node(network, destId, factory.createProtocol(destId)), null);
+    }
+
+    /**
+     * Creates a link between two random nodes and associated with a dummy label. The nodes are initialized with
+     * a null network and protocol. The node's ids will never repeat between calls, which mean it will always
+     * create different links.
+     * @return link instance.
+     */
+    public static Link createRandomLink() {
+        return new Link(createRandomNode(), createRandomNode(), new DummyLabel());
     }
 
     /**
@@ -61,7 +73,7 @@ public class Factory {
     private static int nodeId = 0;
 
     /**
-     * Creates nodes with random id. The ids will never repeat between calls.
+     * Creates a node with random id. The ids will never repeat between calls.
      * @return new node instance.
      */
     public static Node createRandomNode() {
@@ -90,6 +102,28 @@ public class Factory {
      */
     public static Node[] createRandomNodes(int n) {
         return createNodes(n);
+    }
+
+    /**
+     * Creates a route with random destination. Initialized with a dummy attribute and empty path. The destination
+     * nodes created between calls never repeat, this means there will always be created different routes.
+     * @return new route instance.
+     */
+    public static Route createRandomRoute() {
+        return new Route(createRandomNode(), new DummyAttribute(), new PathAttribute());
+    }
+
+    /**
+     * Creates n routes instances with different random destination nodes.
+     * @return array with n node instances.
+     */
+    public static Route[] createRandomRoutes(int n) {
+        Route[] routes = new Route[n];
+        for (int i = 0; i < n; i++) {
+            routes[i] = new Route(createRandomNode(), new DummyAttribute(), new PathAttribute());
+        }
+
+        return routes;
     }
 
 }
