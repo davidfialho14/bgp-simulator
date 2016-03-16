@@ -187,12 +187,15 @@ public class Node {
                             !previousSelectedPath.equals(selectedPath)) {
 
             for (Link inLink : inLinks) {
-                // !! it must be exported a new instance (a copy) of Route
-                Route exported =
-                        new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath));
-                network.export(inLink, exported);
+                // export to all neighbours except the one from which the route was learned
+                if (!inLink.getSource().equals(link.getDestination())) {
+                    // !! it must be exported a new instance (a copy) of Route
+                    Route exported =
+                            new Route(learnedRoute.getDestination(), selectedAttribute, new PathAttribute(selectedPath));
+                    network.export(inLink, exported);
 
-                System.out.println(this + ": EXPORTED " + exported + " to " + inLink.getSource());
+                    System.out.println(this + ": EXPORTED " + exported + " to " + inLink.getSource());
+                }
             }
         }
     }
