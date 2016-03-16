@@ -8,4 +8,10 @@ public interface Attribute extends Comparable<Attribute> {
      */
     boolean isInvalid();
 
+    /**
+     * Creates an invalid attribute of the same type.
+     * @return invalid attribute of the same type.
+     */
+    Attribute createInvalid();
+
 }

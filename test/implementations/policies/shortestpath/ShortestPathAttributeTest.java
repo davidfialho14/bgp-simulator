@@ -11,15 +11,15 @@ public class ShortestPathAttributeTest {
 
     @Test
     public void compareTo_TwoInvalidAttributes_Equal() throws Exception {
-        ShortestPathAttribute attribute1 = ShortestPathAttribute.createInvalid();
-        ShortestPathAttribute attribute2 = ShortestPathAttribute.createInvalid();
+        ShortestPathAttribute attribute1 = ShortestPathAttribute.createInvalidShortestPath();
+        ShortestPathAttribute attribute2 = ShortestPathAttribute.createInvalidShortestPath();
 
         assertThat(attribute1.compareTo(attribute2), equalTo(0));
     }
 
     @Test
     public void compareTo_InvalidAttributeWithValidAttribute_Greater() throws Exception {
-        ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalid();
+        ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalidShortestPath();
         ShortestPathAttribute validAttribute = new ShortestPathAttribute(0);
 
         assertThat(invalidAttribute.compareTo(validAttribute), greaterThan(0));
@@ -28,7 +28,7 @@ public class ShortestPathAttributeTest {
     @Test
     public void compareTo_ValidAttributeWithInvalidAttribute_Lesser() throws Exception {
         ShortestPathAttribute validAttribute = new ShortestPathAttribute(0);
-        ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalid();
+        ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalidShortestPath();
 
         assertThat(validAttribute.compareTo(invalidAttribute), lessThan(0));
     }

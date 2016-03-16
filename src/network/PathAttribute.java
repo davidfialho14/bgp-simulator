@@ -48,7 +48,15 @@ public class PathAttribute implements Attribute {
      * Returns an invalid path instance.
      * @return invalid path instance.
      */
-    public static PathAttribute createInvalid() {
+    public static PathAttribute createInvalidPath() {
+        return INVALID;
+    }
+    /**
+     * Returns an invalid path instance.
+     * @return invalid path instance.
+     */
+    @Override
+    public PathAttribute createInvalid() {
         return INVALID;
     }
 
