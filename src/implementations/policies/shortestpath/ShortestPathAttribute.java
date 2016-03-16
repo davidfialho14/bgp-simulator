@@ -14,7 +14,12 @@ public class ShortestPathAttribute implements Attribute {
     }
 
     // TODO replace all calls to default constructor with the new createInvalid() method
-    static ShortestPathAttribute createInvalid() {
+    static ShortestPathAttribute createInvalidShortestPath() {
+        return new ShortestPathAttribute();
+    }
+
+    @Override
+    public Attribute createInvalid() {
         return new ShortestPathAttribute();
     }
 

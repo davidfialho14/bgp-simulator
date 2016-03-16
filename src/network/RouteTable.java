@@ -90,7 +90,7 @@ public class RouteTable {
         // add an invalid route for each neighbour
         for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
             entry.getValue().put(destination,
-                    new Route(destination, attributeFactory.createInvalid(), PathAttribute.createInvalid()));
+                    new Route(destination, attributeFactory.createInvalid(), PathAttribute.createInvalidPath()));
         }
 
         destinations.add(destination);

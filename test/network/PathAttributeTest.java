@@ -9,13 +9,13 @@ public class PathAttributeTest {
 
     @Test
     public void createInvalid_AlwaysReturnsTheSameInstance() throws Exception {
-        PathAttribute invalid = PathAttribute.createInvalid();
-        assert invalid == PathAttribute.createInvalid();
+        PathAttribute invalid = PathAttribute.createInvalidPath();
+        assert invalid == PathAttribute.createInvalidPath();
     }
 
     @Test
     public void createInvalid_ReturnsInvalidPathAttribute() throws Exception {
-        assertThat(PathAttribute.createInvalid().isInvalid(), is(true));
+        assertThat(PathAttribute.createInvalidPath().isInvalid(), is(true));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class PathAttributeTest {
 
     @Test
     public void contains_InvalidPath_ReturnsFalse() throws Exception {
-        PathAttribute invalidPath = PathAttribute.createInvalid();
+        PathAttribute invalidPath = PathAttribute.createInvalidPath();
         Node node = Factory.createRandomNode();
 
         assertThat(invalidPath.contains(node), is(false));
@@ -77,7 +77,7 @@ public class PathAttributeTest {
 
     @Test
     public void copyConstructor_InvalidPath_ConstructsInvalidPath() throws Exception {
-        PathAttribute invalidPath = PathAttribute.createInvalid();
+        PathAttribute invalidPath = PathAttribute.createInvalidPath();
 
         PathAttribute pathCopy = new PathAttribute(invalidPath);
 

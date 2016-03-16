@@ -24,10 +24,14 @@ public class DummyAttribute implements Attribute {
      * Creates invalid dummy attribute.
      * @return invalid dummy attribute.
      */
-    public static DummyAttribute createInvalid() {
+    public static DummyAttribute createInvalidDummy() {
         DummyAttribute dummy = new DummyAttribute();
         dummy.value = null;
         return dummy;
+    }
+
+    public DummyAttribute createInvalid() {
+        return createInvalidDummy();
     }
 
     @Override

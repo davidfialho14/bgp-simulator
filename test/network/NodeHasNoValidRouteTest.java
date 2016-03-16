@@ -16,7 +16,7 @@ public class NodeHasNoValidRouteTest extends NodeTest {
     public void setUp() throws Exception {
         super.setUp();
         node.selectedAttributes.put(destination, attributeFactory.createInvalid());
-        node.selectedPaths.put(destination, PathAttribute.createInvalid());
+        node.selectedPaths.put(destination, PathAttribute.createInvalidPath());
     }
 
     @Test

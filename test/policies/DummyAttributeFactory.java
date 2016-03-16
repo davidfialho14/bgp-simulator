@@ -13,7 +13,7 @@ public class DummyAttributeFactory implements AttributeFactory {
 
     @Override
     public Attribute createInvalid() {
-        return DummyAttribute.createInvalid();
+        return DummyAttribute.createInvalidDummy();
     }
 
 }

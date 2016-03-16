@@ -147,7 +147,7 @@ public class Node {
             path = learnedRoute.getPath();
             path.add(link.getDestination());    // add exporter to the path
         } else {
-            path = PathAttribute.createInvalid();
+            path = PathAttribute.createInvalidPath();
         }
 
         System.out.println(this + ": LEARNED " + learnedRoute + "from " + link.getDestination());
@@ -162,7 +162,7 @@ public class Node {
             }
 
             attribute = network.getAttrFactory().createInvalid();
-            path = PathAttribute.createInvalid();
+            path = PathAttribute.createInvalidPath();
         }
 
         Attribute selectedAttribute;

@@ -13,7 +13,7 @@ public class Route implements Comparable<Route> {
     }
 
     public static Route createInvalid(Node destination, AttributeFactory factory) {
-        return new Route(destination, factory.createInvalid(), PathAttribute.createInvalid());
+        return new Route(destination, factory.createInvalid(), PathAttribute.createInvalidPath());
     }
 
     /**
