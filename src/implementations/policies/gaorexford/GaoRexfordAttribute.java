@@ -41,13 +41,28 @@ public class GaoRexfordAttribute implements Attribute{
 
         GaoRexfordAttribute that = (GaoRexfordAttribute) o;
 
-        return type == that.type;
+        return type.equals(that.type);
 
     }
 
     @Override
     public int hashCode() {
         return type != null ? type.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+
+        switch (type) {
+            case CUSTOMER:
+                return "GR(c)";
+            case PEER:
+                return "GR(r)";
+            case PROVIDER:
+                return "GR(p)";
+        }
+
+        return "GR(•)";
     }
 
 }
