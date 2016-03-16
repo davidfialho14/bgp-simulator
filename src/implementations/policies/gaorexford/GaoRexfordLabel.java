@@ -23,4 +23,20 @@ public abstract class GaoRexfordLabel implements Label {
 
     abstract protected int getRowCode();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GaoRexfordLabel that = (GaoRexfordLabel) o;
+
+        return getRowCode() == that.getRowCode();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getRowCode();
+    }
+
 }

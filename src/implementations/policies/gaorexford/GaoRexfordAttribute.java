@@ -30,7 +30,8 @@ public class GaoRexfordAttribute implements Attribute{
 
     @Override
     public int compareTo(Attribute attribute) {
-        throw new UnsupportedOperationException();
+        GaoRexfordAttribute other = (GaoRexfordAttribute) attribute;
+        return this.type.compareTo(other.type);
     }
 
     @Override
