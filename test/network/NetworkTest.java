@@ -47,12 +47,23 @@ public class NetworkTest {
         network.addNode(0);
     }
 
+    /**
+     * Links two nodes with the given ids in the network object under test. The other link attributes are
+     * initialized to null.
+     * @param srdId id of the source node.
+     * @param destId id of the destination node.
+     * @throws NodeNotFoundException
+     */
+    private void linkNodes(int srdId, int destId) throws NodeNotFoundException {
+        network.link(srdId, destId, null);
+    }
+
     @Test
     public void link2ExistingNodes_NetworkContainsLinkBetweenThe2Nodes() throws Exception {
         network.addNode(0); network.addNode(1);
 
         Link[] expectedLinks = { Factory.createLink(network, 0, 1) };
-        network.link(0, 1, null);
+        linkNodes(0, 1);
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
     }
@@ -63,7 +74,7 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '0' does not exist");
-        network.link(0, 1, null);
+        linkNodes(0, 1);
     }
 
     @Test
@@ -72,16 +83,16 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '0' does not exist");
-        network.link(0, 1, null);
+        linkNodes(0, 1);
     }
 
     @Test
     public void linkSameNodesTwice_NetworkContainsBothLinks() throws Exception {
         network.addNode(0); network.addNode(1);
-        network.link(0, 1, null);  // first link
+        linkNodes(0, 1);  // first link
 
         Link[] expectedLinks = { Factory.createLink(network, 0, 1), Factory.createLink(network, 0, 1) };
-        network.link(0, 1, null);  // same link twice
+        linkNodes(0, 1);  // same link twice
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
     }
@@ -91,7 +102,7 @@ public class NetworkTest {
         network.addNode(0);
 
         Link[] expectedLinks = { Factory.createLink(network, 0, 0) };
-        network.link(0, 0, null);
+        linkNodes(0, 0);
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
     }

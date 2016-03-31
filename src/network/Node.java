@@ -1,7 +1,9 @@
 package network;
 
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class Node {
 
@@ -67,8 +69,7 @@ public class Node {
 
         Node node = (Node) o;
 
-        if (id != node.id) return false;
-        return network != null ? network.equals(node.network) : node.network == null;
+        return id == node.id && (network != null ? network.equals(node.network) : node.network == null);
 
     }
 
