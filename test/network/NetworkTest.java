@@ -6,10 +6,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import protocols.DummyProtocolFactory;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class NetworkTest {
 
@@ -20,7 +19,7 @@ public class NetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        network = new Network(new DummyProtocolFactory(), null, null);
+        network = new Network();
     }
 
     @Test

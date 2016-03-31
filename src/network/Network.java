@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Network {
 
@@ -64,4 +65,13 @@ public class Network {
         destinationNode.addInLink(link);
     }
 
+    /**
+     * Returns a list with all the links in the network.
+     * @return list with the links in the network.
+     */
+    public Collection<Link> getLinks() {
+        return nodes.values().stream()
+                .flatMap(node -> node.getInLinks().stream())
+                .collect(Collectors.toList());
+    }
 }
