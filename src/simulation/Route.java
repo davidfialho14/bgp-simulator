@@ -14,8 +14,24 @@ public class Route implements Comparable<Route> {
         this.path = path;
     }
 
+    /**
+     * Creates a new invalid route.
+     * @param destination destination of the route.
+     * @param factory attribute factory used to create a self attribute.
+     * @return new invalid Route instance.
+     */
     public static Route createInvalid(Node destination, AttributeFactory factory) {
         return new Route(destination, factory.createInvalid(), PathAttribute.createInvalidPath());
+    }
+
+    /**
+     * Creates a new self route for the given node.
+     * @param node node to create self route for.
+     * @param factory attribute factory used to create a self attribute to the given node.
+     * @return new self Route instance to the given node.
+     */
+    public static Route createSelf(Node node, AttributeFactory factory) {
+        return new Route(node, factory.createSelf(node), new PathAttribute(node));
     }
 
     /**
