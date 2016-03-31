@@ -63,12 +63,13 @@ public class SimulateEngine {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    Route select(Link link, Route learnedRoute, NodeStateInfo stateInfo) {
+    Route select(Link link, Route exportedRoute, Route learnedRoute, NodeStateInfo nodeStateInfo) {
         // TODO implement this method
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    void export(Link inLink, Route route) {
+    void export(Link inLink, Route route, ScheduledRoute prevScheduledRoute) {
+        // !! it must be exported a new instance (a copy) of Route
         // TODO implement this method
         throw new UnsupportedOperationException("not yet implemented");
     }
@@ -93,7 +94,7 @@ public class SimulateEngine {
     private void exportNodesSelfRoutes(Network network) {
         for (Node node : network.getNodes()) {
             for (Link inLink : node.getInLinks()) {
-                export(inLink, Route.createSelf(node, attributeFactory));
+                export(inLink, Route.createSelf(node, attributeFactory), null);
             }
         }
     }
