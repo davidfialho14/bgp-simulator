@@ -58,9 +58,25 @@ public class SimulateEngine {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    /**
+     * Learns a new exported route, returning the route after the attribute has been exported and included the
+     * out-neighbour in the path.
+     * @param link link through which the route was exported.
+     * @param route exported route.
+     * @return route after the attribute has been exported and included the out-neighbour in the path.
+     */
     Route learn(Link link, Route route) {
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+        Attribute attribute = protocol.extend(link, route.getAttribute());
+
+        PathAttribute path;
+        if (!attribute.isInvalid()) {
+            path = route.getPath();
+            path.add(link.getDestination());    // add exporter to the path
+        } else {
+            path = PathAttribute.createInvalidPath();
+        }
+
+        return new Route(route.getDestination(), attribute, path);
     }
 
     Route select(Link link, Route exportedRoute, Route learnedRoute, NodeStateInfo nodeStateInfo) {

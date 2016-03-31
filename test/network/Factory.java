@@ -83,6 +83,14 @@ public class Factory {
     }
 
     /**
+     * The same as the previous method but with the network being initialized to null.
+     */
+    public static Link createLink(int srcId, int destId) {
+        // do not care about the link length
+        return new Link(new Node(null, srcId), new Node(null, destId), null);
+    }
+
+    /**
      * Creates a link between two random nodes and associated with a dummy label. The nodes are initialized with
      * a null network and protocol. The node's ids will never repeat between calls, which mean it will always
      * create different links.
