@@ -24,7 +24,7 @@ public class RouteTableTest {
     public void
     setAttribute_Attr0ForTableWithNoNeighbours_GetAttributeReturnsNull() throws Exception {
         RouteTable table = createRouteTable();
-        Node neighbour = new Node(null, 1, null);
+        Node neighbour = Factory.createNode(1);
         Node destination = Factory.createRandomNode();
 
         table.setAttribute(destination, neighbour, new DummyAttribute());

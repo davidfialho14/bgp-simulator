@@ -44,16 +44,16 @@ public class PathAttributeTest {
 
     @Test
     public void compareTo_PathWithNode1ComparedPathWithNode1_Equal() throws Exception {
-        PathAttribute path1WithNode1 = new PathAttribute(new Node(null, 1, null));
-        PathAttribute path2WithNode1 = new PathAttribute(new Node(null, 1, null));
+        PathAttribute path1WithNode1 = new PathAttribute(Factory.createNode(1));
+        PathAttribute path2WithNode1 = new PathAttribute(Factory.createNode(1));
 
         assertThat(path1WithNode1.compareTo(path2WithNode1), equalTo(0));
     }
 
     @Test
     public void compareTo_PathWithNode1ComparedPathWithNode2_Equal() throws Exception {
-        PathAttribute pathWithNode1 = new PathAttribute(new Node(null, 1, null));
-        PathAttribute pathWithNode2 = new PathAttribute(new Node(null, 2, null));
+        PathAttribute pathWithNode1 = new PathAttribute(Factory.createNode(1));
+        PathAttribute pathWithNode2 = new PathAttribute(Factory.createNode(2));
 
         assertThat(pathWithNode1.compareTo(pathWithNode2), equalTo(0));
     }
@@ -62,7 +62,7 @@ public class PathAttributeTest {
     public void compareTo_PathWithTwoNodes1And2ComparedPathWithNode1_Greater() throws Exception {
         Node[] nodes = Factory.createNodes(2);
         PathAttribute pathWithTwoNodes1And2 = new PathAttribute(nodes);
-        PathAttribute pathWithNode1 = new PathAttribute(new Node(null, 1, null));
+        PathAttribute pathWithNode1 = new PathAttribute(Factory.createNode(1));
 
         assertThat(pathWithTwoNodes1And2.compareTo(pathWithNode1), greaterThan(0));
     }
