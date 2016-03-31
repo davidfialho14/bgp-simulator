@@ -3,24 +3,19 @@ package network;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Network {
 
     private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
-	private ProtocolFactory protocolFactory;            // factory for protocols to be used by the nodes
-    private AttributeFactory attrFactory;               // Node class must be able to access this factory
-    private Scheduler scheduler;
 
     /**
 	 * Creates a new empty network.
-	 * @param protocolFactory factory used to create the protocols to be assigned to the nodes.
 	 */
-	public Network(ProtocolFactory protocolFactory, AttributeFactory attrFactory, Scheduler scheduler) {
-		this.protocolFactory = protocolFactory;
-        this.attrFactory = attrFactory;
-        this.scheduler = scheduler;
+	public Network() {
 	}
 
 	/**
@@ -29,7 +24,7 @@ public class Network {
      * @throws NodeExistsException if a node with the given id already exists in the network.
      */
 	public void addNode(int id) throws NodeExistsException {
-        Node node = new Node(this, id, protocolFactory.createProtocol(id));
+        Node node = new Node(this, id);
 		if (nodes.putIfAbsent(id, node) != null) {
             throw new NodeExistsException(String.format("node with id '%d' already exists", id));
         }
@@ -67,66 +62,6 @@ public class Network {
         Link link = new Link(sourceNode, destinationNode, label);
         sourceNode.addOutLink(link);
         destinationNode.addInLink(link);
-    }
-
-    /**
-     * Returns a list with all the links in the network.
-     * @return list with the links in the network.
-     */
-    public Collection<Link> getLinks() {
-        return nodes.values().stream()
-                .flatMap(node -> node.getInLinks().stream())
-                .collect(Collectors.toList());
-    }
-
-    public void process() {
-        for (Node node : nodes.values()) {
-            node.startTable();
-            node.exportSelf();
-        }
-
-        processLoop();
-    }
-
-    public void process(Node destination) {
-        for (Node node : nodes.values()) {
-            node.startTable();
-            if (node.equals(destination)) {
-                node.exportSelf();
-            }
-        }
-
-        processLoop();
-    }
-
-    private ScheduledRoute currentScheduledRoute;  // current scheduled route during process
-
-    private void processLoop() {
-        while ((currentScheduledRoute = scheduler.get()) != null) {
-            Node learningNode = currentScheduledRoute.getLink().getSource();
-            learningNode.learn(currentScheduledRoute.getLink(), currentScheduledRoute.getRoute());
-        }
-    }
-
-    AttributeFactory getAttrFactory() {
-        return attrFactory;
-    }
-
-    /**
-     * Exports a route through the given link. The route is put in the network's scheduler.
-     * @param link link to export the route to.
-     * @param route route to be exported.
-     */
-    void export(Link link, Route route) {
-        long timestamp;
-        if (currentScheduledRoute == null) {
-            // exporting self route
-            timestamp = 0;
-        } else {
-            timestamp = currentScheduledRoute.getTimestamp();
-        }
-
-        scheduler.put(new ScheduledRoute(route, link, timestamp));
     }
 
 }
