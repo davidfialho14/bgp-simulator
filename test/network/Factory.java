@@ -2,6 +2,8 @@ package network;
 
 import policies.DummyAttribute;
 import policies.DummyLabel;
+import simulation.PathAttribute;
+import simulation.Route;
 
 /**
  * Factory class to create instances necessary for abstract and interface classes necessary to build a network.

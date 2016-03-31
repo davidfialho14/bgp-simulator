@@ -1,6 +1,6 @@
 package policies;
 
-import network.Attribute;
+import simulation.Attribute;
 
 public class DummyAttribute implements Attribute {
 

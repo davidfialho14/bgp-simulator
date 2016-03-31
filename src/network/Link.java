@@ -1,5 +1,8 @@
 package network;
 
+import simulation.Attribute;
+import simulation.Label;
+
 public class Link {
 
 	private Node source;
