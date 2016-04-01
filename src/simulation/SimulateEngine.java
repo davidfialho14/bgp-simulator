@@ -100,6 +100,11 @@ public class SimulateEngine {
         Route exclRoute = nodeStateInfo.getSelectedRoute(destination, exportingNeighbour);
 
         if (path.contains(learningNode)) {  // check for a loop in the path
+            if (protocol.isOscillation(link, exportedRoute, attribute, path, exclRoute)) {
+                // detected oscillation
+                protocol.setParameters(link, exportedRoute, attribute, path, exclRoute);
+            }
+
             // there is a loop
             learnedRoute = Route.createInvalid(destination, attributeFactory);
         }
