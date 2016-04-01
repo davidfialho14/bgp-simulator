@@ -11,13 +11,11 @@ import java.util.Map;
 class NodeStateInfo {
 
     private RouteTable table;
-    private Map<Node, Attribute> selectedAttributes;
-    private Map<Node, PathAttribute> selectedPaths;
+    private Map<Node, Attribute> selectedAttributes = new HashMap<>();
+    private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
 
     public NodeStateInfo(Node node, AttributeFactory attributeFactory) {
         this.table = new RouteTable(node.getOutNeighbours(), attributeFactory);
-        this.selectedAttributes = new HashMap<>();
-        this.selectedPaths = new HashMap<>();
     }
 
     public RouteTable getTable() {
@@ -42,8 +40,20 @@ class NodeStateInfo {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public Attribute getSelectedRoute(Node destination, Node ignoredNeighbour) {
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+    public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {
+        return table.getSelectedRoute(destination, ignoredNeighbour);
+    }
+
+    public void setSelectedAttribute(Node destination, Attribute attribute) {
+        selectedAttributes.put(destination, attribute);
+    }
+
+    public void setSelectedPath(Node destination, PathAttribute path) {
+        selectedPaths.put(destination, path);
+    }
+
+    public void updateRoute(Node destination, Node neighbour, Attribute attribute, PathAttribute path) {
+        table.setAttribute(destination, neighbour, attribute);
+        table.setPath(destination, neighbour, path);
     }
 }
