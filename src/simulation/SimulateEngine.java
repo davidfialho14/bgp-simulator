@@ -92,11 +92,17 @@ public class SimulateEngine {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
         Node exportingNeighbour = link.getDestination();
+        Node learningNode = link.getSource();
         Attribute attribute = learnedRoute.getAttribute();
         PathAttribute path = learnedRoute.getPath();
 
         // select the best route learned from all out-neighbours except the exporting neighbour
         Route exclRoute = nodeStateInfo.getSelectedRoute(destination, exportingNeighbour);
+
+        if (path.contains(learningNode)) {  // check for a loop in the path
+            // there is a loop
+            learnedRoute = Route.createInvalid(destination, attributeFactory);
+        }
 
         Route selectedRoute;
         if (exclRoute == null || learnedRoute.compareTo(exclRoute) < 0) {

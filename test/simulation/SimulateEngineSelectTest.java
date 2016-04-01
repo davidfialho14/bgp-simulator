@@ -23,9 +23,9 @@ public class SimulateEngineSelectTest {
 
     SimulateEngine engine;  // class under test
 
-    Node destination = Factory.createNode(0);
-    Node learningNode = Factory.createNode(1);
-    Node exportingNode = Factory.createNode(2);
+    Node destination = Factory.createRandomNode();
+    Node learningNode = Factory.createRandomNode();
+    Node exportingNode = Factory.createRandomNode();
     Link link = new Link(learningNode, exportingNode, new DummyLabel());
 
     @Mock
@@ -44,7 +44,7 @@ public class SimulateEngineSelectTest {
 
     @Test
     public void
-    select_BetweenLearnedInvalidRouteAndExclInvalidRoute_InvalidRoute() throws Exception {
+    select_BetweenLearnedInvalidRouteAndExclRouteInvalid_InvalidRoute() throws Exception {
         Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
         when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
@@ -63,7 +63,7 @@ public class SimulateEngineSelectTest {
 
     @Test
     public void
-    select_BetweenLearnedWithAttr0AndEmptyPathAndExclInvalidRoute_RouteWithAttr0AndEmptyPath() throws Exception {
+    select_BetweenLearnedWithAttr0AndEmptyPathAndExclRouteInvalid_RouteWithAttr0AndEmptyPath() throws Exception {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
         Route exlcRoute = Route.createInvalid(destination, new DummyAttributeFactory());
         when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
@@ -113,5 +113,61 @@ public class SimulateEngineSelectTest {
         when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
         assertThat(engine.select(nodeStateInfo, link, null, learnedRoute), is(learnedRoute));
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteInvalid_InvalidRoute()
+            throws Exception {
+        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
+
+        assertThat(engine.select(nodeStateInfo, link, null, learnedRoute), is(invalidRoute));
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteWithAttr0AndEmptyPath_RouteWithAttr0AndEmptyPath()
+            throws Exception {
+        Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
+        Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+
+        assertThat(engine.select(nodeStateInfo, link, null, learnedRoute), is(exlcRoute));
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteWithAttr0AndPathWith2_RouteWithAttr0AndPathWith2()
+            throws Exception {
+        Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
+        Node[] nodes = {destination, Factory.createRandomNode()};
+        Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(nodes));
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+
+        assertThat(engine.select(nodeStateInfo, link, null, learnedRoute), is(exlcRoute));
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr1AndPathWithLearningNodeAndExclRouteWithAttr0AndEmptyPath_RouteWithAttr0AndEmptyPath()
+            throws Exception {
+        Route learnedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(learningNode));
+        Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+
+        assertThat(engine.select(nodeStateInfo, link, null, learnedRoute), is(exlcRoute));
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteWithAttr1AndEmptyPath_RouteWithAttr1AndEmptyPath()
+            throws Exception {
+        Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
+        Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        when(stubRouteTable.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+
+        assertThat(engine.select(nodeStateInfo, link, null, learnedRoute), is(exlcRoute));
     }
 }
