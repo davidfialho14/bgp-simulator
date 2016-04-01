@@ -70,7 +70,7 @@ public class SimulateEngine {
 
         PathAttribute path;
         if (!attribute.isInvalid()) {
-            path = route.getPath();
+            path = route.getPath();  // FIXME copy the path!
             path.add(link.getDestination());    // add exporter to the path
         } else {
             path = PathAttribute.createInvalidPath();
@@ -79,9 +79,48 @@ public class SimulateEngine {
         return new Route(route.getDestination(), attribute, path);
     }
 
-    Route select(Link link, Route exportedRoute, Route learnedRoute, NodeStateInfo nodeStateInfo) {
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+    /**
+     * Selects the best route taking into account the new learned route. It also updates the route table while
+     * selecting the best route with the new learned route.
+     * @param nodeStateInfo state information of the node who learned the route.
+     * @param link link from which the route was learned.
+     * @param exportedRoute route when it was exported.
+     * @param learnedRoute route after being learned.
+     * @return route currently being selected by the learning node to reach the route's destination.
+     */
+    Route select(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute) {
+        // unpacking some variables to easier reading of the code
+        Node destination = learnedRoute.getDestination();
+        Node exportingNeighbour = link.getDestination();
+        Node learningNode = link.getSource();
+        Attribute attribute = learnedRoute.getAttribute();
+        PathAttribute path = learnedRoute.getPath();
+
+        // select the best route learned from all out-neighbours except the exporting neighbour
+        Route exclRoute = nodeStateInfo.getSelectedRoute(destination, exportingNeighbour);
+
+        if (path.contains(learningNode)) {  // check for a loop in the path
+            if (protocol.isOscillation(link, exportedRoute, attribute, path, exclRoute)) {
+                // detected oscillation
+                protocol.setParameters(link, exportedRoute, attribute, path, exclRoute);
+            }
+
+            // there is a loop
+            learnedRoute = Route.createInvalid(destination, attributeFactory);
+        }
+
+        Route selectedRoute;
+        if (exclRoute == null || learnedRoute.compareTo(exclRoute) < 0) {
+            selectedRoute = new Route(learnedRoute);
+        } else {
+            selectedRoute = new Route(exclRoute);
+        }
+
+        // update the node state information
+        nodeStateInfo.setSelected(destination, selectedRoute);
+        nodeStateInfo.updateRoute(destination, exportingNeighbour, attribute, path);
+
+        return selectedRoute;
     }
 
     void export(Link inLink, Route route, ScheduledRoute prevScheduledRoute) {
