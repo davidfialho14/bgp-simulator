@@ -15,6 +15,17 @@ public class Route implements Comparable<Route> {
     }
 
     /**
+     * Copy constructor. Only the path attribute is hard copied, the destination node and attribute are both
+     * only copied by reference.
+     * @param route route to be copied.
+     */
+    public Route(Route route) {
+        this.destination = route.destination;
+        this.attribute = route.attribute;
+        this.path = new PathAttribute(route.path);
+    }
+
+    /**
      * Creates a new invalid route.
      * @param destination destination of the route.
      * @param factory attribute factory used to create a self attribute.

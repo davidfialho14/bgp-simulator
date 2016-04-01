@@ -44,12 +44,9 @@ class NodeStateInfo {
         return table.getSelectedRoute(destination, ignoredNeighbour);
     }
 
-    public void setSelectedAttribute(Node destination, Attribute attribute) {
-        selectedAttributes.put(destination, attribute);
-    }
-
-    public void setSelectedPath(Node destination, PathAttribute path) {
-        selectedPaths.put(destination, path);
+    public void setSelected(Node destination, Route route) {
+        selectedAttributes.put(destination, route.getAttribute());
+        selectedPaths.put(destination, route.getPath());
     }
 
     public void updateRoute(Node destination, Node neighbour, Attribute attribute, PathAttribute path) {
