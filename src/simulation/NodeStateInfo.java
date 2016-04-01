@@ -41,4 +41,9 @@ class NodeStateInfo {
         // TODO implement this method
         throw new UnsupportedOperationException("not yet implemented");
     }
+
+    public Attribute getSelectedRoute(Node destination, Node ignoredNeighbour) {
+        // TODO implement this method
+        throw new UnsupportedOperationException("not yet implemented");
+    }
 }
