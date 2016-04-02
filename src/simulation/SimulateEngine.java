@@ -52,6 +52,21 @@ public class SimulateEngine {
         }
     }
 
+    /**
+     * Returns a map containing the nodes associated with their respective route tables. The route tables will only
+     * be filled after a simulation takes place.
+     * @return map containing the nodes associated with their respective route tables.
+     */
+    public Map<Node, RouteTable> getRouteTables() {
+        Map<Node, RouteTable> routeTables = new HashMap<>();
+
+        for (Map.Entry<Node, NodeStateInfo> entry : nodesStateInfo.entrySet()) {
+            routeTables.put(entry.getKey(), entry.getValue().getTable());
+        }
+
+        return routeTables;
+    }
+
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
