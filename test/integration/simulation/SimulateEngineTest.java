@@ -47,6 +47,14 @@ public class SimulateEngineTest {
         printTables();
     }
 
+    @Test(timeout = 5000)
+    public void simulate_Network2_Converges() throws Exception {
+        Network network2 = NetworkCreator.createNetwork2();
+        engine.simulate(network2, 0);
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork2ForDestination0(network2)));
+        printTables();
+    }
+
     @Test
     public void simulate_Network3_DoesNotConverge() throws Exception {
         Network network = NetworkCreator.createNetwork3();

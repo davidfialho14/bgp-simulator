@@ -54,7 +54,7 @@ public class NetworkCreator {
         /* node 0 route table
             --------------
            |   | 1        |
-           | --|----------|
+           |---|----------|
            | 1 | (1, [1]) |
             --------------
         */
@@ -91,7 +91,7 @@ public class NetworkCreator {
         /* node 0 route table
             ----------------------------
            |   | 1           | 2        |
-           | --|-------------|----------|
+           |---|-------------|----------|
            | 1 | (1, [1])    |  •       |
            | 2 | (2, [1, 2]) | (0, [2]) |
             ----------------------------
@@ -106,7 +106,7 @@ public class NetworkCreator {
         /* node 1 route table
             --------------
            |   | 2        |
-           | --|----------|
+           |---|----------|
            | 2 | (1, [2]) |
             --------------
          */
@@ -120,6 +120,55 @@ public class NetworkCreator {
             -
          */
         routeTable = createRouteTableForNode(network, 2);
+        expectedTables.put(network.getNode(2), routeTable);
+
+        return expectedTables;
+    }
+
+    static Network createNetwork2() throws NodeExistsException, NodeNotFoundException {
+        Network network = new Network();
+        network.addNode(0);
+        network.addNode(1);
+        network.addNode(2);
+        network.link(0, 1, new ShortestPathLabel(1));
+        network.link(1, 2, new ShortestPathLabel(1));
+        network.link(2, 0, new ShortestPathLabel(1));
+        return network;
+    }
+
+    static Map<Node, RouteTable> expectedRouteTableForNetwork2ForDestination0(Network network) {
+        Map<Node, RouteTable> expectedTables = new HashMap<>();
+        RouteTable routeTable;
+
+        /* node 0 route table
+            -------
+           |   | 1 |
+           |---|---|
+            -------
+        */
+        routeTable = createRouteTableForNode(network, 0);
+        expectedTables.put(network.getNode(0), routeTable);
+
+        /* node 1 route table
+            -----------------
+           |   | 2           |
+           |---|-------------|
+           | 0 | (2, [2, 0]) |
+            -----------------
+         */
+        routeTable = createRouteTableForNode(network, 1);
+        setRoute(routeTable, network, 0, 2, 2, new int[]{2, 0});
+        expectedTables.put(network.getNode(1), routeTable);
+
+        /* node 1 route table
+            --------------
+           |   | 0        |
+           |---|----------|
+           | 0 | (1, [0]) |
+            --------------
+         */
+        routeTable = createRouteTableForNode(network, 2);
+        setRoute(routeTable, network, 0, 0, 1, new int[]{0});
         expectedTables.put(network.getNode(2), routeTable);
 
         return expectedTables;
