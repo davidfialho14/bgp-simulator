@@ -45,6 +45,15 @@ public class Network {
     }
 
     /**
+     * Returns the node associated with the given id.
+     * @param id id of the node to get.
+     * @return node associated with the given id.
+     */
+    public Node getNode(int id) {
+        return nodes.get(id);
+    }
+
+    /**
      * Creates a link between the node with id srcId and the node with id destId.
      * The link is also associated with the given label.
      * @param srcId id of the source node.

@@ -44,13 +44,18 @@ public class SimulateEngine {
     public void simulate(Network network) {
         initNodesStateInfo(network);
         exportNodesSelfRoutes(network);
+        simulationLoop();
+    }
 
-        // simulation loop
-        ScheduledRoute scheduledRoute;
-        while ((scheduledRoute = scheduler.get()) != null) {
-            Node learningNode = scheduledRoute.getLink().getSource();
-            process(nodesStateInfo.get(learningNode), scheduledRoute);
-        }
+    /**
+     * Executes the simulation but just for one destination node. @see {@link SimulateEngine#simulate(Network)}
+     * @param network network being simulated.
+     * @param destinationId id of the destination node to simulate for.
+     */
+    public void simulate(Network network, int destinationId) {
+        initNodesStateInfo(network);
+        exportNodesSelfRoutes(network.getNode(destinationId));
+        simulationLoop();
     }
 
     /**
@@ -199,6 +204,17 @@ public class SimulateEngine {
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
 
     /**
+     * Executes the simulation loop for the given network.
+     */
+    private void simulationLoop() {
+        ScheduledRoute scheduledRoute;
+        while ((scheduledRoute = scheduler.get()) != null) {
+            Node learningNode = scheduledRoute.getLink().getSource();
+            process(nodesStateInfo.get(learningNode), scheduledRoute);
+        }
+    }
+
+    /**
      * Initializes the network's nodes state info with the default state information for each node.
      * @param network network being simulated.
      */
@@ -218,6 +234,16 @@ public class SimulateEngine {
             for (Link inLink : node.getInLinks()) {
                 export(inLink, Route.createSelf(node, attributeFactory), null);
             }
+        }
+    }
+
+    /**
+     * The destination node exports its self route to all of its in-neighbours.
+     * @param destination node to export self route.
+     */
+    private void exportNodesSelfRoutes(Node destination) {
+        for (Link inLink : destination.getInLinks()) {
+            export(inLink, Route.createSelf(destination, attributeFactory), null);
         }
     }
 }
