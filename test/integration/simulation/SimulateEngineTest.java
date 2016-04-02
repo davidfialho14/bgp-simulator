@@ -48,13 +48,6 @@ public class SimulateEngineTest {
     }
 
     @Test
-    public void simulate_Network2_Converges() throws Exception {
-        Network network = NetworkCreator.createNetwork2();
-        engine.simulate(network, 5);
-        printTables();
-    }
-
-    @Test
     public void simulate_Network3_DoesNotConverge() throws Exception {
         Network network = NetworkCreator.createNetwork3();
         engine.simulate(network, 0);

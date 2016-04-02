@@ -125,24 +125,6 @@ public class NetworkCreator {
         return expectedTables;
     }
 
-    static Network createNetwork2() throws NodeExistsException, NodeNotFoundException {
-        Network network = new Network();
-        network.addNode(0);
-        network.addNode(1);
-        network.addNode(2);
-        network.addNode(3);
-        network.addNode(4);
-        network.addNode(5);
-        network.link(0, 1, new ShortestPathLabel(1));
-        network.link(0, 2, new ShortestPathLabel(1));
-        network.link(1, 2, new ShortestPathLabel(1));
-        network.link(2, 3, new ShortestPathLabel(0));
-        network.link(2, 4, new ShortestPathLabel(-1));
-        network.link(3, 5, new ShortestPathLabel(0));
-        network.link(4, 5, new ShortestPathLabel(3));
-        return network;
-    }
-
     static Network createNetwork3() throws NodeExistsException, NodeNotFoundException {
         Network network = new Network();
         network.addNode(0);
