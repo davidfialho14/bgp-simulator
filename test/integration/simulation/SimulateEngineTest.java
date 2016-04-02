@@ -31,7 +31,7 @@ public class SimulateEngineTest {
         }
     }
 
-    @Test
+    @Test(timeout = 5000)
     public void simulate_Network0_Converges() throws Exception {
         Network network = NetworkCreator.createNetwork0();
         engine.simulate(network);
