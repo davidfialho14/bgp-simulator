@@ -15,6 +15,24 @@ public class NetworkCreator {
 
     private NetworkCreator() {} // should not be instantiated
 
+    private static RouteTable createRouteTableForNode(Network network, int nodeId) {
+        return new RouteTable(network.getNode(nodeId).getOutNeighbours(), new ShortestPathAttributeFactory());
+    }
+
+    private static void setRoute(RouteTable routeTable, Network network, int destId, int neighbourId,
+                                 int length, int[] path) {
+        routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId),
+                new ShortestPathAttribute(length));
+
+        // create array of nodes for the path
+        Node[] pathNodes = new Node[path.length];
+        for (int i = 0; i < pathNodes.length; i++) {
+            pathNodes[i] = new Node(network, path[i]);
+        }
+
+        routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), new PathAttribute(pathNodes));
+    }
+
     static Network createNetwork0() throws NodeExistsException, NodeNotFoundException {
         Network network = new Network();
         network.addNode(0);
@@ -25,16 +43,15 @@ public class NetworkCreator {
 
     static Map<Node, RouteTable> expectedRouteTableForNetwork0(Network network) {
         Map<Node, RouteTable> expectedTables = new HashMap<>();
+        RouteTable routeTable;
 
         // node 0 route table
-        RouteTable routeTable = new RouteTable(network.getNode(0).getOutNeighbours(),
-                new ShortestPathAttributeFactory());
-        routeTable.setAttribute(network.getNode(1), network.getNode(1), new ShortestPathAttribute(1));
-        routeTable.setPath(network.getNode(1), network.getNode(1), new PathAttribute(network.getNode(1)));
+        routeTable = createRouteTableForNode(network, 0);
+        setRoute(routeTable, network, 1, 1, 1, new int[]{1});
         expectedTables.put(network.getNode(0), routeTable);
 
         // node 1 route table
-        routeTable = new RouteTable(network.getNode(1).getOutNeighbours(), new ShortestPathAttributeFactory());
+        routeTable = createRouteTableForNode(network, 1);
         expectedTables.put(network.getNode(1), routeTable);
 
         return expectedTables;
