@@ -6,6 +6,7 @@ import network.Node;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Engine implements the hardcore simulation logic.
@@ -58,13 +59,11 @@ public class SimulateEngine {
      * @return map containing the nodes associated with their respective route tables.
      */
     public Map<Node, RouteTable> getRouteTables() {
-        Map<Node, RouteTable> routeTables = new HashMap<>();
-
-        for (Map.Entry<Node, NodeStateInfo> entry : nodesStateInfo.entrySet()) {
-            routeTables.put(entry.getKey(), entry.getValue().getTable());
-        }
-
-        return routeTables;
+        return nodesStateInfo.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getTable()
+                ));
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
