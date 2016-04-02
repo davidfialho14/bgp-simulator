@@ -123,10 +123,22 @@ public class SimulateEngine {
         return selectedRoute;
     }
 
-    void export(Link inLink, Route route, ScheduledRoute prevScheduledRoute) {
-        // !! it must be exported a new instance (a copy) of Route
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+    /**
+     * Exports a route through the given link. The route is put in the network's scheduler.
+     * @param link link to export the route to.
+     * @param route route to be exported.
+     * @param prevScheduledRoute scheduled route previously got from the scheduler.
+     */
+    void export(Link link, Route route, ScheduledRoute prevScheduledRoute) {
+        long timestamp;
+        if (prevScheduledRoute == null) {
+            // exporting self route
+            timestamp = 0;
+        } else {
+            timestamp = prevScheduledRoute.getTimestamp();
+        }
+
+        scheduler.put(new ScheduledRoute(route, link, timestamp));
     }
 
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
