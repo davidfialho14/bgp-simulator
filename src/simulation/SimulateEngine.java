@@ -27,7 +27,8 @@ public class SimulateEngine {
      * @param scheduler scheduler used to schedule exported routes.
      * @param eventHandler event handler called on any new event.
      */
-    public SimulateEngine(Protocol protocol, AttributeFactory attributeFactory, Scheduler scheduler, EventHandler eventHandler) {
+    public SimulateEngine(Protocol protocol, AttributeFactory attributeFactory, Scheduler scheduler,
+                          EventHandler eventHandler) {
         this.protocol = protocol;
         this.attributeFactory = attributeFactory;
         this.scheduler = scheduler;
@@ -47,15 +48,39 @@ public class SimulateEngine {
         ScheduledRoute scheduledRoute;
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
-            processScheduledRoute(scheduledRoute, nodesStateInfo.get(learningNode));
+            process(nodesStateInfo.get(learningNode), scheduledRoute);
         }
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
-    void processScheduledRoute(ScheduledRoute scheduledRoute, NodeStateInfo nodeStateInfo) {
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+    /**
+     * Processes a scheduled route by updating the state info of the learning node.
+     * @param nodeStateInfo state info of the learning node.
+     * @param scheduledRoute scheduled route to process.
+     */
+    void process(NodeStateInfo nodeStateInfo, ScheduledRoute scheduledRoute) {
+        // unpack the link, exported route, and destination node
+        Link link = scheduledRoute.getLink();
+        Route exportedRoute = scheduledRoute.getRoute();
+        Node destination = exportedRoute.getDestination();
+
+        Route learnedRoute = learn(link, exportedRoute);
+
+        // store the currently selected attribute and path
+        Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
+        PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
+
+        Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
+
+        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
+                    !prevSelectedPath.equals(selectedRoute.getPath())) {
+            /*
+                must export the new route to all of the learning node's in-links except to the node
+                from which the route was learned.
+             */
+            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination(), scheduledRoute);
+        }
     }
 
     /**
@@ -100,12 +125,13 @@ public class SimulateEngine {
         Route exclRoute = nodeStateInfo.getSelectedRoute(destination, exportingNeighbour);
 
         if (path.contains(learningNode)) {  // check for a loop in the path
+            // there is a loop
+
             if (protocol.isOscillation(link, exportedRoute, attribute, path, exclRoute)) {
                 // detected oscillation
                 protocol.setParameters(link, exportedRoute, attribute, path, exclRoute);
             }
 
-            // there is a loop
             learnedRoute = Route.createInvalid(destination, attributeFactory);
         }
 
@@ -121,6 +147,21 @@ public class SimulateEngine {
         nodeStateInfo.updateRoute(destination, exportingNeighbour, attribute, path);
 
         return selectedRoute;
+    }
+
+    /**
+     * Exports the given route to all of the in-neighbours of the exporting node except to node indicated as
+     * not to export.
+     * @param exportingNode node which is exporting the route.
+     * @param route route to be exported.
+     * @param nodeNotToExport node to which the route is not to be exported.
+     * @param prevScheduledRoute previously scheduled route.
+     */
+    void exportToInNeighbours(Node exportingNode, Route route, Node nodeNotToExport,
+                              ScheduledRoute prevScheduledRoute) {
+        exportingNode.getInLinks().stream()
+                .filter(inLink -> !inLink.getSource().equals(nodeNotToExport))  // exclude the nodeNotToExport
+                .forEach(inLink -> export(inLink, route, prevScheduledRoute));
     }
 
     /**

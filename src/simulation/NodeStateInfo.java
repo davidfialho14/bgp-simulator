@@ -30,14 +30,24 @@ class NodeStateInfo {
         return selectedPaths;
     }
 
+    /**
+     * Returns the currently selected attribute for the given destination. If the destination was not yet known it
+     * returns null.
+     * @param destination destination to get the attribute for.
+     * @return currently selected attribute or null if the destination was not known.
+     */
     public Attribute getSelectedAttribute(Node destination) {
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+        return selectedAttributes.get(destination);
     }
 
+    /**
+     * Returns the currently selected path for the given destination. If the destination was not yet known it
+     * returns null.
+     * @param destination destination to get the path for.
+     * @return currently selected path or null if the destination was not known.
+     */
     public PathAttribute getSelectedPath(Node destination) {
-        // TODO implement this method
-        throw new UnsupportedOperationException("not yet implemented");
+        return selectedPaths.get(destination);
     }
 
     public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {
