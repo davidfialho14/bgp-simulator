@@ -10,6 +10,9 @@ import simulation.implementations.schedulers.FIFOScheduler;
 
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 public class SimulateEngineTest {
 
     SimulateEngine engine;
@@ -32,7 +35,7 @@ public class SimulateEngineTest {
     public void simulate_Network0_Converges() throws Exception {
         Network network = NetworkCreator.createNetwork0();
         engine.simulate(network);
-        printTables();
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network)));
     }
 
     @Test

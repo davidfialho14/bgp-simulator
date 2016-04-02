@@ -167,4 +167,24 @@ public class RouteTable {
         return new TextTable(columns, table);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RouteTable that = (RouteTable) o;
+
+        if (routes != null ? !routes.equals(that.routes) : that.routes != null) return false;
+        if (neighbours != null ? !neighbours.equals(that.neighbours) : that.neighbours != null) return false;
+        return destinations != null ? destinations.equals(that.destinations) : that.destinations == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = routes != null ? routes.hashCode() : 0;
+        result = 31 * result + (neighbours != null ? neighbours.hashCode() : 0);
+        result = 31 * result + (destinations != null ? destinations.hashCode() : 0);
+        return result;
+    }
 }
