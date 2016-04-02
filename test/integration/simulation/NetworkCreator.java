@@ -20,9 +20,9 @@ public class NetworkCreator {
     }
 
     private static void setRoute(RouteTable routeTable, Network network, int destId, int neighbourId,
-                                 int length, int[] path) {
+                                 int cost, int[] path) {
         routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId),
-                new ShortestPathAttribute(length));
+                new ShortestPathAttribute(cost));
 
         // create array of nodes for the path
         Node[] pathNodes = new Node[path.length];
@@ -31,6 +31,12 @@ public class NetworkCreator {
         }
 
         routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), new PathAttribute(pathNodes));
+    }
+
+    private static void setInvalidRoute(RouteTable routeTable, Network network, int destId, int neighbourId) {
+        ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalidShortestPath();
+        routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId), invalidAttribute);
+        routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), PathAttribute.createInvalidPath());
     }
 
     static Network createNetwork0() throws NodeExistsException, NodeNotFoundException {
@@ -45,12 +51,22 @@ public class NetworkCreator {
         Map<Node, RouteTable> expectedTables = new HashMap<>();
         RouteTable routeTable;
 
-        // node 0 route table
+        /* node 0 route table
+            --------------
+           |   | 1        |
+           | --|----------|
+           | 1 | (1, [1]) |
+            --------------
+        */
         routeTable = createRouteTableForNode(network, 0);
         setRoute(routeTable, network, 1, 1, 1, new int[]{1});
         expectedTables.put(network.getNode(0), routeTable);
 
-        // node 1 route table
+        /* node 1 route table
+            -
+           | |
+            -
+         */
         routeTable = createRouteTableForNode(network, 1);
         expectedTables.put(network.getNode(1), routeTable);
 
@@ -66,6 +82,47 @@ public class NetworkCreator {
         network.link(1, 2, new ShortestPathLabel(1));
         network.link(0, 2, new ShortestPathLabel(0));
         return network;
+    }
+
+    static Map<Node, RouteTable> expectedRouteTableForNetwork1(Network network) {
+        Map<Node, RouteTable> expectedTables = new HashMap<>();
+        RouteTable routeTable;
+
+        /* node 0 route table
+            ----------------------------
+           |   | 1           | 2        |
+           | --|-------------|----------|
+           | 1 | (1, [1])    |  •       |
+           | 2 | (2, [1, 2]) | (0, [2]) |
+            ----------------------------
+        */
+        routeTable = createRouteTableForNode(network, 0);
+        setRoute(routeTable, network, 1, 1, 1, new int[]{1});
+        setInvalidRoute(routeTable, network, 1, 2);
+        setRoute(routeTable, network, 2, 1, 2, new int[]{1, 2});
+        setRoute(routeTable, network, 2, 2, 0, new int[]{2});
+        expectedTables.put(network.getNode(0), routeTable);
+
+        /* node 1 route table
+            --------------
+           |   | 2        |
+           | --|----------|
+           | 2 | (1, [2]) |
+            --------------
+         */
+        routeTable = createRouteTableForNode(network, 1);
+        setRoute(routeTable, network, 2, 2, 1, new int[]{2});
+        expectedTables.put(network.getNode(1), routeTable);
+
+        /* node 2 route table
+            -
+           | |
+            -
+         */
+        routeTable = createRouteTableForNode(network, 2);
+        expectedTables.put(network.getNode(2), routeTable);
+
+        return expectedTables;
     }
 
     static Network createNetwork2() throws NodeExistsException, NodeNotFoundException {

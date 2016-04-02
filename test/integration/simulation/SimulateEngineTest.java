@@ -33,15 +33,17 @@ public class SimulateEngineTest {
 
     @Test(timeout = 5000)
     public void simulate_Network0_Converges() throws Exception {
-        Network network = NetworkCreator.createNetwork0();
-        engine.simulate(network);
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network)));
+        Network network0 = NetworkCreator.createNetwork0();
+        engine.simulate(network0);
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network0)));
+        printTables();
     }
 
-    @Test
+    @Test(timeout = 5000)
     public void simulate_Network1_Converges() throws Exception {
-        Network network = NetworkCreator.createNetwork1();
-        engine.simulate(network);
+        Network network1 = NetworkCreator.createNetwork1();
+        engine.simulate(network1);
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork1(network1)));
         printTables();
     }
 
