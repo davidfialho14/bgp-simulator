@@ -1,7 +1,7 @@
 package protocols;
 
-import network.Protocol;
-import network.ProtocolFactory;
+import simulation.Protocol;
+import simulation.ProtocolFactory;
 
 public class DummyProtocolFactory implements ProtocolFactory {
 
