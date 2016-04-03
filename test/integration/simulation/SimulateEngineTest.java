@@ -11,6 +11,7 @@ import simulation.networks.Topology;
 import simulation.networks.shortestpath.Topology0;
 import simulation.networks.shortestpath.Topology1;
 import simulation.networks.shortestpath.Topology2;
+import simulation.networks.shortestpath.Topology4;
 
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class SimulateEngineTest {
     }
 
     @Test(timeout = 2000)
-    public void simulate_Network1_Converges() throws Exception {
+    public void simulate_Topology1_Converges() throws Exception {
         topology = new Topology1();
         engine.simulate(topology.getNetwork());
         printTables();
@@ -55,7 +56,7 @@ public class SimulateEngineTest {
     }
 
     @Test(timeout = 2000)
-    public void simulate_Network2_Converges() throws Exception {
+    public void simulate_Topology2_Converges() throws Exception {
         topology = new Topology2();
         engine.simulate(topology.getNetwork(), 0);
         printTables();
@@ -63,12 +64,12 @@ public class SimulateEngineTest {
         assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
     }
 
-//    @Test//(timeout = 2000)
-//    public void simulate_Network4_Converges() throws Exception {
-//        Network network4 = NetworkCreator.createNetwork4();
-//        engine.simulate(network4, 0);
-//        printTables();
-//
-//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork4ForDestination0(network4)));
-//    }
+    @Test//(timeout = 2000)
+    public void simulate_Topology4_Converges() throws Exception {
+        topology = new Topology4();
+        engine.simulate(topology.getNetwork(), 0);
+        printTables();
+
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
+    }
 }
