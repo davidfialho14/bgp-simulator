@@ -6,4 +6,9 @@ public class PeerLabel extends GaoRexfordLabel {
     protected int getRowCode() {
         return 1;
     }
+
+    @Override
+    public String toString() {
+        return "R";
+    }
 }
