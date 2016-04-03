@@ -11,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import policies.DummyAttribute;
 import policies.DummyAttributeFactory;
 import policies.DummyLabel;
+import simulation.implementations.handlers.DebugEventHandler;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -31,7 +32,7 @@ public class SimulateEngineProcessTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = spy(new SimulateEngine(null, null, null, null));
+        engine = spy(new SimulateEngine(null, null, null, new DebugEventHandler()));
         // stub out the learn method
         doReturn(Factory.createRandomRoute()).when(engine).learn(any(), any());
     }
