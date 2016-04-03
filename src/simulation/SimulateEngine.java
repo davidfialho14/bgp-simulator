@@ -89,6 +89,7 @@ public class SimulateEngine {
 
         if (learningNode.equals(destination)) {
             // discard the route
+            eventHandler.onDiscardRoute(link, exportedRoute);
             return;
         }
 

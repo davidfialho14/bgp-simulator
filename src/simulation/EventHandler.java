@@ -37,4 +37,8 @@ public abstract class EventHandler {
                               ScheduledRoute scheduledRoute) {
         // by default do nothing
     }
+
+    public void onDiscardRoute(Link link, Route route) {
+        // by default do nothing
+    }
 }
