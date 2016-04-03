@@ -4,6 +4,7 @@ import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
+import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
 import simulation.implementations.protocols.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
@@ -20,7 +21,7 @@ public class SimulateEngineTest {
     @Before
     public void setUp() throws Exception {
         engine = new SimulateEngine(new BGPProtocol(), new ShortestPathAttributeFactory(),
-                new FIFOScheduler(), null);
+                new FIFOScheduler(), new DebugEventHandler());
     }
 
     private void printTables() {
