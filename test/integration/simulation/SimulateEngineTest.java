@@ -2,16 +2,14 @@ package simulation;
 
 import network.Node;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
 import simulation.implementations.protocols.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
 import simulation.networks.Topology;
-import simulation.networks.shortestpath.Topology0;
-import simulation.networks.shortestpath.Topology1;
-import simulation.networks.shortestpath.Topology2;
-import simulation.networks.shortestpath.Topology4;
+import simulation.networks.shortestpath.*;
 
 import java.util.Map;
 
@@ -58,6 +56,16 @@ public class SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Topology2_Converges() throws Exception {
         topology = new Topology2();
+        engine.simulate(topology.getNetwork(), 0);
+        printTables();
+
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
+    }
+
+    @Test(timeout = 2000)
+    @Ignore
+    public void simulate_Topology3_DoesNotConverge() throws Exception {
+        topology = new Topology3();
         engine.simulate(topology.getNetwork(), 0);
         printTables();
 
