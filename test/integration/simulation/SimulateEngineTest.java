@@ -9,6 +9,8 @@ import simulation.implementations.protocols.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
 import simulation.networks.Topology;
 import simulation.networks.shortestpath.Topology0;
+import simulation.networks.shortestpath.Topology1;
+import simulation.networks.shortestpath.Topology2;
 
 import java.util.Map;
 
@@ -42,25 +44,25 @@ public class SimulateEngineTest {
 
         assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
     }
-//
-//    @Test(timeout = 2000)
-//    public void simulate_Network1_Converges() throws Exception {
-//        Network network1 = NetworkCreator.createNetwork1();
-//        engine.simulate(network1);
-//        printTables();
-//
-//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork1(network1)));
-//    }
-//
-//    @Test(timeout = 2000)
-//    public void simulate_Network2_Converges() throws Exception {
-//        Network network2 = NetworkCreator.createNetwork2();
-//        engine.simulate(network2, 0);
-//        printTables();
-//
-//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork2ForDestination0(network2)));
-//    }
-//
+
+    @Test(timeout = 2000)
+    public void simulate_Network1_Converges() throws Exception {
+        topology = new Topology1();
+        engine.simulate(topology.getNetwork());
+        printTables();
+
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+    }
+
+    @Test(timeout = 2000)
+    public void simulate_Network2_Converges() throws Exception {
+        topology = new Topology2();
+        engine.simulate(topology.getNetwork(), 0);
+        printTables();
+
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
+    }
+
 //    @Test//(timeout = 2000)
 //    public void simulate_Network4_Converges() throws Exception {
 //        Network network4 = NetworkCreator.createNetwork4();

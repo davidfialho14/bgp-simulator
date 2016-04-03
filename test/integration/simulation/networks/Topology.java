@@ -3,73 +3,23 @@ package simulation.networks;
 import network.Network;
 import network.Node;
 import simulation.RouteTable;
-import simulation.networks.shortestpath.ShortestPathRouteTablesGenerator;
 
 import java.util.Map;
 
 public abstract class Topology {
 
-    protected Network network;
-    protected ShortestPathRouteTablesGenerator routeTablesGenerator;
+    protected Network network = new Network();
 
-    abstract public Network getNetwork();
+    public Network getNetwork() {
+        return network;
+    }
 
-    abstract public Map<Node, RouteTable> getExpectedRouteTables();
+    public Map<Node, RouteTable> getExpectedRouteTables() {
+        return getExpectedRouteTables(null);
+    }
 
-//    /**
-//     * Creates the network1.
-//     *  digraph network1 {
-//     *      0 -> 1 -> 2 [label=1];
-//     *      0 -> 2 [label=0];
-//     *  }
-//     */
-//    private Network createNetwork1() throws NodeExistsException, NodeNotFoundException {
-//        Network network = new Network();
-//        network.addNode(0);
-//        network.addNode(1);
-//        network.addNode(2);
-//        network.link(0, 1, new ShortestPathLabel(1));
-//        network.link(1, 2, new ShortestPathLabel(1));
-//        network.link(0, 2, new ShortestPathLabel(0));
-//        return network;
-//    }
-//
-//    private Map<Node, RouteTable> expectedRouteTableForNetwork1(Network network) {
-//        Map<Node, RouteTable> expectedTables = new HashMap<>();
-//        RouteTable routeTable;
-//
-//        /* node 0 route table
-//            |   |     1     |    2   |
-//            |:-:|:---------:|:------:|
-//            | 1 |   1, [1]  |    •   |
-//            | 2 | 2, [1, 2] | 0, [2] |
-//        */
-//        routeTable = createRouteTableForNode(network, 0);
-//        setRoute(routeTable, network, 1, 1, 1, new int[]{1});
-//        setInvalidRoute(routeTable, network, 1, 2);
-//        setRoute(routeTable, network, 2, 1, 2, new int[]{1, 2});
-//        setRoute(routeTable, network, 2, 2, 0, new int[]{2});
-//        expectedTables.put(network.getNode(0), routeTable);
-//
-//        /* node 1 route table
-//            |   |    2   |
-//            |:-:|:------:|
-//            | 2 | 1, [2] |
-//         */
-//        routeTable = createRouteTableForNode(network, 1);
-//        setRoute(routeTable, network, 2, 2, 1, new int[]{2});
-//        expectedTables.put(network.getNode(1), routeTable);
-//
-//        /* node 2 route table
-//            |   |
-//            |:-:|
-//         */
-//        routeTable = createRouteTableForNode(network, 2);
-//        expectedTables.put(network.getNode(2), routeTable);
-//
-//        return expectedTables;
-//    }
-//
+    abstract public Map<Node, RouteTable> getExpectedRouteTables(Integer destId);
+
 //    /**
 //     * Creates the network2.
 //     *  digraph network2 {
