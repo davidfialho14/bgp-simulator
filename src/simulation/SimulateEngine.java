@@ -54,8 +54,10 @@ public class SimulateEngine {
      */
     public void simulate(Network network, int destinationId) {
         initNodesStateInfo(network);
+        eventHandler.onBeforeSimulate();
         exportNodesSelfRoutes(network.getNode(destinationId));
         simulationLoop();
+        eventHandler.onAfterSimulate();
     }
 
     /**
@@ -84,13 +86,19 @@ public class SimulateEngine {
         Route exportedRoute = scheduledRoute.getRoute();
         Node destination = exportedRoute.getDestination();
 
+        eventHandler.onBeforeLearn(link, exportedRoute);
         Route learnedRoute = learn(link, exportedRoute);
+        eventHandler.onAfterLearn(link, exportedRoute, learnedRoute);
 
         // store the currently selected attribute and path
         Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
         PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
 
+        eventHandler.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+                prevSelectedAttribute, prevSelectedPath);
         Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
+        eventHandler.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+                prevSelectedAttribute, prevSelectedPath, selectedRoute);
 
         if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
                     !prevSelectedPath.equals(selectedRoute.getPath())) {
@@ -190,6 +198,8 @@ public class SimulateEngine {
      * @param prevScheduledRoute scheduled route previously got from the scheduler.
      */
     void export(Link link, Route route, ScheduledRoute prevScheduledRoute) {
+        eventHandler.onBeforeExport(link, route, prevScheduledRoute);
+
         long timestamp;
         if (prevScheduledRoute == null) {
             // exporting self route
@@ -198,7 +208,10 @@ public class SimulateEngine {
             timestamp = prevScheduledRoute.getTimestamp();
         }
 
-        scheduler.put(new ScheduledRoute(route, link, timestamp));
+        ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timestamp);
+        scheduler.put(scheduledRoute);
+
+        eventHandler.onAfterExport(link, route, prevScheduledRoute, scheduledRoute);
     }
 
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
