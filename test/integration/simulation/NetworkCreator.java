@@ -39,6 +39,12 @@ public class NetworkCreator {
         routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), PathAttribute.createInvalidPath());
     }
 
+    /**
+     * Creates the network0.
+     *  digraph network1 {
+     *      0 -> 1 [label=1];
+     *  }
+     */
     static Network createNetwork0() throws NodeExistsException, NodeNotFoundException {
         Network network = new Network();
         network.addNode(0);
@@ -73,6 +79,13 @@ public class NetworkCreator {
         return expectedTables;
     }
 
+    /**
+     * Creates the network1.
+     *  digraph network1 {
+     *      0 -> 1 -> 2 [label=1];
+     *      0 -> 2 [label=0];
+     *  }
+     */
     static Network createNetwork1() throws NodeExistsException, NodeNotFoundException {
         Network network = new Network();
         network.addNode(0);
@@ -89,12 +102,10 @@ public class NetworkCreator {
         RouteTable routeTable;
 
         /* node 0 route table
-            ----------------------------
-           |   | 1           | 2        |
-           |---|-------------|----------|
-           | 1 | (1, [1])    |  •       |
-           | 2 | (2, [1, 2]) | (0, [2]) |
-            ----------------------------
+            |   |     1     |    2   |
+            |:-:|:---------:|:------:|
+            | 1 |   1, [1]  |    •   |
+            | 2 | 2, [1, 2] | 0, [2] |
         */
         routeTable = createRouteTableForNode(network, 0);
         setRoute(routeTable, network, 1, 1, 1, new int[]{1});
@@ -104,20 +115,17 @@ public class NetworkCreator {
         expectedTables.put(network.getNode(0), routeTable);
 
         /* node 1 route table
-            --------------
-           |   | 2        |
-           |---|----------|
-           | 2 | (1, [2]) |
-            --------------
+            |   |    2   |
+            |:-:|:------:|
+            | 2 | 1, [2] |
          */
         routeTable = createRouteTableForNode(network, 1);
         setRoute(routeTable, network, 2, 2, 1, new int[]{2});
         expectedTables.put(network.getNode(1), routeTable);
 
         /* node 2 route table
-            -
-           | |
-            -
+            |   |
+            |:-:|
          */
         routeTable = createRouteTableForNode(network, 2);
         expectedTables.put(network.getNode(2), routeTable);
@@ -125,6 +133,13 @@ public class NetworkCreator {
         return expectedTables;
     }
 
+    /**
+     * Creates the network2.
+     *  digraph network2 {
+     *      0 -> 1 -> 2 [label=1];
+     *      2 -> 0 [label=1];
+     *  }
+     */
     static Network createNetwork2() throws NodeExistsException, NodeNotFoundException {
         Network network = new Network();
         network.addNode(0);
@@ -141,31 +156,25 @@ public class NetworkCreator {
         RouteTable routeTable;
 
         /* node 0 route table
-            -------
-           |   | 1 |
-           |---|---|
-            -------
+            |   |
+            |:-:|
         */
         routeTable = createRouteTableForNode(network, 0);
         expectedTables.put(network.getNode(0), routeTable);
 
         /* node 1 route table
-            -----------------
-           |   | 2           |
-           |---|-------------|
-           | 0 | (2, [2, 0]) |
-            -----------------
+            |   |     2     |
+            |:-:|:---------:|
+            | 0 | 2, [2, 0] |
          */
         routeTable = createRouteTableForNode(network, 1);
         setRoute(routeTable, network, 0, 2, 2, new int[]{2, 0});
         expectedTables.put(network.getNode(1), routeTable);
 
         /* node 1 route table
-            --------------
-           |   | 0        |
-           |---|----------|
-           | 0 | (1, [0]) |
-            --------------
+            |   |    0   |
+            |:-:|:------:|
+            | 0 | 1, [0] |
          */
         routeTable = createRouteTableForNode(network, 2);
         setRoute(routeTable, network, 0, 0, 1, new int[]{0});
@@ -174,6 +183,17 @@ public class NetworkCreator {
         return expectedTables;
     }
 
+    /**
+     * Creates the network1.
+     *  digraph network3 {
+     *      1 -> 0 [label=0];
+     *      2 -> 0 [label=0];
+     *      3 -> 0 [label=0];
+     *      1 -> 2 [label=-1];
+     *      2 -> 3 [label=1];
+     *      3 -> 1 [label=-2];
+     *  }
+     */
     static Network createNetwork3() throws NodeExistsException, NodeNotFoundException {
         Network network = new Network();
         network.addNode(0);
