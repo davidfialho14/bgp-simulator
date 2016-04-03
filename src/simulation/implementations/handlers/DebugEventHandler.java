@@ -17,28 +17,28 @@ public class DebugEventHandler extends EventHandler {
         System.out.println("AFTER SIMULATE");
     }
 
-    @Override
-    public void onBeforeLearn(Link link, Route exportedRoute) {
-        super.onBeforeLearn(link, exportedRoute);
-
-        System.out.println("BEFORE LEARN:\t" + link + "\t|\t" + exportedRoute);
-    }
+//    @Override
+//    public void onBeforeLearn(Link link, Route exportedRoute) {
+//        super.onBeforeLearn(link, exportedRoute);
+//
+//        System.out.println("BEFORE LEARN:\t" + link + "\t|\t" + exportedRoute);
+//    }
 
     @Override
     public void onAfterLearn(Link link, Route exportedRoute, Route learnedRoute) {
         super.onAfterLearn(link, exportedRoute, learnedRoute);
 
-        System.out.println("AFTER LEARN:\t" + link + "\t|\t" + exportedRoute + "\t|\t" + learnedRoute);
+        System.out.println("LEARN:\t" + link + "\t|\t" + exportedRoute + "\t|\t" + learnedRoute);
     }
 
-    @Override
-    public void onBeforeSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
-                               Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
-        super.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute, prevSelectedAttribute, prevSelectedPath);
-
-        System.out.println("BEFORE SELECT:\t" + link + "\t|\t" + exportedRoute + "\t|\t" + learnedRoute + "\t|\t"
-                + prevSelectedAttribute + "\t|\t" + prevSelectedPath);
-    }
+//    @Override
+//    public void onBeforeSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+//                               Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
+//        super.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute, prevSelectedAttribute, prevSelectedPath);
+//
+//        System.out.println("BEFORE SELECT:\t" + link + "\t|\t" + exportedRoute + "\t|\t" + learnedRoute + "\t|\t"
+//                + prevSelectedAttribute + "\t|\t" + prevSelectedPath);
+//    }
 
     @Override
     public void onAfterSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
@@ -46,7 +46,7 @@ public class DebugEventHandler extends EventHandler {
         super.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
                 prevSelectedAttribute, prevSelectedPath, selectedRoute);
 
-        System.out.println("AFTER SELECT:\t" + link + "\t|\t" + exportedRoute + "\t|\t" + learnedRoute  + "\t|\t"
+        System.out.println("SELECT:\t" + link + "\t|\t" + exportedRoute + "\t|\t" + learnedRoute  + "\t|\t"
                 + prevSelectedAttribute + "\t|\t" + prevSelectedPath + "\t|\t" + selectedRoute);
     }
 
@@ -55,7 +55,7 @@ public class DebugEventHandler extends EventHandler {
                               ScheduledRoute scheduledRoute) {
         super.onAfterExport(link, route, prevScheduledRoute, scheduledRoute);
 
-        System.out.println("EXPORT:\t\t\t" + link + "\t|\t" + route);
+        System.out.println("EXPORT:\t" + link + "\t|\t" + route);
     }
 
     @Override

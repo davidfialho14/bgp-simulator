@@ -37,24 +37,27 @@ public class SimulateEngineTest {
     public void simulate_Network0_Converges() throws Exception {
         Network network0 = NetworkCreator.createNetwork0();
         engine.simulate(network0);
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network0)));
         printTables();
+
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network0)));
     }
 
     @Test(timeout = 2000)
     public void simulate_Network1_Converges() throws Exception {
         Network network1 = NetworkCreator.createNetwork1();
         engine.simulate(network1);
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork1(network1)));
         printTables();
+
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork1(network1)));
     }
 
     @Test(timeout = 2000)
     public void simulate_Network2_Converges() throws Exception {
         Network network2 = NetworkCreator.createNetwork2();
         engine.simulate(network2, 0);
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork2ForDestination0(network2)));
         printTables();
+
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork2ForDestination0(network2)));
     }
 
     @Test(timeout = 2000)
@@ -63,5 +66,14 @@ public class SimulateEngineTest {
         Network network = NetworkCreator.createNetwork3();
         engine.simulate(network, 0);
         printTables();
+    }
+
+    @Test//(timeout = 2000)
+    public void simulate_Network4_Converges() throws Exception {
+        Network network4 = NetworkCreator.createNetwork4();
+        engine.simulate(network4, 0);
+        printTables();
+
+        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork4ForDestination0(network4)));
     }
 }
