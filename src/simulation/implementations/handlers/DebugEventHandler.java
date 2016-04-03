@@ -57,4 +57,11 @@ public class DebugEventHandler extends EventHandler {
 
         System.out.println("EXPORT:\t\t\t" + link + "\t|\t" + route);
     }
+
+    @Override
+    public void onDiscardRoute(Link link, Route route) {
+        super.onDiscardRoute(link, route);
+
+        System.out.println("DISCARDED:\t" + link + "\t|\t" + route);
+    }
 }
