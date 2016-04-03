@@ -15,6 +15,8 @@ import policies.DummyLabel;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -166,5 +168,35 @@ public class SimulateEngineSelectTest {
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
         assertThat(engine.select(stubNodeStateInfo, link, null, learnedRoute), is(exlcRoute));
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteIsValid_TableUpdatedWithInvalidRoute()
+            throws Exception {
+        Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
+        Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        Attribute invalidAttribute = DummyAttribute.createInvalidDummy();
+        PathAttribute invalidPath = PathAttribute.createInvalidPath();
+
+        engine.select(stubNodeStateInfo, link, null, learnedRoute);
+
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalidAttribute, invalidPath);
+    }
+
+    @Test
+    public void
+    select_BetweenLearnedWithAttr0AndExclRouteWithAttr1BothWithEmptyPaths_TableUpdatedWithRouteWithAttr0AndEmptyPath()
+            throws Exception {
+        Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
+        Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        Attribute expectedAttribute = new DummyAttribute(0);
+        PathAttribute expectedPath = new PathAttribute();
+
+        engine.select(stubNodeStateInfo, link, null, learnedRoute);
+
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, expectedAttribute, expectedPath);
     }
 }
