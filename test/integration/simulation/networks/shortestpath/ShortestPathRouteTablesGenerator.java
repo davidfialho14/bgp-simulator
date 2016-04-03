@@ -1,7 +1,6 @@
 package simulation.networks.shortestpath;
 
 import network.Network;
-import network.Node;
 import simulation.PathAttribute;
 import simulation.RouteTable;
 import simulation.implementations.policies.shortestpath.ShortestPathAttribute;
@@ -10,10 +9,8 @@ import simulation.networks.RouteTablesGenerator;
 
 public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {
 
-    private Integer onlyValidDestId = null;
-
     public ShortestPathRouteTablesGenerator(Network network, Integer onlyValidDestId) {
-        super(network, new ShortestPathAttributeFactory());
+        super(network, onlyValidDestId, new ShortestPathAttributeFactory());
         this.onlyValidDestId = onlyValidDestId;
     }
 
@@ -28,19 +25,12 @@ public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {
      */
     public void setRoute(int nodeId, int destId, int neighbourId, int length, int[] path) {
         if (isValidDestination(destId)) {    // set route only for valid destination node
-
             RouteTable routeTable = routeTables.get(network.getNode(nodeId));
 
             routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId),
                     new ShortestPathAttribute(length));
-
-            // create array of nodes for the path
-            Node[] pathNodes = new Node[path.length];
-            for (int i = 0; i < pathNodes.length; i++) {
-                pathNodes[i] = new Node(network, path[i]);
-            }
-
-            routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), new PathAttribute(pathNodes));
+            routeTable.setPath(network.getNode(destId), network.getNode(neighbourId),
+                    new PathAttribute(pathNodes(path)));
         }
     }
 
@@ -60,9 +50,5 @@ public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {
             routeTable.setPath(network.getNode(destId), network.getNode(neighbourId),
                     PathAttribute.createInvalidPath());
         }
-    }
-
-    private boolean isValidDestination(int destId) {
-        return onlyValidDestId == null || destId == onlyValidDestId;
     }
 }

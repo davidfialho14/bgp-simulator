@@ -1,7 +1,6 @@
 package simulation.networks.gaorexford;
 
 import network.Network;
-import network.Node;
 import simulation.PathAttribute;
 import simulation.RouteTable;
 import simulation.implementations.policies.gaorexford.GaoRexfordAttribute;
@@ -10,11 +9,8 @@ import simulation.networks.RouteTablesGenerator;
 
 public class GaoRexfordRouteTablesGenerator extends RouteTablesGenerator {
 
-    private Integer onlyValidDestId = null;
-
     public GaoRexfordRouteTablesGenerator(Network network, Integer onlyValidDestId) {
-        super(network, new GaoRexfordAttributeFactory());
-        this.onlyValidDestId = onlyValidDestId;
+        super(network, onlyValidDestId, new GaoRexfordAttributeFactory());
     }
 
     /**
@@ -28,23 +24,12 @@ public class GaoRexfordRouteTablesGenerator extends RouteTablesGenerator {
      */
     public void setRoute(int nodeId, int destId, int neighbourId, GaoRexfordAttribute.Type type, int[] path) {
         if (isValidDestination(destId)) {    // set route only for valid destination node
-
             RouteTable routeTable = routeTables.get(network.getNode(nodeId));
 
             routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId),
                     new GaoRexfordAttribute(type));
-
-            // create array of nodes for the path
-            Node[] pathNodes = new Node[path.length];
-            for (int i = 0; i < pathNodes.length; i++) {
-                pathNodes[i] = new Node(network, path[i]);
-            }
-
-            routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), new PathAttribute(pathNodes));
+            routeTable.setPath(network.getNode(destId), network.getNode(neighbourId),
+                    new PathAttribute(pathNodes(path)));
         }
-    }
-
-    private boolean isValidDestination(int destId) {
-        return onlyValidDestId == null || destId == onlyValidDestId;
     }
 }
