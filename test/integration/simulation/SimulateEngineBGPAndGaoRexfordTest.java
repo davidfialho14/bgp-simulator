@@ -10,12 +10,18 @@ import simulation.implementations.policies.gaorexford.GaoRexfordAttributeFactory
 import simulation.implementations.policies.gaorexford.ProviderLabel;
 import simulation.implementations.protocols.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
+import simulation.networks.Topology;
+import simulation.networks.gaorexford.Topology0;
 
 import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class SimulateEngineBGPAndGaoRexfordTest {
 
     SimulateEngine engine;
+    Topology topology;
 
     @Before
     public void setUp() throws Exception {
@@ -33,16 +39,11 @@ public class SimulateEngineBGPAndGaoRexfordTest {
 
     @Test(timeout = 2000)
     public void simulate_Network0_Converges() throws Exception {
-        Network network0 = new Network();
-        network0.addNode(0);
-        network0.addNode(1);
-        network0.link(0, 1, new CustomerLabel());
-        network0.link(1, 0, new ProviderLabel());
-
-        engine.simulate(network0);
+        topology = new Topology0();
+        engine.simulate(topology.getNetwork());
         printTables();
 
-//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network0)));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
     }
 
     @Test(timeout = 2000)
