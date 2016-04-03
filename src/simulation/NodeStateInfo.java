@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Aggregates all the state information of one node in one unique class
  */
-class NodeStateInfo {
+public class NodeStateInfo {
 
     private RouteTable table;
     private Map<Node, Attribute> selectedAttributes = new HashMap<>();
