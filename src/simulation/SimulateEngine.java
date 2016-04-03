@@ -85,6 +85,13 @@ public class SimulateEngine {
         Link link = scheduledRoute.getLink();
         Route exportedRoute = scheduledRoute.getRoute();
         Node destination = exportedRoute.getDestination();
+        Node learningNode = link.getSource();
+
+        if (learningNode.equals(destination)) {
+            // discard the route
+            eventHandler.onDiscardRoute(link, exportedRoute);
+            return;
+        }
 
         eventHandler.onBeforeLearn(link, exportedRoute);
         Route learnedRoute = learn(link, exportedRoute);

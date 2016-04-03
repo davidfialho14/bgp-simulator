@@ -44,4 +44,9 @@ public class ShortestPathLabel implements Label {
     public int hashCode() {
         return length;
     }
+
+    @Override
+    public String toString() {
+        return "SPLabel(" + length + ')';
+    }
 }
