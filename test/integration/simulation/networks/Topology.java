@@ -2,67 +2,19 @@ package simulation.networks;
 
 import network.Network;
 import network.Node;
-import simulation.PathAttribute;
 import simulation.RouteTable;
-import simulation.implementations.policies.shortestpath.ShortestPathAttribute;
-import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
+import simulation.networks.shortestpath.ShortestPathRouteTablesGenerator;
 
 import java.util.Map;
 
 public abstract class Topology {
 
     protected Network network;
+    protected ShortestPathRouteTablesGenerator routeTablesGenerator;
 
     abstract public Network getNetwork();
 
     abstract public Map<Node, RouteTable> getExpectedRouteTables();
-
-    // ------- HELPER METHODS ------------------------------------------------------------------------------------------
-    /**
-     * Creates the route table for the node with the given integer id.
-     * @param network network holding the node.
-     * @param nodeId id of the node.
-     * @return route table for the node with the given integer id.
-     */
-    protected RouteTable createRouteTableForNode(Network network, int nodeId) {
-        return new RouteTable(network.getNode(nodeId).getOutNeighbours(), new ShortestPathAttributeFactory());
-    }
-
-    /**
-     * Sets a route on the route table.
-     * @param routeTable route table to set route for.
-     * @param network network holding hte nodes.
-     * @param destId  id of the destination node to associated with the route.
-     * @param neighbourId id of the neighbour node to associated with the route.
-     * @param length length attribute to be set.
-     * @param path path attribute to be set. array containing the ids of hte nodes in the path.
-     */
-    protected void setRoute(RouteTable routeTable, Network network, int destId, int neighbourId,
-                            int length, int[] path) {
-        routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId),
-                new ShortestPathAttribute(length));
-
-        // create array of nodes for the path
-        Node[] pathNodes = new Node[path.length];
-        for (int i = 0; i < pathNodes.length; i++) {
-            pathNodes[i] = new Node(network, path[i]);
-        }
-
-        routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), new PathAttribute(pathNodes));
-    }
-
-    /**
-     * Sets an invalid route for the given route table in the pair (destination, neighbour) given.
-     * @param routeTable route table to set invalid route for.
-     * @param network network golding the nodes.
-     * @param destId id of the destination node to associated with invalid route.
-     * @param neighbourId id of the neighbour node to associated with invalid route.
-     */
-    protected void setInvalidRoute(RouteTable routeTable, Network network, int destId, int neighbourId) {
-        ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalidShortestPath();
-        routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId), invalidAttribute);
-        routeTable.setPath(network.getNode(destId), network.getNode(neighbourId), PathAttribute.createInvalidPath());
-    }
 
 //    /**
 //     * Creates the network1.

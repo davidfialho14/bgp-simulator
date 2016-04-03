@@ -5,10 +5,9 @@ import network.Node;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulation.RouteTable;
-import simulation.networks.Topology;
 import simulation.implementations.policies.shortestpath.ShortestPathLabel;
+import simulation.networks.Topology;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Topology0 extends Topology {
@@ -23,6 +22,8 @@ public class Topology0 extends Topology {
         network.addNode(0);
         network.addNode(1);
         network.link(0, 1, new ShortestPathLabel(1));
+
+        routeTablesGenerator = new ShortestPathRouteTablesGenerator(network);
     }
 
     /**
@@ -38,25 +39,18 @@ public class Topology0 extends Topology {
 
     @Override
     public Map<Node, RouteTable> getExpectedRouteTables() {
-        Map<Node, RouteTable> expectedTables = new HashMap<>();
-        RouteTable routeTable;
-
         /* node 0 route table
             |   |     1    |
             |:-:|:--------:|
             | 1 | (1, [1]) |
          */
-        routeTable = createRouteTableForNode(network, 0);
-        setRoute(routeTable, network, 1, 1, 1, new int[]{1});
-        expectedTables.put(network.getNode(0), routeTable);
+        routeTablesGenerator.setRoute(0, 1, 1, 1, new int[]{1});
 
         /* node 1 route table
             |   |
             |:-:|
          */
-        routeTable = createRouteTableForNode(network, 1);
-        expectedTables.put(network.getNode(1), routeTable);
 
-        return expectedTables;
+        return routeTablesGenerator.getTables();
     }
 }
