@@ -129,7 +129,7 @@ public class SimulateEngine {
 
         PathAttribute path;
         if (!attribute.isInvalid()) {
-            path = route.getPath();  // FIXME copy the path!
+            path = new PathAttribute(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
             path = PathAttribute.createInvalidPath();
@@ -152,18 +152,18 @@ public class SimulateEngine {
         Node destination = learnedRoute.getDestination();
         Node exportingNeighbour = link.getDestination();
         Node learningNode = link.getSource();
-        Attribute attribute = learnedRoute.getAttribute();
-        PathAttribute path = learnedRoute.getPath();
 
         // select the best route learned from all out-neighbours except the exporting neighbour
         Route exclRoute = nodeStateInfo.getSelectedRoute(destination, exportingNeighbour);
 
-        if (path.contains(learningNode)) {  // check for a loop in the path
+        if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (protocol.isOscillation(link, exportedRoute, attribute, path, exclRoute)) {
+            if (protocol.isOscillation(link, exportedRoute,
+                    learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
-                protocol.setParameters(link, exportedRoute, attribute, path, exclRoute);
+                protocol.setParameters(link, exportedRoute,
+                        learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
             learnedRoute = Route.createInvalid(destination, attributeFactory);
@@ -178,7 +178,7 @@ public class SimulateEngine {
 
         // update the node state information
         nodeStateInfo.setSelected(destination, selectedRoute);
-        nodeStateInfo.updateRoute(destination, exportingNeighbour, attribute, path);
+        nodeStateInfo.updateRoute(destination, exportingNeighbour, learnedRoute.getAttribute(), learnedRoute.getPath());
 
         return selectedRoute;
     }
