@@ -1,23 +1,24 @@
 package simulation;
 
-import network.Network;
 import network.Node;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
 import simulation.implementations.protocols.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
+import simulation.networks.Topology;
+import simulation.networks.shortestpath.Topology0;
 
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 
 public class SimulateEngineTest {
 
     SimulateEngine engine;
+    Topology topology;
 
     @Before
     public void setUp() throws Exception {
@@ -34,46 +35,38 @@ public class SimulateEngineTest {
     }
 
     @Test(timeout = 2000)
-    public void simulate_Network0_Converges() throws Exception {
-        Network network0 = NetworkCreator.createNetwork0();
-        engine.simulate(network0);
+    public void simulate_Topology0_Converges() throws Exception {
+        topology = new Topology0();
+        engine.simulate(topology.getNetwork());
         printTables();
 
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork0(network0)));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
     }
-
-    @Test(timeout = 2000)
-    public void simulate_Network1_Converges() throws Exception {
-        Network network1 = NetworkCreator.createNetwork1();
-        engine.simulate(network1);
-        printTables();
-
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork1(network1)));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_Network2_Converges() throws Exception {
-        Network network2 = NetworkCreator.createNetwork2();
-        engine.simulate(network2, 0);
-        printTables();
-
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork2ForDestination0(network2)));
-    }
-
-    @Test(timeout = 2000)
-    @Ignore
-    public void simulate_Network3_DoesNotConverge() throws Exception {
-        Network network = NetworkCreator.createNetwork3();
-        engine.simulate(network, 0);
-        printTables();
-    }
-
-    @Test//(timeout = 2000)
-    public void simulate_Network4_Converges() throws Exception {
-        Network network4 = NetworkCreator.createNetwork4();
-        engine.simulate(network4, 0);
-        printTables();
-
-        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork4ForDestination0(network4)));
-    }
+//
+//    @Test(timeout = 2000)
+//    public void simulate_Network1_Converges() throws Exception {
+//        Network network1 = NetworkCreator.createNetwork1();
+//        engine.simulate(network1);
+//        printTables();
+//
+//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork1(network1)));
+//    }
+//
+//    @Test(timeout = 2000)
+//    public void simulate_Network2_Converges() throws Exception {
+//        Network network2 = NetworkCreator.createNetwork2();
+//        engine.simulate(network2, 0);
+//        printTables();
+//
+//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork2ForDestination0(network2)));
+//    }
+//
+//    @Test//(timeout = 2000)
+//    public void simulate_Network4_Converges() throws Exception {
+//        Network network4 = NetworkCreator.createNetwork4();
+//        engine.simulate(network4, 0);
+//        printTables();
+//
+//        assertThat(engine.getRouteTables(), is(NetworkCreator.expectedRouteTableForNetwork4ForDestination0(network4)));
+//    }
 }
