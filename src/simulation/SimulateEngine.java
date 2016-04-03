@@ -129,7 +129,7 @@ public class SimulateEngine {
 
         PathAttribute path;
         if (!attribute.isInvalid()) {
-            path = route.getPath();  // FIXME copy the path!
+            path = new PathAttribute(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
             path = PathAttribute.createInvalidPath();
