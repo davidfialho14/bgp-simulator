@@ -9,10 +9,8 @@ import com.alexmerz.graphviz.objects.PortNode;
 import network.Network;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import policies.AttributeFactory;
 import policies.Label;
-import policies.implementations.gaorexford.CustomerLabel;
-import policies.implementations.shortestpath.ShortestPathAttributeFactory;
+import policies.Policy;
 import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
 
@@ -28,10 +26,10 @@ import java.io.IOException;
 
 public class TopologyParser {
 
-    private Parser parser;                            // DOT file parser
-    private Network parsedNetwork;                    // parsed parsedNetwork
-    private Protocol parsedProtocol;                  // parsed parsedProtocol
-    private AttributeFactory parsedAttributeFactory;  // parsed attribute factory
+    private Parser parser;              // DOT file parser
+    private Network parsedNetwork;      // parsed parsedNetwork
+    private Protocol parsedProtocol;    // parsed parsedProtocol
+    private Policy parsedPolicy;        // parsed attribute factory
 
     // -------- PUBLIC INTERFACE -------------------------------------------------------------------------------------
 
@@ -58,7 +56,7 @@ public class TopologyParser {
         Graph graph = parser.getGraphs().get(0);
 
         parsedProtocol = parseProtocol(graph.getAttribute("parsedProtocol"));
-        parsedAttributeFactory = parseAttributeFactory(graph.getAttribute("policy"));
+        parsedPolicy = parsePolicy(graph.getAttribute("policy"));
         parsedNetwork = new Network();
 
         // add all nodes to the parsedNetwork
@@ -70,7 +68,7 @@ public class TopologyParser {
         for (Edge edge : graph.getEdges()) {
             int sourceId = getId(edge.getSource());
             int destId = getId(edge.getTarget());
-            Label label = parseLabel(graph.getAttribute("policy"));
+            Label label = parsedPolicy.createLabel(graph.getAttribute("policy"));
 
             parsedNetwork.link(sourceId, destId, label);
         }
@@ -95,29 +93,34 @@ public class TopologyParser {
     }
 
     /**
-     * Returns the attribute factory parsed after the last call to the parse() method. If the parse() method has never
+     * Returns the policy parsed after the last call to the parse() method. If the parse() method has never
      * been called then null is returned.
-     * @return the last attribute factory parse or null if the parse() method has never been called.
+     * @return the last policy parse or null if the parse() method has never been called.
      */
-    public AttributeFactory getParsedAttributeFactory() {
-        return parsedAttributeFactory;
+    public Policy getPolicy() {
+        return parsedPolicy;
     }
 
     // --------- PARSE METHODS -----------------------------------------------------------------------------------------
 
-    private Protocol parseProtocol(String protocol) {
+    /**
+     * Parses the protocol tag and returns the respective protocol instance.
+     * @param tag tag to be parsed.
+     * @return protocol instance corresponding to the given tag.
+     */
+    private Protocol parseProtocol(String tag) {
         // TODO to implement
         return new BGPProtocol();
     }
 
-    private AttributeFactory parseAttributeFactory(String policy) {
+    /**
+     * Parses the policy tag and returns the respective Policy instance.
+     * @param tag tag to be parsed.
+     * @return protocol instance corresponding to the given tag.
+     */
+    private Policy parsePolicy(String tag) {
         // TODO to implement
-        return new ShortestPathAttributeFactory();
-    }
-
-    private Label parseLabel(String policy) {
-        // TODO to implement
-        return new CustomerLabel();
+        return null;
     }
 
     // --------- HELPER METHODS ---------------------------------------------------------------------------------------
