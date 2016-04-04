@@ -11,14 +11,10 @@ import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import policies.Label;
 import policies.Policy;
-import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.Protocol;
-import protocols.implementations.BGPProtocol;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /*
     TODO add my own parse exception
@@ -28,25 +24,6 @@ import java.util.Map;
  */
 
 public class TopologyParser {
-
-    // maps the tags to the protocols available
-    private static Map<String, Protocol> protocols = new HashMap<>();
-    // maps the tags to the policies available
-    private static Map<String, Policy> policies = new HashMap<>();
-
-    /**
-     * Sets up the set of protocols available by associating a tag with a protocol.
-     */
-    static {
-        protocol("BGP", new BGPProtocol());
-    }
-
-    /**
-     * Sets up the set of policies available by associating a tag with a policy.
-     */
-    static {
-        policy("ShortestPath", new ShortestPathPolicy());
-    }
 
     private Parser parser;              // DOT file parser
     private Network parsedNetwork;      // parsed parsedNetwork
@@ -77,8 +54,8 @@ public class TopologyParser {
         // here we just want the first graph
         Graph graph = parser.getGraphs().get(0);
 
-        parsedProtocol = parseProtocol(graph.getAttribute("parsedProtocol"));
-        parsedPolicy = parsePolicy(graph.getAttribute("policy"));
+        parsedProtocol = Protocols.getProtocol(graph.getAttribute("protocol"));
+        parsedPolicy = Policies.getPolicy(graph.getAttribute("policy"));
         parsedNetwork = new Network();
 
         // add all nodes to the parsedNetwork
@@ -123,26 +100,6 @@ public class TopologyParser {
         return parsedPolicy;
     }
 
-    // --------- PARSE METHODS -----------------------------------------------------------------------------------------
-
-    /**
-     * Parses the protocol tag and returns the respective protocol instance.
-     * @param tag tag to be parsed.
-     * @return protocol instance corresponding to the given tag.
-     */
-    private Protocol parseProtocol(String tag) {
-        return protocols.get(tag);
-    }
-
-    /**
-     * Parses the policy tag and returns the respective Policy instance.
-     * @param tag tag to be parsed.
-     * @return protocol instance corresponding to the given tag.
-     */
-    private Policy parsePolicy(String tag) {
-        return policies.get(tag);
-    }
-
     // --------- HELPER METHODS ---------------------------------------------------------------------------------------
 
     private int getId(Node node) {
@@ -154,13 +111,4 @@ public class TopologyParser {
         return getId(portNode.getNode());
     }
 
-    // --------- TAGGERS -----------------------------------------------------------------------------------------------
-
-    private static void protocol(String tag, Protocol protocol) {
-        protocols.put(tag, protocol);
-    }
-
-    private static void policy(String tag, Policy policy) {
-        policies.put(tag, policy);
-    }
 }
