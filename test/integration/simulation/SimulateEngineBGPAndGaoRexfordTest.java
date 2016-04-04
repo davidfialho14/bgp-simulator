@@ -49,15 +49,15 @@ public class SimulateEngineBGPAndGaoRexfordTest {
         engine.simulate(topology.getNetwork());
         printTables();
 
-        System.out.println("EXPECTED");
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+    }
 
-        Map<Node, RouteTable> expectedRouteTables = topology.getExpectedRouteTables();
-        for (Map.Entry<Node, RouteTable> entry : expectedRouteTables.entrySet()) {
-            System.out.println(entry.getKey()); // print the node
-            entry.getValue().getPrintableTable().printTable();
-            System.out.println();
-        }
+    @Test(timeout = 2000)
+    public void simulate_Topology2_Converges() throws Exception {
+        topology = new Topology2();
+        engine.simulate(topology.getNetwork());
+        printTables();
 
-        assertThat(engine.getRouteTables(), is(expectedRouteTables));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
     }
 }
