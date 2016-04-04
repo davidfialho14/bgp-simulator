@@ -1,4 +1,4 @@
-package simulation;
+package protocols;
 
 public interface ProtocolFactory {
 

@@ -1,7 +1,7 @@
-package simulation.implementations.protocols;
+package protocols.implementations;
 
-import simulation.Protocol;
-import simulation.ProtocolFactory;
+import protocols.Protocol;
+import protocols.ProtocolFactory;
 
 public class BGPProtocolFactory implements ProtocolFactory {
 

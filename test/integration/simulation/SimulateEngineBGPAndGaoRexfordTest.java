@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import simulation.implementations.handlers.DebugEventHandler;
 import policies.implementations.gaorexford.GaoRexfordAttributeFactory;
-import simulation.implementations.protocols.BGPProtocol;
+import protocols.implementations.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
 import simulation.networks.gaorexford.Topology0;
 import simulation.networks.gaorexford.Topology1;

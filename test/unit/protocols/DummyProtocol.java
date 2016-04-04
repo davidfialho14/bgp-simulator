@@ -4,7 +4,6 @@ import network.*;
 import policies.DummyAttribute;
 import policies.Attribute;
 import simulation.PathAttribute;
-import simulation.Protocol;
 import simulation.Route;
 
 public class DummyProtocol implements Protocol {
