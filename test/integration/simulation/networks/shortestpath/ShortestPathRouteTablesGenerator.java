@@ -3,8 +3,8 @@ package simulation.networks.shortestpath;
 import network.Network;
 import simulation.PathAttribute;
 import simulation.RouteTable;
-import simulation.implementations.policies.shortestpath.ShortestPathAttribute;
-import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
+import policies.implementations.shortestpath.ShortestPathAttribute;
+import policies.implementations.shortestpath.ShortestPathAttributeFactory;
 import simulation.networks.RouteTablesGenerator;
 
 public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {

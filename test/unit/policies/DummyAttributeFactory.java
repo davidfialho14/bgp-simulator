@@ -1,7 +1,5 @@
 package policies;
 
-import simulation.Attribute;
-import simulation.AttributeFactory;
 import network.Node;
 
 public class DummyAttributeFactory implements AttributeFactory {

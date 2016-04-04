@@ -2,7 +2,7 @@ package network;
 
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulation.Label;
+import policies.Label;
 
 import java.util.Collection;
 import java.util.HashMap;

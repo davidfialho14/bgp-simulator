@@ -1,7 +1,7 @@
-package simulation.implementations.policies.shortestpath;
+package policies.implementations.shortestpath;
 
-import simulation.Attribute;
-import simulation.Label;
+import policies.Attribute;
+import policies.Label;
 import network.Link;
 
 public class ShortestPathLabel implements Label {

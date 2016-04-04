@@ -9,12 +9,12 @@ import com.alexmerz.graphviz.objects.PortNode;
 import network.Network;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulation.AttributeFactory;
-import simulation.Label;
-import simulation.Protocol;
-import simulation.implementations.policies.gaorexford.CustomerLabel;
-import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
-import simulation.implementations.protocols.BGPProtocol;
+import policies.AttributeFactory;
+import policies.Label;
+import policies.implementations.gaorexford.CustomerLabel;
+import policies.implementations.shortestpath.ShortestPathAttributeFactory;
+import protocols.Protocol;
+import protocols.implementations.BGPProtocol;
 
 import java.io.FileReader;
 import java.io.IOException;

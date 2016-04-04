@@ -1,6 +1,6 @@
-package simulation.implementations.policies.shortestpath;
+package policies.implementations.shortestpath;
 
-import simulation.Attribute;
+import policies.Attribute;
 
 public class ShortestPathAttribute implements Attribute {
 

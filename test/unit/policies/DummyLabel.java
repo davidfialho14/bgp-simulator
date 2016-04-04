@@ -1,7 +1,5 @@
 package policies;
 
-import simulation.Attribute;
-import simulation.Label;
 import network.Link;
 
 public class DummyLabel implements Label {

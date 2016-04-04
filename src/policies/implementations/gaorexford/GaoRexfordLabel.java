@@ -1,7 +1,7 @@
-package simulation.implementations.policies.gaorexford;
+package policies.implementations.gaorexford;
 
-import simulation.Attribute;
-import simulation.Label;
+import policies.Attribute;
+import policies.Label;
 import network.Link;
 
 public abstract class GaoRexfordLabel implements Label {

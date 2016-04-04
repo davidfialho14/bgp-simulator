@@ -4,7 +4,7 @@ import network.Node;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulation.RouteTable;
-import simulation.implementations.policies.shortestpath.ShortestPathLabel;
+import policies.implementations.shortestpath.ShortestPathLabel;
 import simulation.networks.Topology;
 
 import java.util.Map;

@@ -1,6 +1,7 @@
 package simulation.implementations.handlers;
 
 import network.Link;
+import policies.Attribute;
 import simulation.*;
 
 public class DebugEventHandler extends EventHandler {

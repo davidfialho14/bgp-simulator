@@ -2,7 +2,7 @@ package simulation.networks;
 
 import network.Network;
 import network.Node;
-import simulation.AttributeFactory;
+import policies.AttributeFactory;
 import simulation.RouteTable;
 
 import java.util.HashMap;

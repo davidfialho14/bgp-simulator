@@ -1,30 +1,29 @@
-package simulation.implementations.policies.gaorexford;
+package policies.implementations.gaorexford;
 
-import simulation.Attribute;
-import simulation.Label;
+import policies.Attribute;
+import policies.Label;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PeerLabelTest {
+public class CustomerLabelTest {
 
     protected Label label;
 
     @Before
     public void setUp() throws Exception {
-        label = new PeerLabel();
+        label = new CustomerLabel();
     }
 
     @Test
-    public void extend_CustomerAttribute_ReturnsPeerAttribute() throws Exception {
+    public void extend_CustomerAttribute_ReturnsCustomerAttribute() throws Exception {
         Attribute customerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.CUSTOMER);
-        Attribute peerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PEER);
 
         Attribute extendedAttribute = label.extend(null, customerAttribute);
 
-        assertThat(extendedAttribute, is(peerAttribute));
+        assertThat(extendedAttribute, is(customerAttribute));
     }
 
     @Test

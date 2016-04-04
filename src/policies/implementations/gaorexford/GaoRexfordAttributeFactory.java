@@ -1,7 +1,7 @@
-package simulation.implementations.policies.gaorexford;
+package policies.implementations.gaorexford;
 
-import simulation.Attribute;
-import simulation.AttributeFactory;
+import policies.Attribute;
+import policies.AttributeFactory;
 import network.Node;
 
 public class GaoRexfordAttributeFactory implements AttributeFactory {

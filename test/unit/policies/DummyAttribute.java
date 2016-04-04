@@ -1,7 +1,5 @@
 package policies;
 
-import simulation.Attribute;
-
 public class DummyAttribute implements Attribute {
 
     Integer value = null;

@@ -1,9 +1,9 @@
-package simulation.implementations.protocols;
+package protocols.implementations;
 
 import network.*;
-import simulation.Attribute;
+import policies.Attribute;
 import simulation.PathAttribute;
-import simulation.Protocol;
+import protocols.Protocol;
 import simulation.Route;
 
 public class BGPProtocol implements Protocol {

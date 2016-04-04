@@ -1,7 +1,7 @@
-package simulation.implementations.policies.shortestpath;
+package policies.implementations.shortestpath;
 
-import simulation.Attribute;
-import simulation.AttributeFactory;
+import policies.Attribute;
+import policies.AttributeFactory;
 import network.Node;
 
 public class ShortestPathAttributeFactory implements AttributeFactory {
