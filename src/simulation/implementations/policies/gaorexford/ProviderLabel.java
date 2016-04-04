@@ -7,4 +7,8 @@ public class ProviderLabel extends GaoRexfordLabel {
         return 2;
     }
 
+    @Override
+    public String toString() {
+        return "P";
+    }
 }
