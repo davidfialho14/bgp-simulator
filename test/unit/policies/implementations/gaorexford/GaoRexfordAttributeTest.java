@@ -1,4 +1,4 @@
-package simulation.implementations.policies.gaorexford;
+package policies.implementations.gaorexford;
 
 import org.junit.Test;
 

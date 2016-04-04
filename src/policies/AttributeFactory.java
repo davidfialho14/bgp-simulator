@@ -1,4 +1,4 @@
-package simulation;
+package policies;
 
 import network.Node;
 

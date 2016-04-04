@@ -1,7 +1,7 @@
 package simulation.implementations.protocols;
 
 import network.*;
-import simulation.Attribute;
+import policies.Attribute;
 import simulation.PathAttribute;
 import simulation.Protocol;
 import simulation.Route;

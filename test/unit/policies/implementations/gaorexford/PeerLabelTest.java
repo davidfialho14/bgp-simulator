@@ -1,40 +1,39 @@
-package simulation.implementations.policies.gaorexford;
+package policies.implementations.gaorexford;
 
-import simulation.Attribute;
-import simulation.Label;
+import policies.Attribute;
+import policies.Label;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ProviderLabelTest {
+public class PeerLabelTest {
 
     protected Label label;
 
     @Before
     public void setUp() throws Exception {
-        label = new ProviderLabel();
+        label = new PeerLabel();
     }
 
     @Test
-    public void extend_CustomerAttribute_ReturnsProviderAttribute() throws Exception {
+    public void extend_CustomerAttribute_ReturnsPeerAttribute() throws Exception {
         Attribute customerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.CUSTOMER);
-        Attribute providerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PROVIDER);
+        Attribute peerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PEER);
 
         Attribute extendedAttribute = label.extend(null, customerAttribute);
 
-        assertThat(extendedAttribute, is(providerAttribute));
+        assertThat(extendedAttribute, is(peerAttribute));
     }
 
     @Test
     public void extend_PeerAttribute_ReturnsInvalidAttribute() throws Exception {
         Attribute peerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PEER);
-        Attribute providerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PROVIDER);
 
         Attribute extendedAttribute = label.extend(null, peerAttribute);
 
-        assertThat(extendedAttribute, is(providerAttribute));
+        assertThat(extendedAttribute.isInvalid(), is(true));
     }
 
     @Test
@@ -43,7 +42,7 @@ public class ProviderLabelTest {
 
         Attribute extendedAttribute = label.extend(null, providerAttribute);
 
-        assertThat(extendedAttribute, is(providerAttribute));
+        assertThat(extendedAttribute.isInvalid(), is(true));
     }
 
     @Test

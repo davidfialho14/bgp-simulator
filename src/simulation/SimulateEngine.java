@@ -3,6 +3,8 @@ package simulation;
 import network.Link;
 import network.Network;
 import network.Node;
+import policies.Attribute;
+import policies.AttributeFactory;
 
 import java.util.HashMap;
 import java.util.Map;

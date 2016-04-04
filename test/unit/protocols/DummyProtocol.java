@@ -2,7 +2,7 @@ package protocols;
 
 import network.*;
 import policies.DummyAttribute;
-import simulation.Attribute;
+import policies.Attribute;
 import simulation.PathAttribute;
 import simulation.Protocol;
 import simulation.Route;

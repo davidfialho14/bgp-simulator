@@ -3,6 +3,7 @@ package simulation;
 import network.Factory;
 import network.Node;
 import org.junit.Test;
+import policies.Attribute;
 import policies.DummyAttribute;
 import policies.DummyAttributeFactory;
 

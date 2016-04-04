@@ -1,6 +1,7 @@
 package simulation;
 
 import network.Link;
+import policies.Attribute;
 
 public interface Protocol {
 

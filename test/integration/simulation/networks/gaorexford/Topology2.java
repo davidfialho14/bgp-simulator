@@ -4,12 +4,12 @@ import network.Node;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulation.RouteTable;
-import simulation.implementations.policies.gaorexford.CustomerLabel;
+import policies.implementations.gaorexford.CustomerLabel;
 import simulation.networks.Topology;
 
 import java.util.Map;
 
-import static simulation.implementations.policies.gaorexford.GaoRexfordAttribute.Type.CUSTOMER;
+import static policies.implementations.gaorexford.GaoRexfordAttribute.Type.CUSTOMER;
 
 public class Topology2 extends Topology {
 

@@ -3,11 +3,11 @@ package simulation.networks.gaorexford;
 import network.Network;
 import simulation.PathAttribute;
 import simulation.RouteTable;
-import simulation.implementations.policies.gaorexford.GaoRexfordAttribute;
-import simulation.implementations.policies.gaorexford.GaoRexfordAttributeFactory;
+import policies.implementations.gaorexford.GaoRexfordAttribute;
+import policies.implementations.gaorexford.GaoRexfordAttributeFactory;
 import simulation.networks.RouteTablesGenerator;
 
-import static simulation.implementations.policies.gaorexford.GaoRexfordAttribute.Type.INVALID;
+import static policies.implementations.gaorexford.GaoRexfordAttribute.Type.INVALID;
 
 public class GaoRexfordRouteTablesGenerator extends RouteTablesGenerator {
 

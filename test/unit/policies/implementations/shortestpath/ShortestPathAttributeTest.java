@@ -1,4 +1,4 @@
-package simulation.implementations.policies.shortestpath;
+package policies.implementations.shortestpath;
 
 import org.junit.Test;
 

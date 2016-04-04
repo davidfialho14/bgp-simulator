@@ -2,6 +2,8 @@ package simulation;
 
 import dnl.utils.text.table.TextTable;
 import network.Node;
+import policies.Attribute;
+import policies.AttributeFactory;
 
 import java.util.*;
 import java.util.function.BiConsumer;

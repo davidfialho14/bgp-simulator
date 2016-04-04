@@ -1,6 +1,6 @@
-package simulation.implementations.policies.gaorexford;
+package policies.implementations.gaorexford;
 
-import simulation.Attribute;
+import policies.Attribute;
 
 public class GaoRexfordAttribute implements Attribute{
 

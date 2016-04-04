@@ -1,6 +1,8 @@
 package simulation;
 
 import network.Node;
+import policies.Attribute;
+import policies.AttributeFactory;
 
 import java.util.HashMap;
 import java.util.Map;

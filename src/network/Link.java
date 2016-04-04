@@ -1,7 +1,7 @@
 package network;
 
-import simulation.Attribute;
-import simulation.Label;
+import policies.Attribute;
+import policies.Label;
 
 public class Link {
 

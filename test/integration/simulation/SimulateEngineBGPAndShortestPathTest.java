@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import simulation.implementations.handlers.DebugEventHandler;
-import simulation.implementations.policies.shortestpath.ShortestPathAttributeFactory;
+import policies.implementations.shortestpath.ShortestPathAttributeFactory;
 import simulation.implementations.protocols.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
 import simulation.networks.shortestpath.*;

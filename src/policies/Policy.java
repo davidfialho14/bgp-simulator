@@ -1,4 +1,4 @@
-package simulation;
+package policies;
 
 public interface Policy {
 
