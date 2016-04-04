@@ -1,4 +1,4 @@
-package policies.exceptions;
+package io;
 
 public class InvalidTagException extends Exception {
 

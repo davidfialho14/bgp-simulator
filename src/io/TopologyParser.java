@@ -11,7 +11,6 @@ import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import policies.Label;
 import policies.Policy;
-import policies.exceptions.InvalidTagException;
 import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
