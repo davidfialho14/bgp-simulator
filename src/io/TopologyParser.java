@@ -11,11 +11,15 @@ import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import policies.Label;
 import policies.Policy;
+import policies.exceptions.InvalidTagException;
+import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
     TODO add my own parse exception
@@ -25,6 +29,25 @@ import java.io.IOException;
  */
 
 public class TopologyParser {
+
+    // maps the tags to the protocols available
+    private static Map<String, Protocol> protocols = new HashMap<>();
+    // maps the tags to the policies available
+    private static Map<String, Policy> policies = new HashMap<>();
+
+    /**
+     * Sets up the set of protocols available by associating a tag with a protocol.
+     */
+    static {
+        protocol("BGP", new BGPProtocol());
+    }
+
+    /**
+     * Sets up the set of policies available by associating a tag with a policy.
+     */
+    static {
+        policy("ShortestPath", new ShortestPathPolicy());
+    }
 
     private Parser parser;              // DOT file parser
     private Network parsedNetwork;      // parsed parsedNetwork
@@ -45,8 +68,8 @@ public class TopologyParser {
      * @throws ParseException
      * @throws NodeExistsException
      */
-    public void parse(String inputFilePath) throws IOException, ParseException,
-                                                           NodeExistsException, NodeNotFoundException {
+    public void parse(String inputFilePath) throws IOException, ParseException, NodeExistsException,
+                                                           NodeNotFoundException, InvalidTagException {
         try (FileReader in = new FileReader(inputFilePath)) {
             parser.parse(in);
         }
@@ -68,7 +91,7 @@ public class TopologyParser {
         for (Edge edge : graph.getEdges()) {
             int sourceId = getId(edge.getSource());
             int destId = getId(edge.getTarget());
-            Label label = parsedPolicy.createLabel(graph.getAttribute("policy"));
+            Label label = parsedPolicy.createLabel(edge.getAttribute("label"));
 
             parsedNetwork.link(sourceId, destId, label);
         }
@@ -109,8 +132,7 @@ public class TopologyParser {
      * @return protocol instance corresponding to the given tag.
      */
     private Protocol parseProtocol(String tag) {
-        // TODO to implement
-        return new BGPProtocol();
+        return protocols.get(tag);
     }
 
     /**
@@ -119,8 +141,7 @@ public class TopologyParser {
      * @return protocol instance corresponding to the given tag.
      */
     private Policy parsePolicy(String tag) {
-        // TODO to implement
-        return null;
+        return policies.get(tag);
     }
 
     // --------- HELPER METHODS ---------------------------------------------------------------------------------------
@@ -132,5 +153,15 @@ public class TopologyParser {
 
     private int getId(PortNode portNode) {
         return getId(portNode.getNode());
+    }
+
+    // --------- TAGGERS -----------------------------------------------------------------------------------------------
+
+    private static void protocol(String tag, Protocol protocol) {
+        protocols.put(tag, protocol);
+    }
+
+    private static void policy(String tag, Policy policy) {
+        policies.put(tag, policy);
     }
 }

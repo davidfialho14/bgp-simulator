@@ -2,7 +2,7 @@ package policies.exceptions;
 
 public class InvalidTagException extends Exception {
 
-    protected String tag;
+    private String tag;
 
     public InvalidTagException(String tag, String message) {
         super(message);
