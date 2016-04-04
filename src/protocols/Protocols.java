@@ -1,5 +1,6 @@
-package io;
+package protocols;
 
+import io.InvalidTagException;
 import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
 

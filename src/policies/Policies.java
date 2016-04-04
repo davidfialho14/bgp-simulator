@@ -1,5 +1,6 @@
-package io;
+package policies;
 
+import io.InvalidTagException;
 import policies.Policy;
 import policies.implementations.shortestpath.ShortestPathPolicy;
 

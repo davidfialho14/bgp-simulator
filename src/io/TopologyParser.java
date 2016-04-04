@@ -10,8 +10,10 @@ import network.Network;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import policies.Label;
+import policies.Policies;
 import policies.Policy;
 import protocols.Protocol;
+import protocols.Protocols;
 
 import java.io.FileReader;
 import java.io.IOException;
