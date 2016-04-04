@@ -84,4 +84,17 @@ public class Network {
                 .flatMap(node -> node.getInLinks().stream())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public String toString() {
+        String networkStr = "Network{";
+
+        for (Node node : nodes.values()) {
+            for (Link link : node.getInLinks()) {
+                networkStr += "\n\t" + link;
+            }
+        }
+
+        return networkStr + "\n}";
+    }
 }
