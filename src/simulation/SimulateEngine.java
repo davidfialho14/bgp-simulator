@@ -136,7 +136,7 @@ public class SimulateEngine {
      * @return route after the attribute has been exported and included the out-neighbour in the path.
      */
     Route learn(Link link, Route route) {
-        Attribute attribute = protocol.extend(link, route.getAttribute());
+        Attribute attribute = protocol.extend(route.getDestination(), link, route.getAttribute());
 
         PathAttribute path;
         if (!attribute.isInvalid()) {

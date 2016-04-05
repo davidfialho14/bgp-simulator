@@ -1,8 +1,8 @@
 package protocols;
 
 import io.InvalidTagException;
-import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
+import protocols.implementations.D1R1Protocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +19,7 @@ public class Protocols {
      */
     static {
         protocol("BGP", new BGPProtocol());
+        protocol("D1R1", new D1R1Protocol());
     }
 
     // --- Stop editing from now on ---------------------------------------------------------------------------------
