@@ -9,7 +9,7 @@ import simulation.Route;
 public class BGPProtocol implements Protocol {
 
     @Override
-    public Attribute extend(Link link, Attribute attribute) {
+    public Attribute extend(Node destination, Link link, Attribute attribute) {
         return link.extend(attribute);
     }
 

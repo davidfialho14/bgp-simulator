@@ -40,4 +40,40 @@ public class Topology3 extends Topology {
         // this topology does not converge so it can not have an expected route tables
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public Map<Node, RouteTable> getExpectedRouteTablesForD1R1(Integer destId) {
+        ShortestPathRouteTablesGenerator generator = new ShortestPathRouteTablesGenerator(network, destId);
+
+        /* node 0 route table
+            |   |
+            |:-:|
+        */
+
+        /* node 1 route table
+            |   |    0   | 2 |
+            |:-:|:------:|:-:|
+            | 0 | 0, [0] | • |
+         */
+        generator.setRoute(1, 0, 0, 0, new int[]{0});
+        generator.setInvalidRoute(1, 0, 2);
+
+        /* node 2 route table
+            |   |    0   | 3 |
+            |:-:|:------:|:-:|
+            | 0 | 0, [0] | • |
+         */
+        generator.setRoute(2, 0, 0, 0, new int[]{0});
+        generator.setInvalidRoute(2, 0, 3);
+
+        /* node 3 route table
+            |   |    0   |      1     |
+            |:-:|:------:|:----------:|
+            | 0 | 0, [0] | -2, [1, 0] |
+         */
+        generator.setRoute(3, 0, 0, 0, new int[]{0});
+        generator.setRoute(3, 0, 1, -2, new int[]{1, 0});
+
+        return generator.getTables();
+    }
 }

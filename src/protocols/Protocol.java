@@ -1,6 +1,7 @@
 package protocols;
 
 import network.Link;
+import network.Node;
 import policies.Attribute;
 import simulation.PathAttribute;
 import simulation.Route;
@@ -10,11 +11,12 @@ public interface Protocol {
     /**
      * Extends the attribute using the given link, while applying some modifications to the import properties
      * according to the protocol implemented.
+     * @param destination the destination node
      * @param link link to extend the attribute.
      * @param attribute attribute to be extended.
      * @return extended attribute (new instance).
      */
-    Attribute extend(Link link, Attribute attribute);
+    Attribute extend(Node destination, Link link, Attribute attribute);
 
     /**
      * Checks if the condition to detect an oscillation is verified.
