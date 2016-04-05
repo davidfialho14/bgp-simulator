@@ -3,7 +3,7 @@ package policies.implementations.shortestpath;
 import policies.AttributeFactory;
 import policies.Label;
 import policies.Policy;
-import policies.exceptions.InvalidTagException;
+import io.InvalidTagException;
 
 public class ShortestPathPolicy implements Policy {
 
@@ -18,7 +18,7 @@ public class ShortestPathPolicy implements Policy {
             return new ShortestPathLabel(Integer.parseInt(tag));
         } catch (NumberFormatException e) {
             // tag is not an integer
-            throw new InvalidTagException("the ShortestPath policy label tags must be integers", tag);
+            throw new InvalidTagException(tag, "the ShortestPath policy's label tags must be integers");
         }
     }
 }

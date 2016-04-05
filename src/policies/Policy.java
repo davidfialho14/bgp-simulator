@@ -1,6 +1,6 @@
 package policies;
 
-import policies.exceptions.InvalidTagException;
+import io.InvalidTagException;
 
 public interface Policy {
 

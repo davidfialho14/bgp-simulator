@@ -1,8 +1,8 @@
-package policies.exceptions;
+package io;
 
 public class InvalidTagException extends Exception {
 
-    protected String tag;
+    private String tag;
 
     public InvalidTagException(String tag, String message) {
         super(message);
