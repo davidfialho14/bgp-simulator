@@ -42,4 +42,8 @@ public abstract class EventHandler {
     public void onDiscardRoute(Link link, Route route) {
         // by default do nothing
     }
+
+    public void onOscillationDetection(Link link, Route exportedRoute, Route learnedRoute, Route exclRoute) {
+        // by default do nothing
+    }
 }

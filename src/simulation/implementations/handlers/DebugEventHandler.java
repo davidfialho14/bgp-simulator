@@ -65,4 +65,11 @@ public class DebugEventHandler extends EventHandler {
 
         System.out.println("DISCARDED:\t" + link + "\t|\t" + route);
     }
+
+    @Override
+    public void onOscillationDetection(Link link, Route exportedRoute, Route learnedRoute, Route exclRoute) {
+        super.onOscillationDetection(link, exportedRoute, learnedRoute, exclRoute);
+
+        System.out.println("DETECTED:\t" + link + "\t|\t" + learnedRoute + "\t|\t" + exclRoute);
+    }
 }

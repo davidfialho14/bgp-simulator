@@ -165,6 +165,8 @@ public class SimulateEngine {
             if (protocol.isOscillation(link, exportedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
+                eventHandler.onOscillationDetection(link, exportedRoute, learnedRoute, exclRoute);
+
                 protocol.setParameters(link, exportedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
