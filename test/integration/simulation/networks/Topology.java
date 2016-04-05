@@ -20,4 +20,13 @@ public abstract class Topology {
 
     abstract public Map<Node, RouteTable> getExpectedRouteTables(Integer destId);
 
+    public Map<Node, RouteTable> getExpectedRouteTablesForD1R1() {
+        return getExpectedRouteTablesForD1R1(null);
+    }
+
+    public Map<Node, RouteTable> getExpectedRouteTablesForD1R1(Integer destId) {
+        // this operation is optional
+        throw  new UnsupportedOperationException();
+    }
+
 }
