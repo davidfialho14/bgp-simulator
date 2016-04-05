@@ -76,6 +76,14 @@ public class SimulateEngine {
                 ));
     }
 
+    /**
+     * Returns the event handler associated with the engine.
+     * @return event handler associated with the engine.
+     */
+    public EventHandler getEventHandler() {
+        return eventHandler;
+    }
+
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
