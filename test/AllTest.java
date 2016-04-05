@@ -42,4 +42,18 @@ public class AllTest {
         System.out.println("Exchanged Message Count: " + eventHandler.getMessageCount());
         System.out.println("Detection Count: " + eventHandler.getDetectionCount());
     }
+
+    @Test
+    public void example1() throws Exception {
+        parser.parse("test/example1.gv");
+        engine = new SimulateEngine(parser.getProtocol(), parser.getPolicy().getAttributeFactory(),
+                new FIFOScheduler(), eventHandler);
+
+        engine.simulate(parser.getParsedNetwork());
+
+        printTables();
+
+        System.out.println("Exchanged Message Count: " + eventHandler.getMessageCount());
+        System.out.println("Detection Count: " + eventHandler.getDetectionCount());
+    }
 }
