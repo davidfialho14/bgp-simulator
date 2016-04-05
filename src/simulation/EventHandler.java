@@ -5,41 +5,45 @@ import policies.Attribute;
 
 public abstract class EventHandler {
 
-    public void onBeforeSimulate() {
+    protected void onBeforeSimulate() {
         // by default do nothing
     }
 
-    public void onAfterSimulate() {
+    protected void onAfterSimulate() {
         // by default do nothing
     }
 
-    public void onBeforeLearn(Link link, Route exportedRoute) {
+    protected void onBeforeLearn(Link link, Route exportedRoute) {
         // by default do nothing
     }
 
-    public void onAfterLearn(Link link, Route exportedRoute, Route learnedRoute) {
+    protected void onAfterLearn(Link link, Route exportedRoute, Route learnedRoute) {
         // by default do nothing
     }
 
-   public  void onBeforeSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
-                               Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
+    protected  void onBeforeSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                                Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
         // by default do nothing
     }
-   public  void onAfterSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
-                       Attribute prevSelectedAttribute, PathAttribute prevSelectedPath, Route selectedRoute) {
-        // by default do nothing
-    }
-
-    public void onBeforeExport(Link link, Route route, ScheduledRoute prevScheduledRoute) {
+    protected  void onAfterSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                               Attribute prevSelectedAttribute, PathAttribute prevSelectedPath, Route selectedRoute) {
         // by default do nothing
     }
 
-    public void onAfterExport(Link link, Route route, ScheduledRoute prevScheduledRoute,
+    protected void onBeforeExport(Link link, Route route, ScheduledRoute prevScheduledRoute) {
+        // by default do nothing
+    }
+
+    protected void onAfterExport(Link link, Route route, ScheduledRoute prevScheduledRoute,
                               ScheduledRoute scheduledRoute) {
         // by default do nothing
     }
 
-    public void onDiscardRoute(Link link, Route route) {
+    protected void onDiscardRoute(Link link, Route route) {
+        // by default do nothing
+    }
+
+    protected void onOscillationDetection(Link link, Route exportedRoute, Route learnedRoute, Route exclRoute) {
         // by default do nothing
     }
 }

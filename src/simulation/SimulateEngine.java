@@ -76,6 +76,14 @@ public class SimulateEngine {
                 ));
     }
 
+    /**
+     * Returns the event handler associated with the engine.
+     * @return event handler associated with the engine.
+     */
+    public EventHandler getEventHandler() {
+        return eventHandler;
+    }
+
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
@@ -165,6 +173,8 @@ public class SimulateEngine {
             if (protocol.isOscillation(link, exportedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
+                eventHandler.onOscillationDetection(link, exportedRoute, learnedRoute, exclRoute);
+
                 protocol.setParameters(link, exportedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
