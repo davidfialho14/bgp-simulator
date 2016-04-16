@@ -10,7 +10,8 @@ import simulation.networks.Topology;
 
 import java.util.Map;
 
-import static policies.implementations.gaorexford.GaoRexfordAttribute.Type.*;
+import static policies.implementations.gaorexford.CustomerAttribute.customer;
+import static policies.implementations.gaorexford.ProviderAttribute.provider;
 
 public class Topology0 extends Topology {
 
@@ -37,14 +38,14 @@ public class Topology0 extends Topology {
             |:-:|:--------:|
             | 1 | (c, [1]) |
          */
-        generator.setRoute(0, 1, 1, CUSTOMER, new int[]{1});
+        generator.setRoute(0, 1, 1, customer(), new int[]{1});
 
         /* node 1 route table
             |   |     0    |
             |:-:|:--------:|
             | 0 | (p, [0]) |
          */
-        generator.setRoute(1, 0, 0, PROVIDER, new int[]{0});
+        generator.setRoute(1, 0, 0, provider(), new int[]{0});
 
         return generator.getTables();
     }
