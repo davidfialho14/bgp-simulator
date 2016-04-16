@@ -2,9 +2,9 @@ package simulation;
 
 import org.junit.Before;
 import org.junit.Test;
-import simulation.implementations.handlers.DebugEventHandler;
-import policies.implementations.gaorexford.GaoRexfordAttributeFactory;
+import policies.implementations.gaorexford.GaoRexfordPolicy;
 import protocols.implementations.BGPProtocol;
+import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 import simulation.networks.gaorexford.Topology0;
 import simulation.networks.gaorexford.Topology1;
@@ -17,7 +17,7 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new BGPProtocol(), new GaoRexfordAttributeFactory(),
+        engine = new SimulateEngine(new BGPProtocol(), new GaoRexfordPolicy(),
                 new FIFOScheduler(), new DebugEventHandler());
     }
 

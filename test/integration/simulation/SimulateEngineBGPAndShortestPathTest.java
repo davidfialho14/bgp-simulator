@@ -3,8 +3,8 @@ package simulation;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import policies.implementations.shortestpath.ShortestPathPolicy;
 import simulation.implementations.handlers.DebugEventHandler;
-import policies.implementations.shortestpath.ShortestPathAttributeFactory;
 import protocols.implementations.BGPProtocol;
 import simulation.implementations.schedulers.FIFOScheduler;
 import simulation.networks.shortestpath.*;
@@ -16,7 +16,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new BGPProtocol(), new ShortestPathAttributeFactory(),
+        engine = new SimulateEngine(new BGPProtocol(), new ShortestPathPolicy(),
                 new FIFOScheduler(), new DebugEventHandler());
     }
 

@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
 import policies.DummyAttribute;
-import policies.DummyAttributeFactory;
 import policies.DummyLabel;
 import protocols.Protocol;
 
@@ -40,7 +39,7 @@ public class SimulateEngineSelectTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(stubProtocol, new DummyAttributeFactory(), null, null);
+        engine = new SimulateEngine(stubProtocol, null, null, null);
         when(stubProtocol.isOscillation(any(), any(), any(), any(), any())).thenReturn(false);
     }
 

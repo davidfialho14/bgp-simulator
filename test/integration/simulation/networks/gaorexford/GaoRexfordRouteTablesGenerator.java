@@ -4,7 +4,6 @@ import network.Network;
 import simulation.PathAttribute;
 import simulation.RouteTable;
 import policies.implementations.gaorexford.GaoRexfordAttribute;
-import policies.implementations.gaorexford.GaoRexfordAttributeFactory;
 import simulation.networks.RouteTablesGenerator;
 
 import static policies.InvalidAttribute.invalid;
@@ -12,7 +11,7 @@ import static policies.InvalidAttribute.invalid;
 public class GaoRexfordRouteTablesGenerator extends RouteTablesGenerator {
 
     public GaoRexfordRouteTablesGenerator(Network network, Integer onlyValidDestId) {
-        super(network, onlyValidDestId, new GaoRexfordAttributeFactory());
+        super(network, onlyValidDestId);
     }
 
     /**

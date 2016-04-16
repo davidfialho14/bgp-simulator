@@ -2,7 +2,6 @@ package simulation.networks;
 
 import network.Network;
 import network.Node;
-import policies.AttributeFactory;
 import simulation.RouteTable;
 
 import java.util.HashMap;
@@ -17,9 +16,8 @@ public abstract class RouteTablesGenerator {
     /**
      * Initiates the route tables for all nodes in the network.
      * @param network network to generate route tables for.
-     * @param attributeFactory attribute factory to create the route table.
      */
-    public RouteTablesGenerator(Network network, Integer onlyValidDestId, AttributeFactory attributeFactory) {
+    public RouteTablesGenerator(Network network, Integer onlyValidDestId) {
         for (Node node : network.getNodes()) {
             routeTables.put(node, new RouteTable(node.getOutNeighbours()));
         }

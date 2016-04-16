@@ -1,7 +1,6 @@
 package policies.implementations.shortestpath;
 
 import network.Link;
-import org.junit.Before;
 import org.junit.Test;
 
 import static network.Factory.createRandomLink;
@@ -10,13 +9,6 @@ import static org.hamcrest.Matchers.is;
 import static policies.InvalidAttribute.invalid;
 
 public class ShortestPathLabelTest {
-
-    ShortestPathAttributeFactory attributeFactory;
-
-    @Before
-    public void setUp() throws Exception {
-        attributeFactory = new ShortestPathAttributeFactory();
-    }
 
     @Test
     public void extend_SPAttributeWithLength1ThroughLabelLength2_SPAttributeWithLength3() throws Exception {

@@ -2,7 +2,7 @@ package simulation;
 
 import network.Node;
 import policies.Attribute;
-import policies.AttributeFactory;
+import policies.Policy;
 
 import static policies.InvalidAttribute.invalid;
 
@@ -47,11 +47,11 @@ public class Route implements Comparable<Route> {
     /**
      * Creates a new self route for the given node.
      * @param node node to create self route for.
-     * @param factory attribute factory used to create a self attribute to the given node.
+     * @param policy policy used to create a self attribute to the given node.
      * @return new self Route instance to the given node.
      */
-    public static Route createSelf(Node node, AttributeFactory factory) {
-        return new Route(node, factory.createSelf(node), new PathAttribute(node));
+    public static Route createSelf(Node node, Policy policy) {
+        return new Route(node, policy.createSelf(node), new PathAttribute(node));
     }
 
     /**
