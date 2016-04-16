@@ -8,8 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
-import policies.DummyAttribute;
-import policies.DummyLabel;
+import dummies.DummyAttribute;
+import dummies.DummyLabel;
 import protocols.Protocol;
 
 import static network.Factory.createRandomNode;

@@ -1,7 +1,7 @@
 package network;
 
-import policies.DummyAttribute;
-import policies.DummyLabel;
+import dummies.DummyAttribute;
+import dummies.DummyLabel;
 import simulation.PathAttribute;
 import simulation.Route;
 

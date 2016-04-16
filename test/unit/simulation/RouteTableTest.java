@@ -3,7 +3,7 @@ package simulation;
 import network.Node;
 import org.junit.Test;
 import policies.Attribute;
-import policies.DummyAttribute;
+import dummies.DummyAttribute;
 
 import java.util.Arrays;
 

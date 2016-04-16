@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import policies.DummyAttribute;
+import dummies.DummyAttribute;
 import protocols.Protocol;
 
 import static network.Factory.*;

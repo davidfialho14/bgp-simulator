@@ -1,4 +1,6 @@
-package policies;
+package dummies;
+
+import policies.Attribute;
 
 public class DummyAttribute extends Attribute {
 

@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import policies.DummyAttribute;
-import policies.DummyLabel;
+import dummies.DummyAttribute;
+import dummies.DummyLabel;
 import simulation.implementations.handlers.DebugEventHandler;
 
 import static network.Factory.*;

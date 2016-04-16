@@ -2,7 +2,7 @@ package simulation;
 
 import network.Node;
 import org.junit.Test;
-import policies.DummyAttribute;
+import dummies.DummyAttribute;
 
 import static network.Factory.*;
 import static org.hamcrest.MatcherAssert.assertThat;
