@@ -8,7 +8,7 @@ import java.util.List;
 public class Node {
 
     private int id;   // id must be unique in each network
-    private List<Node> outNeighbours = new ArrayList<>();
+    private List<Link> outLinks = new ArrayList<>();
     private List<Link> inLinks = new ArrayList<>();
 
     /**
@@ -31,7 +31,7 @@ public class Node {
      * @param link link to be added as out-link.
      */
     public void addOutLink(Link link) {
-        outNeighbours.add(link.getDestination());
+        outLinks.add(link);
     }
 
     /**
@@ -55,7 +55,15 @@ public class Node {
      * @return collection with all the out-neighbours of the node.
      */
     public Collection<Node> getOutNeighbours() {
-        return outNeighbours;
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Returns a collection with all the out-links of the node.
+     * @return collection with all the out-links of the node.
+     */
+    public Collection<Link> getOutLinks() {
+        return outLinks;
     }
 
     /**
