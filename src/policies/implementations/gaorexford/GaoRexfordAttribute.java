@@ -19,11 +19,6 @@ public class GaoRexfordAttribute extends Attribute{
     }
 
     @Override
-    public boolean isInvalid() {
-        return type.equals(Type.INVALID);
-    }
-
-    @Override
     public int compareTo(Attribute attribute) {
         GaoRexfordAttribute other = (GaoRexfordAttribute) attribute;
         return this.type.compareTo(other.type);

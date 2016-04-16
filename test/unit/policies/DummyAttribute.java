@@ -32,11 +32,6 @@ public class DummyAttribute extends Attribute {
         return createInvalidDummy();
     }
 
-    @Override
-    public boolean isInvalid() {
-        return value == null;
-    }
-
     /**
      * Dummy attributes are preferred (<) depending on its value. A higher value means the attribute has
      * higher preference. An invalid dummy has always the lowest preference.
