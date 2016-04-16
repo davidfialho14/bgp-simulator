@@ -1,6 +1,6 @@
 package policies;
 
-public class DummyAttribute implements Attribute {
+public class DummyAttribute extends Attribute {
 
     Integer value = null;
 

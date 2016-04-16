@@ -2,7 +2,7 @@ package policies.implementations.gaorexford;
 
 import policies.Attribute;
 
-public class GaoRexfordAttribute implements Attribute{
+public class GaoRexfordAttribute extends Attribute{
 
     public enum Type {
         CUSTOMER, PEER, PROVIDER, INVALID

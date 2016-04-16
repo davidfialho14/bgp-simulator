@@ -2,7 +2,7 @@ package policies.implementations.shortestpath;
 
 import policies.Attribute;
 
-public class ShortestPathAttribute implements Attribute {
+public class ShortestPathAttribute extends Attribute {
 
     Integer length = null;
 
