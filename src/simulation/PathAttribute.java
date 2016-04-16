@@ -14,9 +14,8 @@ public class PathAttribute extends Attribute {
      * Initializes the INVALID
      */
     static {
-        PathAttribute path = new PathAttribute();
-        path.path = null;
-        INVALID = path;
+        INVALID = new PathAttribute();
+        INVALID.path = null;
     }
 
     private LinkedHashSet<Node> path;   // must be a LinkedHashSet in order to preserve insertion order
@@ -28,11 +27,20 @@ public class PathAttribute extends Attribute {
         this.path = new LinkedHashSet<>();
     }
 
+    /**
+     * Creates a new path with a single node.
+     * @param node node initiate the path with.
+     */
     public PathAttribute(Node node) {
         this.path = new LinkedHashSet<>(1);
         path.add(node);
     }
 
+    /**
+     * Constructs a path given a sequence of nodes. Nodes are added to the path in the same order they are stored
+     * in the array.
+     * @param nodes nodes to initiate the path with.
+     */
     public PathAttribute(Node[] nodes) {
         this.path = new LinkedHashSet<>();
         Collections.addAll(path, nodes);
@@ -63,6 +71,11 @@ public class PathAttribute extends Attribute {
         path.add(node);
     }
 
+    /**
+     * Checks if the path contains the given node.
+     * @param node node to check if the path contains.
+     * @return true if the path contains the node and false otherwise.
+     */
     public boolean contains(Node node) {
         return !isInvalid() && path.contains(node);
     }
@@ -85,6 +98,9 @@ public class PathAttribute extends Attribute {
         return this.path.size() - other.path.size();
     }
 
+    /**
+     * Two paths are considered equal if they have the same nodes in the same order.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
