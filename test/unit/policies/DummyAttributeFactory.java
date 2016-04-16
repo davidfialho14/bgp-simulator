@@ -2,6 +2,8 @@ package policies;
 
 import network.Node;
 
+import static policies.InvalidAttribute.invalid;
+
 public class DummyAttributeFactory implements AttributeFactory {
 
     @Override
@@ -11,7 +13,7 @@ public class DummyAttributeFactory implements AttributeFactory {
 
     @Override
     public Attribute createInvalid() {
-        return DummyAttribute.createInvalidDummy();
+        return invalid();
     }
 
 }

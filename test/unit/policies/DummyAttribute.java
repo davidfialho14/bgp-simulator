@@ -19,20 +19,6 @@ public class DummyAttribute extends Attribute {
     }
 
     /**
-     * Creates invalid dummy attribute.
-     * @return invalid dummy attribute.
-     */
-    public static DummyAttribute createInvalidDummy() {
-        DummyAttribute dummy = new DummyAttribute();
-        dummy.value = null;
-        return dummy;
-    }
-
-    public DummyAttribute createInvalid() {
-        return createInvalidDummy();
-    }
-
-    /**
      * Dummy attributes are preferred (<) depending on its value. A higher value means the attribute has
      * higher preference. An invalid dummy has always the lowest preference.
      * @param attribute dummy attribute to be compared.

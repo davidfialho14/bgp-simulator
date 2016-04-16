@@ -20,6 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static policies.InvalidAttribute.invalid;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineSelectTest {
@@ -179,12 +180,11 @@ public class SimulateEngineSelectTest {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
         Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
-        Attribute invalidAttribute = DummyAttribute.createInvalidDummy();
         PathAttribute invalidPath = PathAttribute.createInvalidPath();
 
         engine.select(stubNodeStateInfo, link, null, learnedRoute);
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalidAttribute, invalidPath);
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalid(), invalidPath);
     }
 
     @Test

@@ -7,8 +7,6 @@ import policies.implementations.gaorexford.GaoRexfordAttribute;
 import policies.implementations.gaorexford.GaoRexfordAttributeFactory;
 import simulation.networks.RouteTablesGenerator;
 
-import static policies.implementations.gaorexford.GaoRexfordAttribute.Type.INVALID;
-
 public class GaoRexfordRouteTablesGenerator extends RouteTablesGenerator {
 
     public GaoRexfordRouteTablesGenerator(Network network, Integer onlyValidDestId) {
