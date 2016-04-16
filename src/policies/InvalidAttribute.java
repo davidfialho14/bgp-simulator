@@ -45,4 +45,15 @@ public class InvalidAttribute extends Attribute {
             return 1;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof InvalidAttribute;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
 }

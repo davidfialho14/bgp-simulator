@@ -23,9 +23,7 @@ public class ShortestPathAttribute extends Attribute {
      */
     @Override
     public int compareTo(Attribute attribute) {
-        if (this.isInvalid() && attribute.isInvalid()) return 0;
-        else if (this.isInvalid() && !attribute.isInvalid()) return 1;
-        else if (!this.isInvalid() && attribute.isInvalid()) return -1;
+        if (attribute.isInvalid()) return -1;
 
         ShortestPathAttribute other = (ShortestPathAttribute) attribute;
         return this.length - other.length;
