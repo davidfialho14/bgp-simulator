@@ -1,6 +1,5 @@
 package simulation;
 
-import network.Factory;
 import network.Link;
 import network.Node;
 import org.junit.Before;
@@ -12,6 +11,7 @@ import policies.DummyAttribute;
 import policies.DummyLabel;
 import simulation.implementations.handlers.DebugEventHandler;
 
+import static network.Factory.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
@@ -24,9 +24,9 @@ public class SimulateEngineProcessTest {
     @Mock
     NodeStateInfo nodeStateInfo;
 
-    final Node destination = Factory.createRandomNode();
-    final Node learningNode = Factory.createRandomNode();
-    final Node exportingNode = Factory.createRandomNode();
+    final Node destination = createRandomNode();
+    final Node learningNode = createRandomNode();
+    final Node exportingNode = createRandomNode();
     final Link link = new Link(learningNode, exportingNode, new DummyLabel());
     final Route invalidRoute = Route.createInvalid(destination);
 
@@ -34,7 +34,7 @@ public class SimulateEngineProcessTest {
     public void setUp() throws Exception {
         engine = spy(new SimulateEngine(null, null, null, new DebugEventHandler()));
         // stub out the learn method
-        doReturn(Factory.createRandomRoute()).when(engine).learn(any(), any());
+        doReturn(createRandomRoute()).when(engine).learn(any(), any());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class SimulateEngineProcessTest {
         when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(new DummyAttribute(0));
         when(nodeStateInfo.getSelectedPath(any())).thenReturn(new PathAttribute());
         Route selectedRoute = new Route(destination,
-                new DummyAttribute(0), new PathAttribute(Factory.createRandomNode()));
+                new DummyAttribute(0), new PathAttribute(createRandomNode()));
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));

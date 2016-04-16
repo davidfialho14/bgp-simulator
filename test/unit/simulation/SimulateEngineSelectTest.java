@@ -1,6 +1,5 @@
 package simulation;
 
-import network.Factory;
 import network.Link;
 import network.Node;
 import org.junit.Before;
@@ -13,12 +12,11 @@ import policies.DummyAttribute;
 import policies.DummyLabel;
 import protocols.Protocol;
 
+import static network.Factory.createRandomNode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,9 +24,9 @@ public class SimulateEngineSelectTest {
 
     SimulateEngine engine;  // class under test
 
-    Node destination = Factory.createRandomNode();
-    Node learningNode = Factory.createRandomNode();
-    Node exportingNode = Factory.createRandomNode();
+    Node destination = createRandomNode();
+    Node learningNode = createRandomNode();
+    Node exportingNode = createRandomNode();
     Link link = new Link(learningNode, exportingNode, new DummyLabel());
 
     @Mock
@@ -143,7 +141,7 @@ public class SimulateEngineSelectTest {
     select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteWithAttr0AndPathWith2_RouteWithAttr0AndPathWith2()
             throws Exception {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
-        Node[] nodes = {destination, Factory.createRandomNode()};
+        Node[] nodes = {destination, createRandomNode()};
         Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(nodes));
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 

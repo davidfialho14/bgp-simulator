@@ -1,6 +1,5 @@
 package simulation;
 
-import network.Factory;
 import network.Link;
 import network.Node;
 import org.junit.Test;
@@ -11,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import policies.DummyAttribute;
 import protocols.Protocol;
 
+import static network.Factory.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
@@ -27,12 +27,12 @@ public class SimulateEngineLearnTest {
     @InjectMocks
     SimulateEngine engine;
 
-    Node destination = Factory.createRandomNode();
+    Node destination = createRandomNode();
 
     @Test
     public void
     learn_FromAnyNodeInvalidRoute_InvalidRoute() throws Exception {
-        Link link = Factory.createRandomLink();
+        Link link = createRandomLink();
         Route invalidRoute = Route.createInvalid(destination);
         when(protocol.extend(eq(destination), any(), any())).thenReturn(invalid());
 
@@ -42,7 +42,7 @@ public class SimulateEngineLearnTest {
     @Test
     public void
     learn_FromAnyNodeRouteWithAttrThatExtendsToInvalid_InvalidRoute() throws Exception {
-        Link link = Factory.createRandomLink();
+        Link link = createRandomLink();
         Route exportedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         when(protocol.extend(eq(destination), any(), any())).thenReturn(invalid());
 
@@ -54,7 +54,7 @@ public class SimulateEngineLearnTest {
     @Test
     public void
     learn_FromNode0RouteWithEmptyPathAndValidAttrWhichExtendsToAttr1_RouteWithPathWithNode0AndAttr1() throws Exception {
-        Link link = Factory.createLink(1, 0);
+        Link link = createLink(1, 0);
         Route exportedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         when(protocol.extend(eq(destination), any(), any())).thenReturn(new DummyAttribute(1));
 
@@ -66,7 +66,7 @@ public class SimulateEngineLearnTest {
     public void
     learn_FromNode0RouteWithPathWithNode1AndValidAttrWhichExtendsToAttr1_RouteWithAttr1AndPathWithNode0AndNode1()
             throws Exception {
-        Link link = Factory.createLink(1, 0);
+        Link link = createLink(1, 0);
         Node node1 = new Node(1);
         Route exportedRoute = new Route(destination, new DummyAttribute(), new PathAttribute(node1));
         when(protocol.extend(eq(destination), any(), any())).thenReturn(new DummyAttribute(1));

@@ -3,6 +3,7 @@ package network;
 import org.junit.Before;
 import org.junit.Test;
 
+import static network.Factory.createLink;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
@@ -19,7 +20,7 @@ public class NodeTest {
 
     @Test
     public void addOutLink_FromNode0ToNode1ToNodeWithoutOutLinks_NodeContainsOutNeighbourNode1() throws Exception {
-        Link outLink = Factory.createLink(0, 1);
+        Link outLink = createLink(0, 1);
 
         node.addOutLink(outLink);
 
@@ -29,7 +30,7 @@ public class NodeTest {
 
     @Test
     public void addInLink_FromNode0ToNode1ToNodeWithoutInLinks_NodeContainsInLinkFromNode0ToNode1() throws Exception {
-        Link inLink = Factory.createLink(0, 1);
+        Link inLink = createLink(0, 1);
 
         node.addInLink(inLink);
 

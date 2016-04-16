@@ -4,7 +4,7 @@ import network.Node;
 import org.junit.Test;
 import policies.DummyAttribute;
 
-import static network.Factory.createRandomNode;
+import static network.Factory.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
