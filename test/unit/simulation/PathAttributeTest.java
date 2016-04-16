@@ -1,24 +1,24 @@
 package simulation;
 
-import network.Factory;
 import network.Node;
 import org.junit.Test;
 
+import static network.Factory.createNodes;
 import static network.Factory.createRandomNode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static simulation.PathAttribute.invalidPath;
 
 public class PathAttributeTest {
 
     @Test
     public void createInvalid_AlwaysReturnsTheSameInstance() throws Exception {
-        PathAttribute invalid = PathAttribute.invalidPath();
-        assert invalid == PathAttribute.invalidPath();
+        assert invalidPath() == invalidPath();  // assert the reference is the same
     }
 
     @Test
     public void createInvalid_ReturnsInvalidPathAttribute() throws Exception {
-        assertThat(PathAttribute.invalidPath().isInvalid(), is(true));
+        assertThat(invalidPath().isInvalid(), is(true));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class PathAttributeTest {
 
     @Test
     public void compareTo_PathWithTwoNodes1And2ComparedPathWithNode1_Greater() throws Exception {
-        Node[] nodes = Factory.createNodes(2);
+        Node[] nodes = createNodes(2);
         PathAttribute pathWithTwoNodes1And2 = new PathAttribute(nodes);
         PathAttribute pathWithNode1 = new PathAttribute(new Node(1));
 
@@ -72,17 +72,12 @@ public class PathAttributeTest {
 
     @Test
     public void contains_InvalidPath_ReturnsFalse() throws Exception {
-        PathAttribute invalidPath = PathAttribute.invalidPath();
-        Node node = createRandomNode();
-
-        assertThat(invalidPath.contains(node), is(false));
+        assertThat(invalidPath().contains(createRandomNode()), is(false));
     }
 
     @Test
     public void copyConstructor_InvalidPath_ConstructsInvalidPath() throws Exception {
-        PathAttribute invalidPath = PathAttribute.invalidPath();
-
-        PathAttribute pathCopy = new PathAttribute(invalidPath);
+        PathAttribute pathCopy = new PathAttribute(invalidPath());
 
         assertThat(pathCopy.isInvalid(), is(true));
     }
