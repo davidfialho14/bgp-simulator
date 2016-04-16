@@ -4,8 +4,10 @@ import network.Link;
 import org.junit.Before;
 import org.junit.Test;
 
+import static network.Factory.createRandomLink;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static policies.InvalidAttribute.invalid;
 
 public class ShortestPathLabelTest {
 
@@ -33,10 +35,10 @@ public class ShortestPathLabelTest {
     }
 
     @Test
-    public void extend_InvalidSPAttributeThroughLabelWithAnyLength_InvalidSPAttribute() throws Exception {
+    public void extend_InvalidAttributeThroughAnyLabel_InvalidAttribute() throws Exception {
         ShortestPathLabel label = anyShortestPathLabel();
-        Link link = new Link(null, null, null);
+        Link link = createRandomLink();
 
-        assertThat(label.extend(link, attributeFactory.createInvalid()), is(attributeFactory.createInvalid()));
+        assertThat(label.extend(link, invalid()), is(invalid()));
     }
 }
