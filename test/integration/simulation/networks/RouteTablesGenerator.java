@@ -2,7 +2,6 @@ package simulation.networks;
 
 import network.Network;
 import network.Node;
-import policies.AttributeFactory;
 import simulation.RouteTable;
 
 import java.util.HashMap;
@@ -17,11 +16,10 @@ public abstract class RouteTablesGenerator {
     /**
      * Initiates the route tables for all nodes in the network.
      * @param network network to generate route tables for.
-     * @param attributeFactory attribute factory to create the route table.
      */
-    public RouteTablesGenerator(Network network, Integer onlyValidDestId, AttributeFactory attributeFactory) {
+    public RouteTablesGenerator(Network network, Integer onlyValidDestId) {
         for (Node node : network.getNodes()) {
-            routeTables.put(node, new RouteTable(node.getOutNeighbours(), attributeFactory));
+            routeTables.put(node, new RouteTable(node.getOutNeighbours()));
         }
         this.network = network;
         this.onlyValidDestId = onlyValidDestId;
@@ -43,7 +41,7 @@ public abstract class RouteTablesGenerator {
         // create array of nodes for the path
         Node[] pathNodes = new Node[path.length];
         for (int i = 0; i < pathNodes.length; i++) {
-            pathNodes[i] = new Node(network, path[i]);
+            pathNodes[i] = new Node(path[i]);
         }
 
         return pathNodes;

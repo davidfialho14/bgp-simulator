@@ -1,10 +1,40 @@
 package policies.implementations.gaorexford;
 
-public class PeerLabel extends GaoRexfordLabel {
+import network.Link;
+import policies.Attribute;
+import policies.Label;
+
+import static policies.InvalidAttribute.invalid;
+import static policies.implementations.gaorexford.PeerAttribute.peer;
+
+/**
+ * Implements the peer label.
+ */
+public class PeerLabel implements Label {
+
+    /**
+     * Table gives the result of extending each type of attribute.
+     */
+    private static final Attribute[] extendTable = {
+            peer(),   invalid(),  invalid()
+    };
 
     @Override
-    protected int getRowCode() {
-        return 1;
+    public Attribute extend(Link link, Attribute attribute) {
+        if (attribute.isInvalid()) return invalid();
+
+        GaoRexfordAttribute gaoRexfordAttribute = (GaoRexfordAttribute) attribute;
+        return extendTable[gaoRexfordAttribute.getType().ordinal()];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof PeerLabel;
+    }
+
+    @Override
+    public int hashCode() {
+        return 32;  // must be different from all Gao Rexford labels
     }
 
     @Override

@@ -3,7 +3,6 @@ package simulation;
 import dnl.utils.text.table.TextTable;
 import network.Node;
 import policies.Attribute;
-import policies.AttributeFactory;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -19,14 +18,12 @@ public class RouteTable {
     private Map<Node, Map<Node, Route>> routes;
     private Collection<Node> neighbours;
     private List<Node> destinations = new ArrayList<>();
-    private AttributeFactory attributeFactory;  // used to create invalid routes
 
     /**
      * Constructs a new empty route table. Defines the neighbours included in the route table.
      * @param neighbours out neighbours of the route table.
-     * @param attributeFactory factory used to generate invalid attributes.
      */
-    public RouteTable(Collection<Node> neighbours, AttributeFactory attributeFactory) {
+    public RouteTable(Collection<Node> neighbours) {
         this.neighbours = neighbours;
         routes = new HashMap<>(neighbours.size());
 
@@ -34,8 +31,6 @@ public class RouteTable {
         for (Node outNeighbour : neighbours) {
             routes.put(outNeighbour, new HashMap<>());
         }
-
-        this.attributeFactory = attributeFactory;
     }
 
     /**
@@ -92,8 +87,7 @@ public class RouteTable {
     private void addDestination(Node destination) {
         // add an invalid route for each neighbour
         for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
-            entry.getValue().put(destination,
-                    new Route(destination, attributeFactory.createInvalid(), PathAttribute.createInvalidPath()));
+            entry.getValue().put(destination, Route.createInvalid(destination));
         }
 
         destinations.add(destination);

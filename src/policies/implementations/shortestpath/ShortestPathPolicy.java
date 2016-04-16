@@ -1,15 +1,16 @@
 package policies.implementations.shortestpath;
 
-import policies.AttributeFactory;
+import io.InvalidTagException;
+import network.Node;
+import policies.Attribute;
 import policies.Label;
 import policies.Policy;
-import io.InvalidTagException;
 
 public class ShortestPathPolicy implements Policy {
 
     @Override
-    public AttributeFactory getAttributeFactory() {
-        return new ShortestPathAttributeFactory();
+    public Attribute createSelf(Node node) {
+        return new ShortestPathAttribute(0);
     }
 
     @Override

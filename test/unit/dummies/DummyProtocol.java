@@ -1,8 +1,8 @@
-package protocols;
+package dummies;
 
 import network.*;
-import policies.DummyAttribute;
 import policies.Attribute;
+import protocols.Protocol;
 import simulation.PathAttribute;
 import simulation.Route;
 

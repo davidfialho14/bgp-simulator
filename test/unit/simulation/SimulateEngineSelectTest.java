@@ -1,6 +1,5 @@
 package simulation;
 
-import network.Factory;
 import network.Link;
 import network.Node;
 import org.junit.Before;
@@ -9,26 +8,25 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
-import policies.DummyAttribute;
-import policies.DummyAttributeFactory;
-import policies.DummyLabel;
+import dummies.DummyAttribute;
+import dummies.DummyLabel;
 import protocols.Protocol;
 
+import static network.Factory.createRandomNode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static policies.InvalidAttribute.invalid;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineSelectTest {
 
     SimulateEngine engine;  // class under test
 
-    Node destination = Factory.createRandomNode();
-    Node learningNode = Factory.createRandomNode();
-    Node exportingNode = Factory.createRandomNode();
+    Node destination = createRandomNode();
+    Node learningNode = createRandomNode();
+    Node exportingNode = createRandomNode();
     Link link = new Link(learningNode, exportingNode, new DummyLabel());
 
     @Mock
@@ -39,14 +37,14 @@ public class SimulateEngineSelectTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(stubProtocol, new DummyAttributeFactory(), null, null);
+        engine = new SimulateEngine(stubProtocol, null, null, null);
         when(stubProtocol.isOscillation(any(), any(), any(), any(), any())).thenReturn(false);
     }
 
     @Test
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteInvalid_InvalidRoute() throws Exception {
-        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route invalidRoute = Route.createInvalid(destination);
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
         assertThat(engine.select(stubNodeStateInfo, link, null, invalidRoute), is(invalidRoute));
@@ -55,7 +53,7 @@ public class SimulateEngineSelectTest {
     @Test
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteWithAttr0AndEmptyPath_RouteWithAttr0AndEmptyPath() throws Exception {
-        Route learnedRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route learnedRoute = Route.createInvalid(destination);
         Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
@@ -66,7 +64,7 @@ public class SimulateEngineSelectTest {
     public void
     select_BetweenLearnedWithAttr0AndEmptyPathAndExclRouteInvalid_RouteWithAttr0AndEmptyPath() throws Exception {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        Route exlcRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route exlcRoute = Route.createInvalid(destination);
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
         assertThat(engine.select(stubNodeStateInfo, link, null, learnedRoute), is(learnedRoute));
@@ -120,7 +118,7 @@ public class SimulateEngineSelectTest {
     public void
     select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteInvalid_InvalidRoute()
             throws Exception {
-        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route invalidRoute = Route.createInvalid(destination);
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
@@ -143,7 +141,7 @@ public class SimulateEngineSelectTest {
     select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteWithAttr0AndPathWith2_RouteWithAttr0AndPathWith2()
             throws Exception {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
-        Node[] nodes = {destination, Factory.createRandomNode()};
+        Node[] nodes = {destination, createRandomNode()};
         Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(nodes));
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
@@ -179,12 +177,11 @@ public class SimulateEngineSelectTest {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
         Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
-        Attribute invalidAttribute = DummyAttribute.createInvalidDummy();
-        PathAttribute invalidPath = PathAttribute.createInvalidPath();
+        PathAttribute invalidPath = PathAttribute.invalidPath();
 
         engine.select(stubNodeStateInfo, link, null, learnedRoute);
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalidAttribute, invalidPath);
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalid(), invalidPath);
     }
 
     @Test

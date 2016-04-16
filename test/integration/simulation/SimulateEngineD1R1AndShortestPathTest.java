@@ -2,7 +2,7 @@ package simulation;
 
 import org.junit.Before;
 import org.junit.Test;
-import policies.implementations.shortestpath.ShortestPathAttributeFactory;
+import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.D1R1Protocol;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
@@ -15,7 +15,7 @@ public class SimulateEngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new D1R1Protocol(), new ShortestPathAttributeFactory(),
+        engine = new SimulateEngine(new D1R1Protocol(), new ShortestPathPolicy(),
                 new FIFOScheduler(), new DebugEventHandler());
     }
 

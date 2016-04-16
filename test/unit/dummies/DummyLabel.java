@@ -1,6 +1,8 @@
-package policies;
+package dummies;
 
 import network.Link;
+import policies.Attribute;
+import policies.Label;
 
 public class DummyLabel implements Label {
 

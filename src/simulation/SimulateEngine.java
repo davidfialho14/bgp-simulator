@@ -4,7 +4,7 @@ import network.Link;
 import network.Network;
 import network.Node;
 import policies.Attribute;
-import policies.AttributeFactory;
+import policies.Policy;
 import protocols.Protocol;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class SimulateEngine {
 
     private Protocol protocol;
-    private AttributeFactory attributeFactory;
+    private Policy policy;
     private Scheduler scheduler;
     private EventHandler eventHandler;
 
@@ -27,14 +27,14 @@ public class SimulateEngine {
     /**
      * Initializes a new SimulateEngine.
      * @param protocol routing protocol to be used.
-     * @param attributeFactory factory used to create attributes.
+     * @param policy factory used to create attributes.
      * @param scheduler scheduler used to schedule exported routes.
      * @param eventHandler event handler called on any new event.
      */
-    public SimulateEngine(Protocol protocol, AttributeFactory attributeFactory, Scheduler scheduler,
+    public SimulateEngine(Protocol protocol, Policy policy, Scheduler scheduler,
                           EventHandler eventHandler) {
         this.protocol = protocol;
-        this.attributeFactory = attributeFactory;
+        this.policy = policy;
         this.scheduler = scheduler;
         this.eventHandler = eventHandler;
     }
@@ -143,7 +143,7 @@ public class SimulateEngine {
             path = new PathAttribute(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
-            path = PathAttribute.createInvalidPath();
+            path = PathAttribute.invalidPath();
         }
 
         return new Route(route.getDestination(), attribute, path);
@@ -179,7 +179,7 @@ public class SimulateEngine {
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
-            learnedRoute = Route.createInvalid(destination, attributeFactory);
+            learnedRoute = Route.createInvalid(destination);
         }
 
         Route selectedRoute;
@@ -254,7 +254,7 @@ public class SimulateEngine {
     private void initNodesStateInfo(Network network) {
         nodesStateInfo.clear();
         for (Node node : network.getNodes()) {
-            nodesStateInfo.put(node, new NodeStateInfo(node, attributeFactory));
+            nodesStateInfo.put(node, new NodeStateInfo(node));
         }
     }
 
@@ -265,7 +265,7 @@ public class SimulateEngine {
     private void exportNodesSelfRoutes(Network network) {
         for (Node node : network.getNodes()) {
             for (Link inLink : node.getInLinks()) {
-                export(inLink, Route.createSelf(node, attributeFactory), null);
+                export(inLink, Route.createSelf(node, policy), null);
             }
         }
     }
@@ -276,7 +276,7 @@ public class SimulateEngine {
      */
     private void exportNodesSelfRoutes(Node destination) {
         for (Link inLink : destination.getInLinks()) {
-            export(inLink, Route.createSelf(destination, attributeFactory), null);
+            export(inLink, Route.createSelf(destination, policy), null);
         }
     }
 }

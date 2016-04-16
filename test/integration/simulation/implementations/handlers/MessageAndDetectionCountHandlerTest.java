@@ -2,7 +2,7 @@ package simulation.implementations.handlers;
 
 import org.junit.Before;
 import org.junit.Test;
-import policies.implementations.shortestpath.ShortestPathAttributeFactory;
+import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.SimulateEngine;
 import simulation.implementations.schedulers.FIFOScheduler;
@@ -20,8 +20,7 @@ public class MessageAndDetectionCountHandlerTest {
     @Before
     public void setUp() throws Exception {
         eventHandler = new MessageAndDetectionCountHandler();
-        engine = new SimulateEngine(new BGPProtocol(), new ShortestPathAttributeFactory(),
-                new FIFOScheduler(), eventHandler);
+        engine = new SimulateEngine(new BGPProtocol(), new ShortestPathPolicy(), new FIFOScheduler(), eventHandler);
     }
 
     @Test

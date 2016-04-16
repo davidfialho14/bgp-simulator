@@ -1,12 +1,15 @@
 package policies.implementations.gaorexford;
 
-import policies.Attribute;
-import policies.Label;
 import org.junit.Before;
 import org.junit.Test;
+import policies.Label;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static policies.InvalidAttribute.invalid;
+import static policies.implementations.gaorexford.CustomerAttribute.customer;
+import static policies.implementations.gaorexford.PeerAttribute.peer;
+import static policies.implementations.gaorexford.ProviderAttribute.provider;
 
 public class ProviderLabelTest {
 
@@ -19,40 +22,22 @@ public class ProviderLabelTest {
 
     @Test
     public void extend_CustomerAttribute_ReturnsProviderAttribute() throws Exception {
-        Attribute customerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.CUSTOMER);
-        Attribute providerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PROVIDER);
-
-        Attribute extendedAttribute = label.extend(null, customerAttribute);
-
-        assertThat(extendedAttribute, is(providerAttribute));
+        assertThat(label.extend(null, customer()), is(provider()));
     }
 
     @Test
-    public void extend_PeerAttribute_ReturnsInvalidAttribute() throws Exception {
-        Attribute peerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PEER);
-        Attribute providerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PROVIDER);
-
-        Attribute extendedAttribute = label.extend(null, peerAttribute);
-
-        assertThat(extendedAttribute, is(providerAttribute));
+    public void extend_PeerAttribute_ReturnsProviderAttribute() throws Exception {
+        assertThat(label.extend(null, peer()), is(provider()));
     }
 
     @Test
-    public void extend_ProviderAttribute_ReturnsInvalidAttribute() throws Exception {
-        Attribute providerAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.PROVIDER);
-
-        Attribute extendedAttribute = label.extend(null, providerAttribute);
-
-        assertThat(extendedAttribute, is(providerAttribute));
+    public void extend_ProviderAttribute_ReturnsProviderAttribute() throws Exception {
+        assertThat(label.extend(null, provider()), is(provider()));
     }
 
     @Test
     public void extend_InvalidAttribute_ReturnsInvalidAttribute() throws Exception {
-        Attribute invalidAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.INVALID);
-
-        Attribute extendedAttribute = label.extend(null, invalidAttribute);
-
-        assertThat(extendedAttribute.isInvalid(), is(true));
+        assertThat(label.extend(null, invalid()).isInvalid(), is(true));
     }
 
 }

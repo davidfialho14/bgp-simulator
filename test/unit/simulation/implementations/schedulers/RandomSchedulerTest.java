@@ -1,14 +1,14 @@
 package simulation.implementations.schedulers;
 
-import network.Factory;
 import network.Link;
-import simulation.ScheduledRoute;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import simulation.ScheduledRoute;
 
+import static network.Factory.createRandomLink;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,7 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime0AndDelay0ForLinkNotYetUsed_Returns0() throws Exception {
         setDelay(0);
-        Link newLink = Factory.createRandomLink();
+        Link newLink = createRandomLink();
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, newLink, 0L);
 
         assertThat(scheduler.schedule(scheduledRoute), is(0L));
@@ -38,7 +38,7 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime0AndDelay0ForLinkNotYetUsed_GetLastTimeForLinkReturns0() throws Exception {
         setDelay(0);
-        Link newLink = Factory.createRandomLink();
+        Link newLink = createRandomLink();
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, newLink, 0L);
 
         scheduler.schedule(scheduledRoute);
@@ -50,7 +50,7 @@ public class RandomSchedulerTest {
     public void
     schedule_RouteWithTime0Delay1AndWithLinkNotYetUsed_Returns1() throws Exception {
         setDelay(1);
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, Factory.createRandomLink(), 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, createRandomLink(), 0L);
 
         assertThat(scheduler.schedule(scheduledRoute), is(1L));
     }
@@ -58,7 +58,7 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime1AndDelay1ForLinkNotYetUsed_GetLastTimeForLinkReturns2() throws Exception {
         setDelay(1);
-        Link newLink = Factory.createRandomLink();
+        Link newLink = createRandomLink();
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, newLink, 1L);
         scheduler.schedule(scheduledRoute);
 
@@ -74,7 +74,7 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas1_Returns2() throws Exception {
-        Link link = Factory.createRandomLink();
+        Link link = createRandomLink();
         setLinkLastTime(link, 1L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
@@ -85,7 +85,7 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas2_Returns3() throws Exception {
-        Link link = Factory.createRandomLink();
+        Link link = createRandomLink();
         setLinkLastTime(link, 2L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
@@ -96,7 +96,7 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas3_Returns4() throws Exception {
-        Link link = Factory.createRandomLink();
+        Link link = createRandomLink();
         setLinkLastTime(link, 3L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);

@@ -1,8 +1,10 @@
 package policies.implementations.shortestpath;
 
+import network.Link;
 import policies.Attribute;
 import policies.Label;
-import network.Link;
+
+import static policies.InvalidAttribute.invalid;
 
 public class ShortestPathLabel implements Label {
 
@@ -22,13 +24,16 @@ public class ShortestPathLabel implements Label {
     @Override
     public Attribute extend(Link link, Attribute attribute) {
         if (attribute.isInvalid()) {
-            return new ShortestPathAttribute();
+            return invalid();
         } else {
             ShortestPathAttribute shortestPathAttribute = (ShortestPathAttribute) attribute;
-            return new ShortestPathAttribute(length + shortestPathAttribute.length);
+            return new ShortestPathAttribute(length + shortestPathAttribute.getLength());
         }
     }
 
+    /**
+     * Two SP labels are equal if they both have the same length.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -4,13 +4,14 @@ import network.Network;
 import simulation.PathAttribute;
 import simulation.RouteTable;
 import policies.implementations.shortestpath.ShortestPathAttribute;
-import policies.implementations.shortestpath.ShortestPathAttributeFactory;
 import simulation.networks.RouteTablesGenerator;
+
+import static policies.InvalidAttribute.invalid;
 
 public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {
 
     public ShortestPathRouteTablesGenerator(Network network, Integer onlyValidDestId) {
-        super(network, onlyValidDestId, new ShortestPathAttributeFactory());
+        super(network, onlyValidDestId);
         this.onlyValidDestId = onlyValidDestId;
     }
 
@@ -44,11 +45,10 @@ public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {
         if (isValidDestination(destId)) {    // set route only for valid destination node
             RouteTable routeTable = routeTables.get(network.getNode(nodeId));
 
-            ShortestPathAttribute invalidAttribute = ShortestPathAttribute.createInvalidShortestPath();
-            routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId), invalidAttribute);
+            routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId), invalid());
 
             routeTable.setPath(network.getNode(destId), network.getNode(neighbourId),
-                    PathAttribute.createInvalidPath());
+                    PathAttribute.invalidPath());
         }
     }
 }

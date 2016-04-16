@@ -9,7 +9,7 @@ import simulation.networks.Topology;
 
 import java.util.Map;
 
-import static policies.implementations.gaorexford.GaoRexfordAttribute.Type.CUSTOMER;
+import static policies.implementations.gaorexford.CustomerAttribute.customer;
 
 public class Topology2 extends Topology {
 
@@ -38,8 +38,8 @@ public class Topology2 extends Topology {
             | 1 |   c, [1]  |
             | 2 | c, [2, 1] |
          */
-        generator.setRoute(0, 1, 1, CUSTOMER, new int[]{1});
-        generator.setRoute(0, 2, 1, CUSTOMER, new int[]{2, 1});
+        generator.setRoute(0, 1, 1, customer(), new int[]{1});
+        generator.setRoute(0, 2, 1, customer(), new int[]{2, 1});
 
         /* node 1 route table
             |   |     2     |
@@ -47,8 +47,8 @@ public class Topology2 extends Topology {
             | 0 | c, [0, 2] |
             | 2 |   c, [2]  |
          */
-        generator.setRoute(1, 0, 2, CUSTOMER, new int[]{0, 2});
-        generator.setRoute(1, 2, 2, CUSTOMER, new int[]{2});
+        generator.setRoute(1, 0, 2, customer(), new int[]{0, 2});
+        generator.setRoute(1, 2, 2, customer(), new int[]{2});
 
         /* node 2 route table
             |   |     0     |
@@ -56,8 +56,8 @@ public class Topology2 extends Topology {
             | 0 |   c, [0]  |
             | 1 | c, [1, 0] |
          */
-        generator.setRoute(2, 0, 0, CUSTOMER, new int[]{0});
-        generator.setRoute(2, 1, 0, CUSTOMER, new int[]{1, 0});
+        generator.setRoute(2, 0, 0, customer(), new int[]{0});
+        generator.setRoute(2, 1, 0, customer(), new int[]{1, 0});
 
         return generator.getTables();
     }
