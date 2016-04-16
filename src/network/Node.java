@@ -62,6 +62,9 @@ public class Node {
         return outNeighbours;
     }
 
+    /**
+     * Two nodes are equal if they are from the same network and have the same id.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

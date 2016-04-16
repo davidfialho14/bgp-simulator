@@ -54,6 +54,9 @@ public class Link {
         return label.extend(this, attribute);
     }
 
+    /**
+     * Two links are considered equal if they share the same source and destination nodes and exactly the same label.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,9 +64,9 @@ public class Link {
 
         Link link = (Link) o;
 
-        if (source != null ? !source.equals(link.source) : link.source != null) return false;
-        if (destination != null ? !destination.equals(link.destination) : link.destination != null) return false;
-        return label != null ? label.equals(link.label) : link.label == null;
+        return source != null ? source.equals(link.source) : link.source == null
+                && (destination != null ? destination.equals(link.destination) : link.destination == null
+                && (label != null ? label.equals(link.label) : link.label == null));
 
     }
 
