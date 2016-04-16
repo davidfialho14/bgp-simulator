@@ -4,12 +4,20 @@ import network.Node;
 import policies.Attribute;
 import policies.AttributeFactory;
 
+import static policies.InvalidAttribute.invalid;
+
 public class Route implements Comparable<Route> {
 
     private Node destination;
     private Attribute attribute;
     private PathAttribute path;
 
+    /**
+     * Constructs a new route assigning it a destination, attribute, and path.
+     * @param destination destination of the route.
+     * @param attribute policy attribute of the route.
+     * @param path path to reach the destination.
+     */
     public Route(Node destination, Attribute attribute, PathAttribute path) {
         this.destination = destination;
         this.attribute = attribute;
@@ -30,11 +38,10 @@ public class Route implements Comparable<Route> {
     /**
      * Creates a new invalid route.
      * @param destination destination of the route.
-     * @param factory attribute factory used to create a self attribute.
      * @return new invalid Route instance.
      */
-    public static Route createInvalid(Node destination, AttributeFactory factory) {
-        return new Route(destination, factory.createInvalid(), PathAttribute.createInvalidPath());
+    public static Route createInvalid(Node destination) {
+        return new Route(destination, invalid(), PathAttribute.createInvalidPath());
     }
 
     /**
@@ -48,31 +55,51 @@ public class Route implements Comparable<Route> {
     }
 
     /**
+     * Assigns the given attribute to the route.
+     * @param attribute attribute to be assigned.
+     */
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
+    }
+
+    /**
+     * Assigns the given path to the route.
+     * @param path path to be assigned.
+     */
+    public void setPath(PathAttribute path) {
+        this.path = path;
+    }
+
+    /**
+     * Returns the route's destination.
+     * @return destination of the route.
+     */
+    public Node getDestination() {
+        return destination;
+    }
+
+    /**
+     * Returns the route's attribute.
+     * @return attribute of the route.
+     */
+    public Attribute getAttribute() {
+        return attribute;
+    }
+
+    /**
+     * Returns the route's path.
+     * @return path of the route.
+     */
+    public PathAttribute getPath() {
+        return path;
+    }
+
+    /**
      * Checks if the route is invalid. A route is considered invalid if the attribute or the path are invalid.
      * @return true if the route is invalid and false otherwise.
      */
     public boolean isInvalid() {
         return attribute.isInvalid() || path.isInvalid();
-    }
-
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
-    }
-
-    public void setPath(PathAttribute path) {
-        this.path = path;
-    }
-
-    public Node getDestination() {
-        return destination;
-    }
-
-    public Attribute getAttribute() {
-        return attribute;
-    }
-
-    public PathAttribute getPath() {
-        return path;
     }
 
     @Override

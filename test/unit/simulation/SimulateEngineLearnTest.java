@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.DummyAttribute;
-import policies.DummyAttributeFactory;
 import protocols.Protocol;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +32,7 @@ public class SimulateEngineLearnTest {
     public void
     learn_FromAnyNodeInvalidRoute_InvalidRoute() throws Exception {
         Link link = Factory.createRandomLink();
-        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route invalidRoute = Route.createInvalid(destination);
         when(protocol.extend(eq(destination), any(), any())).thenReturn(DummyAttribute.createInvalidDummy());
 
         assertThat(engine.learn(link, invalidRoute), is(invalidRoute));
@@ -47,7 +46,7 @@ public class SimulateEngineLearnTest {
         when(protocol.extend(eq(destination), any(), any())).thenReturn(DummyAttribute.createInvalidDummy());
 
 
-        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route invalidRoute = Route.createInvalid(destination);
         assertThat(engine.learn(link, exportedRoute), is(invalidRoute));
     }
 

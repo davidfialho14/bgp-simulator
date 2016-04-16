@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static policies.InvalidAttribute.invalid;
 
 public class PeerLabelTest {
 
@@ -47,9 +48,7 @@ public class PeerLabelTest {
 
     @Test
     public void extend_InvalidAttribute_ReturnsInvalidAttribute() throws Exception {
-        Attribute invalidAttribute = new GaoRexfordAttribute(GaoRexfordAttribute.Type.INVALID);
-
-        Attribute extendedAttribute = label.extend(null, invalidAttribute);
+        Attribute extendedAttribute = label.extend(null, invalid());
 
         assertThat(extendedAttribute.isInvalid(), is(true));
     }

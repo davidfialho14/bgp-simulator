@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.DummyAttribute;
-import policies.DummyAttributeFactory;
 import policies.DummyLabel;
 import simulation.implementations.handlers.DebugEventHandler;
 
@@ -28,7 +27,7 @@ public class SimulateEngineProcessTest {
     final Node learningNode = Factory.createRandomNode();
     final Node exportingNode = Factory.createRandomNode();
     final Link link = new Link(learningNode, exportingNode, new DummyLabel());
-    final Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+    final Route invalidRoute = Route.createInvalid(destination);
 
     @Before
     public void setUp() throws Exception {

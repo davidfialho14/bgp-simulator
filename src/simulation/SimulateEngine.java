@@ -179,7 +179,7 @@ public class SimulateEngine {
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
-            learnedRoute = Route.createInvalid(destination, attributeFactory);
+            learnedRoute = Route.createInvalid(destination);
         }
 
         Route selectedRoute;
