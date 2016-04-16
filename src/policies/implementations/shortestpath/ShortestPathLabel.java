@@ -1,8 +1,8 @@
 package policies.implementations.shortestpath;
 
+import network.Link;
 import policies.Attribute;
 import policies.Label;
-import network.Link;
 
 import static policies.InvalidAttribute.invalid;
 

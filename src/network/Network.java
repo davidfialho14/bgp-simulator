@@ -40,6 +40,10 @@ public class Network {
 		return nodes.keySet();
 	}
 
+    /**
+     * Returns all the nodes in the network.
+     * @return all the nodes in the network.
+     */
     public Collection<Node> getNodes() {
         return nodes.values();
     }

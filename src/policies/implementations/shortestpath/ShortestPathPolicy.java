@@ -1,10 +1,10 @@
 package policies.implementations.shortestpath;
 
+import io.InvalidTagException;
 import network.Node;
 import policies.Attribute;
 import policies.Label;
 import policies.Policy;
-import io.InvalidTagException;
 
 public class ShortestPathPolicy implements Policy {
 
