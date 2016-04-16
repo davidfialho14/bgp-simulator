@@ -7,18 +7,14 @@ import java.util.List;
 
 public class Node {
 
-    private Network network;    // network who created the node
-
     private int id;   // id must be unique in each network
     private List<Node> outNeighbours = new ArrayList<>();
     private List<Link> inLinks = new ArrayList<>();
 
     /**
-     * @param network   network who created the node.
 	 * @param id    id to assign to the node.
 	 */
-    public Node(Network network, int id) {
-		this.network = network;
+    public Node(int id) {
 		this.id = id;
 	}
 
@@ -63,7 +59,7 @@ public class Node {
     }
 
     /**
-     * Two nodes are equal if they are from the same network and have the same id.
+     * Two nodes are equal if they have the same id.
      */
     @Override
     public boolean equals(Object o) {
@@ -72,15 +68,13 @@ public class Node {
 
         Node node = (Node) o;
 
-        return id == node.id && (network != null ? network.equals(node.network) : node.network == null);
+        return id == node.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = network != null ? network.hashCode() : 0;
-        result = 31 * result + id;
-        return result;
+        return id;
     }
 
     @Override

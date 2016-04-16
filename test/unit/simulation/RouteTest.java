@@ -4,7 +4,6 @@ import network.Node;
 import org.junit.Test;
 import policies.DummyAttribute;
 
-import static network.Factory.createNode;
 import static network.Factory.createRandomNode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -71,7 +70,7 @@ public class RouteTest {
     public void
     compareTo_RouteWithAttr0AndPathWithOneNodeWithRouteWithAttr0AndEmptyPath_Greater()
             throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute(createNode()));
+        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
         Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute());
 
         assertThat(route1.compareTo(route2), greaterThan(0));
@@ -82,7 +81,7 @@ public class RouteTest {
     compareTo_RouteWithAttr0AndEmptyPathWithRouteWithAttr0AndPathWithOneNode_Lesser()
             throws Exception {
         Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute(createNode()));
+        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
 
         assertThat(route1.compareTo(route2), lessThan(0));
     }
@@ -91,7 +90,7 @@ public class RouteTest {
     public void
     compareTo_RouteWithAttr0AndPathWithOneNodeWithRouteWithAttr1AndEmptyPath_Greater()
             throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute(createNode()));
+        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
         Route route2 = new Route(destination, new DummyAttribute(1), new PathAttribute());
 
         assertThat(route1.compareTo(route2), greaterThan(0));
@@ -102,7 +101,7 @@ public class RouteTest {
     compareTo_RouteWithAttr1AndEmptyPathWithRouteWithAttr0AndPathWithOneNode_Lesser()
             throws Exception {
         Route route1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute(createNode()));
+        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
 
         assertThat(route1.compareTo(route2), lessThan(0));
     }

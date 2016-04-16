@@ -12,23 +12,6 @@ import simulation.Route;
 public class Factory {
 
     /**
-     * Creates a node with a fixed Id. All nodes created with this method will have the same id. All the other node
-     * attributes will be initialized to null.
-     * @return new node instance.
-     */
-    public static Node createNode() {
-        return new Node(null, 0);
-    }
-
-    /**
-     * Creates a node with the specified id. All the other node attributes will be initialized to null.
-     * @return new node instance.
-     */
-    public static Node createNode(int id) {
-        return new Node(null, id);
-    }
-
-    /**
      * Creates n node instances with different ids. The returned nodes are ordered by id from the smaller id to the
      * higher. All the other node attributes will be initialized to null.
      * @return array with n node instances.
@@ -36,7 +19,7 @@ public class Factory {
     public static Node[] createNodes(int n) {
         Node[] nodes = new Node[n];
         for (int i = 0; i < n; i++) {
-            nodes[i] = new Node(null, i);
+            nodes[i] = new Node(i);
         }
 
         return nodes;
@@ -51,7 +34,7 @@ public class Factory {
      * @return new node instance.
      */
     public static Node createRandomNode() {
-        return new Node(null, nodeId++);
+        return new Node(nodeId++);
     }
 
     /**
@@ -62,32 +45,23 @@ public class Factory {
     public static Node[] createRandomNodes(int n) {
         Node[] nodes = new Node[n];
         for (int i = 0; i < n; i++) {
-            nodes[i] = new Node(null, nodeId++);
+            nodes[i] = new Node(nodeId++);
         }
 
         return nodes;
     }
 
     /**
-     * Creates a link between two nodes of a network with dummy label. It creates the nodes from the ids.
+     * Creates a link between two nodes with dummy label. It creates the nodes from the ids.
      * To be used when a link is needed but it label its not used.
-     * @param network network where node are to be linked.
      * @param srcId id of the source node.
      * @param destId id of the destination node.
      * @return link instance.
      */
-    public static Link createLink(Network network, int srcId, int destId) {
-        // do not care about the link length
-        return new Link(new Node(network, srcId),
-                new Node(network, destId), null);
-    }
-
-    /**
-     * The same as the previous method but with the network being initialized to null.
-     */
     public static Link createLink(int srcId, int destId) {
         // do not care about the link length
-        return new Link(new Node(null, srcId), new Node(null, destId), null);
+        return new Link(new Node(srcId),
+                new Node(destId), null);
     }
 
     /**

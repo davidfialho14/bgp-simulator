@@ -58,7 +58,7 @@ public class SimulateEngineLearnTest {
         Route exportedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         when(protocol.extend(eq(destination), any(), any())).thenReturn(new DummyAttribute(1));
 
-        Route expectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(Factory.createNode(0)));
+        Route expectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(new Node(0)));
         assertThat(engine.learn(link, exportedRoute), is(expectedRoute));
     }
 
@@ -67,10 +67,10 @@ public class SimulateEngineLearnTest {
     learn_FromNode0RouteWithPathWithNode1AndValidAttrWhichExtendsToAttr1_RouteWithAttr1AndPathWithNode0AndNode1()
             throws Exception {
         Link link = Factory.createLink(1, 0);
-        Node node1 = Factory.createNode(1);
+        Node node1 = new Node(1);
         Route exportedRoute = new Route(destination, new DummyAttribute(), new PathAttribute(node1));
         when(protocol.extend(eq(destination), any(), any())).thenReturn(new DummyAttribute(1));
-        Node[] pathNodes = {node1, Factory.createNode(0)};
+        Node[] pathNodes = {node1, new Node(0)};
 
         Route expectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(pathNodes));
         assertThat(engine.learn(link, exportedRoute), is(expectedRoute));

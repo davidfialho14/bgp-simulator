@@ -41,7 +41,7 @@ public abstract class RouteTablesGenerator {
         // create array of nodes for the path
         Node[] pathNodes = new Node[path.length];
         for (int i = 0; i < pathNodes.length; i++) {
-            pathNodes[i] = new Node(network, path[i]);
+            pathNodes[i] = new Node(path[i]);
         }
 
         return pathNodes;

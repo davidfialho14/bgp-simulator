@@ -62,7 +62,7 @@ public class NetworkTest {
     public void link2ExistingNodes_NetworkContainsLinkBetweenThe2Nodes() throws Exception {
         network.addNode(0); network.addNode(1);
 
-        Link[] expectedLinks = { Factory.createLink(network, 0, 1) };
+        Link[] expectedLinks = { Factory.createLink(0, 1) };
         linkNodes(0, 1);
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
@@ -91,7 +91,7 @@ public class NetworkTest {
         network.addNode(0); network.addNode(1);
         linkNodes(0, 1);  // first link
 
-        Link[] expectedLinks = { Factory.createLink(network, 0, 1), Factory.createLink(network, 0, 1) };
+        Link[] expectedLinks = { Factory.createLink(0, 1), Factory.createLink(0, 1) };
         linkNodes(0, 1);  // same link twice
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
@@ -101,7 +101,7 @@ public class NetworkTest {
     public void linkWithSourceEqualToDestination_NetworkContainsLink() throws Exception {
         network.addNode(0);
 
-        Link[] expectedLinks = { Factory.createLink(network, 0, 0) };
+        Link[] expectedLinks = { Factory.createLink(0, 0) };
         linkNodes(0, 0);
 
         assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));

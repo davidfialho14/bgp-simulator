@@ -26,7 +26,7 @@ public class Network {
      * @throws NodeExistsException if a node with the given id already exists in the network.
      */
 	public void addNode(int id) throws NodeExistsException {
-        Node node = new Node(this, id);
+        Node node = new Node(id);
 		if (nodes.putIfAbsent(id, node) != null) {
             throw new NodeExistsException(String.format("node with id '%d' already exists", id));
         }
