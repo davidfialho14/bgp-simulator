@@ -179,7 +179,7 @@ public class SimulateEngineSelectTest {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
         Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
-        PathAttribute invalidPath = PathAttribute.createInvalidPath();
+        PathAttribute invalidPath = PathAttribute.invalidPath();
 
         engine.select(stubNodeStateInfo, link, null, learnedRoute);
 

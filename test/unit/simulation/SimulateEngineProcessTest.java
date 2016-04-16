@@ -41,7 +41,7 @@ public class SimulateEngineProcessTest {
     public void
     process_PrevSelectedInvalidRouteAndSelectedInvalidRoute_DoesNotExportToInNeighbours() throws Exception {
         when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(invalid());
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.createInvalidPath());
+        when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.invalidPath());
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -65,7 +65,7 @@ public class SimulateEngineProcessTest {
     public void
     process_PrevSelectedInvalidRouteAndSelectedValidRoute_ExportsToInNeighboursValidRoute() throws Exception {
         when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(invalid());
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.createInvalidPath());
+        when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.invalidPath());
         Route selectedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 

@@ -41,7 +41,7 @@ public class Route implements Comparable<Route> {
      * @return new invalid Route instance.
      */
     public static Route createInvalid(Node destination) {
-        return new Route(destination, invalid(), PathAttribute.createInvalidPath());
+        return new Route(destination, invalid(), PathAttribute.invalidPath());
     }
 
     /**

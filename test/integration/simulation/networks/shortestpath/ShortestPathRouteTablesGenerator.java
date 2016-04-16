@@ -48,7 +48,7 @@ public class ShortestPathRouteTablesGenerator extends RouteTablesGenerator {
             routeTable.setAttribute(network.getNode(destId), network.getNode(neighbourId), invalid());
 
             routeTable.setPath(network.getNode(destId), network.getNode(neighbourId),
-                    PathAttribute.createInvalidPath());
+                    PathAttribute.invalidPath());
         }
     }
 }

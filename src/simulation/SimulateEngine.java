@@ -143,7 +143,7 @@ public class SimulateEngine {
             path = new PathAttribute(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
-            path = PathAttribute.createInvalidPath();
+            path = PathAttribute.invalidPath();
         }
 
         return new Route(route.getDestination(), attribute, path);

@@ -59,7 +59,7 @@ public class PathAttribute extends Attribute {
      * Returns an invalid path instance.
      * @return invalid path instance.
      */
-    public static PathAttribute createInvalidPath() {
+    public static PathAttribute invalidPath() {
         return INVALID;
     }
 
