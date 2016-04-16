@@ -54,14 +54,6 @@ public class PathAttribute extends Attribute {
     public static PathAttribute createInvalidPath() {
         return INVALID;
     }
-    /**
-     * Returns an invalid path instance.
-     * @return invalid path instance.
-     */
-    @Override
-    public PathAttribute createInvalid() {
-        return INVALID;
-    }
 
     /**
      * Adds a new node to the path. If the node already exists in the path then it will no be added.

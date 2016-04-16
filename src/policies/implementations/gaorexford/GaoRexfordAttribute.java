@@ -24,11 +24,6 @@ public class GaoRexfordAttribute extends Attribute{
     }
 
     @Override
-    public Attribute createInvalid() {
-        return new GaoRexfordAttribute(Type.INVALID);
-    }
-
-    @Override
     public int compareTo(Attribute attribute) {
         GaoRexfordAttribute other = (GaoRexfordAttribute) attribute;
         return this.type.compareTo(other.type);

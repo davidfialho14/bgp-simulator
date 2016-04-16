@@ -28,11 +28,6 @@ public class ShortestPathAttribute extends Attribute {
     }
 
     @Override
-    public Attribute createInvalid() {
-        return createInvalidShortestPath();
-    }
-
-    @Override
     public int compareTo(Attribute attribute) {
         if (this.isInvalid() && attribute.isInvalid()) return 0;
         else if (this.isInvalid() && !attribute.isInvalid()) return 1;

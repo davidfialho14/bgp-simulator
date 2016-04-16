@@ -32,12 +32,6 @@ public class InvalidAttribute extends Attribute {
         return true;
     }
 
-    // TODO remove this method
-    @Override
-    public Attribute createInvalid() {
-        return null;
-    }
-
     /**
      * The invalid attribute is equal to other invalid attributes and greater than any other attribute.
      * @param attribute attribute to be compared.

@@ -3,6 +3,7 @@ package protocols.implementations;
 import network.Link;
 import network.Node;
 import policies.Attribute;
+import policies.InvalidAttribute;
 import protocols.Protocol;
 import simulation.PathAttribute;
 import simulation.Route;
@@ -26,7 +27,7 @@ public class D1R1Protocol implements Protocol {
         if (cutLinks == null || !cutLinks.contains(link)) {
             return link.extend(attribute);
         } else {
-            return attribute.createInvalid();
+            return InvalidAttribute.invalid();
         }
     }
 
