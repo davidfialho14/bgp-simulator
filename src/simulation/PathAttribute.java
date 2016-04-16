@@ -6,7 +6,7 @@ import policies.Attribute;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 
-public class PathAttribute implements Attribute {
+public class PathAttribute extends Attribute {
 
     private static final PathAttribute INVALID;
 
@@ -52,14 +52,6 @@ public class PathAttribute implements Attribute {
      * @return invalid path instance.
      */
     public static PathAttribute createInvalidPath() {
-        return INVALID;
-    }
-    /**
-     * Returns an invalid path instance.
-     * @return invalid path instance.
-     */
-    @Override
-    public PathAttribute createInvalid() {
         return INVALID;
     }
 

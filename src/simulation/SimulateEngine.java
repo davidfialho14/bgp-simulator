@@ -179,7 +179,7 @@ public class SimulateEngine {
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
-            learnedRoute = Route.createInvalid(destination, attributeFactory);
+            learnedRoute = Route.createInvalid(destination);
         }
 
         Route selectedRoute;
@@ -254,7 +254,7 @@ public class SimulateEngine {
     private void initNodesStateInfo(Network network) {
         nodesStateInfo.clear();
         for (Node node : network.getNodes()) {
-            nodesStateInfo.put(node, new NodeStateInfo(node, attributeFactory));
+            nodesStateInfo.put(node, new NodeStateInfo(node));
         }
     }
 

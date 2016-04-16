@@ -4,6 +4,8 @@ import policies.Attribute;
 import policies.AttributeFactory;
 import network.Node;
 
+import static policies.InvalidAttribute.invalid;
+
 public class ShortestPathAttributeFactory implements AttributeFactory {
 
     @Override
@@ -13,7 +15,7 @@ public class ShortestPathAttributeFactory implements AttributeFactory {
 
     @Override
     public Attribute createInvalid() {
-        return new ShortestPathAttribute();
+        return invalid();
     }
 
 }

@@ -20,6 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static policies.InvalidAttribute.invalid;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineSelectTest {
@@ -46,7 +47,7 @@ public class SimulateEngineSelectTest {
     @Test
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteInvalid_InvalidRoute() throws Exception {
-        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route invalidRoute = Route.createInvalid(destination);
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
         assertThat(engine.select(stubNodeStateInfo, link, null, invalidRoute), is(invalidRoute));
@@ -55,7 +56,7 @@ public class SimulateEngineSelectTest {
     @Test
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteWithAttr0AndEmptyPath_RouteWithAttr0AndEmptyPath() throws Exception {
-        Route learnedRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route learnedRoute = Route.createInvalid(destination);
         Route exlcRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
@@ -66,7 +67,7 @@ public class SimulateEngineSelectTest {
     public void
     select_BetweenLearnedWithAttr0AndEmptyPathAndExclRouteInvalid_RouteWithAttr0AndEmptyPath() throws Exception {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        Route exlcRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route exlcRoute = Route.createInvalid(destination);
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
         assertThat(engine.select(stubNodeStateInfo, link, null, learnedRoute), is(learnedRoute));
@@ -120,7 +121,7 @@ public class SimulateEngineSelectTest {
     public void
     select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteInvalid_InvalidRoute()
             throws Exception {
-        Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+        Route invalidRoute = Route.createInvalid(destination);
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
@@ -179,12 +180,11 @@ public class SimulateEngineSelectTest {
         Route learnedRoute = new Route(destination, new DummyAttribute(0), new PathAttribute(learningNode));
         Route exlcRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
         when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
-        Attribute invalidAttribute = DummyAttribute.createInvalidDummy();
         PathAttribute invalidPath = PathAttribute.createInvalidPath();
 
         engine.select(stubNodeStateInfo, link, null, learnedRoute);
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalidAttribute, invalidPath);
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalid(), invalidPath);
     }
 
     @Test

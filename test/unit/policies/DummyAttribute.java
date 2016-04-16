@@ -1,6 +1,6 @@
 package policies;
 
-public class DummyAttribute implements Attribute {
+public class DummyAttribute extends Attribute {
 
     Integer value = null;
 
@@ -16,25 +16,6 @@ public class DummyAttribute implements Attribute {
      */
     public DummyAttribute(int value) {
         this.value = value;
-    }
-
-    /**
-     * Creates invalid dummy attribute.
-     * @return invalid dummy attribute.
-     */
-    public static DummyAttribute createInvalidDummy() {
-        DummyAttribute dummy = new DummyAttribute();
-        dummy.value = null;
-        return dummy;
-    }
-
-    public DummyAttribute createInvalid() {
-        return createInvalidDummy();
-    }
-
-    @Override
-    public boolean isInvalid() {
-        return value == null;
     }
 
     /**

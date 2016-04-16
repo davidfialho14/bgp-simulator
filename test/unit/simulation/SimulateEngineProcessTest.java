@@ -9,12 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.DummyAttribute;
-import policies.DummyAttributeFactory;
 import policies.DummyLabel;
 import simulation.implementations.handlers.DebugEventHandler;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static policies.InvalidAttribute.invalid;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineProcessTest {
@@ -28,7 +28,7 @@ public class SimulateEngineProcessTest {
     final Node learningNode = Factory.createRandomNode();
     final Node exportingNode = Factory.createRandomNode();
     final Link link = new Link(learningNode, exportingNode, new DummyLabel());
-    final Route invalidRoute = Route.createInvalid(destination, new DummyAttributeFactory());
+    final Route invalidRoute = Route.createInvalid(destination);
 
     @Before
     public void setUp() throws Exception {
@@ -40,7 +40,7 @@ public class SimulateEngineProcessTest {
     @Test
     public void
     process_PrevSelectedInvalidRouteAndSelectedInvalidRoute_DoesNotExportToInNeighbours() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(DummyAttribute.createInvalidDummy());
+        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(invalid());
         when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.createInvalidPath());
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
@@ -64,7 +64,7 @@ public class SimulateEngineProcessTest {
     @Test
     public void
     process_PrevSelectedInvalidRouteAndSelectedValidRoute_ExportsToInNeighboursValidRoute() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(DummyAttribute.createInvalidDummy());
+        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(invalid());
         when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.createInvalidPath());
         Route selectedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());

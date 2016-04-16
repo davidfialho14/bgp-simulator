@@ -5,7 +5,6 @@ import network.Node;
 import org.junit.Test;
 import policies.Attribute;
 import policies.DummyAttribute;
-import policies.DummyAttributeFactory;
 
 import java.util.Arrays;
 
@@ -20,7 +19,7 @@ public class RouteTableTest {
      * @return route table initialized.
      */
     private RouteTable createRouteTable(Node... neighbours) {
-        return new RouteTable(Arrays.asList(neighbours), new DummyAttributeFactory());
+        return new RouteTable(Arrays.asList(neighbours));
     }
 
     @Test

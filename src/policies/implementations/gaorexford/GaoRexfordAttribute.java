@@ -2,36 +2,25 @@ package policies.implementations.gaorexford;
 
 import policies.Attribute;
 
-public class GaoRexfordAttribute implements Attribute{
+public abstract class GaoRexfordAttribute extends Attribute {
 
-    public enum Type {
-        CUSTOMER, PEER, PROVIDER, INVALID
+    /**
+     * This enum models the type of the attributes.
+     * Customer is the lowest which means the most preferred attribute, followed by the peer attribute, which
+     * is followed by the provider attribute.
+     */
+    protected enum Type {
+        CUSTOMER, PEER, PROVIDER
     }
 
-    private Type type;
-
-    public GaoRexfordAttribute(Type type) {
-        this.type = type;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    @Override
-    public boolean isInvalid() {
-        return type.equals(Type.INVALID);
-    }
-
-    @Override
-    public Attribute createInvalid() {
-        return new GaoRexfordAttribute(Type.INVALID);
-    }
+    abstract Type getType();
 
     @Override
     public int compareTo(Attribute attribute) {
+        if (attribute.isInvalid()) return -1;
+
         GaoRexfordAttribute other = (GaoRexfordAttribute) attribute;
-        return this.type.compareTo(other.type);
+        return this.getType().compareTo(other.getType());
     }
 
     @Override
@@ -41,28 +30,13 @@ public class GaoRexfordAttribute implements Attribute{
 
         GaoRexfordAttribute that = (GaoRexfordAttribute) o;
 
-        return type.equals(that.type);
+        return getType().equals(that.getType());
 
     }
 
     @Override
     public int hashCode() {
-        return type != null ? type.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-
-        switch (type) {
-            case CUSTOMER:
-                return "GR(c)";
-            case PEER:
-                return "GR(r)";
-            case PROVIDER:
-                return "GR(p)";
-        }
-
-        return "GR(•)";
+        return getType() != null ? getType().hashCode() : 0;
     }
 
 }

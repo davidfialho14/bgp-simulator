@@ -2,7 +2,6 @@ package simulation;
 
 import network.Node;
 import policies.Attribute;
-import policies.AttributeFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +15,8 @@ public class NodeStateInfo {
     private Map<Node, Attribute> selectedAttributes = new HashMap<>();
     private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
 
-    public NodeStateInfo(Node node, AttributeFactory attributeFactory) {
-        this.table = new RouteTable(node.getOutNeighbours(), attributeFactory);
+    public NodeStateInfo(Node node) {
+        this.table = new RouteTable(node.getOutNeighbours());
     }
 
     public RouteTable getTable() {
