@@ -2,26 +2,25 @@ package policies.implementations.shortestpath;
 
 import policies.Attribute;
 
+/**
+ * Implements any attribute of the shortest path policy.
+ */
 public class ShortestPathAttribute extends Attribute {
 
-    Integer length = null;
+    private int length;
 
     /**
-     * Creates an invalid shortest-path attribute.
-     * Should only be called by the factory to create invalid attributes.
+     * Constructs a SP attribute assigning it the given length.
+     * @param length length to be assigned to the new SP attribute.
      */
-    ShortestPathAttribute() {
-    }
-
-    // TODO replace all calls to default constructor with the new createInvalid() method
-    public static ShortestPathAttribute createInvalidShortestPath() {
-        return new ShortestPathAttribute();
-    }
-
     public ShortestPathAttribute(int length) {
         this.length = length;
     }
 
+    /**
+     * Two SP attributes are compared using their lengths. Attributes with lower lengths
+     * are less than attribute with higher lengths.
+     */
     @Override
     public int compareTo(Attribute attribute) {
         if (this.isInvalid() && attribute.isInvalid()) return 0;
@@ -32,6 +31,9 @@ public class ShortestPathAttribute extends Attribute {
         return this.length - other.length;
     }
 
+    /**
+     * Two SP attributes are equal if they have the same length.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,21 +41,25 @@ public class ShortestPathAttribute extends Attribute {
 
         ShortestPathAttribute that = (ShortestPathAttribute) o;
 
-        return length != null ? length.equals(that.length) : that.length == null;
+        return length == that.length;
 
     }
 
     @Override
     public int hashCode() {
-        return length != null ? length.hashCode() : 0;
+        return length;
     }
 
     @Override
     public String toString() {
-        if (length == null) {
-            return "SP(•)";
-        } else {
-            return "SP(" + length + ')';
-        }
+        return "SP(" + length + ')';
+    }
+
+    /**
+     * Returns the length of the SP attribute.
+     * @return length of the SP attribute.
+     */
+    int getLength() {
+        return length;
     }
 }

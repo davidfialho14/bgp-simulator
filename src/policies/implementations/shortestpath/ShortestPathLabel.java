@@ -27,7 +27,7 @@ public class ShortestPathLabel implements Label {
             return invalid();
         } else {
             ShortestPathAttribute shortestPathAttribute = (ShortestPathAttribute) attribute;
-            return new ShortestPathAttribute(length + shortestPathAttribute.length);
+            return new ShortestPathAttribute(length + shortestPathAttribute.getLength());
         }
     }
 
