@@ -19,7 +19,7 @@ public abstract class RouteTablesGenerator {
      */
     public RouteTablesGenerator(Network network, Integer onlyValidDestId) {
         for (Node node : network.getNodes()) {
-            routeTables.put(node, new RouteTable(node.getOutNeighbours()));
+            routeTables.put(node, new RouteTable(node.getOutLinks()));
         }
         this.network = network;
         this.onlyValidDestId = onlyValidDestId;

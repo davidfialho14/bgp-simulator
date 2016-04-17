@@ -1,6 +1,7 @@
 package simulation;
 
 import dnl.utils.text.table.TextTable;
+import network.Link;
 import network.Node;
 import policies.Attribute;
 
@@ -11,82 +12,80 @@ import java.util.function.Function;
 public class RouteTable {
 
     /*
-        The first map represents the neighbours. A neighbour maps to a map with the destination as the key and the
-        associated route as the value. The neighbour must be the initial map keys in order to be possible to create
+        The first map represents the out-links. A out-link maps to a map with the destination as the key and the
+        associated route as the value. The out-link must be the initial map keys in order to be possible to create
         the maps in the constructor.
      */
-    private Map<Node, Map<Node, Route>> routes;
-    private Collection<Node> neighbours;
+    private Map<Link, Map<Node, Route>> routes;
+    private Collection<Link> outLinks;
     private List<Node> destinations = new ArrayList<>();
 
     /**
-     * Constructs a new empty route table. Defines the neighbours included in the route table.
-     * @param neighbours out neighbours of the route table.
+     * Constructs a new empty route table. Defines the outLinks included in the route table.
+     * @param outLinks out out-links of the route table.
      */
-    public RouteTable(Collection<Node> neighbours) {
-        this.neighbours = neighbours;
-        routes = new HashMap<>(neighbours.size());
+    public RouteTable(Collection<Link> outLinks) {
+        this.outLinks = outLinks;
+        this.routes = new HashMap<>(outLinks.size());
 
-        // create maps for each neighbour
-        for (Node outNeighbour : neighbours) {
-            routes.put(outNeighbour, new HashMap<>());
-        }
+        // create empty maps for each out-link
+        outLinks.forEach(link -> routes.put(link, new HashMap<>()));
     }
 
     /**
-     * Sets a the given attribute to the given destination and neighbour pair. If the neighbour does not exists in the
+     * Sets a the given attribute to the given destination and out-link pair. If the out-link does not exists in the
      * table calling this method will not change anything.
      * @param destination destination node to be assigned the attribute.
-     * @param neighbour neighbour node to be assigned the attribute.
+     * @param outLink out-link node to be assigned the attribute.
      * @param attribute attribute to be set.
      */
-    public void setAttribute(Node destination, Node neighbour, Attribute attribute) {
+    public void setAttribute(Node destination, Link outLink, Attribute attribute) {
 
         try {
-            set(destination, neighbour, (route, p) -> route.setAttribute(attribute), attribute);
+            set(destination, outLink, (route, p) -> route.setAttribute(attribute), attribute);
         } catch (NullPointerException e1) {
             // destination was not added yet
             addDestination(destination);
-            routes.get(neighbour).get(destination).setAttribute(attribute);
+            routes.get(outLink).get(destination).setAttribute(attribute);
         }
     }
 
     /**
-     * Sets a the given path to the given destination and neighbour pair. If the neighbour does not exists in the
+     * Sets a the given path to the given destination and out-link pair. If the out-link does not exists in the
      * table calling this method will not change anything.
      * @param destination destination node to be assigned the path.
-     * @param neighbour neighbour node to be assigned the path.
+     * @param outLink out-link node to be assigned the path.
      * @param path attribute to be set.
      */
-    public void setPath(Node destination, Node neighbour, PathAttribute path) {
+    public void setPath(Node destination, Link outLink, PathAttribute path) {
         try {
-            set(destination, neighbour, (route, p) -> route.setPath(path), path);
+            set(destination, outLink, (route, p) -> route.setPath(path), path);
         } catch (NullPointerException e1) {
             // destination was not added yet
             addDestination(destination);
-            routes.get(neighbour).get(destination).setPath(path);
+            routes.get(outLink).get(destination).setPath(path);
         }
     }
 
     /**
      * @throws NullPointerException if the destination node does not exist.
      */
-    private void set(Node destination, Node neighbour,
+    private void set(Node destination, Link outLink,
                      BiConsumer<Route, Attribute> setter, Attribute attributeToset) {
-        Map<Node, Route> row = routes.get(neighbour);
+        Map<Node, Route> row = routes.get(outLink);
         if (row != null) {
-            // neighbour exists
+            // out-link exists
             setter.accept(row.get(destination), attributeToset); // set the attribute
         }
     }
 
     /**
-     * Adds a new destination to the table by assigning invalid routes for all neighbours for that destination.
+     * Adds a new destination to the table by assigning invalid routes for all out-links for that destination.
      * @param destination destination to be added.
      */
     private void addDestination(Node destination) {
-        // add an invalid route for each neighbour
-        for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
+        // add an invalid route for each out-link
+        for (Map.Entry<Link, Map<Node, Route>> entry : routes.entrySet()) {
             entry.getValue().put(destination, Route.createInvalid(destination));
         }
 
@@ -94,50 +93,50 @@ public class RouteTable {
     }
 
     /**
-     * Returns the attribute associated with the given destination and neighbour pair. If the destination or the
-     * neighbour do not exist in the table it will be returned null.
+     * Returns the attribute associated with the given destination and out-link pair. If the destination or the
+     * out-link do not exist in the table it will be returned null.
      * @param destination destination to get attribute.
-     * @param neighbour neighbour to get attribute.
+     * @param outLink out-link to get attribute.
      * @return attribute associated with the given pair or null if one of them does not exist.
      */
-    public Attribute getAttribute(Node destination, Node neighbour) {
-        return get(destination, neighbour, (Route::getAttribute));
+    public Attribute getAttribute(Node destination, Link outLink) {
+        return get(destination, outLink, (Route::getAttribute));
     }
 
     /**
-     * Returns the path associated with the given destination and neighbour pair. If the destination or the
-     * neighbour do not exist in the table it will be returned null.
+     * Returns the path associated with the given destination and out-link pair. If the destination or the
+     * out-link do not exist in the table it will be returned null.
      * @param destination destination to get path.
-     * @param neighbour neighbour to get path.
+     * @param outLink out-link to get path.
      * @return path associated with the given pair or null if one of them does not exist.
      */
-    public PathAttribute getPath(Node destination, Node neighbour) {
-        return (PathAttribute) get(destination, neighbour, (Route::getPath));
+    public PathAttribute getPath(Node destination, Link outLink) {
+        return (PathAttribute) get(destination, outLink, (Route::getPath));
     }
 
-    private Attribute get(Node destination, Node neighbour, Function<Route, Attribute> getter) {
+    private Attribute get(Node destination, Link outLink, Function<Route, Attribute> getter) {
         try {
-            return getter.apply(routes.get(neighbour).get(destination));
+            return getter.apply(routes.get(outLink).get(destination));
         } catch (NullPointerException e) {
-            // neighbour or destination do not exist
+            // out-link or destination do not exist
             return null;
         }
     }
 
     /**
-     * Clears all the routes and destinations from the table. It keeps the neighbours.
+     * Clears all the routes and destinations from the table. It keeps the out-links.
      */
     public void clear() {
         routes.values().forEach(Map::clear);
     }
 
-    public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {
+    public Route getSelectedRoute(Node destination, Link ignoredOutLink) {
         Route preferredRoute = null;
-        for (Map.Entry<Node, Map<Node, Route>> entry : routes.entrySet()) {
-            Node neighbour = entry.getKey();
+        for (Map.Entry<Link, Map<Node, Route>> entry : routes.entrySet()) {
+            Link outLink = entry.getKey();
             Route route = entry.getValue().get(destination);
 
-            if (!neighbour.equals(ignoredNeighbour) &&
+            if (!outLink.equals(ignoredOutLink) &&
                     (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
                 preferredRoute = route;
             }
@@ -147,16 +146,16 @@ public class RouteTable {
     }
 
     public TextTable getPrintableTable() {
-        Object[] neighboursArray = neighbours.toArray();
-        String[] columns = new String[neighbours.size()];
-        for (int i = 0; i < neighbours.size(); i++) {
-            columns[i] = neighboursArray[i].toString();
+        Object[] outLinksArray = outLinks.toArray();
+        String[] columns = new String[outLinks.size()];
+        for (int i = 0; i < outLinks.size(); i++) {
+            columns[i] = outLinksArray[i].toString();
         }
 
-        Route[][] table = new Route[destinations.size()][neighbours.size()];
+        Route[][] table = new Route[destinations.size()][outLinks.size()];
         for (int i = 0; i < destinations.size(); i++) {
-            for (int j = 0; j < neighbours.size(); j++) {
-                table[i][j] = routes.get(neighboursArray[j]).get(destinations.get(i));
+            for (int j = 0; j < outLinks.size(); j++) {
+                table[i][j] = routes.get(outLinksArray[j]).get(destinations.get(i));
             }
         }
 
@@ -172,14 +171,14 @@ public class RouteTable {
         RouteTable that = (RouteTable) o;
 
         return routes != null ? routes.equals(that.routes) : that.routes == null &&
-                (neighbours != null ? neighbours.equals(that.neighbours) : that.neighbours == null);
+                (outLinks != null ? outLinks.equals(that.outLinks) : that.outLinks == null);
 
     }
 
     @Override
     public int hashCode() {
         int result = routes != null ? routes.hashCode() : 0;
-        result = 31 * result + (neighbours != null ? neighbours.hashCode() : 0);
+        result = 31 * result + (outLinks != null ? outLinks.hashCode() : 0);
         return result;
     }
 }

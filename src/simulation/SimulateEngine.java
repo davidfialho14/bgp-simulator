@@ -161,11 +161,10 @@ public class SimulateEngine {
     Route select(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
-        Node exportingNeighbour = link.getDestination();
         Node learningNode = link.getSource();
 
-        // select the best route learned from all out-neighbours except the exporting neighbour
-        Route exclRoute = nodeStateInfo.getSelectedRoute(destination, exportingNeighbour);
+        // select the best route learned from all out-neighbours except the exporting out-link
+        Route exclRoute = nodeStateInfo.getSelectedRoute(destination, link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
@@ -191,7 +190,7 @@ public class SimulateEngine {
 
         // update the node state information
         nodeStateInfo.setSelected(destination, selectedRoute);
-        nodeStateInfo.updateRoute(destination, exportingNeighbour, learnedRoute.getAttribute(), learnedRoute.getPath());
+        nodeStateInfo.updateRoute(destination, link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
         return selectedRoute;
     }
