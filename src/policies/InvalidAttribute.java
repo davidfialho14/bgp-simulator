@@ -56,4 +56,8 @@ public class InvalidAttribute extends Attribute {
         return 31;
     }
 
+    @Override
+    public String toString() {
+        return "•";
+    }
 }

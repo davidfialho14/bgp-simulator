@@ -29,7 +29,7 @@ public class Topology2 extends Topology {
     }
 
     @Override
-    public Map<Node, RouteTable> getExpectedRouteTables(Integer destId) {
+    public Map<Node, RouteTable> getExpectedRouteTablesForBGP(Integer destId) {
         GaoRexfordRouteTablesGenerator generator = new GaoRexfordRouteTablesGenerator(network, destId);
 
         /* node 0 route table

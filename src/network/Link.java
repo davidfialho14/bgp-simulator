@@ -21,6 +21,18 @@ public class Link {
         this.label = label;
 	}
 
+    /**
+     * Creates a link connecting two nodes with the given source and destination ids.
+     * @param srcId id of the source node of the link.
+     * @param destId id of the destination node of the link.
+     * @param label label associated with the link.
+     */
+    public Link(int srcId, int destId, Label label) {
+        this.source = new Node(srcId);
+        this.destination = new Node(destId);
+        this.label = label;
+    }
+
 	/**
 	 * Returns the source node of the link.
 	 * @return the source node of the link.

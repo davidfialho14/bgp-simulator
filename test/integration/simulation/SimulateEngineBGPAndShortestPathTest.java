@@ -20,13 +20,13 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
                 new FIFOScheduler(), new DebugEventHandler());
     }
 
-    @Test(timeout = 2000)
+    @Test//(timeout = 2000)
     public void simulate_Topology0_Converges() throws Exception {
         topology = new Topology0();
         engine.simulate(topology.getNetwork());
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
     }
 
     @Test(timeout = 2000)
@@ -35,7 +35,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork());
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
     }
 
     @Test(timeout = 2000)
@@ -44,7 +44,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork(), 0);
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
     }
 
     @Test(timeout = 2000)
@@ -54,7 +54,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork(), 0);
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
     }
 
     @Test//(timeout = 2000)
@@ -63,6 +63,6 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork(), 0);
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables(0)));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
     }
 }
