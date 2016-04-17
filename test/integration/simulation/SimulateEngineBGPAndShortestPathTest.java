@@ -20,7 +20,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
                 new FIFOScheduler(), new DebugEventHandler());
     }
 
-    @Test//(timeout = 2000)
+    @Test(timeout = 2000)
     public void simulate_Topology0_Converges() throws Exception {
         topology = new Topology0();
         engine.simulate(topology.getNetwork());
@@ -57,7 +57,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
     }
 
-    @Test//(timeout = 2000)
+    @Test(timeout = 2000)
     public void simulate_Topology4_Converges() throws Exception {
         topology = new Topology4();
         engine.simulate(topology.getNetwork(), 0);

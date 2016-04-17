@@ -76,10 +76,9 @@ public class Link {
 
         Link link = (Link) o;
 
-        return source != null ? source.equals(link.source) : link.source == null
-                && (destination != null ? destination.equals(link.destination) : link.destination == null
-                && (label != null ? label.equals(link.label) : link.label == null));
-
+        if (source != null ? !source.equals(link.source) : link.source != null) return false;
+        if (destination != null ? !destination.equals(link.destination) : link.destination != null) return false;
+        return label != null ? label.equals(link.label) : link.label == null;
     }
 
     @Override
