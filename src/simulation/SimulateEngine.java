@@ -46,9 +46,12 @@ public class SimulateEngine {
      * @param network network to be simulated.
      */
     public void simulate(Network network) {
-        initNodesStateInfo(network);
+        initNodesStateInfo(network.getNodes());
+
+        eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNodes());
         simulationLoop();
+        eventHandler.onAfterSimulate();
     }
 
     /**
@@ -57,7 +60,8 @@ public class SimulateEngine {
      * @param destinationId id of the destination node to simulate for.
      */
     public void simulate(Network network, int destinationId) {
-        initNodesStateInfo(network);
+        initNodesStateInfo(network.getNodes());
+
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNode(destinationId));
         simulationLoop();
@@ -248,14 +252,13 @@ public class SimulateEngine {
     }
 
     /**
-     * Initializes the network's nodes state info with the default state information for each node.
-     * @param network network being simulated.
+     * Initializes state info of for the given collection of nodes. All current node state information is cleared
+     * after calling this method.
+     * @param nodes nodes to initialize the state info for.
      */
-    private void initNodesStateInfo(Network network) {
+    private void initNodesStateInfo(Collection<Node> nodes) {
         nodesStateInfo.clear();
-        for (Node node : network.getNodes()) {
-            nodesStateInfo.put(node, new NodeStateInfo(node));
-        }
+        nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node)));
     }
 
     /**
