@@ -7,6 +7,7 @@ import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class SimulateEngine {
      */
     public void simulate(Network network) {
         initNodesStateInfo(network);
-        exportNodesSelfRoutes(network);
+        exportSelfRoute(network.getNodes());
         simulationLoop();
     }
 
@@ -58,7 +59,7 @@ public class SimulateEngine {
     public void simulate(Network network, int destinationId) {
         initNodesStateInfo(network);
         eventHandler.onBeforeSimulate();
-        exportNodesSelfRoutes(network.getNode(destinationId));
+        exportSelfRoute(network.getNode(destinationId));
         simulationLoop();
         eventHandler.onAfterSimulate();
     }
@@ -258,24 +259,18 @@ public class SimulateEngine {
     }
 
     /**
-     * Exports all self routes from all nodes in the given network.
-     * @param network network being simulated.
+     * Exports the self routes of each one of the given nodes.
+     * @param nodes nodes which the self routes are to be exported.
      */
-    private void exportNodesSelfRoutes(Network network) {
-        for (Node node : network.getNodes()) {
-            for (Link inLink : node.getInLinks()) {
-                export(inLink, Route.createSelf(node, policy), null);
-            }
-        }
+    private void exportSelfRoute(Collection<Node> nodes) {
+        nodes.forEach(this::exportSelfRoute);
     }
 
     /**
-     * The destination node exports its self route to all of its in-neighbours.
-     * @param destination node to export self route.
+     * Exports the self route of the given node.
+     * @param node node which the self route is to be exported.
      */
-    private void exportNodesSelfRoutes(Node destination) {
-        for (Link inLink : destination.getInLinks()) {
-            export(inLink, Route.createSelf(destination, policy), null);
-        }
+    private void exportSelfRoute(Node node) {
+        node.getInLinks().forEach(link -> export(link, Route.createSelf(node, policy), null));
     }
 }
