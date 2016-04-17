@@ -6,13 +6,13 @@ import policies.Attribute;
 import policies.Label;
 import policies.Policy;
 
-import static policies.implementations.gaorexford.CustomerAttribute.customer;
+import static policies.implementations.gaorexford.SelfAttribute.self;
 
 public class GaoRexfordPolicy implements Policy {
 
     @Override
     public Attribute createSelf(Node node) {
-        return customer();
+        return self();
     }
 
     @Override

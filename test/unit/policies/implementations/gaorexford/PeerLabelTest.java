@@ -10,6 +10,7 @@ import static policies.InvalidAttribute.invalid;
 import static policies.implementations.gaorexford.CustomerAttribute.customer;
 import static policies.implementations.gaorexford.PeerAttribute.peer;
 import static policies.implementations.gaorexford.ProviderAttribute.provider;
+import static policies.implementations.gaorexford.SelfAttribute.self;
 
 public class PeerLabelTest {
 
@@ -18,6 +19,11 @@ public class PeerLabelTest {
     @Before
     public void setUp() throws Exception {
         label = new PeerLabel();
+    }
+
+    @Test
+    public void extend_SelfAttribute_ReturnsSelfAttribute() throws Exception {
+        assertThat(label.extend(null, self()), is(peer()));
     }
 
     @Test

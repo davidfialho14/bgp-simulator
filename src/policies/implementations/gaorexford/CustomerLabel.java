@@ -16,7 +16,7 @@ public class CustomerLabel implements Label {
      * Table gives the result of extending each type of attribute.
      */
     private static final Attribute[] extendTable = {
-            customer(),   invalid(),  invalid()
+            customer(), customer(),   invalid(),  invalid()
     };
 
     @Override
