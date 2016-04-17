@@ -30,6 +30,9 @@ public class Network {
 		if (nodes.putIfAbsent(id, node) != null) {
             throw new NodeExistsException(String.format("node with id '%d' already exists", id));
         }
+
+        // node must store a self link to itself
+        node.addOutLink(new SelfLink(node));
 	}
 
     /**
