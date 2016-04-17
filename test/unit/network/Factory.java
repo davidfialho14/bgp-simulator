@@ -65,13 +65,25 @@ public class Factory {
     }
 
     /**
-     * Creates a link between two random nodes and associated with a dummy label. The nodes are initialized with
-     * a null network and protocol. The node's ids will never repeat between calls, which mean it will always
-     * create different links.
+     * Creates a link between two random nodes and associated with a dummy label. The node's ids will never repeat
+     * between calls, which mean it will always create different links.
      * @return link instance.
      */
     public static Link createRandomLink() {
         return new Link(createRandomNode(), createRandomNode(), new DummyLabel());
+    }
+
+    /**
+     * Creates n links instances with different source and destination nodes.
+     * @return array with n link instances.
+     */
+    public static Link[] createRandomLinks(int n) {
+        Link[] links = new Link[n];
+        for (int i = 0; i < n; i++) {
+            links[i] = createRandomLink();
+        }
+
+        return links;
     }
 
     /**
@@ -85,7 +97,7 @@ public class Factory {
 
     /**
      * Creates n routes instances with different random destination nodes.
-     * @return array with n node instances.
+     * @return array with n route instances.
      */
     public static Route[] createRandomRoutes(int n) {
         Route[] routes = new Route[n];

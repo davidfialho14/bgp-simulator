@@ -3,20 +3,24 @@ package simulation.networks.shortestpath;
 import network.Node;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulation.RouteTable;
 import policies.implementations.shortestpath.ShortestPathLabel;
-import simulation.networks.Topology;
+import simulation.RouteTable;
+import simulation.networks.RouteTablesGenerator;
 
 import java.util.Map;
 
-public class Topology4 extends Topology {
+/**
+ * Topology description:
+ *
+ *  digraph network4 {
+ *      1 -> 0 [label=0];
+ *      1 -> 2 -> 3 -> 1 [label=1];
+ *  }
+ */
+public class Topology4 extends ShortestPathTopology {
 
     /**
-     * Creates the network4.
-     *  digraph network4 {
-     *      1 -> 0 [label=0];
-     *      1 -> 2 -> 3 -> 1 [label=1];
-     *  }
+     * Constructs the network topology according to the topology description
      */
     public Topology4() throws NodeExistsException, NodeNotFoundException {
         network.addNode(0);
@@ -30,8 +34,8 @@ public class Topology4 extends Topology {
     }
 
     @Override
-    public Map<Node, RouteTable> getExpectedRouteTables(Integer destId) {
-        ShortestPathRouteTablesGenerator generator = new ShortestPathRouteTablesGenerator(network, destId);
+    public Map<Node, RouteTable> getExpectedRouteTablesForBGP(Integer destId) {
+        RouteTablesGenerator generator = new RouteTablesGenerator(network.getNodes(), destId);
 
         /* node 0 route table
             |   |
@@ -39,26 +43,26 @@ public class Topology4 extends Topology {
         */
 
         /* node 1 route table
-            |   |    0   | 2 |
-            |:-:|:------:|:-:|
-            | 0 | 0, [0] | • |
+            |   |  0, 0  | 2, 1 |
+            |:-:|:------:|:----:|
+            | 0 | 0, [0] |  •   |
          */
-        generator.setRoute(1, 0, 0, 0, new int[]{0});
-        generator.setInvalidRoute(1, 0, 2);
+        generator.setRoute(1, 0, label(0), 0, attribute(0), new int[]{0});
+        generator.setInvalidRoute(1, 2, label(1), 0);
 
         /* node 2 route table
-            |   |       3      |
+            |   |     3, 1     |
             |:-:|:------------:|
             | 0 | 2, [3, 1, 0] |
          */
-        generator.setRoute(2, 0, 3, 2, new int[]{3, 1, 0});
+        generator.setRoute(2, 3, label(1), 0, attribute(2), new int[]{3, 1, 0});
 
         /* node 3 route table
-            |   |     1     |
+            |   |    1, 1   |
             |:-:|:---------:|
             | 0 | 1, [1, 0] |
          */
-        generator.setRoute(3, 0, 1, 1, new int[]{1, 0});
+        generator.setRoute(3, 1, label(1), 0, attribute(1), new int[]{1, 0});
 
         return generator.getTables();
     }

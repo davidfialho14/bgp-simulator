@@ -3,21 +3,26 @@ package simulation.networks.gaorexford;
 import network.Node;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulation.RouteTable;
 import policies.implementations.gaorexford.CustomerLabel;
+import simulation.RouteTable;
+import simulation.networks.RouteTablesGenerator;
 import simulation.networks.Topology;
 
 import java.util.Map;
 
 import static policies.implementations.gaorexford.CustomerAttribute.customer;
 
+/**
+ * Topology description:
+ *
+ *  digraph topology2 {
+ *      0 -> 1 -> 2 -> 0 [label=c];
+ *  }
+ */
 public class Topology2 extends Topology {
 
     /**
-     * Creates the topology 0.
-     *  digraph topology0 {
-     *      0 -> 1 -> 2 -> 0 [label=c];
-     *  }
+     * Constructs the network topology according to the topology description
      */
     public Topology2() throws NodeExistsException, NodeNotFoundException {
         network.addNode(0);
@@ -29,35 +34,35 @@ public class Topology2 extends Topology {
     }
 
     @Override
-    public Map<Node, RouteTable> getExpectedRouteTables(Integer destId) {
-        GaoRexfordRouteTablesGenerator generator = new GaoRexfordRouteTablesGenerator(network, destId);
+    public Map<Node, RouteTable> getExpectedRouteTablesForBGP(Integer destId) {
+        RouteTablesGenerator generator = new RouteTablesGenerator(network.getNodes(), destId);
 
         /* node 0 route table
-            |   |     1     |
+            |   |   1, C    |
             |:-:|:---------:|
             | 1 |   c, [1]  |
             | 2 | c, [2, 1] |
          */
-        generator.setRoute(0, 1, 1, customer(), new int[]{1});
-        generator.setRoute(0, 2, 1, customer(), new int[]{2, 1});
+        generator.setRoute(0, 1, new CustomerLabel(), 1, customer(), new int[]{1});
+        generator.setRoute(0, 1, new CustomerLabel(), 2, customer(), new int[]{2, 1});
 
         /* node 1 route table
-            |   |     2     |
+            |   |   2, C    |
             |:-:|:---------:|
             | 0 | c, [0, 2] |
             | 2 |   c, [2]  |
          */
-        generator.setRoute(1, 0, 2, customer(), new int[]{0, 2});
-        generator.setRoute(1, 2, 2, customer(), new int[]{2});
+        generator.setRoute(1, 2, new CustomerLabel(), 0, customer(), new int[]{0, 2});
+        generator.setRoute(1, 2, new CustomerLabel(), 2, customer(), new int[]{2});
 
         /* node 2 route table
-            |   |     0     |
+            |   |   0, C    |
             |:-:|:---------:|
             | 0 |   c, [0]  |
             | 1 | c, [1, 0] |
          */
-        generator.setRoute(2, 0, 0, customer(), new int[]{0});
-        generator.setRoute(2, 1, 0, customer(), new int[]{1, 0});
+        generator.setRoute(2, 0, new CustomerLabel(), 0, customer(), new int[]{0});
+        generator.setRoute(2, 0, new CustomerLabel(), 1, customer(), new int[]{1, 0});
 
         return generator.getTables();
     }

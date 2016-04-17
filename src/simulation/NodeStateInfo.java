@@ -1,5 +1,6 @@
 package simulation;
 
+import network.Link;
 import network.Node;
 import policies.Attribute;
 
@@ -16,7 +17,7 @@ public class NodeStateInfo {
     private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
 
     public NodeStateInfo(Node node) {
-        this.table = new RouteTable(node.getOutNeighbours());
+        this.table = new RouteTable(node.getOutLinks());
     }
 
     public RouteTable getTable() {
@@ -51,8 +52,8 @@ public class NodeStateInfo {
         return selectedPaths.get(destination);
     }
 
-    public Route getSelectedRoute(Node destination, Node ignoredNeighbour) {
-        return table.getSelectedRoute(destination, ignoredNeighbour);
+    public Route getSelectedRoute(Node destination, Link ignoredLink) {
+        return table.getSelectedRoute(destination, ignoredLink);
     }
 
     public void setSelected(Node destination, Route route) {
@@ -60,8 +61,8 @@ public class NodeStateInfo {
         selectedPaths.put(destination, route.getPath());
     }
 
-    public void updateRoute(Node destination, Node neighbour, Attribute attribute, PathAttribute path) {
-        table.setAttribute(destination, neighbour, attribute);
-        table.setPath(destination, neighbour, path);
+    public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
+        table.setAttribute(destination, outLink, attribute);
+        table.setPath(destination, outLink, path);
     }
 }

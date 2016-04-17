@@ -181,7 +181,7 @@ public class SimulateEngineSelectTest {
 
         engine.select(stubNodeStateInfo, link, null, learnedRoute);
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, invalid(), invalidPath);
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, link, invalid(), invalidPath);
     }
 
     @Test
@@ -196,6 +196,6 @@ public class SimulateEngineSelectTest {
 
         engine.select(stubNodeStateInfo, link, null, learnedRoute);
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(destination, exportingNode, expectedAttribute, expectedPath);
+        verify(stubNodeStateInfo, times(1)).updateRoute(destination, link, expectedAttribute, expectedPath);
     }
 }

@@ -27,7 +27,7 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork());
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
     }
 
     @Test(timeout = 2000)
@@ -36,7 +36,7 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork());
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
     }
 
     @Test(timeout = 2000)
@@ -45,6 +45,6 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         engine.simulate(topology.getNetwork());
         printTables();
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTables()));
+        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
     }
 }

@@ -3,19 +3,23 @@ package simulation.networks.shortestpath;
 import network.Node;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulation.RouteTable;
 import policies.implementations.shortestpath.ShortestPathLabel;
-import simulation.networks.Topology;
+import simulation.RouteTable;
+import simulation.networks.RouteTablesGenerator;
 
 import java.util.Map;
 
-public class Topology0 extends Topology {
+/**
+ * Topology description:
+ *
+ *  digraph network0 {
+ *      0 -> 1 [label=1];
+ *  }
+ */
+public class Topology0 extends ShortestPathTopology {
 
     /**
-     * Creates the network1.
-     *  digraph network0 {
-     *      0 -> 1 [label=1];
-     *  }
+     * Constructs the network topology according to the topology description
      */
     public Topology0() throws NodeExistsException, NodeNotFoundException {
         network.addNode(0);
@@ -24,21 +28,22 @@ public class Topology0 extends Topology {
     }
 
     @Override
-    public Map<Node, RouteTable> getExpectedRouteTables(Integer destId) {
-        ShortestPathRouteTablesGenerator routeTablesGenerator = new ShortestPathRouteTablesGenerator(network, destId);
+    public Map<Node, RouteTable> getExpectedRouteTablesForBGP(Integer destId) {
+        RouteTablesGenerator generator = new RouteTablesGenerator(network.getNodes(), destId);
 
         /* node 0 route table
             |   |     1    |
             |:-:|:--------:|
             | 1 | (1, [1]) |
          */
-        routeTablesGenerator.setRoute(0, 1, 1, 1, new int[]{1});
+        generator.setRoute(0, 1, label(1), 1, attribute(1), new int[]{1});
 
         /* node 1 route table
             |   |
             |:-:|
          */
 
-        return routeTablesGenerator.getTables();
+        return generator.getTables();
     }
+
 }
