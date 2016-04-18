@@ -68,6 +68,17 @@ public class RouteTable {
     }
 
     /**
+     * Associates the given route with the pair destination out-link given.
+     * @param destination destination node to associate route with.
+     * @param outLink out-link to associate route with.
+     * @param route route to be set.
+     */
+    public void setRoute(Node destination, Link outLink, Route route) {
+        setAttribute(destination, outLink, route.getAttribute());
+        setPath(destination, outLink, route.getPath());
+    }
+
+    /**
      * @throws NullPointerException if the destination node does not exist.
      */
     private void set(Node destination, Link outLink,

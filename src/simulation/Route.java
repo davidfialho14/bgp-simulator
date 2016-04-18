@@ -55,6 +55,14 @@ public class Route implements Comparable<Route> {
     }
 
     /**
+     * Assigns the given destination to the route.
+     * @param destination node to be assigned as destination.
+     */
+    public void setDestination(Node destination) {
+        this.destination = destination;
+    }
+
+    /**
      * Assigns the given attribute to the route.
      * @param attribute attribute to be assigned.
      */
