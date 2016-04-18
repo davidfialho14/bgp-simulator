@@ -2,7 +2,9 @@ package simulation;
 
 import network.Link;
 import network.Node;
+import network.SelfLink;
 import policies.Attribute;
+import policies.Policy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +18,12 @@ public class NodeStateInfo {
     private Map<Node, Attribute> selectedAttributes = new HashMap<>();
     private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
 
-    public NodeStateInfo(Node node) {
+    public NodeStateInfo(Node node, Policy policy) {
         this.table = new RouteTable(node.getOutLinks());
+
+        Route route = Route.createSelf(node, policy);
+        updateRoute(node, new SelfLink(node), route.getAttribute(), route.getPath());
+        setSelected(node, route);
     }
 
     public RouteTable getTable() {

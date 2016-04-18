@@ -15,4 +15,11 @@ public class SelfLink extends Link {
         super(node, node, null);
     }
 
+    /**
+     * Creates a self link.
+     * @param nodeId  id of the node to create self link for.
+     */
+    public SelfLink(int nodeId) {
+        super(nodeId, nodeId, null);
+    }
 }

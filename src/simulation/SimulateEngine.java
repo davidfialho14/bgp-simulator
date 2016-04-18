@@ -258,7 +258,7 @@ public class SimulateEngine {
      */
     private void initNodesStateInfo(Collection<Node> nodes) {
         nodesStateInfo.clear();
-        nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node)));
+        nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node, policy)));
     }
 
     /**
