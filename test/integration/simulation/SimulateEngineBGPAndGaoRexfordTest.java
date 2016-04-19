@@ -8,7 +8,6 @@ import policies.implementations.gaorexford.GaoRexfordPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
-import simulation.networks.gaorexford.Topology2;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -88,10 +87,33 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology2_Converges() throws Exception {
-        topology = new Topology2();
-        engine.simulate(topology.getNetwork());
-        printTables();
+        Network network2 = network(
+                link(from(0), to(1), customerLabel()),
+                link(from(1), to(2), customerLabel()),
+                link(from(2), to(0), customerLabel())
+        );
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
+        engine.simulate(network2);
+
+        assertThat(engine.getRouteTable(new Node(0)), is( table(
+                                selfLink(0), customerLink(0, 1),
+                destination(0), selfRoute(), invalid(),
+                destination(1), invalid(),   customerRoute(path(1)),
+                destination(2), invalid(),   customerRoute(path(2, 1))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is( table(
+                                selfLink(1), customerLink(1, 2),
+                destination(0), invalid(),   customerRoute(path(0, 2)),
+                destination(1), selfRoute(), invalid(),
+                destination(2), invalid(),   customerRoute(path(2))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is( table(
+                                selfLink(2), customerLink(2, 0),
+                destination(0), invalid(),   customerRoute(path(0)),
+                destination(1), invalid(),   customerRoute(path(1, 0)),
+                destination(2), selfRoute(), invalid()
+        )));
     }
 }
