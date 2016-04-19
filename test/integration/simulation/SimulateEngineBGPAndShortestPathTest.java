@@ -11,7 +11,6 @@ import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
-import simulation.networks.shortestpath.Topology2;
 import simulation.networks.shortestpath.Topology3;
 import simulation.networks.shortestpath.Topology4;
 import wrappers.routetable.OutLinkElement;
@@ -118,11 +117,28 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     @Ignore
     public void simulate_Topology2_Converges() throws Exception {
-        topology = new Topology2();
-        engine.simulate(topology.getNetwork(), 0);
-        printTables();
+        Network network2 = network(
+                link(from(0), to(1), label(1)),
+                link(from(1), to(2), label(1)),
+                link(from(2), to(0), label(1))
+        );
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
+        engine.simulate(network2, 0);
+
+        assertThat(engine.getRouteTable(new Node(0)), is(table(
+                                selfLink(0),        splink(0, 1, 1),
+                destination(0), sproute(0, path()), invalid()
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is(table(
+                                selfLink(1), splink(1, 2, 1),
+                destination(0), invalid(),   sproute(2, path(2, 0))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is(table(
+                                selfLink(2), splink(2, 0, 1),
+                destination(0), invalid(),   sproute(1, path(0))
+        )));
     }
 
     @Test(timeout = 2000)
