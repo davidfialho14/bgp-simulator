@@ -8,7 +8,6 @@ import policies.implementations.gaorexford.GaoRexfordPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
-import simulation.networks.gaorexford.Topology1;
 import simulation.networks.gaorexford.Topology2;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,24 +42,48 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),       customerLink(0, 1),
-                destination(0), selfRoute(path()), invalid(),
+                destination(0), selfRoute(), invalid(),
                 destination(1), invalid(),         customerRoute(path(1))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
                                 selfLink(1),       providerLink(1, 0),
                 destination(0), invalid(),         providerRoute(path(0)),
-                destination(1), selfRoute(path()), invalid()
+                destination(1), selfRoute(), invalid()
         )));
     }
 
     @Test(timeout = 2000)
     public void simulate_Topology1_Converges() throws Exception {
-        topology = new Topology1();
-        engine.simulate(topology.getNetwork());
-        printTables();
+        Network network1 = network(
+                link(from(0), to(1), customerLabel()),
+                link(from(1), to(0), providerLabel()),
+                link(from(2), to(1), customerLabel()),
+                link(from(1), to(2), providerLabel())
+        );
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP()));
+        engine.simulate(network1);
+
+        assertThat(engine.getRouteTable(new Node(0)), is( table(
+                                selfLink(0), customerLink(0, 1),
+                destination(0), selfRoute(), invalid(),
+                destination(1), invalid(),   customerRoute(path(1)),
+                destination(2), invalid(),   invalid()
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is( table(
+                                selfLink(1), providerLink(1, 0),     providerLink(1, 2),
+                destination(0), invalid(),   providerRoute(path(0)), invalid(),
+                destination(1), selfRoute(), invalid(),              invalid(),
+                destination(2), invalid(),   invalid(),              providerRoute(path(2))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is( table(
+                                selfLink(2), customerLink(2, 1),
+                destination(0), invalid(),   invalid(),
+                destination(1), invalid(),   customerRoute(path(1)),
+                destination(2), selfRoute(), invalid()
+        )));
     }
 
     @Test(timeout = 2000)

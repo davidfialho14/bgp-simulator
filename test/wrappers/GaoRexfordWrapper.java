@@ -12,6 +12,7 @@ import static policies.implementations.gaorexford.CustomerAttribute.customer;
 import static policies.implementations.gaorexford.PeerAttribute.peer;
 import static policies.implementations.gaorexford.ProviderAttribute.provider;
 import static policies.implementations.gaorexford.SelfAttribute.self;
+import static wrappers.PathWrapper.path;
 import static wrappers.routetable.OutLinkElement.outLink;
 import static wrappers.routetable.RouteElement.route;
 
@@ -64,8 +65,8 @@ public interface GaoRexfordWrapper {
      *
      * @return a new route instance with a self attribute and path.
      */
-    static RouteElement selfRoute(PathAttribute path) {
-        return route(self(), path);
+    static RouteElement selfRoute() {
+        return route(self(), path());
     }
 
     /**
