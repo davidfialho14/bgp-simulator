@@ -11,8 +11,6 @@ import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
-import simulation.networks.shortestpath.Topology3;
-import simulation.networks.shortestpath.Topology4;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 
@@ -144,20 +142,47 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     @Ignore
     public void simulate_Topology3_DoesNotConverge() throws Exception {
-        topology = new Topology3();
-        engine.simulate(topology.getNetwork(), 0);
-        printTables();
+        Network network3 = network(
+                link(from(1), to(0), label(0)),
+                link(from(2), to(0), label(0)),
+                link(from(3), to(0), label(0)),
+                link(from(1), to(2), label(-1)),
+                link(from(2), to(3), label(1)),
+                link(from(3), to(1), label(-2))
+        );
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
+        engine.simulate(network3, 0);
     }
 
     @Test(timeout = 2000)
-    @Ignore
     public void simulate_Topology4_Converges() throws Exception {
-        topology = new Topology4();
-        engine.simulate(topology.getNetwork(), 0);
-        printTables();
+        Network network4 = network(
+                link(from(1), to(0), label(0)),
+                link(from(1), to(2), label(1)),
+                link(from(2), to(3), label(1)),
+                link(from(3), to(1), label(1))
+        );
 
-        assertThat(engine.getRouteTables(), is(topology.getExpectedRouteTablesForBGP(0)));
+        engine.simulate(network4, 0);
+
+        assertThat(engine.getRouteTable(new Node(0)), is(table(
+                                selfLink(0),
+                destination(0), sproute(0, path())
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is(table(
+                                selfLink(1), splink(1, 0, 0),     splink(1, 2, 1),
+                destination(0), invalid(),   sproute(0, path(0)), invalid()
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is(table(
+                                selfLink(2), splink(2, 3, 1),
+                destination(0), invalid(),   sproute(2, path(3, 1, 0))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(3)), is(table(
+                                selfLink(3), splink(3, 1, 1),
+                destination(0), invalid(),   sproute(1, path(1, 0))
+        )));
     }
 }
