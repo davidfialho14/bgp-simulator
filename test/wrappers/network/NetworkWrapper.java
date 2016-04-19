@@ -1,6 +1,7 @@
 package wrappers.network;
 
 import network.Network;
+import network.exceptions.NodeNotFoundException;
 
 /**
  * Implements a set of static method wrappers to improve generating a network statically in a more
@@ -17,7 +18,7 @@ public class NetworkWrapper {
      * @param links links of the network.
      * @return network instance initialized.
      */
-    public static Network network(LinkElement... links) {
+    public static Network network(LinkElement... links) throws NodeNotFoundException {
         Network network = new Network();
         for (LinkElement link : links) {
             link.addTo(network);
