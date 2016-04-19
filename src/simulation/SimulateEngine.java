@@ -83,6 +83,14 @@ public class SimulateEngine {
     }
 
     /**
+     * Returns the route table of the given node. The route table will only be filled after a simulation takes place.
+     * @return map containing the nodes associated with their respective route tables.
+     */
+    public RouteTable getRouteTable(Node node) {
+        return nodesStateInfo.get(node).getTable();
+    }
+
+    /**
      * Returns the event handler associated with the engine.
      * @return event handler associated with the engine.
      */
