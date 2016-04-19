@@ -7,11 +7,11 @@ import policies.Label;
 /**
  * Represents a node element.
  */
-public class LinkElement implements RouteTableElement {
+public class OutLinkElement implements RouteTableElement {
 
     private Link link;
 
-    private LinkElement(Link link) {
+    private OutLinkElement(Link link) {
         this.link = link;
     }
 
@@ -33,7 +33,7 @@ public class LinkElement implements RouteTableElement {
      * @param label label of the link.
      * @return new link element instance.
      */
-    public static LinkElement link(int srcId, int destId, Label label) {
-        return new LinkElement(new Link(new Node(srcId), new Node(destId), label));
+    public static OutLinkElement outLink(int srcId, int destId, Label label) {
+        return new OutLinkElement(new Link(new Node(srcId), new Node(destId), label));
     }
 }

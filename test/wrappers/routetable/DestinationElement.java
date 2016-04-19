@@ -5,11 +5,11 @@ import network.Node;
 /**
  * Represents a node element.
  */
-public class NodeElement implements RouteTableElement {
+public class DestinationElement implements RouteTableElement {
 
     private Node node;
 
-    private NodeElement(Node node) {
+    private DestinationElement(Node node) {
         this.node = node;
     }
 
@@ -29,7 +29,7 @@ public class NodeElement implements RouteTableElement {
      * @param id id of the node.
      * @return new node element instance with the given id.
      */
-    public static NodeElement node(int id) {
-        return new NodeElement(new Node(id));
+    public static DestinationElement destination(int id) {
+        return new DestinationElement(new Node(id));
     }
 }
