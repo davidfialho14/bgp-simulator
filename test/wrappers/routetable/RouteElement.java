@@ -28,12 +28,6 @@ public class RouteElement implements RouteTableElement {
     /**
      * Wrapper around the route element constructor to improve readability.
      *
-     * @param id id of the route.
-     * @return new route element instance with the given id.
-     */
-    /**
-     * Wrapper around the route element constructor to improve readability.
-     *
      * @param attribute attribute of the route.
      * @param path path of the route.
      * @return route element corresponding to the route.
@@ -42,5 +36,16 @@ public class RouteElement implements RouteTableElement {
         // the route destination node does not need to be specified since it will be replaced
         // when building the route table
         return new RouteElement(new Route(null, attribute, path));
+    }
+
+    /**
+     * Wrapper around the route element constructor create invalid routes in a more readable way.
+     *
+     * @return route element corresponding to an invalid route.
+     */
+    public static RouteElement invalid() {
+        // the route destination node does not need to be specified since it will be replaced
+        // when building the route table
+        return new RouteElement(Route.createInvalid(null));
     }
 }

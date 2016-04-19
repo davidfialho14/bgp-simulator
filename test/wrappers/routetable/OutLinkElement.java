@@ -2,6 +2,7 @@ package wrappers.routetable;
 
 import network.Link;
 import network.Node;
+import network.SelfLink;
 import policies.Label;
 
 /**
@@ -31,9 +32,19 @@ public class OutLinkElement implements RouteTableElement {
      * @param srcId id of the source node.
      * @param destId id of the destination node.
      * @param label label of the link.
-     * @return new link element instance.
+     * @return new out-link element instance.
      */
     public static OutLinkElement outLink(int srcId, int destId, Label label) {
         return new OutLinkElement(new Link(new Node(srcId), new Node(destId), label));
+    }
+
+    /**
+     * Wrapper around the element constructor to create self links in a more readable way.
+     *
+     * @param id id of the node create self link for.
+     * @return new out-link element instance.
+     */
+    public static OutLinkElement selfLink(int id) {
+        return new OutLinkElement(new SelfLink(id));
     }
 }
