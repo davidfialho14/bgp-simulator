@@ -2,13 +2,11 @@ package wrappers.routetable;
 
 import network.Link;
 import network.Node;
+import network.SelfLink;
 import simulation.Route;
 import simulation.RouteTable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -29,7 +27,7 @@ public class RouteTableWrapper {
      * Builds a route table from route table elements.
      *
      * @param elements elements of the route table.
-     * @return built route table.
+     * @return the built route table.
      */
     public static RouteTable table(RouteTableElement... elements) {
         RouteTableWrapper wrapper = new RouteTableWrapper();
@@ -39,6 +37,16 @@ public class RouteTableWrapper {
         }
 
         return wrapper.build();
+    }
+
+    /**
+     * Builds an for the node with the given id.
+     *
+     * @param nodeId id of the node to create empty route table for.
+     * @return the built empty route table.
+     */
+    public static RouteTable emptyTable(int nodeId) {
+        return new RouteTable(Collections.singleton(new SelfLink(nodeId)));
     }
 
     // ----- BUILD METHODS ------------------------------------------------------------------------------------------
