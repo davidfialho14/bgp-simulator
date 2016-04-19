@@ -3,6 +3,7 @@ package simulation;
 import network.Link;
 import network.Network;
 import network.Node;
+import network.SelfLink;
 import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
@@ -261,6 +262,23 @@ public class SimulateEngine {
         nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node, policy)));
     }
 
+    private void initNodesStateInfo(Collection<Node> nodes, Node destination) {
+        nodesStateInfo.clear();
+
+        for (Node node : nodes) {
+            NodeStateInfo stateInfo = new NodeStateInfo(node, policy);
+            nodesStateInfo.put(node, stateInfo);
+
+            // set the self route only for the destination node
+
+            if (node.equals(destination)) {
+                Route route = Route.createSelf(node, policy);
+                stateInfo.updateRoute(node, new SelfLink(node), route.getAttribute(), route.getPath());
+                stateInfo.setSelected(node, route);
+            }
+        }
+    }
+
     /**
      * Exports the self routes of each one of the given nodes.
      * @param nodes nodes which the self routes are to be exported.
@@ -274,6 +292,13 @@ public class SimulateEngine {
      * @param node node which the self route is to be exported.
      */
     private void exportSelfRoute(Node node) {
-        node.getInLinks().forEach(link -> export(link, Route.createSelf(node, policy), null));
+        NodeStateInfo stateInfo = nodesStateInfo.get(node);
+        Route selfRoute = Route.createSelf(node, policy);
+
+        // add the self route to the node's route table
+        stateInfo.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
+        stateInfo.setSelected(node, selfRoute);
+
+        node.getInLinks().forEach(link -> export(link, selfRoute, null));
     }
 }

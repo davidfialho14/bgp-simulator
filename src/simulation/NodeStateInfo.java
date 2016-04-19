@@ -2,7 +2,6 @@ package simulation;
 
 import network.Link;
 import network.Node;
-import network.SelfLink;
 import policies.Attribute;
 import policies.Policy;
 
@@ -20,10 +19,6 @@ public class NodeStateInfo {
 
     public NodeStateInfo(Node node, Policy policy) {
         this.table = new RouteTable(node.getOutLinks());
-
-        Route route = Route.createSelf(node, policy);
-        updateRoute(node, new SelfLink(node), route.getAttribute(), route.getPath());
-        setSelected(node, route);
     }
 
     public RouteTable getTable() {
@@ -70,5 +65,10 @@ public class NodeStateInfo {
     public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
         table.setAttribute(destination, outLink, attribute);
         table.setPath(destination, outLink, path);
+    }
+
+    public void updateRoute(Link outLink, Route route) {
+        table.setAttribute(route.getDestination(), outLink, route.getAttribute());
+        table.setPath(route.getDestination(), outLink, route.getPath());
     }
 }
