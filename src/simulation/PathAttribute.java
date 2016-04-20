@@ -81,24 +81,31 @@ public class PathAttribute extends Attribute {
         return !isInvalid() && path.contains(node);
     }
 
+    /**
+     * Returns the path after the given node. If the node does not exist an empty path is returned.
+     * If the path is invalid an invalid path is returned as well.
+     *
+     * @param node node to get path after.
+     * @return path after the node or empty path if the node is not found or invalid if the path is invalid.
+     */
     public PathAttribute getPathAfter(Node node) {
         if (isInvalid()) return invalidPath();
 
+        // start with an empty path
         PathAttribute pathAfterNode = new PathAttribute();
 
         Iterator<Node> nodeItr = path.iterator();
+
+        // start by finding in the path the node in question
         while (nodeItr.hasNext()) {
-            Node currentNode = nodeItr.next();
-            if (currentNode.equals(node)) {
+            if (nodeItr.next().equals(node)) {
                 // found the node
                 break;
             }
         }
 
-        while (nodeItr.hasNext()) {
-            Node currentNode = nodeItr.next();
-            pathAfterNode.add(currentNode);
-        }
+        // add to the new path, all nodes in the path after the node in question
+        nodeItr.forEachRemaining(pathAfterNode::add);
 
         return pathAfterNode;
     }
