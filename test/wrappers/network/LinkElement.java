@@ -2,6 +2,7 @@ package wrappers.network;
 
 import network.Link;
 import network.Network;
+import network.exceptions.NodeNotFoundException;
 import policies.Label;
 
 /**
@@ -20,7 +21,7 @@ public class LinkElement {
      *
      * @param network network to add link to.
      */
-    public void addTo(Network network) {
+    public void addTo(Network network) throws NodeNotFoundException {
         network.addNode(link.getSource());
         network.addNode(link.getDestination());
         network.addLink(link);

@@ -51,7 +51,7 @@ public class Route implements Comparable<Route> {
      * @return new self Route instance to the given node.
      */
     public static Route createSelf(Node node, Policy policy) {
-        return new Route(node, policy.createSelf(node), new PathAttribute(node));
+        return new Route(node, policy.createSelf(node), new PathAttribute());
     }
 
     /**

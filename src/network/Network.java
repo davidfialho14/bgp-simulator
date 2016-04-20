@@ -93,16 +93,17 @@ public class Network {
             throw new NodeNotFoundException(String.format("node with id '%d' does not exist", invalidId));
         }
 
-        addLink(new Link(sourceNode, destinationNode, label));
+        Link link = new Link(sourceNode, destinationNode, label);
+        sourceNode.addOutLink(link);
+        destinationNode.addInLink(link);
     }
 
     /**
      * Adds a new link to the network
      * @param link link to be added to the network
      */
-    public void addLink(Link link)  {
-        link.getSource().addOutLink(link);
-        link.getDestination().addInLink(link);
+    public void addLink(Link link) throws NodeNotFoundException {
+        this.link(link.getSource().getId(), link.getDestination().getId(), link.getLabel());
     }
 
     /**
