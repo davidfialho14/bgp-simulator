@@ -10,7 +10,7 @@ public abstract class GaoRexfordAttribute extends Attribute {
      * is followed by the provider attribute.
      */
     protected enum Type {
-        CUSTOMER, PEER, PROVIDER
+        SELF, CUSTOMER, PEER, PROVIDER
     }
 
     abstract Type getType();

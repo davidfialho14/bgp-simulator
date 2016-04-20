@@ -16,7 +16,7 @@ public class ProviderLabel implements Label {
      * Table gives the result of extending each type of attribute.
      */
     private static final Attribute[] extendTable = {
-            provider(),   provider(),  provider()
+            provider(), provider(),   provider(),  provider()
     };
 
     @Override

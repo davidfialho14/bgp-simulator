@@ -51,7 +51,15 @@ public class Route implements Comparable<Route> {
      * @return new self Route instance to the given node.
      */
     public static Route createSelf(Node node, Policy policy) {
-        return new Route(node, policy.createSelf(node), new PathAttribute(node));
+        return new Route(node, policy.createSelf(node), new PathAttribute());
+    }
+
+    /**
+     * Assigns the given destination to the route.
+     * @param destination node to be assigned as destination.
+     */
+    public void setDestination(Node destination) {
+        this.destination = destination;
     }
 
     /**

@@ -3,6 +3,7 @@ package simulation;
 import network.Link;
 import network.Node;
 import policies.Attribute;
+import policies.Policy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class NodeStateInfo {
     private Map<Node, Attribute> selectedAttributes = new HashMap<>();
     private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
 
-    public NodeStateInfo(Node node) {
+    public NodeStateInfo(Node node, Policy policy) {
         this.table = new RouteTable(node.getOutLinks());
     }
 
@@ -64,5 +65,10 @@ public class NodeStateInfo {
     public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
         table.setAttribute(destination, outLink, attribute);
         table.setPath(destination, outLink, path);
+    }
+
+    public void updateRoute(Link outLink, Route route) {
+        table.setAttribute(route.getDestination(), outLink, route.getAttribute());
+        table.setPath(route.getDestination(), outLink, route.getPath());
     }
 }

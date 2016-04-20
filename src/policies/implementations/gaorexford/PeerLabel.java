@@ -16,7 +16,7 @@ public class PeerLabel implements Label {
      * Table gives the result of extending each type of attribute.
      */
     private static final Attribute[] extendTable = {
-            peer(),   invalid(),  invalid()
+            peer(), peer(),   invalid(),  invalid()
     };
 
     @Override

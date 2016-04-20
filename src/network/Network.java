@@ -30,7 +30,26 @@ public class Network {
 		if (nodes.putIfAbsent(id, node) != null) {
             throw new NodeExistsException(String.format("node with id '%d' already exists", id));
         }
+
+        // node must store a self link to itself
+        node.addOutLink(new SelfLink(node));
 	}
+
+    /**
+     * Adds the node to the network.
+     * @param node node to be added to the network.
+     * @return true if node was added or false otherwise
+     */
+    public boolean addNode(Node node) {
+        if (nodes.putIfAbsent(node.getId(), node) != null) {
+            return false;
+        }
+
+        // node must store a self link to itself
+        node.addOutLink(new SelfLink(node));
+
+        return true;
+    }
 
     /**
      * Return a collection with the ids of all the nodes in the network.
@@ -77,6 +96,14 @@ public class Network {
         Link link = new Link(sourceNode, destinationNode, label);
         sourceNode.addOutLink(link);
         destinationNode.addInLink(link);
+    }
+
+    /**
+     * Adds a new link to the network
+     * @param link link to be added to the network
+     */
+    public void addLink(Link link) throws NodeNotFoundException {
+        this.link(link.getSource().getId(), link.getDestination().getId(), link.getLabel());
     }
 
     /**

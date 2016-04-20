@@ -15,6 +15,8 @@ import static network.Factory.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
+import static wrappers.PathWrapper.path;
+import static wrappers.RouteWrapper.anyRoute;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineProcessTest {
@@ -126,5 +128,22 @@ public class SimulateEngineProcessTest {
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
 
         verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any(), any());
+    }
+
+    @Test
+    public void
+    process_RouteBetterThanCurrentBestRouteAndWithDestinationEqualToLinkSourceNode_ExportsLearnedRoute()
+            throws Exception {
+        Node routeDestination = new Node(0);
+        Link link = new Link(routeDestination, new Node(2), new DummyLabel());
+        Route learnedRoute = new Route(routeDestination, new DummyAttribute(-1), path());
+        doReturn(learnedRoute).when(engine).learn(any(), any());
+        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(new DummyAttribute(0));
+        when(nodeStateInfo.getSelectedPath(any())).thenReturn(path());
+        doReturn(learnedRoute).when(engine).select(any(), any(), any(), any());
+
+        engine.process(nodeStateInfo, new ScheduledRoute(anyRoute(routeDestination), link, 0));
+
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(learnedRoute), any(), any());
     }
 }

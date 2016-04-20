@@ -8,6 +8,7 @@ import static policies.InvalidAttribute.invalid;
 import static policies.implementations.gaorexford.CustomerAttribute.customer;
 import static policies.implementations.gaorexford.PeerAttribute.peer;
 import static policies.implementations.gaorexford.ProviderAttribute.provider;
+import static policies.implementations.gaorexford.SelfAttribute.self;
 
 public class GaoRexfordAttributeTest {
 
@@ -64,6 +65,31 @@ public class GaoRexfordAttributeTest {
     @Test
     public void compareTo_ProviderToInvalid_Less() throws Exception {
         assertThat(provider().compareTo(invalid()), is(lessThan(0)));
+    }
+
+    @Test
+    public void compareTo_SelfToSelf_Equal() throws Exception {
+        assertThat(self().compareTo(self()), is(equalTo(0)));
+    }
+
+    @Test
+    public void compareTo_SelfToCustomer_Less() throws Exception {
+        assertThat(self().compareTo(customer()), is(lessThan(0)));
+    }
+
+    @Test
+    public void compareTo_SelfToPeer_Less() throws Exception {
+        assertThat(self().compareTo(peer()), is(lessThan(0)));
+    }
+
+    @Test
+    public void compareTo_SelfToProvider_Less() throws Exception {
+        assertThat(self().compareTo(provider()), is(lessThan(0)));
+    }
+
+    @Test
+    public void compareTo_SelfToInvalid_Less() throws Exception {
+        assertThat(self().compareTo(invalid()), is(lessThan(0)));
     }
 
 }

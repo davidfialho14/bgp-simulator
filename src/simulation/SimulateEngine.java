@@ -3,10 +3,12 @@ package simulation;
 import network.Link;
 import network.Network;
 import network.Node;
+import network.SelfLink;
 import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,9 +47,12 @@ public class SimulateEngine {
      * @param network network to be simulated.
      */
     public void simulate(Network network) {
-        initNodesStateInfo(network);
-        exportNodesSelfRoutes(network);
+        initNodesStateInfo(network.getNodes());
+
+        eventHandler.onBeforeSimulate();
+        exportSelfRoute(network.getNodes());
         simulationLoop();
+        eventHandler.onAfterSimulate();
     }
 
     /**
@@ -56,9 +61,10 @@ public class SimulateEngine {
      * @param destinationId id of the destination node to simulate for.
      */
     public void simulate(Network network, int destinationId) {
-        initNodesStateInfo(network);
+        initNodesStateInfo(network.getNodes());
+
         eventHandler.onBeforeSimulate();
-        exportNodesSelfRoutes(network.getNode(destinationId));
+        exportSelfRoute(network.getNode(destinationId));
         simulationLoop();
         eventHandler.onAfterSimulate();
     }
@@ -74,6 +80,14 @@ public class SimulateEngine {
                         Map.Entry::getKey,
                         entry -> entry.getValue().getTable()
                 ));
+    }
+
+    /**
+     * Returns the route table of the given node. The route table will only be filled after a simulation takes place.
+     * @return map containing the nodes associated with their respective route tables.
+     */
+    public RouteTable getRouteTable(Node node) {
+        return nodesStateInfo.get(node).getTable();
     }
 
     /**
@@ -96,13 +110,6 @@ public class SimulateEngine {
         Link link = scheduledRoute.getLink();
         Route exportedRoute = scheduledRoute.getRoute();
         Node destination = exportedRoute.getDestination();
-        Node learningNode = link.getSource();
-
-        if (learningNode.equals(destination)) {
-            // discard the route
-            eventHandler.onDiscardRoute(link, exportedRoute);
-            return;
-        }
 
         eventHandler.onBeforeLearn(link, exportedRoute);
         Route learnedRoute = learn(link, exportedRoute);
@@ -247,35 +254,35 @@ public class SimulateEngine {
     }
 
     /**
-     * Initializes the network's nodes state info with the default state information for each node.
-     * @param network network being simulated.
+     * Initializes state info of for the given collection of nodes. All current node state information is cleared
+     * after calling this method.
+     * @param nodes nodes to initialize the state info for.
      */
-    private void initNodesStateInfo(Network network) {
+    private void initNodesStateInfo(Collection<Node> nodes) {
         nodesStateInfo.clear();
-        for (Node node : network.getNodes()) {
-            nodesStateInfo.put(node, new NodeStateInfo(node));
-        }
+        nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node, policy)));
     }
 
     /**
-     * Exports all self routes from all nodes in the given network.
-     * @param network network being simulated.
+     * Exports the self routes of each one of the given nodes.
+     * @param nodes nodes which the self routes are to be exported.
      */
-    private void exportNodesSelfRoutes(Network network) {
-        for (Node node : network.getNodes()) {
-            for (Link inLink : node.getInLinks()) {
-                export(inLink, Route.createSelf(node, policy), null);
-            }
-        }
+    private void exportSelfRoute(Collection<Node> nodes) {
+        nodes.forEach(this::exportSelfRoute);
     }
 
     /**
-     * The destination node exports its self route to all of its in-neighbours.
-     * @param destination node to export self route.
+     * Exports the self route of the given node.
+     * @param node node which the self route is to be exported.
      */
-    private void exportNodesSelfRoutes(Node destination) {
-        for (Link inLink : destination.getInLinks()) {
-            export(inLink, Route.createSelf(destination, policy), null);
-        }
+    private void exportSelfRoute(Node node) {
+        NodeStateInfo stateInfo = nodesStateInfo.get(node);
+        Route selfRoute = Route.createSelf(node, policy);
+
+        // add the self route to the node's route table
+        stateInfo.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
+        stateInfo.setSelected(node, selfRoute);
+
+        node.getInLinks().forEach(link -> export(link, selfRoute, null));
     }
 }
