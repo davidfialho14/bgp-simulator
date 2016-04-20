@@ -17,6 +17,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static policies.InvalidAttribute.invalid;
+import static wrappers.PathWrapper.path;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineLearnTest {
@@ -67,12 +68,10 @@ public class SimulateEngineLearnTest {
     learn_FromNode0RouteWithPathWithNode1AndValidAttrWhichExtendsToAttr1_RouteWithAttr1AndPathWithNode0AndNode1()
             throws Exception {
         Link link = createLink(1, 0);
-        Node node1 = new Node(1);
-        Route exportedRoute = new Route(destination, new DummyAttribute(), new PathAttribute(node1));
+        Route exportedRoute = new Route(destination, new DummyAttribute(), path(1));
         when(protocol.extend(eq(destination), any(), any())).thenReturn(new DummyAttribute(1));
-        Node[] pathNodes = {node1, new Node(0)};
 
-        Route expectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute(pathNodes));
+        Route expectedRoute = new Route(destination, new DummyAttribute(1), path(0, 1));
         assertThat(engine.learn(link, exportedRoute), is(expectedRoute));
     }
 }

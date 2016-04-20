@@ -64,7 +64,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(0), sproute(0, path()), invalid(),              invalid(),
                 destination(1), invalid(),          sproute(1, path(1)),    invalid(),
-                destination(2), invalid(),          sproute(2, path(2, 1)), sproute(0, path(2))
+                destination(2), invalid(),          sproute(2, path(1, 2)), sproute(0, path(2))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
