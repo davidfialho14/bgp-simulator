@@ -4,6 +4,7 @@ import network.Node;
 import policies.Attribute;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 public class PathAttribute extends Attribute {
@@ -78,6 +79,28 @@ public class PathAttribute extends Attribute {
      */
     public boolean contains(Node node) {
         return !isInvalid() && path.contains(node);
+    }
+
+    public PathAttribute getPathAfter(Node node) {
+        if (isInvalid()) return invalidPath();
+
+        PathAttribute pathAfterNode = new PathAttribute();
+
+        Iterator<Node> nodeItr = path.iterator();
+        while (nodeItr.hasNext()) {
+            Node currentNode = nodeItr.next();
+            if (currentNode.equals(node)) {
+                // found the node
+                break;
+            }
+        }
+
+        while (nodeItr.hasNext()) {
+            Node currentNode = nodeItr.next();
+            pathAfterNode.add(currentNode);
+        }
+
+        return pathAfterNode;
     }
 
     @Override
