@@ -8,6 +8,7 @@ import static network.Factory.createRandomNode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static simulation.PathAttribute.invalidPath;
+import static wrappers.PathWrapper.path;
 
 public class PathAttributeTest {
 
@@ -80,6 +81,36 @@ public class PathAttributeTest {
         PathAttribute pathCopy = new PathAttribute(invalidPath());
 
         assertThat(pathCopy.isInvalid(), is(true));
+    }
+
+    @Test
+    public void getPathAfter_InvalidPath_InvalidPath() throws Exception {
+        assertThat(invalidPath().getPathAfter(createRandomNode()), is(invalidPath()));
+    }
+
+    @Test
+    public void getPathAfter_EmptyPath_EmptyPath() throws Exception {
+        assertThat(path().getPathAfter(createRandomNode()), is(path()));
+    }
+
+    @Test
+    public void getPathAfter_Node1ForPathWithNode1And0_PathWithNode0() throws Exception {
+        assertThat(path(1, 0).getPathAfter(new Node(1)), is(path(0)));
+    }
+
+    @Test
+    public void getPathAfter_Node1ForPathWithNode1_EmptyPath() throws Exception {
+        assertThat(path(1).getPathAfter(new Node(1)), is(path()));
+    }
+
+    @Test
+    public void getPathAfter_Node0ForPathWithNode1_EmptyPath() throws Exception {
+        assertThat(path(1).getPathAfter(new Node(0)), is(path()));
+    }
+
+    @Test
+    public void getPathAfter_Node1ForPathWithNode2And1And4And0_PathWithNode4And0() throws Exception {
+        assertThat(path(2, 1, 4, 0).getPathAfter(new Node(1)), is(path(4, 0)));
     }
 
 }

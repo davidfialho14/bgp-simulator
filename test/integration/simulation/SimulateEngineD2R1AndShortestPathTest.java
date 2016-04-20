@@ -3,10 +3,9 @@ package simulation;
 import network.Network;
 import network.Node;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
-import protocols.implementations.BGPProtocol;
+import protocols.implementations.D2R1Protocol;
 import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
@@ -23,11 +22,16 @@ import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalid;
 import static wrappers.routetable.RouteTableWrapper.table;
 
-public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
+/*
+    Allow duplicates in order to make the tests easier to understand without having to look for the network or
+    the expected tables elsewhere.
+ */
+@SuppressWarnings("Duplicates")
+public class SimulateEngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new BGPProtocol(), new ShortestPathPolicy(),
+        engine = new SimulateEngine(new D2R1Protocol(), new ShortestPathPolicy(),
                 new FIFOScheduler(), new DebugEventHandler());
     }
 
@@ -106,8 +110,7 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
     }
 
     @Test(timeout = 2000)
-    @Ignore
-    public void simulate_Topology3_DoesNotConverge() throws Exception {
+    public void simulate_Topology3_Converges() throws Exception {
         Network network3 = network(
                 link(from(1), to(0), label(0)),
                 link(from(2), to(0), label(0)),
@@ -118,6 +121,26 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         );
 
         engine.simulate(network3, 0);
+
+        assertThat(engine.getRouteTable(new Node(0)), is( table(
+                                selfLink(0),
+                destination(0), sproute(0, path())
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is( table(
+                                selfLink(1), splink(1, 0, 0),     splink(1, 2, -1),
+                destination(0), invalid(),   sproute(0, path(0)), invalid()
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is( table(
+                                selfLink(2), splink(2, 0, 0),     splink(2, 3, 1),
+                destination(0), invalid(),   sproute(0, path(0)), invalid()
+        )));
+
+        assertThat(engine.getRouteTable(new Node(3)), is( table(
+                                selfLink(3), splink(3, 0, 0),     splink(3, 1, -2),
+                destination(0), invalid(),   sproute(0, path(0)), sproute(-2, path(1, 0))
+        )));
     }
 
     @Test(timeout = 2000)

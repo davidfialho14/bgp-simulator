@@ -99,12 +99,12 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
                                 selfLink(0), customerLink(0, 1),
                 destination(0), selfRoute(), invalid(),
                 destination(1), invalid(),   customerRoute(path(1)),
-                destination(2), invalid(),   customerRoute(path(2, 1))
+                destination(2), invalid(),   customerRoute(path(1, 2))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
                                 selfLink(1), customerLink(1, 2),
-                destination(0), invalid(),   customerRoute(path(0, 2)),
+                destination(0), invalid(),   customerRoute(path(2, 0)),
                 destination(1), selfRoute(), invalid(),
                 destination(2), invalid(),   customerRoute(path(2))
         )));
@@ -112,7 +112,7 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         assertThat(engine.getRouteTable(new Node(2)), is( table(
                                 selfLink(2), customerLink(2, 0),
                 destination(0), invalid(),   customerRoute(path(0)),
-                destination(1), invalid(),   customerRoute(path(1, 0)),
+                destination(1), invalid(),   customerRoute(path(0, 1)),
                 destination(2), selfRoute(), invalid()
         )));
     }

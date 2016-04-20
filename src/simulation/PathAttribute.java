@@ -4,7 +4,8 @@ import network.Node;
 import policies.Attribute;
 
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class PathAttribute extends Attribute {
 
@@ -18,13 +19,13 @@ public class PathAttribute extends Attribute {
         INVALID.path = null;
     }
 
-    private LinkedHashSet<Node> path;   // must be a LinkedHashSet in order to preserve insertion order
+    private LinkedList<Node> path;   // must be a LinkedList in order to preserve insertion order
 
     /**
      * Constructs an empty path.
      */
     public PathAttribute() {
-        this.path = new LinkedHashSet<>();
+        this.path = new LinkedList<>();
     }
 
     /**
@@ -32,7 +33,7 @@ public class PathAttribute extends Attribute {
      * @param node node initiate the path with.
      */
     public PathAttribute(Node node) {
-        this.path = new LinkedHashSet<>(1);
+        this.path = new LinkedList<>();
         path.add(node);
     }
 
@@ -42,7 +43,7 @@ public class PathAttribute extends Attribute {
      * @param nodes nodes to initiate the path with.
      */
     public PathAttribute(Node[] nodes) {
-        this.path = new LinkedHashSet<>();
+        this.path = new LinkedList<>();
         Collections.addAll(path, nodes);
     }
 
@@ -52,7 +53,7 @@ public class PathAttribute extends Attribute {
      */
     public PathAttribute(PathAttribute path) {
         if (!path.isInvalid())
-            this.path = new LinkedHashSet<>(path.path);
+            this.path = new LinkedList<>(path.path);
     }
 
     /**
@@ -68,7 +69,7 @@ public class PathAttribute extends Attribute {
      * @param node node to be added to the path.
      */
     public void add(Node node) {
-        path.add(node);
+        path.addFirst(node);
     }
 
     /**
@@ -78,6 +79,35 @@ public class PathAttribute extends Attribute {
      */
     public boolean contains(Node node) {
         return !isInvalid() && path.contains(node);
+    }
+
+    /**
+     * Returns the path after the given node. If the node does not exist an empty path is returned.
+     * If the path is invalid an invalid path is returned as well.
+     *
+     * @param node node to get path after.
+     * @return path after the node or empty path if the node is not found or invalid if the path is invalid.
+     */
+    public PathAttribute getPathAfter(Node node) {
+        if (isInvalid()) return invalidPath();
+
+        // start with an empty path
+        PathAttribute pathAfterNode = new PathAttribute();
+
+        Iterator<Node> nodeItr = path.iterator();
+
+        // start by finding in the path the node in question
+        while (nodeItr.hasNext()) {
+            if (nodeItr.next().equals(node)) {
+                // found the node
+                break;
+            }
+        }
+
+        // add to the new path, all nodes in the path after the node in question
+        nodeItr.forEachRemaining(pathAfterNode.path::add);
+
+        return pathAfterNode;
     }
 
     @Override
