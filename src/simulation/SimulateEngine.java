@@ -110,13 +110,6 @@ public class SimulateEngine {
         Link link = scheduledRoute.getLink();
         Route exportedRoute = scheduledRoute.getRoute();
         Node destination = exportedRoute.getDestination();
-        Node learningNode = link.getSource();
-
-        if (learningNode.equals(destination)) {
-            // discard the route
-            eventHandler.onDiscardRoute(link, exportedRoute);
-            return;
-        }
 
         eventHandler.onBeforeLearn(link, exportedRoute);
         Route learnedRoute = learn(link, exportedRoute);
@@ -268,23 +261,6 @@ public class SimulateEngine {
     private void initNodesStateInfo(Collection<Node> nodes) {
         nodesStateInfo.clear();
         nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node, policy)));
-    }
-
-    private void initNodesStateInfo(Collection<Node> nodes, Node destination) {
-        nodesStateInfo.clear();
-
-        for (Node node : nodes) {
-            NodeStateInfo stateInfo = new NodeStateInfo(node, policy);
-            nodesStateInfo.put(node, stateInfo);
-
-            // set the self route only for the destination node
-
-            if (node.equals(destination)) {
-                Route route = Route.createSelf(node, policy);
-                stateInfo.updateRoute(node, new SelfLink(node), route.getAttribute(), route.getPath());
-                stateInfo.setSelected(node, route);
-            }
-        }
     }
 
     /**
