@@ -5,6 +5,8 @@ import network.Link;
 import network.Node;
 import policies.Attribute;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -173,7 +175,6 @@ public class RouteTable {
         return new TextTable(columns, table);
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -191,5 +192,13 @@ public class RouteTable {
         int result = routes != null ? routes.hashCode() : 0;
         result = 31 * result + (outLinks != null ? outLinks.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        getPrintableTable().printTable(new PrintStream(os), 0);
+
+        return os.toString();
     }
 }
