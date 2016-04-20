@@ -6,15 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.D1R1Protocol;
-import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
-import static wrappers.ShortestPathWrapper.label;
-import static wrappers.ShortestPathWrapper.splink;
-import static wrappers.ShortestPathWrapper.sproute;
+import static wrappers.ShortestPathWrapper.*;
 import static wrappers.network.FromNodeElement.from;
 import static wrappers.network.LinkElement.link;
 import static wrappers.network.NetworkWrapper.network;
@@ -24,12 +21,17 @@ import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalid;
 import static wrappers.routetable.RouteTableWrapper.table;
 
+/*
+    Allow duplicates in order to make the tests easier to understand without having to look for the network or
+    the expected tables elsewhere.
+ */
+@SuppressWarnings("Duplicates")
 public class SimulateEngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
         engine = new SimulateEngine(new D1R1Protocol(), new ShortestPathPolicy(),
-                new FIFOScheduler(), new DebugEventHandler());
+                new FIFOScheduler(), eventHandler);
     }
 
     @Test(timeout = 2000)

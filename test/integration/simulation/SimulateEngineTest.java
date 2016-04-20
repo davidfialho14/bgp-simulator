@@ -1,12 +1,14 @@
 package simulation;
 
 import network.Node;
+import simulation.implementations.handlers.NullEventHandler;
 
 import java.util.Map;
 
 public class SimulateEngineTest {
 
-    SimulateEngine engine;
+    protected SimulateEngine engine;
+    protected EventHandler eventHandler = new NullEventHandler();
 
     protected void printTables() {
         for (Map.Entry<Node, RouteTable> entry : engine.getRouteTables().entrySet()) {

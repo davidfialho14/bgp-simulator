@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.gaorexford.GaoRexfordPolicy;
 import protocols.implementations.BGPProtocol;
-import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,12 +21,17 @@ import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalid;
 import static wrappers.routetable.RouteTableWrapper.table;
 
+/*
+    Allow duplicates in order to make the tests easier to understand without having to look for the network or
+    the expected tables elsewhere.
+ */
+@SuppressWarnings("Duplicates")
 public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
         engine = new SimulateEngine(new BGPProtocol(), new GaoRexfordPolicy(),
-                new FIFOScheduler(), new DebugEventHandler());
+                new FIFOScheduler(), eventHandler);
     }
 
     @Test(timeout = 2000)

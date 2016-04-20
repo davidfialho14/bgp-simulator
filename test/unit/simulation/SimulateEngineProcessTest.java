@@ -1,5 +1,7 @@
 package simulation;
 
+import dummies.DummyAttribute;
+import dummies.DummyLabel;
 import network.Link;
 import network.Node;
 import org.junit.Before;
@@ -7,11 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import dummies.DummyAttribute;
-import dummies.DummyLabel;
-import simulation.implementations.handlers.DebugEventHandler;
+import simulation.implementations.handlers.NullEventHandler;
 
-import static network.Factory.*;
+import static network.Factory.createRandomNode;
+import static network.Factory.createRandomRoute;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
@@ -21,7 +22,8 @@ import static wrappers.RouteWrapper.anyRoute;
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineProcessTest {
 
-    SimulateEngine engine;
+    private SimulateEngine engine;
+    private EventHandler eventHandler = new NullEventHandler();
 
     @Mock
     NodeStateInfo nodeStateInfo;
@@ -34,7 +36,7 @@ public class SimulateEngineProcessTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = spy(new SimulateEngine(null, null, null, new DebugEventHandler()));
+        engine = spy(new SimulateEngine(null, null, null, eventHandler));
         // stub out the learn method
         doReturn(createRandomRoute()).when(engine).learn(any(), any());
     }

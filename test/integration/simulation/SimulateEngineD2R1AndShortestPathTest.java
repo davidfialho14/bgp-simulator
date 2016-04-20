@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.D2R1Protocol;
-import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +31,7 @@ public class SimulateEngineD2R1AndShortestPathTest extends SimulateEngineTest {
     @Before
     public void setUp() throws Exception {
         engine = new SimulateEngine(new D2R1Protocol(), new ShortestPathPolicy(),
-                new FIFOScheduler(), new DebugEventHandler());
+                new FIFOScheduler(), eventHandler);
     }
 
     @Test(timeout = 2000)
