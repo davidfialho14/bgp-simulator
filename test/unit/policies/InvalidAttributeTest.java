@@ -11,12 +11,12 @@ import static policies.InvalidAttribute.invalid;
 public class InvalidAttributeTest {
 
     @Test
-    public void compareTo_InvalidAttributeWithInvalidAttribute_Equals() throws Exception {
+    public void compareTo_InvalidAttributeWithInvalidAttribute_Equal() throws Exception {
         assertThat(invalid().compareTo(invalid()), equalTo(0));
     }
 
     @Test
-    public void compareTo_InvalidAttributeWithDummyAttribute_Equals() throws Exception {
+    public void compareTo_InvalidAttributeWithDummyAttribute_Greater() throws Exception {
         assertThat(invalid().compareTo(new DummyAttribute()), greaterThan(0));
     }
 }

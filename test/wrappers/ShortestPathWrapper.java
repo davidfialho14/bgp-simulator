@@ -42,4 +42,30 @@ public interface ShortestPathWrapper {
         return route(new ShortestPathAttribute(length), path);
     }
 
+    /**
+     * Wrapper around the ShortestPathAttribute constructor. It improves the readability when a SP attribute
+     * instance is necessary.
+     */
+    static ShortestPathAttribute spattribute(int length) {
+        return new ShortestPathAttribute(length);
+    }
+
+    /**
+     * Wrapper around the ShortestPathLabel constructor. It improves the readability when a SP label
+     * instance is necessary.
+     */
+    static ShortestPathLabel splabel(int length) {
+        return new ShortestPathLabel(length);
+    }
+
+    /**
+     * Wrapper to create a ShortestPathLabel with any length. This should be used to indicate that in the
+     * context that is being used the shortest path label can be of any length.
+     *
+     * @return new instance of ShortestPathLabel with any length.
+     */
+    static ShortestPathLabel anySPLabel() {
+        return new ShortestPathLabel(Integer.MAX_VALUE);
+    }
+
 }
