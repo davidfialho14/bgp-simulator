@@ -1,6 +1,7 @@
 package wrappers.network;
 
 import network.Network;
+import network.Node;
 import network.exceptions.NodeNotFoundException;
 
 /**
@@ -29,6 +30,13 @@ public class NetworkWrapper {
         }
 
         return network;
+    }
+
+    /**
+     * Creates a node with any id. To be used in a context when the id of the node is not important.
+     */
+    public static Node anyNode() {
+        return new Node(Integer.MAX_VALUE);
     }
 
 }
