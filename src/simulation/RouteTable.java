@@ -158,6 +158,10 @@ public class RouteTable {
         return preferredRoute;
     }
 
+    public Route getSelectedRoute(Node destination) {
+        return getSelectedRoute(destination, null);
+    }
+
     public TextTable getPrintableTable() {
         Object[] outLinksArray = outLinks.toArray();
         String[] columns = new String[outLinks.size()];

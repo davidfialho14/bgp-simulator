@@ -18,7 +18,7 @@ import static wrappers.network.NetworkWrapper.network;
 import static wrappers.network.ToNodeElement.to;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
-import static wrappers.routetable.RouteElement.invalid;
+import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
@@ -53,18 +53,18 @@ public class SimulateEngineD1R1AndShortestPathTest extends SimulateEngineTest {
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
-                                selfLink(1), splink(1, 0, 0),     splink(1, 2, -1),
-                destination(0), invalid(),   sproute(0, path(0)), invalid()
+                                selfLink(1),    splink(1, 0, 0),     splink(1, 2, -1),
+                destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
         assertThat(engine.getRouteTable(new Node(2)), is( table(
-                                selfLink(2), splink(2, 0, 0),     splink(2, 3, 1),
-                destination(0), invalid(),   sproute(0, path(0)), invalid()
+                                selfLink(2),    splink(2, 0, 0),     splink(2, 3, 1),
+                destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
         assertThat(engine.getRouteTable(new Node(3)), is( table(
-                                selfLink(3), splink(3, 0, 0),     splink(3, 1, -2),
-                destination(0), invalid(),   sproute(0, path(0)), sproute(-2, path(1, 0))
+                                selfLink(3),    splink(3, 0, 0),     splink(3, 1, -2),
+                destination(0), invalidRoute(), sproute(0, path(0)), sproute(-2, path(1, 0))
         )));
     }
 }

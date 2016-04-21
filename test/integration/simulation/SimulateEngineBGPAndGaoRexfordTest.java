@@ -18,7 +18,7 @@ import static wrappers.network.NetworkWrapper.network;
 import static wrappers.network.ToNodeElement.to;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
-import static wrappers.routetable.RouteElement.invalid;
+import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
@@ -44,15 +44,15 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         engine.simulate(network0);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
-                                selfLink(0),       customerLink(0, 1),
-                destination(0), selfRoute(), invalid(),
-                destination(1), invalid(),         customerRoute(path(1))
+                                selfLink(0),    customerLink(0, 1),
+                destination(0), selfRoute(),    invalidRoute(),
+                destination(1), invalidRoute(), customerRoute(path(1))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
-                                selfLink(1),       providerLink(1, 0),
-                destination(0), invalid(),         providerRoute(path(0)),
-                destination(1), selfRoute(), invalid()
+                                selfLink(1),    providerLink(1, 0),
+                destination(0), invalidRoute(), providerRoute(path(0)),
+                destination(1), selfRoute(),    invalidRoute()
         )));
     }
 
@@ -68,24 +68,24 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         engine.simulate(network1);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
-                                selfLink(0), customerLink(0, 1),
-                destination(0), selfRoute(), invalid(),
-                destination(1), invalid(),   customerRoute(path(1)),
-                destination(2), invalid(),   invalid()
+                                selfLink(0),    customerLink(0, 1),
+                destination(0), selfRoute(),    invalidRoute(),
+                destination(1), invalidRoute(), customerRoute(path(1)),
+                destination(2), invalidRoute(), invalidRoute()
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
-                                selfLink(1), providerLink(1, 0),     providerLink(1, 2),
-                destination(0), invalid(),   providerRoute(path(0)), invalid(),
-                destination(1), selfRoute(), invalid(),              invalid(),
-                destination(2), invalid(),   invalid(),              providerRoute(path(2))
+                                selfLink(1),    providerLink(1, 0),     providerLink(1, 2),
+                destination(0), invalidRoute(), providerRoute(path(0)), invalidRoute(),
+                destination(1), selfRoute(),    invalidRoute(),         invalidRoute(),
+                destination(2), invalidRoute(), invalidRoute(),         providerRoute(path(2))
         )));
 
         assertThat(engine.getRouteTable(new Node(2)), is( table(
-                                selfLink(2), customerLink(2, 1),
-                destination(0), invalid(),   invalid(),
-                destination(1), invalid(),   customerRoute(path(1)),
-                destination(2), selfRoute(), invalid()
+                                selfLink(2),    customerLink(2, 1),
+                destination(0), invalidRoute(), invalidRoute(),
+                destination(1), invalidRoute(), customerRoute(path(1)),
+                destination(2), selfRoute(),    invalidRoute()
         )));
     }
 
@@ -100,24 +100,24 @@ public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         engine.simulate(network2);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
-                                selfLink(0), customerLink(0, 1),
-                destination(0), selfRoute(), invalid(),
-                destination(1), invalid(),   customerRoute(path(1)),
-                destination(2), invalid(),   customerRoute(path(1, 2))
+                                selfLink(0),    customerLink(0, 1),
+                destination(0), selfRoute(),    invalidRoute(),
+                destination(1), invalidRoute(), customerRoute(path(1)),
+                destination(2), invalidRoute(), customerRoute(path(1, 2))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
-                                selfLink(1), customerLink(1, 2),
-                destination(0), invalid(),   customerRoute(path(2, 0)),
-                destination(1), selfRoute(), invalid(),
-                destination(2), invalid(),   customerRoute(path(2))
+                                selfLink(1),    customerLink(1, 2),
+                destination(0), invalidRoute(), customerRoute(path(2, 0)),
+                destination(1), selfRoute(),    invalidRoute(),
+                destination(2), invalidRoute(), customerRoute(path(2))
         )));
 
         assertThat(engine.getRouteTable(new Node(2)), is( table(
-                                selfLink(2), customerLink(2, 0),
-                destination(0), invalid(),   customerRoute(path(0)),
-                destination(1), invalid(),   customerRoute(path(0, 1)),
-                destination(2), selfRoute(), invalid()
+                                selfLink(2),    customerLink(2, 0),
+                destination(0), invalidRoute(), customerRoute(path(0)),
+                destination(1), invalidRoute(), customerRoute(path(0, 1)),
+                destination(2), selfRoute(),    invalidRoute()
         )));
     }
 }

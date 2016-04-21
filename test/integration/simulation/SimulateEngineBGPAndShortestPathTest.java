@@ -19,7 +19,7 @@ import static wrappers.network.NetworkWrapper.network;
 import static wrappers.network.ToNodeElement.to;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
-import static wrappers.routetable.RouteElement.invalid;
+import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
@@ -44,8 +44,8 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         engine.simulate(network0, 1);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
-                                selfLink(0), splink(0, 1, 1),
-                destination(1), invalid(),   sproute(1, path(1))
+                                selfLink(0),    splink(0, 1, 1),
+                destination(1), invalidRoute(), sproute(1, path(1))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
@@ -66,15 +66,15 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
-                destination(0), sproute(0, path()), invalid(),              invalid(),
-                destination(1), invalid(),          sproute(1, path(1)),    invalid(),
-                destination(2), invalid(),          sproute(2, path(1, 2)), sproute(0, path(2))
+                destination(0), sproute(0, path()), invalidRoute(),         invalidRoute(),
+                destination(1), invalidRoute(),     sproute(1, path(1)),    invalidRoute(),
+                destination(2), invalidRoute(),     sproute(2, path(1, 2)), sproute(0, path(2))
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is( table(
                                 selfLink(1),        splink(1, 2, 1),
-                destination(1), sproute(0, path()), invalid(),
-                destination(2), invalid(),          sproute(1, path(2))
+                destination(1), sproute(0, path()), invalidRoute(),
+                destination(2), invalidRoute(),     sproute(1, path(2))
         )));
 
         assertThat(engine.getRouteTable(new Node(2)), is( table(
@@ -95,17 +95,17 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         assertThat(engine.getRouteTable(new Node(0)), is(table(
                                 selfLink(0),        splink(0, 1, 1),
-                destination(0), sproute(0, path()), invalid()
+                destination(0), sproute(0, path()), invalidRoute()
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is(table(
-                                selfLink(1), splink(1, 2, 1),
-                destination(0), invalid(),   sproute(2, path(2, 0))
+                                selfLink(1),    splink(1, 2, 1),
+                destination(0), invalidRoute(), sproute(2, path(2, 0))
         )));
 
         assertThat(engine.getRouteTable(new Node(2)), is(table(
-                                selfLink(2), splink(2, 0, 1),
-                destination(0), invalid(),   sproute(1, path(0))
+                                selfLink(2),    splink(2, 0, 1),
+                destination(0), invalidRoute(), sproute(1, path(0))
         )));
     }
 
@@ -141,18 +141,18 @@ public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
 
         assertThat(engine.getRouteTable(new Node(1)), is(table(
-                                selfLink(1), splink(1, 0, 0),     splink(1, 2, 1),
-                destination(0), invalid(),   sproute(0, path(0)), invalid()
+                                selfLink(1),    splink(1, 0, 0),     splink(1, 2, 1),
+                destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
         assertThat(engine.getRouteTable(new Node(2)), is(table(
-                                selfLink(2), splink(2, 3, 1),
-                destination(0), invalid(),   sproute(2, path(3, 1, 0))
+                                selfLink(2),    splink(2, 3, 1),
+                destination(0), invalidRoute(), sproute(2, path(3, 1, 0))
         )));
 
         assertThat(engine.getRouteTable(new Node(3)), is(table(
-                                selfLink(3), splink(3, 1, 1),
-                destination(0), invalid(),   sproute(1, path(1, 0))
+                                selfLink(3),    splink(3, 1, 1),
+                destination(0), invalidRoute(), sproute(1, path(1, 0))
         )));
     }
 }

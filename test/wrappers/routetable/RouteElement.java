@@ -43,7 +43,7 @@ public class RouteElement implements RouteTableElement {
      *
      * @return route element corresponding to an invalid route.
      */
-    public static RouteElement invalid() {
+    public static RouteElement invalidRoute() {
         // the route destination node does not need to be specified since it will be replaced
         // when building the route table
         return new RouteElement(Route.createInvalid(null));
