@@ -40,7 +40,7 @@ public class Route implements Comparable<Route> {
      * @param destination destination of the route.
      * @return new invalid Route instance.
      */
-    public static Route createInvalid(Node destination) {
+    public static Route invalidRoute(Node destination) {
         return new Route(destination, invalid(), PathAttribute.invalidPath());
     }
 

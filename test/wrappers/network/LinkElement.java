@@ -21,7 +21,7 @@ public class LinkElement {
      *
      * @param network network to add link to.
      */
-    public void addTo(Network network) throws NodeNotFoundException {
+    void addTo(Network network) throws NodeNotFoundException {
         network.addNode(link.getSource());
         network.addNode(link.getDestination());
         network.addLink(link);

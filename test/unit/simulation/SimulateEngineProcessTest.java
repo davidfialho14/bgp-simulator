@@ -1,7 +1,5 @@
 package simulation;
 
-import dummies.DummyAttribute;
-import dummies.DummyLabel;
 import network.Link;
 import network.Node;
 import org.junit.Before;
@@ -9,15 +7,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import policies.Attribute;
 import simulation.implementations.handlers.NullEventHandler;
 
-import static network.Factory.createRandomNode;
-import static network.Factory.createRandomRoute;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
+import static simulation.PathAttribute.invalidPath;
+import static wrappers.DummyWrapper.dummyAttr;
+import static wrappers.DummyWrapper.dummyLink;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.anyRoute;
+import static wrappers.RouteWrapper.route;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulateEngineProcessTest {
@@ -26,26 +27,33 @@ public class SimulateEngineProcessTest {
     private EventHandler eventHandler = new NullEventHandler();
 
     @Mock
-    NodeStateInfo nodeStateInfo;
+    private NodeStateInfo nodeStateInfo;
 
-    final Node destination = createRandomNode();
-    final Node learningNode = createRandomNode();
-    final Node exportingNode = createRandomNode();
-    final Link link = new Link(learningNode, exportingNode, new DummyLabel());
-    final Route invalidRoute = Route.createInvalid(destination);
+    private final Node destination = new Node(0);
+    private final Link link = dummyLink(1, 2);
+    private final Route invalidRoute = Route.invalidRoute(destination);
 
     @Before
     public void setUp() throws Exception {
         engine = spy(new SimulateEngine(null, null, null, eventHandler));
         // stub out the learn method
-        doReturn(createRandomRoute()).when(engine).learn(any(), any());
+        doReturn(anyRoute(destination)).when(engine).learn(any(), any());
     }
 
+    /**
+     * Sets the previously selected attribute and path for the node state info.
+     *  @param attribute attribute previously selected.
+     * @param path path previously selected.
+     */
+    private void setPreviouslySelected(Attribute attribute, PathAttribute path) {
+        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(attribute);
+        when(nodeStateInfo.getSelectedPath(any())).thenReturn(path);
+    }
+    
     @Test
     public void
-    process_PrevSelectedInvalidRouteAndSelectedInvalidRoute_DoesNotExportToInNeighbours() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(invalid());
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.invalidPath());
+    process_PrevSelectedInvalidRouteAndSelectedInvalidRoute_DoesNotExport() throws Exception {
+        setPreviouslySelected(invalid(), invalidPath());
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -55,22 +63,9 @@ public class SimulateEngineProcessTest {
 
     @Test
     public void
-    process_PrevSelectedValidRouteAndSelectedInvalidRoute_ExportsToInNeighboursInvalidRoute() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(new DummyAttribute());
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(new PathAttribute());
-        doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
-
-        engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
-
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any(), any());
-    }
-
-    @Test
-    public void
-    process_PrevSelectedInvalidRouteAndSelectedValidRoute_ExportsToInNeighboursValidRoute() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(invalid());
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(PathAttribute.invalidPath());
-        Route selectedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
+    process_PrevSelectedInvalidRouteAndSelectedValidRoute_ExportsSelectedRoute() throws Exception {
+        setPreviouslySelected(invalid(), invalidPath());
+        Route selectedRoute = route(destination, dummyAttr(0), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -80,9 +75,8 @@ public class SimulateEngineProcessTest {
 
     @Test
     public void
-    process_DestinationIsNotKnownAndSelectedInvalidRoute_ExportsToInNeighboursInvalidRoute() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(null);
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(null);
+    process_PrevSelectedValidRouteAndSelectedInvalidRoute_ExportsInvalidRoute() throws Exception {
+        setPreviouslySelected(dummyAttr(0), path());
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -92,10 +86,20 @@ public class SimulateEngineProcessTest {
 
     @Test
     public void
-    process_DestinationIsNotKnownAndSelectedValidRoute_ExportsToInNeighboursValidRoute() throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(null);
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(null);
-        Route selectedRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
+    process_DestinationIsNotKnownAndSelectedInvalidRoute_ExportsInvalidRoute() throws Exception {
+        setPreviouslySelected(null, null);
+        doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
+
+        engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
+
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any(), any());
+    }
+
+    @Test
+    public void
+    process_DestinationIsNotKnownAndSelectedValidRoute_ExportsSelectedRoute() throws Exception {
+        setPreviouslySelected(null, null);
+        Route selectedRoute = route(destination, dummyAttr(0), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -107,9 +111,8 @@ public class SimulateEngineProcessTest {
     public void
     process_PrevSelectedRouteWithAttr0AndEmptyPathAndSelectedRouteWithAttr1AndEmptyPath_ExportsSelectedRoute()
             throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(new DummyAttribute(0));
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(new PathAttribute());
-        Route selectedRoute = new Route(destination, new DummyAttribute(1), new PathAttribute());
+        setPreviouslySelected(dummyAttr(0), path());
+        Route selectedRoute = route(destination, dummyAttr(1), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -121,10 +124,8 @@ public class SimulateEngineProcessTest {
     public void
     process_PrevSelectedRouteWithAttr0AndEmptyPathAndSelectedRouteWithAttr0AndPathWithOneNode_ExportsSelectedRoute()
             throws Exception {
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(new DummyAttribute(0));
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(new PathAttribute());
-        Route selectedRoute = new Route(destination,
-                new DummyAttribute(0), new PathAttribute(createRandomNode()));
+        setPreviouslySelected(dummyAttr(0), path());
+        Route selectedRoute = route(destination, dummyAttr(0), path(0));
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
         engine.process(nodeStateInfo, new ScheduledRoute(invalidRoute, link, 0));
@@ -136,15 +137,12 @@ public class SimulateEngineProcessTest {
     public void
     process_RouteBetterThanCurrentBestRouteAndWithDestinationEqualToLinkSourceNode_ExportsLearnedRoute()
             throws Exception {
-        Node routeDestination = new Node(0);
-        Link link = new Link(routeDestination, new Node(2), new DummyLabel());
-        Route learnedRoute = new Route(routeDestination, new DummyAttribute(-1), path());
+        Route learnedRoute = route(0, dummyAttr(-1), path());
         doReturn(learnedRoute).when(engine).learn(any(), any());
-        when(nodeStateInfo.getSelectedAttribute(any())).thenReturn(new DummyAttribute(0));
-        when(nodeStateInfo.getSelectedPath(any())).thenReturn(path());
+        setPreviouslySelected(dummyAttr(0), path());
         doReturn(learnedRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeStateInfo, new ScheduledRoute(anyRoute(routeDestination), link, 0));
+        engine.process(nodeStateInfo, new ScheduledRoute(anyRoute(0), dummyLink(0, 2), 0));
 
         verify(engine, times(1)).exportToInNeighbours(any(), eq(learnedRoute), any(), any());
     }

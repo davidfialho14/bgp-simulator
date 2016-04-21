@@ -1,176 +1,186 @@
 package simulation;
 
-import dummies.DummyAttribute;
 import network.Link;
 import network.Node;
 import org.junit.Test;
-import policies.Attribute;
 
-import java.util.Arrays;
-
-import static network.Factory.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static policies.InvalidAttribute.invalid;
+import static wrappers.DummyWrapper.*;
+import static wrappers.PathWrapper.path;
+import static wrappers.RouteWrapper.route;
+import static wrappers.network.NetworkWrapper.anyNode;
+import static wrappers.routetable.DestinationElement.destination;
+import static wrappers.routetable.RouteElement.invalidRoute;
+import static wrappers.routetable.RouteTableWrapper.table;
 
 public class RouteTableTest {
 
-    private Node destination = createRandomNode();
+    private Node destNode = anyNode();
 
-    /**
-     * Creates a route table. The out-links can be added as normal parameters or by an array.
-     * @param outLinks out-links to assign to the route table.
-     * @return route table initialized.
-     */
-    private RouteTable createRouteTable(Link... outLinks) {
-        return new RouteTable(Arrays.asList(outLinks));
+    @Test
+    public void setAttribute_Attr0OnTableWithoutOutLinks_GetsNull() throws Exception {
+        RouteTable routeTable = table();
+        Link outLink = anyDummyLink();
+
+        routeTable.setAttribute(destNode, outLink, dummyAttr(0));
+
+        assertThat(routeTable.getAttribute(destNode, outLink), is(nullValue()));
+    }
+
+    @Test
+    public void setAttribute_Attribute0ForOutLinkBetweenNodes0And1_GetsAttribute0() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+
+        routeTable.setAttribute(destNode, dummyLink(0, 1), dummyAttr(0));
+
+        assertThat(routeTable.getAttribute(destNode, dummyLink(0, 1)), is(dummyAttr(0)));
+    }
+
+    @Test
+    public void setAttribute_Attr2ForOutLinkWithAttribute1AlreadyAssigned_GetsAttribute2() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+        Link outLink = dummyLink(0, 1);
+        routeTable.setAttribute(destNode, outLink, dummyAttr(1));
+
+        routeTable.setAttribute(destNode, outLink, dummyAttr(2));
+
+        assertThat(routeTable.getAttribute(destNode, outLink), is(dummyAttr(2)));
     }
 
     @Test
     public void
-    setAttribute_Attr0ForTableWithNoOutLinks_GetAttributeReturnsNull() throws Exception {
-        RouteTable table = createRouteTable();
-        Link outLink = createRandomLink();
+    setAttribute_Attribute0ForOutLinkBetween0And1OnTableWithOutLinkBetween0And2_GetsNull() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 2));
+        Link outLink = dummyLink(0, 1);
 
-        table.setAttribute(destination, outLink, new DummyAttribute());
+        routeTable.setAttribute(destNode, outLink, dummyAttr(2));
 
-        assertThat(table.getAttribute(destination, outLink), is(nullValue()));
-    }
-
-    @Test
-    public void 
-    setAttribute_Attr0ForValidOutLinkAndNonExistingDestination_GetAttributeReturnsAttr0() throws Exception {
-        Link validOutLink = createRandomLink();
-        RouteTable table = createRouteTable(validOutLink);
-        Attribute attribute = new DummyAttribute();
-
-        table.setAttribute(destination, validOutLink, attribute);
-
-        assertThat(table.getAttribute(destination, validOutLink), equalTo(attribute));
+        assertThat(routeTable.getAttribute(destNode, outLink), is(nullValue()));
     }
 
     @Test
     public void
-    setAttribute_Attr2ForDestinationAndOutLinkWithAttr1_GetAttributeReturnsAttr2() throws Exception {
-        Link validOutLink = createRandomLink();
-        RouteTable table = createRouteTable(validOutLink);
-        table.setAttribute(destination, validOutLink, new DummyAttribute(1));
+    getAttribute_ForDestination1OnTableWithOnlyKnownDestination0_GetsNull() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path())
+        );
+        Node destination1 = new Node(1);
 
-        Attribute attribute = new DummyAttribute(2);
-        table.setAttribute(destination, validOutLink, attribute);
-
-        assertThat(table.getAttribute(destination, validOutLink), equalTo(attribute));
+        assertThat(routeTable.getAttribute(destination1, dummyLink(0, 1)), is(nullValue()));
     }
 
     @Test
     public void
-    setAttribute_Attr0ForInvalidOutLink_GetAttributeReturnsNull() throws Exception {
-        RouteTable table = createRouteTable();
-        Link invalidOutLink = createRandomLink();
-
-        assertThat(table.getAttribute(destination, invalidOutLink), is(nullValue()));
-    }
-
-    @Test
-    public void
-    getAttribute_ForExistingDestinationAndOutLinkWithoutAttrPreviouslyAssigned_ReturnsInvalidAttribute()
+    getAttribute_ForDestination0AndOutLinkBetween0And1WithoutAttributePreviouslyAssigned_GetsInvalidAttribute()
             throws Exception {
-        Link outLinkWithAttrAssigned = createRandomLink();
-        Link outLinkWithoutAttrAssigned = createRandomLink();
-        RouteTable table = createRouteTable(outLinkWithAttrAssigned, outLinkWithoutAttrAssigned);
-        table.setAttribute(destination, outLinkWithAttrAssigned, new DummyAttribute());
+        RouteTable table = table(dummyOutLink(0, 1), dummyOutLink(0, 2));
+        table.setAttribute(destNode, dummyLink(0, 2), anyDummyAttr());  // assigne attribute to other link
 
-        assertThat(table.getAttribute(destination, outLinkWithoutAttrAssigned).isInvalid(), is(true));
+        assertThat(table.getAttribute(destNode, dummyLink(0, 1)), is(invalid()));
     }
 
     @Test
     public void
-    clear_TableWithOnly1Attribute_GetAttributeReturnsNull() throws Exception {
-        Link outLink = createRandomLink();
-        RouteTable table = createRouteTable(outLink);
-        table.setAttribute(destination, outLink, new DummyAttribute());
+    clear_EmptyTableWithoutOutLinks_TableStaysEmptyWithoutOutLinks() throws Exception {
+        RouteTable routeTable = table();
 
-        table.clear();
+        routeTable.clear();
 
-        assertThat(table.getAttribute(destination, outLink), is(nullValue()));
+        assertThat(routeTable, is(table()));
     }
 
     @Test
     public void
-    clear_SettingAttr0ForDestination1AndValidOutLink_GetAttributeReturnsAttr0() throws Exception {
-        Link outLink = createRandomLink();
-        RouteTable table = createRouteTable(outLink);
-        Node destination = new Node(1);
-        table.setAttribute(destination, outLink, new DummyAttribute());
-        Attribute attribute = new DummyAttribute(1);
+    clear_EmptyTableWithOutLinkBetween0And1_TableStaysEmptyWithOutLinkBetween0And1() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
 
-        table.clear();
-        table.setAttribute(destination, outLink, attribute);
+        routeTable.clear();
 
-        assertThat(table.getAttribute(destination, outLink), is(attribute));
+        assertThat(routeTable, is(table(dummyOutLink(0, 1))));
     }
 
     @Test
     public void
-    getSelectedRoute_ForNonExistingDestination_ReturnsNull() throws Exception {
-        Link outLink = createRandomLink();
-        RouteTable table = createRouteTable(outLink);
+    clear_TableWithOutLinkBetween0And1AndKnownDestinations0And1_EmptyTableWithOutLinkBetween0And1() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path()),
+                destination(1), dummyRoute(0, path())
+        );
 
-        assertThat(table.getSelectedRoute(destination, null), is(nullValue()));
+        routeTable.clear();
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 1))));
     }
 
-    private void setRoute(RouteTable table, Node destination, Link outLink, Route route) {
-        table.setAttribute(destination, outLink, route.getAttribute());
-        table.setPath(destination, outLink, route.getPath());
+
+    @Test
+    public void
+    getSelectedRoute_ForDestination0OnTableWithoutKnownDestinations_GetsNull() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+        Node destination0 = new Node(0);
+
+        assertThat(routeTable.getSelectedRoute(destination0, dummyLink(0, 1)), is(nullValue()));
     }
 
     @Test
     public void
-    getSelectedRoute_TableWithOneOutLinkWithAttr0_ReturnsRouteWithAttr0() throws Exception {
-        Link outLink = createRandomLink();
-        RouteTable table = createRouteTable(outLink);
-        Route route = new Route(destination, new DummyAttribute(), new PathAttribute());
-        setRoute(table, destination, outLink, route);
+    getSelectedRoute_ForDestination0WithOnlyOnePossibility_GetsTheOnlyRouteAvailable() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path())
+        );
 
-        assertThat(table.getSelectedRoute(destination, null), is(route));
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, dummyAttr(0), path())));
     }
 
     @Test
     public void
-    getSelectedRoute_TableWithOutLinkWithAttr0AndOutLinkWithoutAssignedRoute_ReturnsRouteWithAttr0()
+    getSelectedRoute_ForDestination0WithRoute0AndEmptyPathAndRoute1AndEmptyPath_GetsRoute1AndEmptyPath()
             throws Exception {
-        Link[] outLinks = createRandomLinks(2);
-        RouteTable table = createRouteTable(outLinks);
-        Route route = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        setRoute(table, destination, outLinks[0], route);
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),    dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()), dummyRoute(1, path())
+        );
 
-        assertThat(table.getSelectedRoute(destination, null), is(route));
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, dummyAttr(1), path())));
     }
 
     @Test
     public void
-    getSelectedRoute_TableWith2OutLinksWithAttrs0And1_ReturnsRouteWithAttr1() throws Exception {
-        Link[] outLinks = createRandomLinks(2);
-        RouteTable table = createRouteTable(outLinks);
-        Route routeWithAttr0 = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        setRoute(table, destination, outLinks[0], routeWithAttr0);
-        Route routeWithAttr1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        setRoute(table, destination, outLinks[1], routeWithAttr1);
+    getSelectedRoute_ForDestination0WithRoute0AndEmptyPathAndInvalidRoute_GetsRoute0AndEmptyPath() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),    dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()), invalidRoute()
+        );
 
-        assertThat(table.getSelectedRoute(destination, null), is(routeWithAttr1));
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, dummyAttr(0), path())));
+    }
+
+    @Test
+    public void getSelectedRoute_ForDestination0WithTwoInvalidsRoutes_GetsInvalidRoute() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1), dummyOutLink(0, 2),
+                destination(0), invalidRoute(),     invalidRoute()
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(Route.invalidRoute(new Node(0))));
     }
 
     @Test
     public void
-    getSelectedRoute_TableWith2OutLinks0And1WithAttrs0And1AndOutLink1IsIgnored_ReturnsRouteWithAttr0()
+    getSelectedRoute_IgnoringOutLink2ForDestination0WithRoute0ForOutLink1AndRoute1ForOutLink2_GetsRoute0()
             throws Exception {
-        Link[] outLinks = createRandomLinks(2);
-        RouteTable table = createRouteTable(outLinks);
-        Route routeWithAttr0 = new Route(destination, new DummyAttribute(0), new PathAttribute());
-        setRoute(table, destination, outLinks[0], routeWithAttr0);
-        Route routeWithAttr1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        setRoute(table, destination, outLinks[1], routeWithAttr1);
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(1, path())
+        );
 
-        assertThat(table.getSelectedRoute(destination, outLinks[1]), is(routeWithAttr0));
+        assertThat(routeTable.getSelectedRoute(new Node(0), dummyLink(0, 2)), is(route(0, dummyAttr(0), path())));
     }
 
 }

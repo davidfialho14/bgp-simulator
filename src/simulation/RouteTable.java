@@ -99,7 +99,7 @@ public class RouteTable {
     private void addDestination(Node destination) {
         // add an invalid route for each out-link
         for (Map.Entry<Link, Map<Node, Route>> entry : routes.entrySet()) {
-            entry.getValue().put(destination, Route.createInvalid(destination));
+            entry.getValue().put(destination, Route.invalidRoute(destination));
         }
 
         destinations.add(destination);
@@ -156,6 +156,10 @@ public class RouteTable {
         }
 
         return preferredRoute;
+    }
+
+    public Route getSelectedRoute(Node destination) {
+        return getSelectedRoute(destination, null);
     }
 
     public TextTable getPrintableTable() {

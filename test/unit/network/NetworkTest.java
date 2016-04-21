@@ -1,5 +1,6 @@
 package network;
 
+import dummies.DummyLabel;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import org.junit.Before;
@@ -7,9 +8,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static network.Factory.createLink;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static wrappers.DummyWrapper.dummyLink;
 
 public class NetworkTest {
 
@@ -24,23 +26,21 @@ public class NetworkTest {
     }
 
     @Test
-    public void addAnyNode_NetworkContainsAddedNode() throws Exception {
-        Integer[] expectedIds = {0};
+    public void add_NodeWithId0_ContainsNodeWithId0() throws Exception {
         network.addNode(0);
 
-        assertThat(network.getIds(), containsInAnyOrder(expectedIds));
+        assertThat(network.getIds(), containsInAnyOrder(0));
     }
 
     @Test
-    public void addAny2Nodes_NetworkContainsThe2Nodes() throws Exception {
-        Integer[] expectedIds = {0, 1};
+    public void add_NodesWithIds0And1_ContainsNodesWithIds0And1() throws Exception {
         network.addNode(0); network.addNode(1);
 
-        assertThat(network.getIds(), containsInAnyOrder(expectedIds));
+        assertThat(network.getIds(), containsInAnyOrder(0, 1));
     }
 
     @Test
-    public void addTheSameNodeTwice_NetworkContainsAddedNode() throws Exception {
+    public void add_NodeWithId0Twice_ThrowsNodeExistsException() throws Exception {
         network.addNode(0);
 
         thrown.expect(NodeExistsException.class);
@@ -48,64 +48,50 @@ public class NetworkTest {
         network.addNode(0);
     }
 
-    /**
-     * Links two nodes with the given ids in the network object under test. The other link attributes are
-     * initialized to null.
-     * @param srdId id of the source node.
-     * @param destId id of the destination node.
-     * @throws NodeNotFoundException
-     */
-    private void linkNodes(int srdId, int destId) throws NodeNotFoundException {
-        network.link(srdId, destId, null);
-    }
-
     @Test
-    public void link2ExistingNodes_NetworkContainsLinkBetweenThe2Nodes() throws Exception {
+    public void link_Node0ToNode1BothAlreadyAddedToTheNetwork_ContainsLinkBetweenNode0AndNode1() throws Exception {
         network.addNode(0); network.addNode(1);
 
-        Link[] expectedLinks = { createLink(0, 1) };
-        linkNodes(0, 1);
+        network.link(0, 1, new DummyLabel());
 
-        assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
+        assertThat(network.getLinks(), containsInAnyOrder(dummyLink(0, 1)));
     }
 
     @Test
-    public void linkExistingSourceToNonExistingDestination_ThrowsNodeNotFoundException() throws Exception {
+    public void link_Node0ToNode1ButNode0WasNotAddedToTheNetwork_ThrowsNodeNotFoundException() throws Exception {
         network.addNode(1);
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '0' does not exist");
-        linkNodes(0, 1);
+        network.link(0, 1, new DummyLabel());
     }
 
     @Test
-    public void linkNonExistingSourceToExistingDestination_ThrowsNodeNotFoundException() throws Exception {
-        network.addNode(1);
-
-        thrown.expect(NodeNotFoundException.class);
-        thrown.expectMessage("node with id '0' does not exist");
-        linkNodes(0, 1);
-    }
-
-    @Test
-    public void linkSameNodesTwice_NetworkContainsBothLinks() throws Exception {
-        network.addNode(0); network.addNode(1);
-        linkNodes(0, 1);  // first link
-
-        Link[] expectedLinks = { createLink(0, 1), createLink(0, 1) };
-        linkNodes(0, 1);  // same link twice
-
-        assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
-    }
-
-    @Test
-    public void linkWithSourceEqualToDestination_NetworkContainsLink() throws Exception {
+    public void link_Node0ToNode1ButNode1WasNotAddedToTheNetwork_ThrowsNodeNotFoundException() throws Exception {
         network.addNode(0);
 
-        Link[] expectedLinks = { createLink(0, 0) };
-        linkNodes(0, 0);
+        thrown.expect(NodeNotFoundException.class);
+        thrown.expectMessage("node with id '1' does not exist");
+        network.link(0, 1, new DummyLabel());
+    }
 
-        assertThat(network.getLinks(), containsInAnyOrder(expectedLinks));
+    @Test
+    public void link_Node0ToNode1Twice_ContainsBothLinks() throws Exception {
+        network.addNode(0); network.addNode(1);
+
+        network.link(0, 1, new DummyLabel());
+        network.link(0, 1, new DummyLabel());
+
+        assertThat(network.getLinks().size(), is(2));
+    }
+
+    @Test
+    public void link_Node0ToNode0_ContainsLinkFromNode0ToNode0() throws Exception {
+        network.addNode(0);
+
+        network.link(0, 0, new DummyLabel());
+
+        assertThat(network.getLinks(), containsInAnyOrder(dummyLink(0, 0)));
     }
 
 }

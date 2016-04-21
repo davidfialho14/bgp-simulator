@@ -1,36 +1,23 @@
 package policies.implementations.shortestpath;
 
-import network.Link;
 import org.junit.Test;
 
-import static network.Factory.createRandomLink;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static policies.InvalidAttribute.invalid;
+import static wrappers.ShortestPathWrapper.anySPLabel;
+import static wrappers.ShortestPathWrapper.spattribute;
+import static wrappers.ShortestPathWrapper.splabel;
 
 public class ShortestPathLabelTest {
 
     @Test
-    public void extend_SPAttributeWithLength1ThroughLabelLength2_SPAttributeWithLength3() throws Exception {
-        ShortestPathLabel label = new ShortestPathLabel(1);
-        Link link = new Link(null, null, null);
-        ShortestPathAttribute attribute = new ShortestPathAttribute(2);
-
-        assertThat(label.extend(link, attribute), is(new ShortestPathAttribute(3)));
-    }
-
-    /**
-     * Returns an arbitrary ShortestPathLabel.
-     */
-    private ShortestPathLabel anyShortestPathLabel() {
-        return new ShortestPathLabel(0);
+    public void extend_AttributeWithLength2WithLabelWithLength1_SPAttributeWithLength3() throws Exception {
+        assertThat(splabel(1).extend(null, spattribute(2)), is(new ShortestPathAttribute(3)));
     }
 
     @Test
-    public void extend_InvalidAttributeThroughAnyLabel_InvalidAttribute() throws Exception {
-        ShortestPathLabel label = anyShortestPathLabel();
-        Link link = createRandomLink();
-
-        assertThat(label.extend(link, invalid()), is(invalid()));
+    public void extend_InvalidAttributeWithAnyLabel_InvalidAttribute() throws Exception {
+        assertThat(anySPLabel().extend(null, invalid()), is(invalid()));
     }
 }
