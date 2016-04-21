@@ -2,6 +2,8 @@ package wrappers;
 
 import dummies.DummyAttribute;
 import network.Node;
+import policies.Attribute;
+import simulation.PathAttribute;
 import simulation.Route;
 
 import static wrappers.PathWrapper.path;
@@ -10,6 +12,13 @@ import static wrappers.PathWrapper.path;
  * Implements wrapper methods to create routes with syntactic meaning.
  */
 public interface RouteWrapper {
+
+    /**
+     * More readable way to create a route instance.
+     */
+    static Route route(int destId, Attribute attribute, PathAttribute path) {
+        return new Route(new Node(destId), attribute, path);
+    }
 
     /**
      * Creates a route instance with the given destination. To be used to indicate that any route can be used
