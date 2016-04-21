@@ -37,4 +37,15 @@ public interface RouteWrapper {
     static Route anyRoute(Node destination) {
         return new Route(destination, new DummyAttribute(), path());
     }
+
+    /**
+     * Creates a route instance with the given destination. To be used to indicate that any route can be used
+     * in some context. It uses a dummy attribute.
+     *
+     * @param destId id of the destination node.
+     * @return new route instance for the given destination.
+     */
+    static Route anyRoute(int destId) {
+        return anyRoute(new Node(destId));
+    }
 }
