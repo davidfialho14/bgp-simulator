@@ -2,106 +2,86 @@ package simulation;
 
 import network.Node;
 import org.junit.Test;
-import dummies.DummyAttribute;
 
-import static network.Factory.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static simulation.Route.invalidRoute;
+import static wrappers.DummyWrapper.dummyAttr;
+import static wrappers.PathWrapper.path;
+import static wrappers.RouteWrapper.route;
+import static wrappers.network.NetworkWrapper.anyNode;
 
 public class RouteTest {
     
-    private Node destination = createRandomNode();
+    private Node destination = anyNode();
 
     @Test
-    public void
-    compareTo_InvalidRouteWithInvalidRoute_Equal() throws Exception {
-        Route invalidRoute1 = Route.invalidRoute(destination);
-        Route invalidRoute2 = Route.invalidRoute(destination);
-
-        assertThat(invalidRoute1.compareTo(invalidRoute2), equalTo(0));
+    public void compareTo_InvalidRouteToInvalidRoute_Equal() throws Exception {
+        assertThat(invalidRoute(destination).compareTo(invalidRoute(destination)), equalTo(0));
     }
 
     @Test
-    public void
-    compareTo_InvalidRouteWithValidRoute_Greater() throws Exception {
-        Route invalidRoute = Route.invalidRoute(destination);
-        Route validRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
-
-        assertThat(invalidRoute.compareTo(validRoute), greaterThan(0));
+    public void compareTo_InvalidRouteToRoute0AndEmptyPath_Greater() throws Exception {
+        assertThat(invalidRoute(destination).compareTo(route(destination, dummyAttr(0), path())), greaterThan(0));
     }
 
     @Test
-    public void
-    compareTo_ValidRouteWithInvalidRoute_Lesser() throws Exception {
-        Route validRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
-        Route invalidRoute = Route.invalidRoute(destination);
-
-        assertThat(validRoute.compareTo(invalidRoute), lessThan(0));
+    public void compareTo_Route0AndEmptyPathToInvalidRoute_Lesser() throws Exception {
+        assertThat(route(destination, dummyAttr(0), path()).compareTo(invalidRoute(destination)), lessThan(0));
     }
 
     @Test
-    public void
-    compareTo_RoutesWithEqualAttributesAndPaths_Equal() throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute());
+    public void compareTo_Route0AndEmptyPathAndRoute0AndEmptyPath_Equal() throws Exception {
+        Route route1 = route(destination, dummyAttr(0), path());
+        Route route2 = route(destination, dummyAttr(0), path());
 
         assertThat(route1.compareTo(route2), equalTo(0));
     }
 
     @Test
-    public void
-    compareTo_RouteDummyAttribute1WithRouteDummyAttribute2BothWithEmptyPaths_Greater() throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(2), new PathAttribute());
+    public void compareTo_Route1AndEmptyPathToRoute2AndEmptyPath_Greater() throws Exception {
+        Route route1 = route(destination, dummyAttr(1), path());
+        Route route2 = route(destination, dummyAttr(2), path());
 
         assertThat(route1.compareTo(route2), greaterThan(0));
     }
 
     @Test
-    public void
-    compareTo_RouteDummyAttribute2WithRouteDummyAttribute1BothWithEmptyPaths_Lesser() throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(2), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(1), new PathAttribute());
+    public void compareTo_Route2AndEmptyPathToRoute1AndEmptyPath_Lesser() throws Exception {
+        Route route1 = route(destination, dummyAttr(1), path());
+        Route route2 = route(destination, dummyAttr(2), path());
+
+        assertThat(route2.compareTo(route1), lessThan(0));
+    }
+
+    @Test
+    public void compareTo_Route0AndPathWithNode0ToRoute0AndEmptyPath_Greater() throws Exception {
+        Route route1 = route(destination, dummyAttr(0), path(0));
+        Route route2 = route(destination, dummyAttr(0), path());
+
+        assertThat(route1.compareTo(route2), greaterThan(0));
+    }
+
+    @Test
+    public void compareTo_Route0AndEmptyPathToRoute0AndPathWithNode0_Lesser() throws Exception {
+        Route route1 = route(destination, dummyAttr(0), path());
+        Route route2 = route(destination, dummyAttr(0), path(0));
 
         assertThat(route1.compareTo(route2), lessThan(0));
     }
 
     @Test
-    public void
-    compareTo_RouteWithAttr0AndPathWithOneNodeWithRouteWithAttr0AndEmptyPath_Greater()
-            throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
-        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute());
+    public void compareTo_Route1AndPathWithNode0ToRoute2AndEmptyPath_Greater() throws Exception {
+        Route route1 = route(destination, dummyAttr(1), path(0));
+        Route route2 = route(destination, dummyAttr(2), path());
 
         assertThat(route1.compareTo(route2), greaterThan(0));
     }
 
     @Test
-    public void
-    compareTo_RouteWithAttr0AndEmptyPathWithRouteWithAttr0AndPathWithOneNode_Lesser()
-            throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
-
-        assertThat(route1.compareTo(route2), lessThan(0));
-    }
-
-    @Test
-    public void
-    compareTo_RouteWithAttr0AndPathWithOneNodeWithRouteWithAttr1AndEmptyPath_Greater()
-            throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
-        Route route2 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-
-        assertThat(route1.compareTo(route2), greaterThan(0));
-    }
-
-    @Test
-    public void
-    compareTo_RouteWithAttr1AndEmptyPathWithRouteWithAttr0AndPathWithOneNode_Lesser()
-            throws Exception {
-        Route route1 = new Route(destination, new DummyAttribute(1), new PathAttribute());
-        Route route2 = new Route(destination, new DummyAttribute(), new PathAttribute(createRandomNode()));
+    public void compareTo_Route2AndEmptyPathToRoute1AndPathWithNode0_Lesser() throws Exception {
+        Route route1 = route(destination, dummyAttr(2), path());
+        Route route2 = route(destination, dummyAttr(1), path(0));
 
         assertThat(route1.compareTo(route2), lessThan(0));
     }
