@@ -15,8 +15,8 @@ public class RouteTest {
     @Test
     public void
     compareTo_InvalidRouteWithInvalidRoute_Equal() throws Exception {
-        Route invalidRoute1 = Route.createInvalid(destination);
-        Route invalidRoute2 = Route.createInvalid(destination);
+        Route invalidRoute1 = Route.invalidRoute(destination);
+        Route invalidRoute2 = Route.invalidRoute(destination);
 
         assertThat(invalidRoute1.compareTo(invalidRoute2), equalTo(0));
     }
@@ -24,7 +24,7 @@ public class RouteTest {
     @Test
     public void
     compareTo_InvalidRouteWithValidRoute_Greater() throws Exception {
-        Route invalidRoute = Route.createInvalid(destination);
+        Route invalidRoute = Route.invalidRoute(destination);
         Route validRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
 
         assertThat(invalidRoute.compareTo(validRoute), greaterThan(0));
@@ -34,7 +34,7 @@ public class RouteTest {
     public void
     compareTo_ValidRouteWithInvalidRoute_Lesser() throws Exception {
         Route validRoute = new Route(destination, new DummyAttribute(), new PathAttribute());
-        Route invalidRoute = Route.createInvalid(destination);
+        Route invalidRoute = Route.invalidRoute(destination);
 
         assertThat(validRoute.compareTo(invalidRoute), lessThan(0));
     }

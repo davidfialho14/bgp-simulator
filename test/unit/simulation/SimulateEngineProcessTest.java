@@ -32,7 +32,7 @@ public class SimulateEngineProcessTest {
     final Node learningNode = createRandomNode();
     final Node exportingNode = createRandomNode();
     final Link link = new Link(learningNode, exportingNode, new DummyLabel());
-    final Route invalidRoute = Route.createInvalid(destination);
+    final Route invalidRoute = Route.invalidRoute(destination);
 
     @Before
     public void setUp() throws Exception {

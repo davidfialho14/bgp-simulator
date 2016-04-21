@@ -99,7 +99,7 @@ public class RouteTable {
     private void addDestination(Node destination) {
         // add an invalid route for each out-link
         for (Map.Entry<Link, Map<Node, Route>> entry : routes.entrySet()) {
-            entry.getValue().put(destination, Route.createInvalid(destination));
+            entry.getValue().put(destination, Route.invalidRoute(destination));
         }
 
         destinations.add(destination);

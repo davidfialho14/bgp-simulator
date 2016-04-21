@@ -34,7 +34,7 @@ public class SimulateEngineLearnTest {
     public void
     learn_FromAnyNodeInvalidRoute_InvalidRoute() throws Exception {
         Link link = createRandomLink();
-        Route invalidRoute = Route.createInvalid(destination);
+        Route invalidRoute = Route.invalidRoute(destination);
         when(protocol.extend(eq(destination), any(), any())).thenReturn(invalid());
 
         assertThat(engine.learn(link, invalidRoute), is(invalidRoute));
@@ -48,7 +48,7 @@ public class SimulateEngineLearnTest {
         when(protocol.extend(eq(destination), any(), any())).thenReturn(invalid());
 
 
-        Route invalidRoute = Route.createInvalid(destination);
+        Route invalidRoute = Route.invalidRoute(destination);
         assertThat(engine.learn(link, exportedRoute), is(invalidRoute));
     }
 

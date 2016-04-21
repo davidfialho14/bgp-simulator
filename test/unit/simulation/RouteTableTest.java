@@ -168,7 +168,7 @@ public class RouteTableTest {
                 destination(0), invalidRoute(),     invalidRoute()
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0)), is(Route.createInvalid(new Node(0))));
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(Route.invalidRoute(new Node(0))));
     }
 
     @Test
