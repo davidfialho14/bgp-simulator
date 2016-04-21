@@ -18,10 +18,14 @@ public class NetworkWrapper {
      * @param links links of the network.
      * @return network instance initialized.
      */
-    public static Network network(LinkElement... links) throws NodeNotFoundException {
+    public static Network network(LinkElement... links) {
         Network network = new Network();
-        for (LinkElement link : links) {
-            link.addTo(network);
+        try {
+            for (LinkElement link : links)
+                link.addTo(network);
+
+        } catch (NodeNotFoundException e) {
+            e.printStackTrace();
         }
 
         return network;
