@@ -8,10 +8,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import simulation.ScheduledRoute;
 
-import static network.Factory.createRandomLink;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+import static wrappers.DummyWrapper.anyDummyLink;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RandomSchedulerTest {
@@ -29,8 +29,7 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime0AndDelay0ForLinkNotYetUsed_Returns0() throws Exception {
         setDelay(0);
-        Link newLink = createRandomLink();
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, newLink, 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 0L);
 
         assertThat(scheduler.schedule(scheduledRoute), is(0L));
     }
@@ -38,19 +37,18 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime0AndDelay0ForLinkNotYetUsed_GetLastTimeForLinkReturns0() throws Exception {
         setDelay(0);
-        Link newLink = createRandomLink();
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, newLink, 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 0L);
 
         scheduler.schedule(scheduledRoute);
 
-        assertThat(scheduler.getLastTime(newLink), is(0L));
+        assertThat(scheduler.getLastTime(anyDummyLink()), is(0L));
     }
 
     @Test
     public void
     schedule_RouteWithTime0Delay1AndWithLinkNotYetUsed_Returns1() throws Exception {
         setDelay(1);
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, createRandomLink(), 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 0L);
 
         assertThat(scheduler.schedule(scheduledRoute), is(1L));
     }
@@ -58,24 +56,29 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime1AndDelay1ForLinkNotYetUsed_GetLastTimeForLinkReturns2() throws Exception {
         setDelay(1);
-        Link newLink = createRandomLink();
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, newLink, 1L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 1L);
         scheduler.schedule(scheduledRoute);
 
-        assertThat(scheduler.getLastTime(newLink), is(2L));
+        assertThat(scheduler.getLastTime(anyDummyLink()), is(2L));
     }
 
-    protected void setLinkLastTime(Link link, long lastTime) {
+    /**
+     * Sets the current time instant of a link in the scheduler.
+     *
+     * @param link link to set time instant.
+     * @param time time instant to set.
+     */
+    protected void setLinkTimeInstant(Link link, long time) {
         setDelay(0);
-        ScheduledRoute previousRoute = new ScheduledRoute(null, link, lastTime);
+        ScheduledRoute previousRoute = new ScheduledRoute(null, link, time);
         scheduler.schedule(previousRoute);
-        // FIXME revert the previous delay
     }
+
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas1_Returns2() throws Exception {
-        Link link = createRandomLink();
-        setLinkLastTime(link, 1L);
+        Link link = anyDummyLink();
+        setLinkTimeInstant(link, 1L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
 
@@ -85,8 +88,8 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas2_Returns3() throws Exception {
-        Link link = createRandomLink();
-        setLinkLastTime(link, 2L);
+        Link link = anyDummyLink();
+        setLinkTimeInstant(link, 2L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
 
@@ -96,8 +99,8 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas3_Returns4() throws Exception {
-        Link link = createRandomLink();
-        setLinkLastTime(link, 3L);
+        Link link = anyDummyLink();
+        setLinkTimeInstant(link, 3L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
 

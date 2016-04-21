@@ -24,7 +24,7 @@ public class RandomDelayGeneratorTest {
 
     @Test
     public void
-    nextDelay_Min0AndMax1RandomReturns0_Returns0() throws Exception {
+    nextDelay_Min0AndMax1AndRandomReturns0_Returns0() throws Exception {
         randomDelayGenerator.setMin(0);
         randomDelayGenerator.setMax(1);
         when(stubRandom.nextInt(anyInt())).thenReturn(0);
@@ -34,7 +34,7 @@ public class RandomDelayGeneratorTest {
 
     @Test
     public void
-    nextDelay_Min0AndMax1RandomReturns1_Returns1() throws Exception {
+    nextDelay_Min0AndMax1AndRandomReturns1_Returns1() throws Exception {
         randomDelayGenerator.setMin(0);
         randomDelayGenerator.setMax(1);
         when(stubRandom.nextInt(anyInt())).thenReturn(1);
