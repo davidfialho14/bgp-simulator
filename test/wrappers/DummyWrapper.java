@@ -1,4 +1,4 @@
-package wrappers.routetable;
+package wrappers;
 
 import dummies.DummyLabel;
 import network.Link;
@@ -18,5 +18,12 @@ public class DummyWrapper {
      */
     public static Link dummyLink(int srcId, int destId) {
         return new Link(srcId, destId, new DummyLabel());
+    }
+
+    /**
+     * Creates a new link instance with a dummy label and between any two nodes.
+     */
+    public static Link anyDummyLink() {
+        return new Link(Integer.MIN_VALUE, Integer.MAX_VALUE, new DummyLabel());
     }
 }

@@ -11,7 +11,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static wrappers.routetable.DummyWrapper.dummyLink;
+import static wrappers.DummyWrapper.dummyLink;
 
 public class NetworkTest {
 

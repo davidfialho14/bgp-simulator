@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static wrappers.routetable.DummyWrapper.dummyLink;
+import static wrappers.DummyWrapper.dummyLink;
 
 public class NodeTest {
 
