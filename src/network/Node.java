@@ -51,14 +51,6 @@ public class Node {
     }
 
     /**
-     * Returns a collection with all the out-neighbours of the node.
-     * @return collection with all the out-neighbours of the node.
-     */
-    public Collection<Node> getOutNeighbours() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Returns a collection with all the out-links of the node.
      * @return collection with all the out-links of the node.
      */

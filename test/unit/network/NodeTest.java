@@ -1,34 +1,28 @@
 package network;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import static network.Factory.createLink;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static wrappers.routetable.DummyWrapper.dummyLink;
 
 public class NodeTest {
 
-    Network network;    // network where the node is created
-    Node node;
+    @Test
+    public void
+    addOutLink_FromNode0ToNode1WithDummyLabel_NodeContainsOutLinkFromNode0ToNode1WithDummyLabel() throws Exception {
+        Node node = new Node(0);
+        node.addOutLink(dummyLink(0, 1));
 
-    @Before
-    public void setUp() throws Exception {
-        network = null;
-        node = new Node(0);
+        assertThat(node.getOutLinks(), containsInAnyOrder(dummyLink(0, 1)));
     }
 
     @Test
-    public void addOutLink_FromNode0ToNode1ToNodeWithoutOutLinks_NodeContainsOutNeighbourNode1() throws Exception {
-        node.addOutLink(createLink(0, 1));
+    public void
+    addInLink_FromNode0ToNode1WithDummyLabel_NodeContainsInLinkFromNode0ToNode1WithDummyLabel() throws Exception {
+        Node node = new Node(1);
+        node.addInLink(dummyLink(0, 1));
 
-        assertThat(node.getOutLinks(), containsInAnyOrder(createLink(0, 1)));
-    }
-
-    @Test
-    public void addInLink_FromNode0ToNode1ToNodeWithoutInLinks_NodeContainsInLinkFromNode0ToNode1() throws Exception {
-        node.addInLink(createLink(0, 1));
-
-        assertThat(node.getInLinks(), containsInAnyOrder(createLink(0, 1)));
+        assertThat(node.getInLinks(), containsInAnyOrder(dummyLink(0, 1)));
     }
 }
