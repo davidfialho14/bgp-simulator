@@ -76,13 +76,13 @@ public class NetworkTest {
     }
 
     @Test
-    public void link_Node0ToNode1Twice_ContainsBothLinks() throws Exception {
+    public void link_Node0ToNode1Twice_ContainsOnlyOneLink() throws Exception {
         network.addNode(0); network.addNode(1);
 
         network.link(0, 1, new DummyLabel());
         network.link(0, 1, new DummyLabel());
 
-        assertThat(network.getLinks().size(), is(2));
+        assertThat(network.getLinks().size(), is(1));
     }
 
     @Test

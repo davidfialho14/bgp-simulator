@@ -1,15 +1,15 @@
 package network;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Node {
 
     private int id;   // id must be unique in each network
-    private List<Link> outLinks = new ArrayList<>();
-    private List<Link> inLinks = new ArrayList<>();
+    private Set<Link> outLinks = new HashSet<>();
+    private Set<Link> inLinks = new HashSet<>();
 
     /**
 	 * @param id    id to assign to the node.
@@ -29,17 +29,19 @@ public class Node {
     /**
      * Adds a new out-link to the node.
      * @param link link to be added as out-link.
+     * @return true if the link was added and false otherwise.
      */
-    public void addOutLink(Link link) {
-        outLinks.add(link);
+    public boolean addOutLink(Link link) {
+        return outLinks.add(link);
     }
 
     /**
      * Adds a new in-link to the node.
      * @param link link to be added as in-link.
+     * @return true if the link was added and false otherwise.
      */
-    public void addInLink(Link link) {
-        inLinks.add(link);
+    public boolean addInLink(Link link) {
+        return inLinks.add(link);
     }
 
     /**
