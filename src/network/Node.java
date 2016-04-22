@@ -45,6 +45,26 @@ public class Node {
     }
 
     /**
+     * Removes the given link from the set of out-links of the node.
+     *
+     * @param link link to be removed.
+     * @return true if the link existed and was removed and false otherwise.
+     */
+    public boolean removeOutLink(Link link) {
+        return outLinks.remove(link);
+    }
+
+    /**
+     * Removes the given link from the set of in-links of the node.
+     *
+     * @param link link to be removed.
+     * @return true if the link existed and was removed and false otherwise.
+     */
+    public boolean removeInLink(Link link) {
+        return inLinks.remove(link);
+    }
+
+    /**
      * Returns a collection with all the in-links of the node.
      * @return collection with all the in-links of the node.
      */

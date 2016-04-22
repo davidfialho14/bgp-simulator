@@ -107,6 +107,24 @@ public class Network {
     }
 
     /**
+     * Removes the given link from the network. If the link does not exist it returns false.
+     *
+     * @param link link to be removed
+     * @return true if link was removed and false otherwise.
+     */
+    public boolean remove(Link link) {
+        Node source = getSource(link);
+        Node destination = getDestination(link);
+
+        if (source == null || destination == null ) {
+            // nodes do not exist which means the link does not exist!
+            return false;
+        }
+
+        return source.removeOutLink(link) && destination.removeInLink(link);
+    }
+
+    /**
      * Returns a list with all the links in the network.
      * @return list with the links in the network.
      */
@@ -127,5 +145,25 @@ public class Network {
         }
 
         return networkStr + "\n}";
+    }
+
+    /**
+     * Returns the node in the network corresponding to the source node of the given link.
+     *
+     * @param link link to get source node from.
+     * @return node in the network corresponding to the source node of the given link.
+     */
+    private Node getSource(Link link) {
+        return nodes.get(link.getSource().getId());
+    }
+
+    /**
+     * Returns the node in the network corresponding to the destination node of the given link.
+     *
+     * @param link link to get destination node from.
+     * @return node in the network corresponding to the destination node of the given link.
+     */
+    private Node getDestination(Link link) {
+        return nodes.get(link.getDestination().getId());
     }
 }
