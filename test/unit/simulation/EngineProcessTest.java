@@ -21,9 +21,9 @@ import static wrappers.RouteWrapper.anyRoute;
 import static wrappers.RouteWrapper.route;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SimulateEngineProcessTest {
+public class EngineProcessTest {
 
-    private SimulateEngine engine;
+    private Engine engine;
     private EventHandler eventHandler = new NullEventHandler();
 
     @Mock
@@ -35,7 +35,7 @@ public class SimulateEngineProcessTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = spy(new SimulateEngine(null, null, null, eventHandler));
+        engine = spy(new Engine(null, null, null, eventHandler));
         // stub out the learn method
         doReturn(anyRoute(destination)).when(engine).learn(any(), any());
     }

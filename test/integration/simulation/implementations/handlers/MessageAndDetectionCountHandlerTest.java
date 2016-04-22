@@ -7,7 +7,7 @@ import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
 import protocols.implementations.D1R1Protocol;
-import simulation.SimulateEngine;
+import simulation.Engine;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,15 +21,15 @@ import static wrappers.network.ToNodeElement.to;
 public class MessageAndDetectionCountHandlerTest {
 
     private MessageAndDetectionCountHandler eventHandler;
-    private SimulateEngine engine;
+    private Engine engine;
 
     @Before
     public void setUp() throws Exception {
         eventHandler = new MessageAndDetectionCountHandler();
     }
 
-    private SimulateEngine engineWithProtocol(Protocol protocol) {
-        return new SimulateEngine(protocol, new ShortestPathPolicy(), new FIFOScheduler(), eventHandler);
+    private Engine engineWithProtocol(Protocol protocol) {
+        return new Engine(protocol, new ShortestPathPolicy(), new FIFOScheduler(), eventHandler);
     }
 
     private static BGPProtocol BGP() {

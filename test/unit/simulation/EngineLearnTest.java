@@ -21,13 +21,13 @@ import static wrappers.RouteWrapper.route;
 import static wrappers.network.NetworkWrapper.anyNode;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SimulateEngineLearnTest {
+public class EngineLearnTest {
 
     @Mock
     Protocol protocol;
 
     @InjectMocks
-    SimulateEngine engine;
+    Engine engine;
 
     Node destination = anyNode();
 

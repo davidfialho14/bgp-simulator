@@ -27,11 +27,11 @@ import static wrappers.routetable.RouteTableWrapper.table;
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
-public class SimulateEngineBGPAndShortestPathTest extends SimulateEngineTest {
+public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new BGPProtocol(), new ShortestPathPolicy(),
+        engine = new Engine(new BGPProtocol(), new ShortestPathPolicy(),
                 new FIFOScheduler(), eventHandler);
     }
 

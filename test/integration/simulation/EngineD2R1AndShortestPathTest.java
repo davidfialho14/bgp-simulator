@@ -26,11 +26,11 @@ import static wrappers.routetable.RouteTableWrapper.table;
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
-public class SimulateEngineD2R1AndShortestPathTest extends SimulateEngineTest {
+public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new D2R1Protocol(), new ShortestPathPolicy(),
+        engine = new Engine(new D2R1Protocol(), new ShortestPathPolicy(),
                 new FIFOScheduler(), eventHandler);
     }
 

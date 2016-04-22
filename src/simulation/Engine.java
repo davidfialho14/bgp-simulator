@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Engine implements the hardcore simulation logic.
  */
-public class SimulateEngine {
+public class Engine {
 
     private Protocol protocol;
     private Policy policy;
@@ -27,14 +27,14 @@ public class SimulateEngine {
     private Map<Node, NodeStateInfo> nodesStateInfo = new HashMap<>();
 
     /**
-     * Initializes a new SimulateEngine.
+     * Initializes a new Engine.
+     *
      * @param protocol routing protocol to be used.
      * @param policy factory used to create attributes.
      * @param scheduler scheduler used to schedule exported routes.
      * @param eventHandler event handler called on any new event.
      */
-    public SimulateEngine(Protocol protocol, Policy policy, Scheduler scheduler,
-                          EventHandler eventHandler) {
+    public Engine(Protocol protocol, Policy policy, Scheduler scheduler, EventHandler eventHandler) {
         this.protocol = protocol;
         this.policy = policy;
         this.scheduler = scheduler;
@@ -44,6 +44,7 @@ public class SimulateEngine {
     /**
      * Simulates the BGP protocol according to the specifications of the engine for the given network.
      * During simulation the slot methods of the event handler are called in the appropriate time.
+     *
      * @param network network to be simulated.
      */
     public void simulate(Network network) {
@@ -56,7 +57,8 @@ public class SimulateEngine {
     }
 
     /**
-     * Executes the simulation but just for one destination node. @see {@link SimulateEngine#simulate(Network)}
+     * Executes the simulation but just for one destination node. @see {@link Engine#simulate(Network)}
+     *
      * @param network network being simulated.
      * @param destinationId id of the destination node to simulate for.
      */
@@ -72,6 +74,7 @@ public class SimulateEngine {
     /**
      * Returns a map containing the nodes associated with their respective route tables. The route tables will only
      * be filled after a simulation takes place.
+     *
      * @return map containing the nodes associated with their respective route tables.
      */
     public Map<Node, RouteTable> getRouteTables() {
@@ -84,6 +87,7 @@ public class SimulateEngine {
 
     /**
      * Returns the route table of the given node. The route table will only be filled after a simulation takes place.
+     *
      * @return map containing the nodes associated with their respective route tables.
      */
     public RouteTable getRouteTable(Node node) {
@@ -92,6 +96,7 @@ public class SimulateEngine {
 
     /**
      * Returns the event handler associated with the engine.
+     *
      * @return event handler associated with the engine.
      */
     public EventHandler getEventHandler() {
@@ -102,6 +107,7 @@ public class SimulateEngine {
 
     /**
      * Processes a scheduled route by updating the state info of the learning node.
+     *
      * @param nodeStateInfo state info of the learning node.
      * @param scheduledRoute scheduled route to process.
      */
@@ -138,6 +144,7 @@ public class SimulateEngine {
     /**
      * Learns a new exported route, returning the route after the attribute has been exported and included the
      * out-neighbour in the path.
+     *
      * @param link link through which the route was exported.
      * @param route exported route.
      * @return route after the attribute has been exported and included the out-neighbour in the path.
@@ -159,6 +166,7 @@ public class SimulateEngine {
     /**
      * Selects the best route taking into account the new learned route. It also updates the route table while
      * selecting the best route with the new learned route.
+     *
      * @param nodeStateInfo state information of the node who learned the route.
      * @param link link from which the route was learned.
      * @param exportedRoute route when it was exported.
@@ -205,6 +213,7 @@ public class SimulateEngine {
     /**
      * Exports the given route to all of the in-neighbours of the exporting node except to node indicated as
      * not to export.
+     *
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
      * @param nodeNotToExport node to which the route is not to be exported.
@@ -219,6 +228,7 @@ public class SimulateEngine {
 
     /**
      * Exports a route through the given link. The route is put in the network's scheduler.
+     *
      * @param link link to export the route to.
      * @param route route to be exported.
      * @param prevScheduledRoute scheduled route previously got from the scheduler.
@@ -256,6 +266,7 @@ public class SimulateEngine {
     /**
      * Initializes state info of for the given collection of nodes. All current node state information is cleared
      * after calling this method.
+     *
      * @param nodes nodes to initialize the state info for.
      */
     private void initNodesStateInfo(Collection<Node> nodes) {
@@ -265,6 +276,7 @@ public class SimulateEngine {
 
     /**
      * Exports the self routes of each one of the given nodes.
+     *
      * @param nodes nodes which the self routes are to be exported.
      */
     private void exportSelfRoute(Collection<Node> nodes) {
@@ -273,6 +285,7 @@ public class SimulateEngine {
 
     /**
      * Exports the self route of the given node.
+     *
      * @param node node which the self route is to be exported.
      */
     private void exportSelfRoute(Node node) {

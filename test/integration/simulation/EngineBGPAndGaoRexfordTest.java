@@ -26,11 +26,11 @@ import static wrappers.routetable.RouteTableWrapper.table;
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
-public class SimulateEngineBGPAndGaoRexfordTest extends SimulateEngineTest {
+public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new BGPProtocol(), new GaoRexfordPolicy(),
+        engine = new Engine(new BGPProtocol(), new GaoRexfordPolicy(),
                 new FIFOScheduler(), eventHandler);
     }
 
