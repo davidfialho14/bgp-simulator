@@ -134,7 +134,7 @@ public class RouteTable {
         Route[][] table = new Route[destinations.length][columns.length];
         for (int i = 0; i < destinations.length; i++) {
             for (int j = 0; j < columns.length; j++) {
-                table[i][j] = getRoute((Node) destinations[i], outLinks[j]);
+                table[i][j] = getRoute(destinations[i], outLinks[j]);
             }
         }
 
