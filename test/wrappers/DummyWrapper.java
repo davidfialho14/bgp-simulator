@@ -3,7 +3,9 @@ package wrappers;
 import dummies.DummyAttribute;
 import dummies.DummyLabel;
 import network.Link;
+import network.Node;
 import simulation.PathAttribute;
+import simulation.Route;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 
@@ -63,5 +65,12 @@ public interface DummyWrapper {
      */
     static RouteElement dummyRoute(int value, PathAttribute path) {
         return route(new DummyAttribute(value), path);
+    }
+
+    /**
+     * Wrapper around the route constructor to create a route with a dummy attribute
+     */
+    static Route dummyRoute(int destination, int value, PathAttribute path) {
+        return new Route(new Node(destination), new DummyAttribute(value), path);
     }
 }

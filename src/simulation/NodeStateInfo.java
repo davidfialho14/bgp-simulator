@@ -63,12 +63,10 @@ public class NodeStateInfo {
     }
 
     public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
-        table.setAttribute(destination, outLink, attribute);
-        table.setPath(destination, outLink, path);
+        table.setRoute(outLink, new Route(destination, attribute, path));
     }
 
     public void updateRoute(Link outLink, Route route) {
-        table.setAttribute(route.getDestination(), outLink, route.getAttribute());
-        table.setPath(route.getDestination(), outLink, route.getPath());
+        table.setRoute(outLink, route);
     }
 }

@@ -1,5 +1,6 @@
 package simulation;
 
+import dnl.utils.text.table.TextTable;
 import network.Link;
 import network.Node;
 import policies.Attribute;
@@ -18,14 +19,13 @@ public class RouteTable {
     }
 
     /**
-     * Associates the given route to the destination and  out-link given. If the out-link does not exist this method
+     * Associates a route with the given out-link. If the out-link does not exist this method
      * will have no effect on the table. If the destination is unknown it will be added to the table.
      *
-     * @param destination destination node to associate route with.
      * @param outLink out-link to associate route with.
      * @param route route to be set.
      */
-    public void setRoute(Node destination, Link outLink, Route route) {
+    public void setRoute(Link outLink, Route route) {
         // TODO implement
         throw new UnsupportedOperationException();
     }
@@ -78,6 +78,11 @@ public class RouteTable {
 
     @Override
     public String toString() {
+        // TODO implement
+        throw new UnsupportedOperationException();
+    }
+
+    public TextTable getPrintableTable() {
         // TODO implement
         throw new UnsupportedOperationException();
     }
