@@ -69,8 +69,7 @@ public class RouteTable {
      * Clears all the routes and destinations from the table. It keeps the out-links.
      */
     public void clear() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+
     }
 
     /**
@@ -88,14 +87,18 @@ public class RouteTable {
 
     @Override
     public boolean equals(Object o) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RouteTable that = (RouteTable) o;
+
+        return routes != null ? routes.equals(that.routes) : that.routes == null;
+
     }
 
     @Override
     public int hashCode() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        return routes != null ? routes.hashCode() : 0;
     }
 
     @Override
