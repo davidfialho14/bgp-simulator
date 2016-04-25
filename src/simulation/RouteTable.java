@@ -85,6 +85,15 @@ public class RouteTable {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Removes the given out-link from the table.
+     *
+     * @param outLink out-link to be removed.
+     */
+    public void removeOutLink(Link outLink) {
+        routes.remove(outLink);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

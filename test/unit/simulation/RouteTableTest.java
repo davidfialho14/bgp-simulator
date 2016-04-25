@@ -7,9 +7,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static simulation.Route.invalidRoute;
 import static wrappers.DummyWrapper.*;
-import static wrappers.DummyWrapper.dummyRoute;
 import static wrappers.PathWrapper.path;
 import static wrappers.network.NetworkWrapper.anyNode;
 import static wrappers.routetable.DestinationElement.destination;
@@ -38,7 +36,7 @@ public class RouteTableTest {
         RouteTable routeTable = table(dummyOutLink(1, 2));
         Node destination = new Node(0);
 
-        assertThat(routeTable.getRoute(destination, dummyLink(1, 2)), is(invalidRoute(destination)));
+        assertThat(routeTable.getRoute(destination, dummyLink(1, 2)), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -91,7 +89,7 @@ public class RouteTableTest {
         );
         Node destination1 = new Node(1);
 
-        assertThat(routeTable.getRoute(destination1, dummyLink(0, 1)), is(invalidRoute(destination1)));
+        assertThat(routeTable.getRoute(destination1, dummyLink(0, 1)), is(Route.invalidRoute(destination1)));
     }
 
     @Test
@@ -102,7 +100,7 @@ public class RouteTableTest {
         Node destination = new Node(0);
         table.setRoute(dummyLink(1, 2), dummyRoute(0, 0, path()));  // assigned attribute to other link
 
-        assertThat(table.getRoute(destination, dummyLink(1, 3)), is(invalidRoute(destination)));
+        assertThat(table.getRoute(destination, dummyLink(1, 3)), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -129,7 +127,7 @@ public class RouteTableTest {
     public void
     clear_TableWithOutLinkBetween0And1AndKnownDestinations0And1_EmptyTableWithOutLinkBetween0And1() throws Exception {
         RouteTable routeTable = table(
-                dummyOutLink(0, 1),
+                                dummyOutLink(0, 1),
                 destination(0), dummyRoute(0, path()),
                 destination(1), dummyRoute(0, path())
         );
@@ -139,4 +137,55 @@ public class RouteTableTest {
         assertThat(routeTable, is(table(dummyOutLink(0, 1))));
     }
 
+    @Test
+    public void removeOutLink_From0To1OnEmptyTable_EmptyTable() throws Exception {
+        RouteTable routeTable = table();
+
+        routeTable.removeOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table()));
+    }
+
+    @Test
+    public void removeOutLink_From0To1OnTableWithOutLink2To3_TableWithOutLink2To3() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(2, 3));
+
+        routeTable.removeOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table(dummyOutLink(2, 3))));
+    }
+
+    @Test
+    public void removeOutLink_From0To1OnTableWithOutLink0To1_EmptyTable() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+
+        routeTable.removeOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table()));
+    }
+
+    @Test
+    public void removeOutLink_From0To1OnTableWithOutLink0To1AndOutLink0To2_TableWithOutLink0To2() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1), dummyOutLink(0, 2));
+
+        routeTable.removeOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 2))));
+    }
+
+    @Test
+    public void
+    removeOutLink_From0To1OnTableWithOneKnownDestination_RoutesAreKeptForOtherOutLink() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(0, path())
+        );
+
+        routeTable.removeOutLink(dummyLink(0, 2));
+
+        assertThat(routeTable, is(table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path())
+        )));
+    }
 }
