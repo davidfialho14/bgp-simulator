@@ -105,4 +105,38 @@ public class RouteTableTest {
         assertThat(table.getRoute(destination, dummyLink(1, 3)), is(invalidRoute(destination)));
     }
 
+    @Test
+    public void
+    clear_EmptyTableWithoutOutLinks_TableStaysEmptyWithoutOutLinks() throws Exception {
+        RouteTable routeTable = table();
+
+        routeTable.clear();
+
+        assertThat(routeTable, is(table()));
+    }
+
+    @Test
+    public void
+    clear_EmptyTableWithOutLinkBetween0And1_TableStaysEmptyWithOutLinkBetween0And1() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+
+        routeTable.clear();
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 1))));
+    }
+
+    @Test
+    public void
+    clear_TableWithOutLinkBetween0And1AndKnownDestinations0And1_EmptyTableWithOutLinkBetween0And1() throws Exception {
+        RouteTable routeTable = table(
+                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path()),
+                destination(1), dummyRoute(0, path())
+        );
+
+        routeTable.clear();
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 1))));
+    }
+
 }
