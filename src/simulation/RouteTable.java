@@ -4,9 +4,9 @@ import dnl.utils.text.table.TextTable;
 import network.Link;
 import network.Node;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.*;
 
 public class RouteTable {
 
@@ -112,12 +112,32 @@ public class RouteTable {
 
     @Override
     public String toString() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        getPrintableTable().printTable(new PrintStream(os), 0);
+
+        return os.toString();
     }
 
-    public TextTable getPrintableTable() {
-        // TODO implement
-        throw new UnsupportedOperationException();
+    private TextTable getPrintableTable() {
+        Link[] outLinks = routes.keySet().stream().toArray(Link[]::new);
+        String[] columns = routes.keySet().stream()
+                .map(Link::toString)
+                .toArray(String[]::new);
+
+        Set<Node> destinationsSet = new HashSet<>();
+        for (Map<Node, Route> nodeRouteMap : routes.values()) {
+            destinationsSet.addAll(nodeRouteMap.keySet());
+        }
+
+        Node[] destinations = destinationsSet.stream().toArray(Node[]::new);
+
+        Route[][] table = new Route[destinations.length][columns.length];
+        for (int i = 0; i < destinations.length; i++) {
+            for (int j = 0; j < columns.length; j++) {
+                table[i][j] = getRoute((Node) destinations[i], outLinks[j]);
+            }
+        }
+
+        return new TextTable(columns, table);
     }
 }
