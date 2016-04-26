@@ -1,14 +1,14 @@
-package dummies;
+package stubs;
 
 import network.Link;
 import policies.Attribute;
 import policies.Label;
 
-public class DummyLabel implements Label {
+public class StubLabel implements Label {
 
     @Override
     public boolean equals(Object o) {
-        return this == o || o instanceof DummyLabel;
+        return this == o || o instanceof StubLabel;
     }
 
     @Override

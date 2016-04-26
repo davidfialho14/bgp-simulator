@@ -1,6 +1,6 @@
 package network;
 
-import dummies.DummyLabel;
+import stubs.StubLabel;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import org.junit.Before;
@@ -11,11 +11,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static wrappers.DummyWrapper.dummyLink;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.ToNodeElement.to;
-import static wrappers.network.NetworkWrapper.network;
+import static wrappers.StubWrapper.stubLink;
 
 public class NetworkTest {
 
@@ -56,9 +52,9 @@ public class NetworkTest {
     public void link_Node0ToNode1BothAlreadyAddedToTheNetwork_ContainsLinkBetweenNode0AndNode1() throws Exception {
         net.addNode(0); net.addNode(1);
 
-        net.link(0, 1, new DummyLabel());
+        net.link(0, 1, new StubLabel());
 
-        assertThat(net.getLinks(), containsInAnyOrder(dummyLink(0, 1)));
+        assertThat(net.getLinks(), containsInAnyOrder(stubLink(0, 1)));
     }
 
     @Test
@@ -67,7 +63,7 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '0' does not exist");
-        net.link(0, 1, new DummyLabel());
+        net.link(0, 1, new StubLabel());
     }
 
     @Test
@@ -76,15 +72,15 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '1' does not exist");
-        net.link(0, 1, new DummyLabel());
+        net.link(0, 1, new StubLabel());
     }
 
     @Test
     public void link_Node0ToNode1Twice_ContainsOnlyOneLink() throws Exception {
         net.addNode(0); net.addNode(1);
 
-        net.link(0, 1, new DummyLabel());
-        net.link(0, 1, new DummyLabel());
+        net.link(0, 1, new StubLabel());
+        net.link(0, 1, new StubLabel());
 
         assertThat(net.getLinks().size(), is(1));
     }
@@ -93,51 +89,9 @@ public class NetworkTest {
     public void link_Node0ToNode0_ContainsLinkFromNode0ToNode0() throws Exception {
         net.addNode(0);
 
-        net.link(0, 0, new DummyLabel());
+        net.link(0, 0, new StubLabel());
 
-        assertThat(net.getLinks(), containsInAnyOrder(dummyLink(0, 0)));
-    }
-
-    @Test
-    public void remove_LinkFromNode0ToNode1FromEmptyNetwork_ReturnsFalse() throws Exception {
-        assertThat(net.remove(dummyLink(0, 1)), is(false));
-    }
-
-    @Test
-    public void remove_LinkFromNode0ToNode1FromNetworkWithLinkFromNode0ToNode1_NetworkHasNoLinks() throws Exception {
-        net = network(
-                link(from(0), to(1), new DummyLabel())
-        );
-
-        net.remove(dummyLink(0, 1));
-
-        assertThat(net.getLinks().isEmpty(), is(true));
-    }
-
-    @Test
-    public void
-    remove_LinkFromNode0ToNode1FromNetworkWith2LinksIncludingLinkFromNode0ToNode1_NetworkHoldsOtherLink() throws Exception {
-        net = network(
-                link(from(0), to(1), new DummyLabel()),
-                link(from(0), to(2), new DummyLabel())
-        );
-
-        net.remove(dummyLink(0, 1));
-
-        assertThat(net.getLinks(), containsInAnyOrder(dummyLink(0, 2)));
-    }
-
-    @Test
-    public void
-    remove_LinkFromNode0ToNode1FromNetworkWith2LinksIncludingLinkFromNode0ToNode1_NetworkContainsNode1() throws Exception {
-        net = network(
-                link(from(0), to(1), new DummyLabel()),
-                link(from(0), to(2), new DummyLabel())
-        );
-
-        net.remove(dummyLink(0, 1));
-
-        assertThat(net.getNodes(), containsInAnyOrder(new Node(0), new Node(1), new Node(2)));
+        assertThat(net.getLinks(), containsInAnyOrder(stubLink(0, 0)));
     }
 
 }

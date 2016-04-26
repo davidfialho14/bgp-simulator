@@ -11,7 +11,7 @@ import simulation.ScheduledRoute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static wrappers.DummyWrapper.anyDummyLink;
+import static wrappers.StubWrapper.anyStubLink;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RandomSchedulerTest {
@@ -29,7 +29,7 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime0AndDelay0ForLinkNotYetUsed_Returns0() throws Exception {
         setDelay(0);
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyStubLink(), 0L);
 
         assertThat(scheduler.schedule(scheduledRoute), is(0L));
     }
@@ -37,18 +37,18 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime0AndDelay0ForLinkNotYetUsed_GetLastTimeForLinkReturns0() throws Exception {
         setDelay(0);
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyStubLink(), 0L);
 
         scheduler.schedule(scheduledRoute);
 
-        assertThat(scheduler.getLastTime(anyDummyLink()), is(0L));
+        assertThat(scheduler.getLastTime(anyStubLink()), is(0L));
     }
 
     @Test
     public void
     schedule_RouteWithTime0Delay1AndWithLinkNotYetUsed_Returns1() throws Exception {
         setDelay(1);
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 0L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyStubLink(), 0L);
 
         assertThat(scheduler.schedule(scheduledRoute), is(1L));
     }
@@ -56,10 +56,10 @@ public class RandomSchedulerTest {
     @Test
     public void schedule_RouteWithTime1AndDelay1ForLinkNotYetUsed_GetLastTimeForLinkReturns2() throws Exception {
         setDelay(1);
-        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyDummyLink(), 1L);
+        ScheduledRoute scheduledRoute = new ScheduledRoute(null, anyStubLink(), 1L);
         scheduler.schedule(scheduledRoute);
 
-        assertThat(scheduler.getLastTime(anyDummyLink()), is(2L));
+        assertThat(scheduler.getLastTime(anyStubLink()), is(2L));
     }
 
     /**
@@ -77,7 +77,7 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas1_Returns2() throws Exception {
-        Link link = anyDummyLink();
+        Link link = anyStubLink();
         setLinkTimeInstant(link, 1L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
@@ -88,7 +88,7 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas2_Returns3() throws Exception {
-        Link link = anyDummyLink();
+        Link link = anyStubLink();
         setLinkTimeInstant(link, 2L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
@@ -99,7 +99,7 @@ public class RandomSchedulerTest {
     @Test
     public void
     schedule_RouteWithTime1AndDelay1AndLinkLastTimeWas3_Returns4() throws Exception {
-        Link link = anyDummyLink();
+        Link link = anyStubLink();
         setLinkTimeInstant(link, 3L);
         setDelay(1);
         ScheduledRoute scheduledRoute = new ScheduledRoute(null, link, 1L);
