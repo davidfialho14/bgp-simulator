@@ -8,6 +8,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static wrappers.DummyWrapper.*;
+import static wrappers.DummyWrapper.dummyRoute;
 import static wrappers.PathWrapper.path;
 import static wrappers.network.NetworkWrapper.anyNode;
 import static wrappers.routetable.DestinationElement.destination;
@@ -204,4 +205,60 @@ public class RouteTableTest {
         assertThat(routeTable.getRoute(destination, removedOutLink), is(nullValue()));
     }
 
+    @Test
+    public void addOutLink_From0To1ToEmptyTable_TableWithOutLink0To1() throws Exception {
+        RouteTable routeTable = table();
+
+        routeTable.addOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 1))));
+    }
+
+    @Test
+    public void addOutLink_From0To1ToTableWithOutLink2To3_TableWithOutLinks0To1And2To3() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(2, 3));
+
+        routeTable.addOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 1), dummyOutLink(2, 3))));
+    }
+
+    @Test
+    public void addOutLink_From0To1ToTableWithOutLink0To1_TableWithOutLink0To1() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+
+        routeTable.addOutLink(dummyLink(0, 1));
+
+        assertThat(routeTable, is(table(dummyOutLink(0, 1))));
+    }
+
+    @Test
+    public void
+    addOutLink_From0To1ToTableAlreadyWithOutLink0To1WithRoute0AndEmptyPathForDestination0_GetsRoute0AndEmptyPath()
+            throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(0, path())
+        );
+        Node destination = new Node(0);
+        Link addedOutLink = dummyLink(0, 1);
+
+        routeTable.addOutLink(addedOutLink);
+
+        assertThat(routeTable.getRoute(destination, addedOutLink), is(dummyRoute(0, 0, path())));
+    }
+
+    @Test
+    public void addOutLink_From0To1ToTableWithDestination0_GetsInvalidRouteForOutLink0To1() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path())
+        );
+        Link addedOutLink = dummyLink(0, 1);
+        Node destination = new Node(0);
+
+        routeTable.addOutLink(addedOutLink);
+
+        assertThat(routeTable.getRoute(destination, addedOutLink), is(Route.invalidRoute(destination)));
+    }
 }

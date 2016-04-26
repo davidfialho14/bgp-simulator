@@ -94,6 +94,15 @@ public class RouteTable {
         routes.remove(outLink);
     }
 
+    /**
+     * Adds a new out-lin to the route table.
+     *
+     * @param outLink out-link to add to the table.
+     */
+    public void addOutLink(Link outLink) {
+        routes.putIfAbsent(outLink, new HashMap<>());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
