@@ -1,9 +1,9 @@
 package simulation;
 
 import network.Node;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protocols.Protocol;
@@ -26,8 +26,12 @@ public class EngineLearnTest {
     @Mock
     Protocol protocol;
 
-    @InjectMocks
     Engine engine;
+
+    @Before
+    public void setUp() throws Exception {
+        engine = new Engine.Builder(protocol, null, null).build();
+    }
 
     Node destination = anyNode();
 

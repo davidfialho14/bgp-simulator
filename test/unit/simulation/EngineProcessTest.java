@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
-import simulation.implementations.handlers.NullEventHandler;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -24,7 +23,6 @@ import static wrappers.RouteWrapper.route;
 public class EngineProcessTest {
 
     private Engine engine;
-    private EventHandler eventHandler = new NullEventHandler();
 
     @Mock
     private NodeStateInfo nodeStateInfo;
@@ -35,7 +33,7 @@ public class EngineProcessTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = spy(new Engine(null, null, null, eventHandler));
+        engine = spy(new Engine.Builder(null, null, null).build());
         // stub out the learn method
         doReturn(anyRoute(destination)).when(engine).learn(any(), any());
     }

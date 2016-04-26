@@ -31,8 +31,12 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new Engine(new BGPProtocol(), new ShortestPathPolicy(),
-                new FIFOScheduler(), eventHandler);
+        engine = new Engine.Builder(
+                new BGPProtocol(),
+                new ShortestPathPolicy(),
+                new FIFOScheduler())
+                .eventHandler(eventHandler)
+                .build();
     }
 
     @Test(timeout = 2000)
