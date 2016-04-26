@@ -8,6 +8,7 @@ import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
 import simulation.implementations.handlers.NullEventHandler;
+import simulation.implementations.linkbreakers.DummyLinkBreaker;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,42 +20,66 @@ import java.util.stream.Collectors;
  */
 public class Engine {
 
-    private Protocol protocol;
-    private Policy policy;
-    private Scheduler scheduler;
-    private EventHandler eventHandler;
+    private final Protocol protocol;
+    private final Policy policy;
+    private final Scheduler scheduler;
+    private final EventHandler eventHandler;
+    private final LinkBreaker linkBreaker;
 
     // state information of the nodes during and after simulation
     private Map<Node, NodeStateInfo> nodesStateInfo = new HashMap<>();
 
     /**
-     * Creates a new Engine with the given configurations.
-     *
-     * @param protocol routing protocol to be used.
-     * @param policy factory used to create attributes.
-     * @param scheduler scheduler used to schedule exported routes.
-     * @param eventHandler event handler called on any new event.
+     * Class responsible for building engine instances. (Builder pattern)
      */
-    public Engine(Protocol protocol, Policy policy, Scheduler scheduler, EventHandler eventHandler) {
-        this.protocol = protocol;
-        this.policy = policy;
-        this.scheduler = scheduler;
-        this.eventHandler = eventHandler;
+    public static class Builder {
+
+        // Required dependencies
+        private final Protocol protocol;
+        private final Policy policy;
+        private final Scheduler scheduler;
+
+        // Optional dependencies (initialized to the defaults)
+        private EventHandler eventHandler = new NullEventHandler();
+        private LinkBreaker linkBreaker = new DummyLinkBreaker();
+
+        // Constructor with the required dependencies only
+
+        public Builder(Protocol protocol, Policy policy, Scheduler scheduler) {
+            this.protocol = protocol;
+            this.policy = policy;
+            this.scheduler = scheduler;
+        }
+
+        // Set methods for optional dependencies
+
+        public Builder eventHandler(EventHandler eventHandler) {
+            this.eventHandler = eventHandler;
+            return this;
+        }
+
+        public Builder linkBreaker(LinkBreaker linkBreaker) {
+            this.linkBreaker = linkBreaker;
+            return this;
+        }
+
+        // method to build the engine
+
+        public Engine build() {
+            return new Engine(this);
+        }
+
     }
 
     /**
-     * Creates a new Engine with the given configurations. The scheduler since it is not given it is initialized
-     * with a NullEventHandler.
-     *
-     * @param protocol routing protocol to be used.
-     * @param policy factory used to create attributes.
-     * @param scheduler scheduler used to schedule exported routes.
+     * Constructs an engine form a pre-configured builder.
      */
-    public Engine(Protocol protocol, Policy policy, Scheduler scheduler) {
-        this.protocol = protocol;
-        this.policy = policy;
-        this.scheduler = scheduler;
-        this.eventHandler = new NullEventHandler();
+    private Engine(Builder builder) {
+        this.protocol = builder.protocol;
+        this.policy = builder.policy;
+        this.scheduler = builder.scheduler;
+        this.eventHandler = builder.eventHandler;
+        this.linkBreaker = builder.linkBreaker;
     }
 
     /**

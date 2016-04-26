@@ -29,7 +29,12 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     private Engine engineWithProtocol(Protocol protocol) {
-        return new Engine(protocol, new ShortestPathPolicy(), new FIFOScheduler(), eventHandler);
+        return new Engine.Builder(
+                protocol,
+                new ShortestPathPolicy(),
+                new FIFOScheduler())
+                .eventHandler(eventHandler)
+                .build();
     }
 
     private static BGPProtocol BGP() {
