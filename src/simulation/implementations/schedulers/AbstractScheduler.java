@@ -23,7 +23,8 @@ public abstract class AbstractScheduler implements Scheduler {
      */
     public ScheduledRoute get() {
         ScheduledRoute nextScheduledRoute = queue.poll();
-        currentTime = nextScheduledRoute.getTimestamp();
+        if (nextScheduledRoute != null)
+            currentTime = nextScheduledRoute.getTimestamp();
 
         return nextScheduledRoute;
     }
