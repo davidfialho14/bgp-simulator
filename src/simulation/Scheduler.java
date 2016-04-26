@@ -22,4 +22,11 @@ public interface Scheduler {
      * @param link link exporting the routes to be removed.
      */
     void removeRoutes(Link link);
+
+    /**
+     * Returns the current time of the scheduler.
+     *
+     * @return the current time of the scheduler.
+     */
+    long getCurrentTime();
 }

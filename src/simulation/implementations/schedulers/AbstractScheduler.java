@@ -13,18 +13,24 @@ public abstract class AbstractScheduler implements Scheduler {
         Defines the order in which the routes will be scheduled based on the timestamps associated
         with the routes.
      */
-    PriorityQueue<ScheduledRoute> queue = new PriorityQueue<>();
+    private PriorityQueue<ScheduledRoute> queue = new PriorityQueue<>();
+    private long currentTime = 0L;
 
     /**
      * Returns the next scheduled route.
+     *
      * @return next route scheduled or null if there is no routes scheduled.
      */
     public ScheduledRoute get() {
-        return queue.poll();
+        ScheduledRoute nextScheduledRoute = queue.poll();
+        currentTime = nextScheduledRoute.getTimestamp();
+
+        return nextScheduledRoute;
     }
 
     /**
      * Adds a new route to the scheduler.
+     *
      * @param scheduledRoute route to be added to the scheduler.
      */
     public void put(ScheduledRoute scheduledRoute) {
@@ -47,5 +53,15 @@ public abstract class AbstractScheduler implements Scheduler {
                 iterator.remove();
             }
         }
+    }
+
+    /**
+     * Returns the current time of the scheduler.
+     *
+     * @return the current time of the scheduler.
+     */
+    @Override
+    public long getCurrentTime() {
+        return currentTime;
     }
 }
