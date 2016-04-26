@@ -22,6 +22,6 @@ public interface LinkBreaker {
      * @param scheduler scheduler used during the simulation of the given network.
      * @return true if any link was broken or false otherwise.
      */
-    boolean breakLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler);
+    boolean breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler);
 
 }
