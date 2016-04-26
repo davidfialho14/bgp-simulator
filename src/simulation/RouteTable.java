@@ -27,7 +27,7 @@ public class RouteTable {
         this.routes = new HashMap<>(outLinks.size());
 
         // create empty maps for each out-link
-        outLinks.forEach(link -> routes.put(link, new HashMap<>()));
+        outLinks.forEach(this::addOutLink);
     }
 
     /**
