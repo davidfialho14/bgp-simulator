@@ -1,6 +1,6 @@
 package network;
 
-import dummies.DummyLabel;
+import stubs.StubLabel;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import org.junit.Before;
@@ -11,7 +11,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static wrappers.DummyWrapper.dummyLink;
+import static wrappers.StubWrapper.stubLink;
 
 public class NetworkTest {
 
@@ -52,9 +52,9 @@ public class NetworkTest {
     public void link_Node0ToNode1BothAlreadyAddedToTheNetwork_ContainsLinkBetweenNode0AndNode1() throws Exception {
         network.addNode(0); network.addNode(1);
 
-        network.link(0, 1, new DummyLabel());
+        network.link(0, 1, new StubLabel());
 
-        assertThat(network.getLinks(), containsInAnyOrder(dummyLink(0, 1)));
+        assertThat(network.getLinks(), containsInAnyOrder(stubLink(0, 1)));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '0' does not exist");
-        network.link(0, 1, new DummyLabel());
+        network.link(0, 1, new StubLabel());
     }
 
     @Test
@@ -72,15 +72,15 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '1' does not exist");
-        network.link(0, 1, new DummyLabel());
+        network.link(0, 1, new StubLabel());
     }
 
     @Test
     public void link_Node0ToNode1Twice_ContainsBothLinks() throws Exception {
         network.addNode(0); network.addNode(1);
 
-        network.link(0, 1, new DummyLabel());
-        network.link(0, 1, new DummyLabel());
+        network.link(0, 1, new StubLabel());
+        network.link(0, 1, new StubLabel());
 
         assertThat(network.getLinks().size(), is(2));
     }
@@ -89,9 +89,9 @@ public class NetworkTest {
     public void link_Node0ToNode0_ContainsLinkFromNode0ToNode0() throws Exception {
         network.addNode(0);
 
-        network.link(0, 0, new DummyLabel());
+        network.link(0, 0, new StubLabel());
 
-        assertThat(network.getLinks(), containsInAnyOrder(dummyLink(0, 0)));
+        assertThat(network.getLinks(), containsInAnyOrder(stubLink(0, 0)));
     }
 
 }

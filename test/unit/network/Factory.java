@@ -1,7 +1,7 @@
 package network;
 
-import dummies.DummyAttribute;
-import dummies.DummyLabel;
+import stubs.StubAttribute;
+import stubs.StubLabel;
 import simulation.PathAttribute;
 import simulation.Route;
 
@@ -70,7 +70,7 @@ public class Factory {
      * @return link instance.
      */
     public static Link createRandomLink() {
-        return new Link(createRandomNode(), createRandomNode(), new DummyLabel());
+        return new Link(createRandomNode(), createRandomNode(), new StubLabel());
     }
 
     /**
@@ -92,7 +92,7 @@ public class Factory {
      * @return new route instance.
      */
     public static Route createRandomRoute() {
-        return new Route(createRandomNode(), new DummyAttribute(), new PathAttribute());
+        return new Route(createRandomNode(), new StubAttribute(), new PathAttribute());
     }
 
     /**
@@ -102,7 +102,7 @@ public class Factory {
     public static Route[] createRandomRoutes(int n) {
         Route[] routes = new Route[n];
         for (int i = 0; i < n; i++) {
-            routes[i] = new Route(createRandomNode(), new DummyAttribute(), new PathAttribute());
+            routes[i] = new Route(createRandomNode(), new StubAttribute(), new PathAttribute());
         }
 
         return routes;

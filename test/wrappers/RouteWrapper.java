@@ -1,6 +1,6 @@
 package wrappers;
 
-import dummies.DummyAttribute;
+import stubs.StubAttribute;
 import network.Node;
 import policies.Attribute;
 import simulation.PathAttribute;
@@ -35,7 +35,7 @@ public interface RouteWrapper {
      * @return new route instance for the given destination.
      */
     static Route anyRoute(Node destination) {
-        return new Route(destination, new DummyAttribute(), path());
+        return new Route(destination, new StubAttribute(), path());
     }
 
     /**

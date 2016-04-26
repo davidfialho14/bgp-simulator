@@ -1,6 +1,6 @@
 package policies;
 
-import dummies.DummyAttribute;
+import stubs.StubAttribute;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -17,6 +17,6 @@ public class InvalidAttributeTest {
 
     @Test
     public void compareTo_InvalidAttributeWithDummyAttribute_Greater() throws Exception {
-        assertThat(invalid().compareTo(new DummyAttribute()), greaterThan(0));
+        assertThat(invalid().compareTo(new StubAttribute()), greaterThan(0));
     }
 }
