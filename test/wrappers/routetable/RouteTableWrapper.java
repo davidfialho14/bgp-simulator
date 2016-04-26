@@ -77,7 +77,9 @@ public class RouteTableWrapper {
 
         for (Node destination : destinations) {
             for (Link outLink : outLinks) {
-                table.setRoute(destination, outLink, routeItr.next());
+                Route route = routeItr.next();
+                route.setDestination(destination);
+                table.setRoute(outLink, route);
             }
         }
 
