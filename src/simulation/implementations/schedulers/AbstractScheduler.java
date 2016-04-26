@@ -1,8 +1,10 @@
 package simulation.implementations.schedulers;
 
+import network.Link;
 import simulation.ScheduledRoute;
 import simulation.Scheduler;
 
+import java.util.Iterator;
 import java.util.PriorityQueue;
 
 public abstract class AbstractScheduler implements Scheduler {
@@ -32,4 +34,18 @@ public abstract class AbstractScheduler implements Scheduler {
 
     abstract protected long schedule(ScheduledRoute scheduledRoute);
 
+    /**
+     * Removes all the routes being exported through the given link.
+     *
+     * @param link link exporting the routes to be removed.
+     */
+    @Override
+    public void removeRoutes(Link link) {
+        Iterator<ScheduledRoute> iterator = queue.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getLink().equals(link)) {
+                iterator.remove();
+            }
+        }
+    }
 }
