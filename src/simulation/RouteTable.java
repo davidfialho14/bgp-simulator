@@ -81,8 +81,21 @@ public class RouteTable {
      * @return currently selected route for the destination.
      */
     public Route getSelectedRoute(Node destination, Link ignoredOutLink) {
-        // TODO implement
-        throw new UnsupportedOperationException();
+        Route preferredRoute = null;
+
+        for (Link outLink : routes.keySet()) {
+            Route route = getRoute(destination, outLink);
+
+            if (!outLink.equals(ignoredOutLink) && (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
+                preferredRoute = route;
+            }
+        }
+
+        return preferredRoute;
+    }
+
+    Route getSelectedRoute(Node destination) {
+        return getSelectedRoute(destination, null);
     }
 
     /**

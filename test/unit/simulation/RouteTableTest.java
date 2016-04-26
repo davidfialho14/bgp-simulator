@@ -8,10 +8,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static wrappers.DummyWrapper.*;
-import static wrappers.DummyWrapper.dummyRoute;
 import static wrappers.PathWrapper.path;
+import static wrappers.RouteWrapper.route;
 import static wrappers.network.NetworkWrapper.anyNode;
 import static wrappers.routetable.DestinationElement.destination;
+import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 public class RouteTableTest {
@@ -261,4 +262,100 @@ public class RouteTableTest {
 
         assertThat(routeTable.getRoute(destination, addedOutLink), is(Route.invalidRoute(destination)));
     }
+
+    @Test
+    public void
+    getSelectedRoute_ForDestination0OnEmptyTable_Null() throws Exception {
+        RouteTable routeTable = table();
+        Node destination0 = new Node(0);
+
+        assertThat(routeTable.getSelectedRoute(destination0, anyDummyLink()), is(nullValue()));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_ForDestination0OnTableWithoutKnownDestinations_InvalidRoute() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1));
+        Node destination0 = new Node(0);
+
+        assertThat(routeTable.getSelectedRoute(destination0), is(Route.invalidRoute(destination0)));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_ForDestination0WithOnlyOneOutLink_TheOnlyRouteAvailable() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path())
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, dummyAttr(0), path())));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_ForDestination0WithRoute0AndEmptyPathAndRoute1AndEmptyPath_Route1AndEmptyPath()
+            throws Exception {
+        RouteTable routeTable = table(
+                dummyOutLink(0, 1),    dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()), dummyRoute(1, path())
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, dummyAttr(1), path())));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_ForDestination0WithRoute0AndEmptyPathAndInvalidRoute_Route0AndEmptyPath() throws Exception {
+        RouteTable routeTable = table(
+                dummyOutLink(0, 1),    dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()), invalidRoute()
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, dummyAttr(0), path())));
+    }
+
+    @Test
+    public void getSelectedRoute_ForDestination0WithTwoInvalidsRoutes_InvalidRoute() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1), dummyOutLink(0, 2),
+                destination(0), invalidRoute(),     invalidRoute()
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0)), is(Route.invalidRoute(new Node(0))));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_IgnoringOutLink0To2ForDestination0WithRoute0ForOutLink0To1AndRoute1ForOutLink0To2_Route0()
+            throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(1, path())
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0), dummyLink(0, 2)), is(route(0, dummyAttr(0), path())));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_IgnoringOutLink0To1ForDestination0OnTableWithOnlyOutLink0To1_Null() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path())
+        );
+
+        assertThat(routeTable.getSelectedRoute(new Node(0), dummyLink(0, 1)), is(nullValue()));
+    }
+
+    @Test
+    public void
+    getSelectedRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
+        RouteTable routeTable = table(dummyOutLink(0, 1), dummyOutLink(0, 2));
+        routeTable.setRoute(dummyLink(0, 1), route(0, dummyAttr(0), path()));
+        Node destination = new Node(0);
+
+        assertThat(routeTable.getSelectedRoute(destination, dummyLink(0, 1)), is(Route.invalidRoute(destination)));
+    }
+
 }
