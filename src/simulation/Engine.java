@@ -7,6 +7,7 @@ import network.SelfLink;
 import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
+import simulation.implementations.handlers.NullEventHandler;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class Engine {
     private Map<Node, NodeStateInfo> nodesStateInfo = new HashMap<>();
 
     /**
-     * Initializes a new Engine.
+     * Creates a new Engine with the given configurations.
      *
      * @param protocol routing protocol to be used.
      * @param policy factory used to create attributes.
@@ -39,6 +40,21 @@ public class Engine {
         this.policy = policy;
         this.scheduler = scheduler;
         this.eventHandler = eventHandler;
+    }
+
+    /**
+     * Creates a new Engine with the given configurations. The scheduler since it is not given it is initialized
+     * with a NullEventHandler.
+     *
+     * @param protocol routing protocol to be used.
+     * @param policy factory used to create attributes.
+     * @param scheduler scheduler used to schedule exported routes.
+     */
+    public Engine(Protocol protocol, Policy policy, Scheduler scheduler) {
+        this.protocol = protocol;
+        this.policy = policy;
+        this.scheduler = scheduler;
+        this.eventHandler = new NullEventHandler();
     }
 
     /**
