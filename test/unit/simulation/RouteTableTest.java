@@ -188,4 +188,20 @@ public class RouteTableTest {
                 destination(0), dummyRoute(0, path())
         )));
     }
+
+    @Test
+    public void
+    removeOutLink_From0To1WithAssignedRouteForDestination0_GetRouteForOutLink0To1ReturnsNull() throws Exception {
+        RouteTable routeTable = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(0, path())
+        );
+        Link removedOutLink = dummyLink(0, 1);
+        Node destination = new Node(0);
+
+        routeTable.removeOutLink(removedOutLink);
+
+        assertThat(routeTable.getRoute(destination, removedOutLink), is(nullValue()));
+    }
+
 }
