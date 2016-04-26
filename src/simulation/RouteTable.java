@@ -127,6 +127,8 @@ public class RouteTable {
         if (routes == null && that.routes == null) return true;
         else if (routes == null || that.routes == null) return false;
 
+        if (!routes.keySet().equals(that.routes.keySet())) return false;
+
         // consider all that destinations from both tables
         Set<Node> destinations = getDestinations();
         destinations.addAll(that.getDestinations());
