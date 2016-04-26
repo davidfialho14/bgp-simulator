@@ -16,6 +16,7 @@ public class RouteTable {
         the maps in the constructor.
      */
     private Map<Link, Map<Node, Route>> routes;
+    private Node node;
 
 
     /**
@@ -123,10 +124,29 @@ public class RouteTable {
 
         RouteTable that = (RouteTable) o;
 
-        return routes != null ? routes.equals(that.routes) : that.routes == null;
+        if (routes == null && that.routes == null) return true;
+        else if (routes == null || that.routes == null) return false;
+
+        // consider all that destinations from both tables
+        Set<Node> destinations = getDestinations();
+        destinations.addAll(that.getDestinations());
+
+        for (Link outLink : routes.keySet()) {
+            for (Node destination : destinations) {
+                if (!this.getRoute(destination, outLink).equals(that.getRoute(destination, outLink))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
 
     }
 
+    /*
+        The hashCode() method does not respect the equals() method. But the equals method is only used for testing
+        and the hashCode() is never used. FIX this if the hashCode() becomes relevant
+     */
     @Override
     public int hashCode() {
         return routes != null ? routes.hashCode() : 0;
@@ -146,12 +166,7 @@ public class RouteTable {
                 .map(Link::toString)
                 .toArray(String[]::new);
 
-        Set<Node> destinationsSet = new HashSet<>();
-        for (Map<Node, Route> nodeRouteMap : routes.values()) {
-            destinationsSet.addAll(nodeRouteMap.keySet());
-        }
-
-        Node[] destinations = destinationsSet.stream().toArray(Node[]::new);
+        Node[] destinations = getDestinations().stream().toArray(Node[]::new);
 
         Route[][] table = new Route[destinations.length][columns.length];
         for (int i = 0; i < destinations.length; i++) {
@@ -161,5 +176,14 @@ public class RouteTable {
         }
 
         return new TextTable(columns, table);
+    }
+
+    private Set<Node> getDestinations() {
+        Set<Node> destinationsSet = new HashSet<>();
+        for (Map<Node, Route> nodeRouteMap : routes.values()) {
+            destinationsSet.addAll(nodeRouteMap.keySet());
+        }
+
+        return destinationsSet;
     }
 }

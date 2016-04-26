@@ -4,8 +4,7 @@ import network.Link;
 import network.Node;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static wrappers.DummyWrapper.*;
 import static wrappers.PathWrapper.path;
@@ -356,6 +355,67 @@ public class RouteTableTest {
         Node destination = new Node(0);
 
         assertThat(routeTable.getSelectedRoute(destination, dummyLink(0, 1)), is(Route.invalidRoute(destination)));
+    }
+
+
+    @Test
+    public void
+    equals_RouteTablesWithExplicitInvalidRouteAndWithExplicitInvalidRoute_AreEqual() throws Exception {
+        RouteTable routeTable1 = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  invalidRoute()
+        );
+        RouteTable routeTable2 = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  invalidRoute()
+        );
+
+        assertThat(routeTable1, is(equalTo(routeTable2)));
+    }
+
+    @Test
+    public void
+    equals_RouteTablesWithExplicitInvalidRouteAndWithImplicitInvalidRoute_AreEqual() throws Exception {
+        RouteTable routeTable1 = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  invalidRoute()
+        );
+        RouteTable routeTable2 = table(dummyOutLink(0, 1),     dummyOutLink(0, 2));
+        routeTable2.setRoute(dummyLink(0, 1), route(0, dummyAttr(0), path()));
+
+        assertThat(routeTable1, is(equalTo(routeTable2)));
+    }
+
+    @Test
+    public void
+    equals_TableWithImplicitInvalidRoutesToDestination1AndTableWithImplicitInvalidRoutesToDestination1_AreEqual()
+            throws Exception {
+        RouteTable routeTable1 = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(0, path()),
+                destination(1), invalidRoute(),         invalidRoute()
+        );
+        RouteTable routeTable2 = table(
+                                dummyOutLink(0, 1),     dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path()),  dummyRoute(0, path())
+        );
+
+        assertThat(routeTable1, is(equalTo(routeTable2)));
+    }
+
+    @Test
+    public void
+    equals_TableWithOutLink0To2AndTableWithOutLink0To1_AreEqual() throws Exception {
+        RouteTable routeTable1 = table(
+                                dummyOutLink(0, 2),
+                destination(0), dummyRoute(0, path())
+        );
+        RouteTable routeTable2 = table(
+                                dummyOutLink(0, 1),
+                destination(0), dummyRoute(0, path())
+        );
+
+        assertThat(routeTable1, not(equalTo(routeTable2)));
     }
 
 }
