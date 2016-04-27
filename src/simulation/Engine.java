@@ -89,9 +89,11 @@ public class Engine {
         this.scheduler = builder.scheduler;
         this.eventHandler = builder.eventHandler;
         this.linkBreaker = builder.linkBreaker;
+        this.linkInserter = builder.linkInserter;
     }
 
     // Setters to change optional dependencies only
+    // TODO after refactoring the integration tests, remove this setters
 
     public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
@@ -175,7 +177,6 @@ public class Engine {
         // unpack the link, exported route, and destination node
         Link link = scheduledRoute.getLink();
         Route exportedRoute = scheduledRoute.getRoute();
-        Node destination = exportedRoute.getDestination();
 
         eventHandler.onBeforeLearn(link, exportedRoute);
         Route learnedRoute = learn(link, exportedRoute);
@@ -350,6 +351,24 @@ public class Engine {
         scheduler.removeRoutes(brokenLink);
     }
 
+    /**
+     * Processes an inserted link. Exports all selected routes through the new link and adds the link to the route
+     * table of the source node of the link.
+     *
+     * @param insertedLink link that was inserted.
+     * @param prevScheduledRoute previously scheduled route.
+     */
+    void processInsertedLink(Link insertedLink, ScheduledRoute prevScheduledRoute) {
+        NodeStateInfo sourceStateInfo = nodesStateInfo.get(insertedLink.getSource());
+        NodeStateInfo destinationStateInfo = nodesStateInfo.get(insertedLink.getDestination());
+
+        // when inserting a new link the destination must export all of its selected routes through the new link
+        destinationStateInfo.getSelectedRoutes().values()
+                .forEach(route -> export(insertedLink, route, prevScheduledRoute));
+
+        sourceStateInfo.getTable().addOutLink(insertedLink);
+    }
+
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
 
     /**
@@ -368,6 +387,13 @@ public class Engine {
             if (brokenLink != null) {
                 eventHandler.onBrokenLink(brokenLink);
                 processBrokenLink(nodesStateInfo.get(brokenLink.getSource()), brokenLink, scheduledRoute);
+            }
+
+            Link insertedLink = linkInserter.insertAnyLink(network, scheduledRoute.getTimestamp());
+
+            if (insertedLink != null) {
+                // TODO eventHandler.onInsertedLink(insertedLink);
+                processInsertedLink(insertedLink, scheduledRoute);
             }
         }
     }
