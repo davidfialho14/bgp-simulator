@@ -27,6 +27,7 @@ public class Engine {
     private final Scheduler scheduler;
     private EventHandler eventHandler;
     private LinkBreaker linkBreaker;
+    private LinkInserter linkInserter;
 
     // state information of the nodes during and after simulation
     private Map<Node, NodeStateInfo> nodesStateInfo = new HashMap<>();
@@ -44,6 +45,7 @@ public class Engine {
         // Optional dependencies (initialized to the defaults)
         private EventHandler eventHandler = new NullEventHandler();
         private LinkBreaker linkBreaker = new DummyLinkBreaker();
+        private LinkInserter linkInserter= new DummyLinkInserter();
 
         // Constructor with the required dependencies only
 
@@ -62,6 +64,11 @@ public class Engine {
 
         public Builder linkBreaker(LinkBreaker linkBreaker) {
             this.linkBreaker = linkBreaker;
+            return this;
+        }
+
+        public Builder linkInserter(LinkInserter linkInserter) {
+            this.linkInserter = linkInserter;
             return this;
         }
 
