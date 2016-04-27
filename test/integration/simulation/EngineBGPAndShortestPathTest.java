@@ -1,12 +1,16 @@
 package simulation;
 
+import network.Link;
 import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import policies.implementations.shortestpath.ShortestPathLabel;
 import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
+import simulation.implementations.handlers.DebugEventHandler;
+import simulation.implementations.linkbreakers.FixedLinkBreaker;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +39,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 new BGPProtocol(),
                 new ShortestPathPolicy(),
                 new FIFOScheduler())
-                .eventHandler(eventHandler)
+                .eventHandler(new DebugEventHandler())
                 .build();
     }
 
@@ -157,6 +161,63 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         assertThat(engine.getRouteTable(new Node(3)), is(table(
                                 selfLink(3),    splink(3, 1, 1),
                 destination(0), invalidRoute(), sproute(1, path(1, 0))
+        )));
+    }
+
+    @Test(timeout = 2000)
+    public void simulate_Topology5_Converges() throws Exception {
+        Network network0 = network(
+                link(from(2), to(1), label(1)),
+                link(from(1), to(0), label(1))
+        );
+
+        engine.simulate(network0, 0);
+
+        assertThat(engine.getRouteTable(new Node(0)), is( table(
+                                selfLink(0),
+                destination(0), sproute(0, path())
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is( table(
+                                selfLink(1),    splink(1, 0, 1),
+                destination(0), invalidRoute(), sproute(1, path(0))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is( table(
+                                selfLink(2),    splink(2, 1, 1),
+                destination(0), invalidRoute(), sproute(2, path(1, 0))
+        )));
+    }
+
+    @Test(timeout = 2000)
+    public void simulate_Topology5BreakingLink2To1OnInstant1_Converges() throws Exception {
+        engine = new Engine.Builder(
+                new BGPProtocol(),
+                new ShortestPathPolicy(),
+                new FIFOScheduler())
+                .linkBreaker(new FixedLinkBreaker(new Link(2, 1, new ShortestPathLabel(1)), 1L))
+                .build();
+
+        Network network0 = network(
+                link(from(2), to(1), label(1)),
+                link(from(1), to(0), label(1))
+        );
+
+        engine.simulate(network0, 0);
+
+        assertThat(engine.getRouteTable(new Node(0)), is( table(
+                                selfLink(0),
+                destination(0), sproute(0, path())
+        )));
+
+        assertThat(engine.getRouteTable(new Node(1)), is( table(
+                                selfLink(1),    splink(1, 0, 1),
+                destination(0), invalidRoute(), sproute(1, path(0))
+        )));
+
+        assertThat(engine.getRouteTable(new Node(2)), is( table(
+                                selfLink(2),
+                destination(0), invalidRoute()
         )));
     }
 }

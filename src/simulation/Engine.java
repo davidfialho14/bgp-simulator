@@ -93,7 +93,7 @@ public class Engine {
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNodes());
-        simulationLoop();
+        simulationLoop(network);
         eventHandler.onAfterSimulate();
     }
 
@@ -108,7 +108,7 @@ public class Engine {
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNode(destinationId));
-        simulationLoop();
+        simulationLoop(network);
         eventHandler.onAfterSimulate();
     }
 
@@ -295,12 +295,16 @@ public class Engine {
 
     /**
      * Executes the simulation loop for the given network.
+     *
+     * @param network network being simulated.
      */
-    private void simulationLoop() {
+    private void simulationLoop(Network network) {
         ScheduledRoute scheduledRoute;
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
             process(nodesStateInfo.get(learningNode), scheduledRoute);
+
+            linkBreaker.breakAnyLink(network, nodesStateInfo, scheduler);
         }
     }
 
