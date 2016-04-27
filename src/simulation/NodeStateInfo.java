@@ -13,8 +13,7 @@ import java.util.Map;
 public class NodeStateInfo {
 
     private RouteTable table;
-    private Map<Node, Attribute> selectedAttributes = new HashMap<>();
-    private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
+    private Map<Node, Route> selectedRoutes = new HashMap<>();
 
     public NodeStateInfo(Node node) {
         this.table = new RouteTable(node.getOutLinks());
@@ -29,8 +28,7 @@ public class NodeStateInfo {
      * @return a map between the destinations and the respective selected routes.
      */
     public Map<Node, Route> getSelectedRoutes() {
-        // TODO implement
-        return null;
+        return selectedRoutes;
     }
 
     /**
@@ -40,7 +38,8 @@ public class NodeStateInfo {
      * @return currently selected attribute or null if the destination was not known.
      */
     public Attribute getSelectedAttribute(Node destination) {
-        return selectedAttributes.get(destination);
+        Route selectedRoute = selectedRoutes.get(destination);
+        return selectedRoute != null ? selectedRoute.getAttribute() : null;
     }
 
     /**
@@ -50,7 +49,8 @@ public class NodeStateInfo {
      * @return currently selected path or null if the destination was not known.
      */
     public PathAttribute getSelectedPath(Node destination) {
-        return selectedPaths.get(destination);
+        Route selectedRoute = selectedRoutes.get(destination);
+        return selectedRoute != null ? selectedRoute.getPath() : null;
     }
 
     /**
@@ -73,8 +73,7 @@ public class NodeStateInfo {
      * @return currently selected route.
      */
     public void setSelected(Node destination, Route route) {
-        selectedAttributes.put(destination, route.getAttribute());
-        selectedPaths.put(destination, route.getPath());
+        selectedRoutes.put(destination, route);
     }
 
     /**
