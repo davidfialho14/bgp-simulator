@@ -3,7 +3,6 @@ package simulation;
 import network.Link;
 import network.Node;
 import policies.Attribute;
-import policies.Policy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +13,9 @@ import java.util.Map;
 public class NodeStateInfo {
 
     private RouteTable table;
-    private Map<Node, Attribute> selectedAttributes = new HashMap<>();
-    private Map<Node, PathAttribute> selectedPaths = new HashMap<>();
+    private Map<Node, Route> selectedRoutes = new HashMap<>();
 
-    public NodeStateInfo(Node node, Policy policy) {
+    public NodeStateInfo(Node node) {
         this.table = new RouteTable(node.getOutLinks());
     }
 
@@ -25,12 +23,12 @@ public class NodeStateInfo {
         return table;
     }
 
-    public Map<Node, Attribute> getSelectedAttributes() {
-        return selectedAttributes;
-    }
-
-    public Map<Node, PathAttribute> getSelectedPaths() {
-        return selectedPaths;
+    /**
+     * Returns a map between the destinations and the respective selected routes
+     * @return a map between the destinations and the respective selected routes.
+     */
+    public Map<Node, Route> getSelectedRoutes() {
+        return selectedRoutes;
     }
 
     /**
@@ -40,7 +38,8 @@ public class NodeStateInfo {
      * @return currently selected attribute or null if the destination was not known.
      */
     public Attribute getSelectedAttribute(Node destination) {
-        return selectedAttributes.get(destination);
+        Route selectedRoute = selectedRoutes.get(destination);
+        return selectedRoute != null ? selectedRoute.getAttribute() : null;
     }
 
     /**
@@ -50,18 +49,41 @@ public class NodeStateInfo {
      * @return currently selected path or null if the destination was not known.
      */
     public PathAttribute getSelectedPath(Node destination) {
-        return selectedPaths.get(destination);
+        Route selectedRoute = selectedRoutes.get(destination);
+        return selectedRoute != null ? selectedRoute.getPath() : null;
     }
 
+    /**
+     * Returns the currently selected route for the given destination. If the ignored link is specified it selects
+     * the preferred route excluding the route learned from that out-link.
+     *
+     * @param destination destination to get selected route for.
+     * @param ignoredLink out-link to be ignored.
+     * @return currently selected route.
+     */
     public Route getSelectedRoute(Node destination, Link ignoredLink) {
         return table.getSelectedRoute(destination, ignoredLink);
     }
 
+    /**
+     * Sets the given route as the currently selected route for the destination.
+     *
+     * @param destination destination to set route for.
+     * @param route route to set
+     * @return currently selected route.
+     */
     public void setSelected(Node destination, Route route) {
-        selectedAttributes.put(destination, route.getAttribute());
-        selectedPaths.put(destination, route.getPath());
+        selectedRoutes.put(destination, route);
     }
 
+    /**
+     * Updates the attribute and/or path of the route for the given destination and out-link.
+     *
+     * @param destination destination to update.
+     * @param outLink out-link to update.
+     * @param attribute attribute to update route to.
+     * @param path path to update to.
+     */
     public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
         table.setRoute(outLink, new Route(destination, attribute, path));
     }
