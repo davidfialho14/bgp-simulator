@@ -39,11 +39,11 @@ public abstract class EventHandler {
         // by default do nothing
     }
 
-    protected void onDiscardRoute(Link link, Route route) {
+    protected void onOscillationDetection(Link link, Route exportedRoute, Route learnedRoute, Route exclRoute) {
         // by default do nothing
     }
 
-    protected void onOscillationDetection(Link link, Route exportedRoute, Route learnedRoute, Route exclRoute) {
+    protected void onBrokenLink(Link brokenLink) {
         // by default do nothing
     }
 }

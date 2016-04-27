@@ -60,16 +60,16 @@ public class DebugEventHandler extends EventHandler {
     }
 
     @Override
-    protected void onDiscardRoute(Link link, Route route) {
-        super.onDiscardRoute(link, route);
-
-        System.out.println("DISCARDED:\t" + link + "\t|\t" + route);
-    }
-
-    @Override
     protected void onOscillationDetection(Link link, Route exportedRoute, Route learnedRoute, Route exclRoute) {
         super.onOscillationDetection(link, exportedRoute, learnedRoute, exclRoute);
 
         System.out.println("DETECTED:\t" + link + "\t|\t" + learnedRoute + "\t|\t" + exclRoute);
+    }
+
+    @Override
+    protected void onBrokenLink(Link brokenLink) {
+        super.onBrokenLink(brokenLink);
+
+        System.out.println("BROKE LINK:\t" + brokenLink);
     }
 }

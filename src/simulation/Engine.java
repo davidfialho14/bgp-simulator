@@ -23,8 +23,8 @@ public class Engine {
     private final Protocol protocol;
     private final Policy policy;
     private final Scheduler scheduler;
-    private final EventHandler eventHandler;
-    private final LinkBreaker linkBreaker;
+    private EventHandler eventHandler;
+    private LinkBreaker linkBreaker;
 
     // state information of the nodes during and after simulation
     private Map<Node, NodeStateInfo> nodesStateInfo = new HashMap<>();
@@ -80,6 +80,16 @@ public class Engine {
         this.scheduler = builder.scheduler;
         this.eventHandler = builder.eventHandler;
         this.linkBreaker = builder.linkBreaker;
+    }
+
+    // Setters to change optional dependencies only
+
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
+    }
+
+    public void setLinkBreaker(LinkBreaker linkBreaker) {
+        this.linkBreaker = linkBreaker;
     }
 
     /**
@@ -304,7 +314,11 @@ public class Engine {
             Node learningNode = scheduledRoute.getLink().getSource();
             process(nodesStateInfo.get(learningNode), scheduledRoute);
 
-            linkBreaker.breakAnyLink(network, nodesStateInfo, scheduler);
+            Link brokenLink = linkBreaker.breakAnyLink(network, nodesStateInfo, scheduler);
+
+            if (brokenLink != null) {
+                eventHandler.onBrokenLink(brokenLink);
+            }
         }
     }
 
