@@ -5,8 +5,6 @@ import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
-import policies.Policy;
-import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import protocols.implementations.D1R1Protocol;
 import protocols.implementations.D2R1Protocol;
@@ -29,12 +27,10 @@ import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
-public class Network6Test {
+public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     private Engine engine;
     private Network network;
-
-    private Policy policy = new ShortestPathPolicy();   // always the same policy
 
     @Before
     public void setUp() throws Exception {
@@ -111,7 +107,7 @@ public class Network6Test {
 
     @Test(timeout = 2000)
     public void simulate_BGPProtocolAndFIFOScheduler_Converges() throws Exception {
-        engine = new Engine.Builder(new BGPProtocol(), policy, new FIFOScheduler()).build();
+        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler()).build();
 
         engine.simulate(network, 0);
 
@@ -125,7 +121,7 @@ public class Network6Test {
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
-        engine = new Engine.Builder(new D1R1Protocol(), policy, new FIFOScheduler()).build();
+        engine = new Engine.Builder(new D1R1Protocol(), shortestPathPolicy, new FIFOScheduler()).build();
 
         engine.simulate(network, 0);
 
@@ -140,7 +136,7 @@ public class Network6Test {
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-        engine = new Engine.Builder(new D1R1Protocol(), policy, new FIFOScheduler())
+        engine = new Engine.Builder(new D1R1Protocol(), shortestPathPolicy, new FIFOScheduler())
                 .eventHandler(eventHandler)
                 .build();
 
@@ -151,7 +147,7 @@ public class Network6Test {
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_Converges() throws Exception {
-        engine = new Engine.Builder(new D1R1Protocol(), policy, new FIFOScheduler())
+        engine = new Engine.Builder(new D1R1Protocol(), shortestPathPolicy, new FIFOScheduler())
                 .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
                 .build();
 
@@ -168,7 +164,7 @@ public class Network6Test {
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_DetectsOnce() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-        engine = new Engine.Builder(new D1R1Protocol(), policy, new FIFOScheduler())
+        engine = new Engine.Builder(new D1R1Protocol(), shortestPathPolicy, new FIFOScheduler())
                 .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
                 .eventHandler(eventHandler)
                 .build();
@@ -180,7 +176,7 @@ public class Network6Test {
 
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
-        engine = new Engine.Builder(new D2R1Protocol(), policy, new FIFOScheduler()).build();
+        engine = new Engine.Builder(new D2R1Protocol(), shortestPathPolicy, new FIFOScheduler()).build();
 
         engine.simulate(network, 0);
 
@@ -195,7 +191,7 @@ public class Network6Test {
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-        engine = new Engine.Builder(new D2R1Protocol(), policy, new FIFOScheduler())
+        engine = new Engine.Builder(new D2R1Protocol(), shortestPathPolicy, new FIFOScheduler())
                 .eventHandler(eventHandler)
                 .build();
 
@@ -206,7 +202,7 @@ public class Network6Test {
 
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_Converges() throws Exception {
-        engine = new Engine.Builder(new D2R1Protocol(), policy, new FIFOScheduler())
+        engine = new Engine.Builder(new D2R1Protocol(), shortestPathPolicy, new FIFOScheduler())
                 .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
                 .build();
 
@@ -223,7 +219,7 @@ public class Network6Test {
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_NeverDetects() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-        engine = new Engine.Builder(new D2R1Protocol(), policy, new FIFOScheduler())
+        engine = new Engine.Builder(new D2R1Protocol(), shortestPathPolicy, new FIFOScheduler())
                 .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
                 .eventHandler(eventHandler)
                 .build();

@@ -10,6 +10,7 @@ public class FixedTimeLinkInserter extends AbstractLinkInserter {
 
     private final Link linkToInsert;
     private final long timeToInsert;
+    private boolean alreadyInserted = false;
 
     public FixedTimeLinkInserter(Link linkToInsert, long timeToInsert) {
         this.linkToInsert = linkToInsert;
@@ -27,8 +28,9 @@ public class FixedTimeLinkInserter extends AbstractLinkInserter {
     public Link insertAnyLink(Network network, long currentTime) {
         Link insertedLink = null;
 
-        if (currentTime >= timeToInsert) {
+        if (!alreadyInserted && currentTime >= timeToInsert) {
             insert(linkToInsert, network);
+            alreadyInserted = true;
             insertedLink = linkToInsert;
         }
 
