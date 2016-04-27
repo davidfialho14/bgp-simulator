@@ -2,11 +2,6 @@ package simulation.implementations.linkbreakers;
 
 import network.Link;
 import network.Network;
-import network.Node;
-import simulation.NodeStateInfo;
-import simulation.Scheduler;
-
-import java.util.Map;
 
 /**
  * A dummy link breaker does not break any link ever. Used when the purpose is not to break links.
@@ -14,7 +9,7 @@ import java.util.Map;
 public class DummyLinkBreaker extends AbstractLinkBreaker {
 
     @Override
-    public Link breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler) {
+    public Link breakAnyLink(Network network, long currentTime) {
         return null;
     }
 }

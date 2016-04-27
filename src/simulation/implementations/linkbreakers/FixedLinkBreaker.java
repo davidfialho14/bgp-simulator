@@ -3,11 +3,6 @@ package simulation.implementations.linkbreakers;
 
 import network.Link;
 import network.Network;
-import network.Node;
-import simulation.NodeStateInfo;
-import simulation.Scheduler;
-
-import java.util.Map;
 
 /**
  * A fixed breaker will break a given link in a fixed instant of time T.
@@ -29,11 +24,11 @@ public class FixedLinkBreaker extends AbstractLinkBreaker {
     }
 
     @Override
-    public Link breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler) {
+    public Link breakAnyLink(Network network, long currentTime) {
 
-        if (scheduler.getCurrentTime() == timeToBreak) {
+        if (currentTime == timeToBreak) {
             try {
-                breakLink(linkToBreak, network, nodesStateInfo, scheduler);
+                breakLink(linkToBreak, network);
                 return linkToBreak;
             } catch (LinkNotFoundException e) {
                 // the link does not exist on the given network

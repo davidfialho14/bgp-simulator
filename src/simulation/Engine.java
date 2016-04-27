@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static simulation.Route.invalidRoute;
+
 /**
  * Engine implements the hardcore simulation logic.
  */
@@ -244,7 +246,7 @@ public class Engine {
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
-            learnedRoute = Route.invalidRoute(destination);
+            learnedRoute = invalidRoute(destination);
         }
 
         Route selectedRoute;
@@ -314,7 +316,7 @@ public class Engine {
             Node learningNode = scheduledRoute.getLink().getSource();
             process(nodesStateInfo.get(learningNode), scheduledRoute);
 
-            Link brokenLink = linkBreaker.breakAnyLink(network, nodesStateInfo, scheduler);
+            Link brokenLink = linkBreaker.breakAnyLink(network, scheduledRoute.getTimestamp());
 
             if (brokenLink != null) {
                 eventHandler.onBrokenLink(brokenLink);
