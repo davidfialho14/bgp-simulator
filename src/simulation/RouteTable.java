@@ -117,6 +117,16 @@ public class RouteTable {
         routes.putIfAbsent(outLink, new HashMap<>());
     }
 
+    /**
+     * Returns a collection with all the destinations learned from the given out-link.
+     *
+     * @param outLink out-link to get destinations from.
+     * @return collection with all the destinations learned from the given out-link.
+     */
+    public Collection<Node> getDestinationsLearnFrom(Link outLink) {
+        return routes.get(outLink).keySet();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
