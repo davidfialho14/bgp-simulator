@@ -15,7 +15,7 @@ import java.util.Map;
 public abstract class AbstractLinkBreaker implements LinkBreaker {
 
     @Override
-    abstract public boolean breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler);
+    abstract public Link breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler);
 
     /**
      * Removes the given link form the network and removes all routes exported through that link from the scheduler.

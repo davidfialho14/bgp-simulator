@@ -1,5 +1,6 @@
 package simulation.implementations.linkbreakers;
 
+import network.Link;
 import network.Network;
 import network.Node;
 import simulation.NodeStateInfo;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class DummyLinkBreaker extends AbstractLinkBreaker {
 
     @Override
-    public boolean breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler) {
-        return false;
+    public Link breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler) {
+        return null;
     }
 }

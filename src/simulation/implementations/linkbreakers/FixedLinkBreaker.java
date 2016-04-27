@@ -29,17 +29,17 @@ public class FixedLinkBreaker extends AbstractLinkBreaker {
     }
 
     @Override
-    public boolean breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler) {
+    public Link breakAnyLink(Network network, Map<Node, NodeStateInfo> nodesStateInfo, Scheduler scheduler) {
 
         if (scheduler.getCurrentTime() == timeToBreak) {
             try {
                 breakLink(linkToBreak, network, nodesStateInfo, scheduler);
-                return true;
+                return linkToBreak;
             } catch (LinkNotFoundException e) {
                 // the link does not exist on the given network
             }
         }
 
-        return false;
+        return null;
     }
 }
