@@ -321,6 +321,15 @@ public class Engine {
         }
     }
 
+    /**
+     * Processes a broken link. It re-selects the preferred route and exports it if it is a different route than the
+     * previously preferred. It also removes the link from the route table and it remvoes all routes being exported
+     * through that link from the scheduler.
+     *
+     * @param nodeStateInfo state information of the source node of the broken link.
+     * @param brokenLink link that was broken.
+     * @param prevScheduledRoute previously scheduled route.
+     */
     void processBrokenLink(NodeStateInfo nodeStateInfo, Link brokenLink, ScheduledRoute prevScheduledRoute) {
         // breaking a link is the same thing that learning invalid routes for all destinations known through that link
 
