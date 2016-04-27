@@ -157,6 +157,17 @@ public class Engine {
     }
 
     /**
+     * Returns the route selected by the node to reach the destination.
+     *
+     * @param node node to get selected route for.
+     * @param destination destination to get selected route for.
+     * @return the route selected by the node to reach the destination.
+     */
+    public Route getSelectedRoute(Node node, Node destination) {
+        return nodesStateInfo.get(node).getSelectedRoute(destination, null);
+    }
+
+    /**
      * Returns the event handler associated with the engine.
      *
      * @return event handler associated with the engine.

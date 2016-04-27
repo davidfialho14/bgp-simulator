@@ -15,6 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
 import static wrappers.ShortestPathWrapper.*;
+import static wrappers.ShortestPathWrapper.sproute;
 import static wrappers.network.FromNodeElement.from;
 import static wrappers.network.LinkElement.link;
 import static wrappers.network.NetworkWrapper.network;
@@ -53,11 +54,23 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
         )));
     }
 
-    @Test//(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1PrefersNewLink() throws Exception {
+    @Test(timeout = 2000)
+    public void
+    simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1SelectsRouteWithAttr1AndPathWithNode0()
+            throws Exception {
+        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler()).build();
+
+        engine.simulate(network, 0);
+
+        assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 1, path(0))));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1LearnsRouteFromNewLink()
+            throws Exception {
         engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler())
                 .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
-                .eventHandler(new DebugEventHandler())
                 .build();
 
         engine.simulate(network, 0);
@@ -71,5 +84,18 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
                                 selfLink(1),    splink(1, 0, 1),     splink(1, 0, 0),
                 destination(0), invalidRoute(), sproute(1, path(0)), sproute(0, path(0))
         )));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1PrefersNewLink() throws Exception {
+        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler())
+                .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
+                .eventHandler(new DebugEventHandler())
+                .build();
+
+        engine.simulate(network, 0);
+
+        assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 0, path(0))));
     }
 }
