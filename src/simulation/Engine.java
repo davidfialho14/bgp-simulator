@@ -174,24 +174,7 @@ public class Engine {
         Route learnedRoute = learn(link, exportedRoute);
         eventHandler.onAfterLearn(link, exportedRoute, learnedRoute);
 
-        // store the currently selected attribute and path
-        Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
-        PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
-
-        eventHandler.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
-                prevSelectedAttribute, prevSelectedPath);
-        Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
-        eventHandler.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
-                prevSelectedAttribute, prevSelectedPath, selectedRoute);
-
-        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
-                    !prevSelectedPath.equals(selectedRoute.getPath())) {
-            /*
-                must export the new route to all of the learning node's in-links except to the node
-                from which the route was learned.
-             */
-            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination(), scheduledRoute);
-        }
+        processSelection(nodeStateInfo, link, exportedRoute, learnedRoute, scheduledRoute);
     }
 
     /**
@@ -303,6 +286,54 @@ public class Engine {
         eventHandler.onAfterExport(link, route, prevScheduledRoute, scheduledRoute);
     }
 
+    /**
+     * Selects the preferred route for the destination and if the selected route is different from the previously
+     * selected route it exports all the new selected route to all of the in-neighbours.
+     *
+     * @param nodeStateInfo state information of the learning node.
+     * @param link link from which the route was learned.
+     * @param exportedRoute route that was exported through the link.
+     * @param learnedRoute route that was learned by the node.
+     * @param prevScheduledRoute previously scheduled route.
+     */
+    void processSelection(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                          ScheduledRoute prevScheduledRoute) {
+
+        Node destination = learnedRoute.getDestination();
+
+        // store the currently selected attribute and path
+        Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
+        PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
+
+        eventHandler.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+                prevSelectedAttribute, prevSelectedPath);
+        Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
+        eventHandler.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+                prevSelectedAttribute, prevSelectedPath, selectedRoute);
+
+        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
+                !prevSelectedPath.equals(selectedRoute.getPath())) {
+            /*
+                must export the new route to all of the learning node's in-links except to the node
+                from which the route was learned.
+             */
+            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination(), prevScheduledRoute);
+        }
+    }
+
+    void processBrokenLink(NodeStateInfo nodeStateInfo, Link brokenLink, ScheduledRoute prevScheduledRoute) {
+        // breaking a link is the same thing that learning invalid routes for all destinations known through that link
+
+        for (Node destination : nodeStateInfo.getTable().getDestinationsLearnFrom(brokenLink)) {
+            processSelection(nodeStateInfo, brokenLink,
+                    invalidRoute(destination), invalidRoute(destination), prevScheduledRoute);
+        }
+
+        // remove the link from the sour node route table and remove all routes being exported through this link
+        nodeStateInfo.getTable().removeOutLink(brokenLink);
+        scheduler.removeRoutes(brokenLink);
+    }
+
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
 
     /**
@@ -320,6 +351,7 @@ public class Engine {
 
             if (brokenLink != null) {
                 eventHandler.onBrokenLink(brokenLink);
+                processBrokenLink(nodesStateInfo.get(brokenLink.getSource()), brokenLink, scheduledRoute);
             }
         }
     }
