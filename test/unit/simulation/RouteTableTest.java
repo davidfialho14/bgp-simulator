@@ -418,4 +418,35 @@ public class RouteTableTest {
         assertThat(routeTable1, not(equalTo(routeTable2)));
     }
 
+    @Test
+    public void
+    equals_WithOutLinks0To1And0To2AndTableWithOutLink0To2_AreNotEqual() throws Exception {
+        RouteTable routeTable1 = table(
+                                stubOutLink(0, 2),      stubOutLink(0, 1),
+                destination(0), stubRoute(0, path()),   stubRoute(0, path())
+        );
+        RouteTable routeTable2 = table(
+                                stubOutLink(0, 2),
+                destination(0), stubRoute(0, path())
+        );
+
+        assertThat(routeTable1, not(equalTo(routeTable2)));
+    }
+
+    @Test
+    public void
+    equals_TableWithOutLinks0To2AndTableWithOutLinks0To1And0To2_AreNotEqual() throws Exception {
+        RouteTable routeTable1 = table(
+                stubOutLink(0, 2),
+                destination(0), stubRoute(0, path())
+        );
+        RouteTable routeTable2 = table(
+                stubOutLink(0, 2),      stubOutLink(0, 1),
+                destination(0), stubRoute(0, path()),   stubRoute(0, path())
+        );
+
+
+        assertThat(routeTable1, not(equalTo(routeTable2)));
+    }
+
 }

@@ -20,9 +20,9 @@ import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SimulateEngineSelectTest {
+public class EngineSelectTest {
 
-    private SimulateEngine engine;  // class under test
+    private Engine engine;  // class under test
 
     @Mock
     private NodeStateInfo stubNodeStateInfo;
@@ -32,7 +32,7 @@ public class SimulateEngineSelectTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(stubProtocol, null, null, null);
+        engine = new Engine.Builder(stubProtocol, null, null).build();
         when(stubProtocol.isOscillation(any(), any(), any(), any(), any())).thenReturn(false);
     }
 

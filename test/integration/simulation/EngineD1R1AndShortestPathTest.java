@@ -26,12 +26,16 @@ import static wrappers.routetable.RouteTableWrapper.table;
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
-public class SimulateEngineD1R1AndShortestPathTest extends SimulateEngineTest {
+public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new SimulateEngine(new D1R1Protocol(), new ShortestPathPolicy(),
-                new FIFOScheduler(), eventHandler);
+        engine = new Engine.Builder(
+                new D1R1Protocol(),
+                new ShortestPathPolicy(),
+                new FIFOScheduler())
+                .eventHandler(eventHandler)
+                .build();
     }
 
     @Test(timeout = 2000)

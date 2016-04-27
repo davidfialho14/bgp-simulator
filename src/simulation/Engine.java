@@ -7,43 +7,97 @@ import network.SelfLink;
 import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
+import simulation.implementations.handlers.NullEventHandler;
+import simulation.implementations.linkbreakers.DummyLinkBreaker;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static simulation.Route.invalidRoute;
+
 /**
  * Engine implements the hardcore simulation logic.
  */
-public class SimulateEngine {
+public class Engine {
 
-    private Protocol protocol;
-    private Policy policy;
-    private Scheduler scheduler;
+    private final Protocol protocol;
+    private final Policy policy;
+    private final Scheduler scheduler;
     private EventHandler eventHandler;
+    private LinkBreaker linkBreaker;
 
     // state information of the nodes during and after simulation
     private Map<Node, NodeStateInfo> nodesStateInfo = new HashMap<>();
 
     /**
-     * Initializes a new SimulateEngine.
-     * @param protocol routing protocol to be used.
-     * @param policy factory used to create attributes.
-     * @param scheduler scheduler used to schedule exported routes.
-     * @param eventHandler event handler called on any new event.
+     * Class responsible for building engine instances. (Builder pattern)
      */
-    public SimulateEngine(Protocol protocol, Policy policy, Scheduler scheduler,
-                          EventHandler eventHandler) {
-        this.protocol = protocol;
-        this.policy = policy;
-        this.scheduler = scheduler;
+    public static class Builder {
+
+        // Required dependencies
+        private final Protocol protocol;
+        private final Policy policy;
+        private final Scheduler scheduler;
+
+        // Optional dependencies (initialized to the defaults)
+        private EventHandler eventHandler = new NullEventHandler();
+        private LinkBreaker linkBreaker = new DummyLinkBreaker();
+
+        // Constructor with the required dependencies only
+
+        public Builder(Protocol protocol, Policy policy, Scheduler scheduler) {
+            this.protocol = protocol;
+            this.policy = policy;
+            this.scheduler = scheduler;
+        }
+
+        // Set methods for optional dependencies
+
+        public Builder eventHandler(EventHandler eventHandler) {
+            this.eventHandler = eventHandler;
+            return this;
+        }
+
+        public Builder linkBreaker(LinkBreaker linkBreaker) {
+            this.linkBreaker = linkBreaker;
+            return this;
+        }
+
+        // method to build the engine
+
+        public Engine build() {
+            return new Engine(this);
+        }
+
+    }
+
+    /**
+     * Constructs an engine form a pre-configured builder.
+     */
+    private Engine(Builder builder) {
+        this.protocol = builder.protocol;
+        this.policy = builder.policy;
+        this.scheduler = builder.scheduler;
+        this.eventHandler = builder.eventHandler;
+        this.linkBreaker = builder.linkBreaker;
+    }
+
+    // Setters to change optional dependencies only
+
+    public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
+    }
+
+    public void setLinkBreaker(LinkBreaker linkBreaker) {
+        this.linkBreaker = linkBreaker;
     }
 
     /**
      * Simulates the BGP protocol according to the specifications of the engine for the given network.
      * During simulation the slot methods of the event handler are called in the appropriate time.
+     *
      * @param network network to be simulated.
      */
     public void simulate(Network network) {
@@ -51,12 +105,13 @@ public class SimulateEngine {
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNodes());
-        simulationLoop();
+        simulationLoop(network);
         eventHandler.onAfterSimulate();
     }
 
     /**
-     * Executes the simulation but just for one destination node. @see {@link SimulateEngine#simulate(Network)}
+     * Executes the simulation but just for one destination node. @see {@link Engine#simulate(Network)}
+     *
      * @param network network being simulated.
      * @param destinationId id of the destination node to simulate for.
      */
@@ -65,13 +120,14 @@ public class SimulateEngine {
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNode(destinationId));
-        simulationLoop();
+        simulationLoop(network);
         eventHandler.onAfterSimulate();
     }
 
     /**
      * Returns a map containing the nodes associated with their respective route tables. The route tables will only
      * be filled after a simulation takes place.
+     *
      * @return map containing the nodes associated with their respective route tables.
      */
     public Map<Node, RouteTable> getRouteTables() {
@@ -84,6 +140,7 @@ public class SimulateEngine {
 
     /**
      * Returns the route table of the given node. The route table will only be filled after a simulation takes place.
+     *
      * @return map containing the nodes associated with their respective route tables.
      */
     public RouteTable getRouteTable(Node node) {
@@ -92,6 +149,7 @@ public class SimulateEngine {
 
     /**
      * Returns the event handler associated with the engine.
+     *
      * @return event handler associated with the engine.
      */
     public EventHandler getEventHandler() {
@@ -102,6 +160,7 @@ public class SimulateEngine {
 
     /**
      * Processes a scheduled route by updating the state info of the learning node.
+     *
      * @param nodeStateInfo state info of the learning node.
      * @param scheduledRoute scheduled route to process.
      */
@@ -115,29 +174,13 @@ public class SimulateEngine {
         Route learnedRoute = learn(link, exportedRoute);
         eventHandler.onAfterLearn(link, exportedRoute, learnedRoute);
 
-        // store the currently selected attribute and path
-        Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
-        PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
-
-        eventHandler.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
-                prevSelectedAttribute, prevSelectedPath);
-        Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
-        eventHandler.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
-                prevSelectedAttribute, prevSelectedPath, selectedRoute);
-
-        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
-                    !prevSelectedPath.equals(selectedRoute.getPath())) {
-            /*
-                must export the new route to all of the learning node's in-links except to the node
-                from which the route was learned.
-             */
-            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination(), scheduledRoute);
-        }
+        processSelection(nodeStateInfo, link, exportedRoute, learnedRoute, scheduledRoute);
     }
 
     /**
      * Learns a new exported route, returning the route after the attribute has been exported and included the
      * out-neighbour in the path.
+     *
      * @param link link through which the route was exported.
      * @param route exported route.
      * @return route after the attribute has been exported and included the out-neighbour in the path.
@@ -159,6 +202,7 @@ public class SimulateEngine {
     /**
      * Selects the best route taking into account the new learned route. It also updates the route table while
      * selecting the best route with the new learned route.
+     *
      * @param nodeStateInfo state information of the node who learned the route.
      * @param link link from which the route was learned.
      * @param exportedRoute route when it was exported.
@@ -185,7 +229,7 @@ public class SimulateEngine {
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
-            learnedRoute = Route.invalidRoute(destination);
+            learnedRoute = invalidRoute(destination);
         }
 
         Route selectedRoute;
@@ -205,6 +249,7 @@ public class SimulateEngine {
     /**
      * Exports the given route to all of the in-neighbours of the exporting node except to node indicated as
      * not to export.
+     *
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
      * @param nodeNotToExport node to which the route is not to be exported.
@@ -219,6 +264,7 @@ public class SimulateEngine {
 
     /**
      * Exports a route through the given link. The route is put in the network's scheduler.
+     *
      * @param link link to export the route to.
      * @param route route to be exported.
      * @param prevScheduledRoute scheduled route previously got from the scheduler.
@@ -240,22 +286,80 @@ public class SimulateEngine {
         eventHandler.onAfterExport(link, route, prevScheduledRoute, scheduledRoute);
     }
 
+    /**
+     * Selects the preferred route for the destination and if the selected route is different from the previously
+     * selected route it exports all the new selected route to all of the in-neighbours.
+     *
+     * @param nodeStateInfo state information of the learning node.
+     * @param link link from which the route was learned.
+     * @param exportedRoute route that was exported through the link.
+     * @param learnedRoute route that was learned by the node.
+     * @param prevScheduledRoute previously scheduled route.
+     */
+    void processSelection(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                          ScheduledRoute prevScheduledRoute) {
+
+        Node destination = learnedRoute.getDestination();
+
+        // store the currently selected attribute and path
+        Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
+        PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
+
+        eventHandler.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+                prevSelectedAttribute, prevSelectedPath);
+        Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
+        eventHandler.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+                prevSelectedAttribute, prevSelectedPath, selectedRoute);
+
+        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
+                !prevSelectedPath.equals(selectedRoute.getPath())) {
+            /*
+                must export the new route to all of the learning node's in-links except to the node
+                from which the route was learned.
+             */
+            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination(), prevScheduledRoute);
+        }
+    }
+
+    void processBrokenLink(NodeStateInfo nodeStateInfo, Link brokenLink, ScheduledRoute prevScheduledRoute) {
+        // breaking a link is the same thing that learning invalid routes for all destinations known through that link
+
+        for (Node destination : nodeStateInfo.getTable().getDestinationsLearnFrom(brokenLink)) {
+            processSelection(nodeStateInfo, brokenLink,
+                    invalidRoute(destination), invalidRoute(destination), prevScheduledRoute);
+        }
+
+        // remove the link from the sour node route table and remove all routes being exported through this link
+        nodeStateInfo.getTable().removeOutLink(brokenLink);
+        scheduler.removeRoutes(brokenLink);
+    }
+
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
 
     /**
      * Executes the simulation loop for the given network.
+     *
+     * @param network network being simulated.
      */
-    private void simulationLoop() {
+    private void simulationLoop(Network network) {
         ScheduledRoute scheduledRoute;
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
             process(nodesStateInfo.get(learningNode), scheduledRoute);
+
+            Link brokenLink = linkBreaker.breakAnyLink(network, scheduledRoute.getTimestamp());
+
+            if (brokenLink != null) {
+                eventHandler.onBrokenLink(brokenLink);
+                processBrokenLink(nodesStateInfo.get(brokenLink.getSource()), brokenLink, scheduledRoute);
+            }
         }
     }
 
     /**
      * Initializes state info of for the given collection of nodes. All current node state information is cleared
      * after calling this method.
+     *
      * @param nodes nodes to initialize the state info for.
      */
     private void initNodesStateInfo(Collection<Node> nodes) {
@@ -265,6 +369,7 @@ public class SimulateEngine {
 
     /**
      * Exports the self routes of each one of the given nodes.
+     *
      * @param nodes nodes which the self routes are to be exported.
      */
     private void exportSelfRoute(Collection<Node> nodes) {
@@ -273,6 +378,7 @@ public class SimulateEngine {
 
     /**
      * Exports the self route of the given node.
+     *
      * @param node node which the self route is to be exported.
      */
     private void exportSelfRoute(Node node) {

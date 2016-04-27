@@ -1,5 +1,7 @@
 package simulation;
 
+import network.Link;
+
 public interface Scheduler {
 
     /**
@@ -14,4 +16,17 @@ public interface Scheduler {
      */
     void put(ScheduledRoute scheduledRoute);
 
+    /**
+     * Removes all the routes being exported through the given link.
+     *
+     * @param link link exporting the routes to be removed.
+     */
+    void removeRoutes(Link link);
+
+    /**
+     * Returns the current time of the scheduler.
+     *
+     * @return the current time of the scheduler.
+     */
+    long getCurrentTime();
 }
