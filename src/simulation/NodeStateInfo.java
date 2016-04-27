@@ -24,12 +24,13 @@ public class NodeStateInfo {
         return table;
     }
 
-    public Map<Node, Attribute> getSelectedAttributes() {
-        return selectedAttributes;
-    }
-
-    public Map<Node, PathAttribute> getSelectedPaths() {
-        return selectedPaths;
+    /**
+     * Returns a map between the destinations and the respective selected routes
+     * @return a map between the destinations and the respective selected routes.
+     */
+    public Map<Node, Route> getSelectedRoutes() {
+        // TODO implement
+        return null;
     }
 
     /**
@@ -52,15 +53,38 @@ public class NodeStateInfo {
         return selectedPaths.get(destination);
     }
 
+    /**
+     * Returns the currently selected route for the given destination. If the ignored link is specified it selects
+     * the preferred route excluding the route learned from that out-link.
+     *
+     * @param destination destination to get selected route for.
+     * @param ignoredLink out-link to be ignored.
+     * @return currently selected route.
+     */
     public Route getSelectedRoute(Node destination, Link ignoredLink) {
         return table.getSelectedRoute(destination, ignoredLink);
     }
 
+    /**
+     * Sets the given route as the currently selected route for the destination.
+     *
+     * @param destination destination to set route for.
+     * @param route route to set
+     * @return currently selected route.
+     */
     public void setSelected(Node destination, Route route) {
         selectedAttributes.put(destination, route.getAttribute());
         selectedPaths.put(destination, route.getPath());
     }
 
+    /**
+     * Updates the attribute and/or path of the route for the given destination and out-link.
+     *
+     * @param destination destination to update.
+     * @param outLink out-link to update.
+     * @param attribute attribute to update route to.
+     * @param path path to update to.
+     */
     public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
         table.setRoute(outLink, new Route(destination, attribute, path));
     }
