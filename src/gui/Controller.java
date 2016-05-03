@@ -2,10 +2,7 @@ package gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 
@@ -20,6 +17,7 @@ public class Controller implements Initializable {
     public Button startButton;
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
+    public RadioButton oneNodeRadioButton;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -36,6 +34,11 @@ public class Controller implements Initializable {
 
         // accept only 1 or more repetitions
         repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
+
+        // enable destination spinner only when the one node radio button is selected
+        oneNodeRadioButton.selectedProperty().addListener((observable, oldState, newState) -> {
+            destinationIdSpinner.setDisable(!newState);
+        });
     }
 
     public void handleClickedBrowseButton(ActionEvent actionEvent) {

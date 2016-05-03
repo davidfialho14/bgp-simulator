@@ -34,15 +34,16 @@
                 GridPane.columnIndex="6"/>
         <Label text="Destination:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
         <Label text="Repetitions:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="92.0" text="All Nodes"
+        <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="92.0" selected="true" text="All Nodes"
                      GridPane.columnIndex="2" GridPane.rowIndex="1">
             <toggleGroup>
                 <ToggleGroup fx:id="destinationGroup"/>
             </toggleGroup>
         </RadioButton>
-        <RadioButton mnemonicParsing="false" text="Node:" toggleGroup="$destinationGroup" GridPane.columnIndex="3"
-                     GridPane.rowIndex="1"/>
-        <Spinner fx:id="destinationIdSpinner" editable="true" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+        <RadioButton fx:id="oneNodeRadioButton" mnemonicParsing="false" text="Node:" toggleGroup="$destinationGroup"
+                     GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <Spinner fx:id="destinationIdSpinner" disable="true" editable="true" GridPane.columnIndex="4"
+                 GridPane.rowIndex="1"/>
         <Spinner fx:id="repetitionsSpinner" editable="true" GridPane.columnIndex="2" GridPane.columnSpan="2"
                  GridPane.rowIndex="2"/>
         <Button fx:id="startButton" defaultButton="true" disable="true" maxWidth="67.0" minWidth="67.0"
