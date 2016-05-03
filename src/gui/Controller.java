@@ -3,6 +3,8 @@ package gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
@@ -16,6 +18,8 @@ public class Controller implements Initializable {
     public GridPane pane;
     public TextField networkTextField;
     public Button startButton;
+    public Spinner<Integer> destinationIdSpinner;
+    public Spinner<Integer> repetitionsSpinner;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -26,6 +30,12 @@ public class Controller implements Initializable {
         networkTextField.textProperty().addListener((observable, oldText, newText) -> {
             startButton.setDisable(newText.isEmpty());
         });
+
+        // accept only positive integers for the destination ID
+        destinationIdSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE));
+
+        // accept only 1 or more repetitions
+        repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
     }
 
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
