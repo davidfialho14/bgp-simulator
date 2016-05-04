@@ -2,19 +2,24 @@ package io;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Generates reports in HTML form.
  */
 public class HTMLReportGenerator {
 
-    private List<Integer> iterations = new ArrayList<>();
     private List<Integer> messageCounts = new ArrayList<>();
+    private List<Integer> detectionCounts = new ArrayList<>();
 
     public void addMessageCount(int count) {
-        iterations.add(iterations.size() + 1);
         messageCounts.add(count);
+    }
+
+    public void addDetectionCount(int count) {
+        detectionCounts.add(count);
     }
 
     /**
@@ -32,11 +37,10 @@ public class HTMLReportGenerator {
                 writer.write(line); writer.newLine();
 
                 if (line.equals("<script>")) {  // insert the data variables at the beginning of the script
-                    String labels = "\tvar labels = " + iterations + ";";
-                    String counts = "\tvar messageCounts = " + messageCounts + ";";
-
-                    writer.write(labels); writer.newLine();
-                    writer.write(counts); writer.newLine();
+                    IntStream range = IntStream.range(1, messageCounts.size() + 1);
+                    writer.write("\tvar labels = " + Arrays.toString(range.toArray()) + ";"); writer.newLine();
+                    writer.write("\tvar messageCounts = " + messageCounts + ";"); writer.newLine();
+                    writer.write("\tvar detectionCounts = " + detectionCounts + ";"); writer.newLine();
                     writer.newLine();
                 }
             }
