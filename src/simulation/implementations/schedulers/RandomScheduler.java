@@ -36,4 +36,12 @@ public class RandomScheduler extends AbstractScheduler {
         return scheduledTime;
     }
 
+    /**
+     * Resets the scheduler.
+     */
+    @Override
+    public void reset() {
+        super.reset();
+        lastTimes.clear();
+    }
 }

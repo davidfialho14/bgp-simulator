@@ -176,6 +176,12 @@ public class Engine {
         return eventHandler;
     }
 
+    public void reset() {
+        protocol.reset();
+        scheduler.reset();
+        nodesStateInfo.clear();
+    }
+
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
@@ -416,7 +422,6 @@ public class Engine {
      * @param nodes nodes to initialize the state info for.
      */
     private void initNodesStateInfo(Collection<Node> nodes) {
-        nodesStateInfo.clear();
         nodes.forEach(node -> nodesStateInfo.put(node, new NodeStateInfo(node)));
     }
 
