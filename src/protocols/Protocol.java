@@ -40,4 +40,5 @@ public interface Protocol {
      */
     void setParameters(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute);
 
+    void reset();
 }

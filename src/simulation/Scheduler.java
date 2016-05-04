@@ -29,4 +29,9 @@ public interface Scheduler {
      * @return the current time of the scheduler.
      */
     long getCurrentTime();
+
+    /**
+     * Resets the scheduler.
+     */
+    void reset();
 }

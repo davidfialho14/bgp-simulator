@@ -65,4 +65,12 @@ public abstract class AbstractScheduler implements Scheduler {
     public long getCurrentTime() {
         return currentTime;
     }
+
+    /**
+     * Resets the scheduler.
+     */
+    @Override
+    public void reset() {
+        queue.clear();
+    }
 }

@@ -24,4 +24,9 @@ public class BGPProtocol implements Protocol {
         // ignore
     }
 
+    @Override
+    public void reset() {
+
+    }
+
 }
