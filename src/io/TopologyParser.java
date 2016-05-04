@@ -15,6 +15,7 @@ import policies.Policy;
 import protocols.Protocol;
 import protocols.Protocols;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -41,14 +42,14 @@ public class TopologyParser {
     /**
      * Parses the given file and builds a parsedNetwork with it. The parsedNetwork, parsedProtocol, and attribute
      * factory being used can be obtained by calling the respective get methods after parsing the file.
-     * @param inputFilePath path to the file to parse.
+     * @param inputFile file to parse.
      * @throws IOException
      * @throws ParseException
      * @throws NodeExistsException
      */
-    public void parse(String inputFilePath) throws IOException, ParseException, NodeExistsException,
+    public void parse(File inputFile) throws IOException, ParseException, NodeExistsException,
                                                            NodeNotFoundException, InvalidTagException {
-        try (FileReader in = new FileReader(inputFilePath)) {
+        try (FileReader in = new FileReader(inputFile)) {
             parser.parse(in);
         }
 
@@ -73,6 +74,19 @@ public class TopologyParser {
 
             parsedNetwork.link(sourceId, destId, label);
         }
+    }
+
+    /**
+     * Parses the given file and builds a parsedNetwork with it. The parsedNetwork, parsedProtocol, and attribute
+     * factory being used can be obtained by calling the respective get methods after parsing the file.
+     * @param inputFilePath path to the file to parse.
+     * @throws IOException
+     * @throws ParseException
+     * @throws NodeExistsException
+     */
+    public void parse(String inputFilePath) throws IOException, ParseException, NodeExistsException,
+            NodeNotFoundException, InvalidTagException {
+        parse(new File(inputFilePath));
     }
 
     /**
