@@ -7,15 +7,30 @@
 </head>
 <body>
 
+<script>
+
+    function avg(values) {
+        var sum = 0;
+        for (var i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+
+        return sum / values.length;
+    }
+
+</script>
+
 <canvas id="messageCountChart" width="300" height="100"></canvas>
-<canvas id="detectionCountChart" width="300" height="100"></canvas>
 <script>
     var labels = [];
     var messageCounts = [];
-    var detectionCounts = [];
 
+    document.write(
+            "<p>Minimum: " + Math.min.apply(null, messageCounts) + "</p>" +
+            "<p>Average: " + avg(messageCounts) + "</p>" +
+            "<p>Maximum: " + Math.max.apply(null, messageCounts) + "</p>"
+    );
     loadMessageCountChart();
-    loadDetectionCountChart();
 
     function loadMessageCountChart() {
         var ctx = document.getElementById("messageCountChart");
@@ -48,6 +63,20 @@
             }
         });
     }
+
+</script>
+
+<canvas id="detectionCountChart" width="300" height="100"></canvas>
+<script>
+    var labels = [];
+    var detectionCounts = [];
+
+    document.write(
+            "<p>Minimum: " + Math.min.apply(null, detectionCounts) + "</p>" +
+            "<p>Average: " + avg(detectionCounts) + "</p>" +
+            "<p>Maximum: " + Math.max.apply(null, detectionCounts) + "</p>"
+    );
+    loadDetectionCountChart();
 
     function loadDetectionCountChart() {
         var ctx = document.getElementById("detectionCountChart");
