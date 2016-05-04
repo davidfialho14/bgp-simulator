@@ -7,13 +7,20 @@
 </head>
 <body>
 
-<canvas id="messageCountChart" width="300" height="100"></canvas>
-<canvas id="detectionCountChart" width="300" height="100"></canvas>
 <script>
-    loadMessageCountChart();
-    loadDetectionCountChart();
 
-    function loadMessageCountChart() {
+    function avg(values) {
+        var sum = 0;
+        for (var i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+
+        return sum / values.length;
+    }
+
+    var messageCountChart = null;
+
+    function loadMessageCountChart(type) {
         var ctx = document.getElementById("messageCountChart");
         var data = {
             labels: labels,
@@ -30,8 +37,12 @@
             ]
         };
 
-        var messageCountChart = new Chart(ctx, {
-            type: 'bar',
+        if (messageCountChart != null) {
+            messageCountChart.destroy();
+        }
+
+        messageCountChart = new Chart(ctx, {
+            type: type,
             data: data,
             options: {
                 scales: {
@@ -76,6 +87,52 @@
             }
         });
     }
+
+    function handleRadioBarChanged() {
+        loadMessageCountChart("bar");
+        console.log("bar called");
+    }
+
+    function handleRadioLineChanged() {
+        loadMessageCountChart("line");
+        console.log("line called");
+    }
+
+</script>
+
+<form action="">
+    <input id="radioBar" type="radio" name="chart" value="bar" checked="checked" onchange="handleRadioBarChanged()">
+    <label for="radioBar">Bar Chart</label>
+    <input id="radioLine" type="radio" name="chart" value="line" onchange="handleRadioLineChanged()">
+    <label for="radioLine">Line Chart</label>
+</form>
+
+<canvas id="messageCountChart" width="300" height="100"></canvas>
+<script>
+    var labels = [];
+    var messageCounts = [];
+
+    document.write(
+            "<p>Minimum: " + Math.min.apply(null, messageCounts) + "</p>" +
+            "<p>Average: " + avg(messageCounts) + "</p>" +
+            "<p>Maximum: " + Math.max.apply(null, messageCounts) + "</p>"
+    );
+    loadMessageCountChart("bar");
+
+</script>
+
+<canvas id="detectionCountChart" width="300" height="100"></canvas>
+<script>
+    var labels = [];
+    var detectionCounts = [];
+
+    document.write(
+            "<p>Minimum: " + Math.min.apply(null, detectionCounts) + "</p>" +
+            "<p>Average: " + avg(detectionCounts) + "</p>" +
+            "<p>Maximum: " + Math.max.apply(null, detectionCounts) + "</p>"
+    );
+    loadDetectionCountChart();
+
 </script>
 
 </body>

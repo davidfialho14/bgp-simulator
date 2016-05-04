@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 /**
@@ -33,18 +35,51 @@ public class HTMLReportGenerator {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile)) ) {
 
             String line;
-            while ((line = reader.readLine()) != null) {
-                writer.write(line); writer.newLine();
+            Pattern dataFieldPattern = Pattern.compile("\\s+var (?<dataType>\\w+) = \\[\\];");
 
-                if (line.equals("<script>")) {  // insert the data variables at the beginning of the script
-                    IntStream range = IntStream.range(1, messageCounts.size() + 1);
-                    writer.write("\tvar labels = " + Arrays.toString(range.toArray()) + ";"); writer.newLine();
-                    writer.write("\tvar messageCounts = " + messageCounts + ";"); writer.newLine();
-                    writer.write("\tvar detectionCounts = " + detectionCounts + ";"); writer.newLine();
+            while ((line = reader.readLine()) != null) {
+                Matcher dataFieldMatcher = dataFieldPattern.matcher(line);
+
+                if (dataFieldMatcher.matches()) {
+                    writeData(writer, dataFieldMatcher.group("dataType"));
+                } else {
+                    writer.write(line);
                     writer.newLine();
                 }
             }
         }
+    }
+
+    /**
+     * Writes data to the report file according to the given data type. If the data type is invalid
+     *
+     * @param writer writer where to write data.
+     * @param dataType data type.
+     * @return true if data was written and false otherwise.
+     * @throws IOException
+     */
+    private boolean writeData(BufferedWriter writer, String dataType) throws IOException {
+        boolean wroteData = true;
+
+        switch (dataType) {
+            case "labels":
+                IntStream range = IntStream.range(1, messageCounts.size() + 1);
+                writer.write("\tvar labels = " + Arrays.toString(range.toArray()) + ";");
+                writer.newLine();
+                break;
+            case "messageCounts":
+                writer.write("\tvar messageCounts = " + messageCounts + ";");
+                writer.newLine();
+                break;
+            case "detectionCounts":
+                writer.write("\tvar detectionCounts = " + detectionCounts + ";");
+                writer.newLine();
+                break;
+            default:
+                wroteData = false;
+        }
+
+        return wroteData;
     }
 
 }
