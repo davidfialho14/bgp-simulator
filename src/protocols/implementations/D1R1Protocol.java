@@ -21,4 +21,9 @@ public class D1R1Protocol extends Reaction1 implements Protocol, Detection1 {
         setParameters(link, learnedRoute);
     }
 
+    @Override
+    public void reset() {
+        destinationCutLinks.clear();
+    }
+
 }
