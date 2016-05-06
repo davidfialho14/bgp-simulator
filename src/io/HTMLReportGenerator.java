@@ -16,7 +16,7 @@ public class HTMLReportGenerator {
     private static final String resourcesDirectory = "reports/html/";
     private static final String modelHtmlFile = resourcesDirectory + "index.html";
 
-    private static final Pattern dataFieldPattern = Pattern.compile("\\s+var (?<dataType>\\w+) = \\[\\];");
+    private static final Pattern dataFieldPattern = Pattern.compile("\\s*var\\s*(?<dataType>\\w+)\\s*=\\s*\\[\\s*\\];");
     private static final Pattern javaScriptLinkPattern = Pattern.compile(
             "<script\\s+type=\"text/javascript\"\\s+src=\"(?<scriptFile>[\\w/\\.]+)\"(\\s+|)>(\\s+|)</script>(\\s+|)");
 
