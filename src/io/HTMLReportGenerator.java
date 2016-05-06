@@ -13,6 +13,13 @@ import java.util.stream.IntStream;
  */
 public class HTMLReportGenerator {
 
+    private static final String resourcesDirectory = "reports/html/";
+    private static final String modelHtmlFile = resourcesDirectory + "index.html";
+
+    private static final Pattern dataFieldPattern = Pattern.compile("\\s+var (?<dataType>\\w+) = \\[\\];");
+    private static final Pattern javaScriptLinkPattern = Pattern.compile(
+            "<script\\s+type=\"text/javascript\"\\s+src=\"(?<scriptFile>[\\w/\\.]+)\"(\\s+|)>(\\s+|)</script>(\\s+|)");
+
     private List<Integer> messageCounts = new ArrayList<>();
     private List<Integer> detectionCounts = new ArrayList<>();
 
@@ -31,22 +38,54 @@ public class HTMLReportGenerator {
      * @throws IOException
      */
     public void generate(File outputFile) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader("data/index.html"));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile)) ) {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(modelHtmlFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile)) ) {
 
             String line;
-            Pattern dataFieldPattern = Pattern.compile("\\s+var (?<dataType>\\w+) = \\[\\];");
+            while ((line = reader.readLine()) != null) {
+                Matcher javaScriptLinkMatcher = javaScriptLinkPattern.matcher(line);
 
+                if(javaScriptLinkMatcher.matches()) {
+                    linkScript(new File(resourcesDirectory + javaScriptLinkMatcher.group("scriptFile")), writer);
+                } else {
+                    writer.write(line); writer.newLine();
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Includes the script included in the HTML report.
+     *
+     * @param scriptFile script file to include in the HTML report.
+     * @param writer used to write the script file.
+     * @throws IOException
+     */
+    private void linkScript(File scriptFile, BufferedWriter writer) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(scriptFile))) {
+
+            writer.write("<script>"); writer.newLine(); // begin script element
+
+            // copy the script inside the script element
+            String line;
             while ((line = reader.readLine()) != null) {
                 Matcher dataFieldMatcher = dataFieldPattern.matcher(line);
 
                 if (dataFieldMatcher.matches()) {
                     writeData(writer, dataFieldMatcher.group("dataType"));
                 } else {
-                    writer.write(line);
-                    writer.newLine();
+                    writer.write(line); writer.newLine();
                 }
             }
+
+            writer.write("</script>"); writer.newLine(); // and script element
+
+        } catch (FileNotFoundException e) {
+            // file does not exist
+            writer.write("<!-- script '" + scriptFile + "' does not exist -->");
+            writer.newLine();
         }
     }
 
