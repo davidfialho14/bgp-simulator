@@ -74,7 +74,9 @@ public class HTMLReportGenerator {
                 Matcher dataFieldMatcher = dataFieldPattern.matcher(line);
 
                 if (dataFieldMatcher.matches()) {
-                    writeData(writer, dataFieldMatcher.group("dataType"));
+                    if (!writeData(writer, dataFieldMatcher.group("dataType"))) {
+                        writer.write(line); writer.newLine();
+                    }
                 } else {
                     writer.write(line); writer.newLine();
                 }
