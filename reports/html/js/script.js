@@ -97,7 +97,9 @@ console.log(messageCountCumulativeLabels);
 
 var messageCountChart = null;
 
-$("#messageHistogramRadioButton").click(function () {
+var messageHistogramRadioButton = $("#messageHistogramRadioButton");
+
+messageHistogramRadioButton.click(function () {
     clearChart(messageCountChart);
     messageCountChart = loadChart($("#messageCountChart"), "Message Count Histogram",
         labels, messageCounts, 'bar', RED);
@@ -140,7 +142,7 @@ $("#messageProbabilityDensityRadioButton").click(function () {
     clearBasicStats();
 });
 
-$("#messageHistogramRadioButton").click();
+messageHistogramRadioButton.click();
 
 // detection count histogram
 
@@ -150,7 +152,9 @@ $("#detectionCountMinimum").text("Minimum: " + (Math.min.apply(null, detectionCo
 $("#detectionCountAverage").text("Average: " + avg(detectionCounts));
 $("#detectionCountMaximum").text("Maximum: " + Math.max.apply(null, detectionCounts));
 
-$("#barDetectionHistogramRadioButton").click(function () {
+var barDetectionHistogramRadioButton = $("#barDetectionHistogramRadioButton");
+
+barDetectionHistogramRadioButton.click(function () {
     clearChart(detectionCountChart);
     detectionCountChart = loadChart($("#detectionCountChart"), "Detection Count Histogram",
         labels, detectionCounts, 'bar', BLUE);
@@ -162,7 +166,7 @@ $("#lineDetectionHistogramRadioButton").click(function () {
         labels, detectionCounts, 'line', BLUE);
 });
 
-$("#barDetectionHistogramRadioButton").click();
+barDetectionHistogramRadioButton.click();
 
 // ----- END MAIN ---------------
 
