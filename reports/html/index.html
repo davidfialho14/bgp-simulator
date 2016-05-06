@@ -35,10 +35,14 @@
 </div>
 
 <form class="chartTypeSelector" action="">
-    <input id="barMessageHistogramRadioButton" type="radio" name="chart" value="bar" checked="checked">
-    <label for="barMessageHistogramRadioButton">Bar Chart</label>
-    <input id="lineMessageHistogramRadioButton" type="radio" name="chart" value="line">
-    <label for="lineMessageHistogramRadioButton">Line Chart</label>
+    <input id="messageHistogramRadioButton" type="radio" name="chart" value="bar" checked="checked">
+    <label for="messageHistogramRadioButton">Histogram</label>
+    <input id="messageCumulativeRadioButton" type="radio" name="chart" value="line">
+    <label for="messageCumulativeRadioButton">Cumulative Distribution</label>
+    <input id="messageComplementaryCumulativeRadioButton" type="radio" name="chart" value="line">
+    <label for="messageComplementaryCumulativeRadioButton">ComplementaryCumulative Distribution</label>
+    <input id="messageProbabilityDensityRadioButton" type="radio" name="chart" value="line">
+    <label for="messageProbabilityDensityRadioButton">Probability Density</label>
 </form>
 
 <canvas id="messageCountChart" width="300" height="100"></canvas>
@@ -50,7 +54,7 @@
 </div>
 
 <form class="chartTypeSelector" action="">
-    <input id="barDetectionHistogramRadioButton" type="radio" name="chart" value="bar" checked="checked">
+    <input id="barDetectionHistogramRadioButton" type="radio" name="chart" value="bar">
     <label for="barDetectionHistogramRadioButton">Bar Chart</label>
     <input id="lineDetectionHistogramRadioButton" type="radio" name="chart" value="line">
     <label for="lineDetectionHistogramRadioButton">Line Chart</label>
