@@ -52,7 +52,7 @@ public class NetworkTest {
     public void link_Node0ToNode1BothAlreadyAddedToTheNetwork_ContainsLinkBetweenNode0AndNode1() throws Exception {
         net.addNode(0); net.addNode(1);
 
-        net.link(0, 1, new StubLabel());
+        net.addLink(0, 1, new StubLabel());
 
         assertThat(net.getLinks(), containsInAnyOrder(stubLink(0, 1)));
     }
@@ -63,7 +63,7 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '0' does not exist");
-        net.link(0, 1, new StubLabel());
+        net.addLink(0, 1, new StubLabel());
     }
 
     @Test
@@ -72,15 +72,15 @@ public class NetworkTest {
 
         thrown.expect(NodeNotFoundException.class);
         thrown.expectMessage("node with id '1' does not exist");
-        net.link(0, 1, new StubLabel());
+        net.addLink(0, 1, new StubLabel());
     }
 
     @Test
     public void link_Node0ToNode1Twice_ContainsOnlyOneLink() throws Exception {
         net.addNode(0); net.addNode(1);
 
-        net.link(0, 1, new StubLabel());
-        net.link(0, 1, new StubLabel());
+        net.addLink(0, 1, new StubLabel());
+        net.addLink(0, 1, new StubLabel());
 
         assertThat(net.getLinks().size(), is(1));
     }
@@ -89,7 +89,7 @@ public class NetworkTest {
     public void link_Node0ToNode0_ContainsLinkFromNode0ToNode0() throws Exception {
         net.addNode(0);
 
-        net.link(0, 0, new StubLabel());
+        net.addLink(0, 0, new StubLabel());
 
         assertThat(net.getLinks(), containsInAnyOrder(stubLink(0, 0)));
     }

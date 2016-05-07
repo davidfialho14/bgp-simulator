@@ -72,7 +72,7 @@ public class TopologyParser {
             int destId = getId(edge.getTarget());
             Label label = parsedPolicy.createLabel(edge.getAttribute("label"));
 
-            parsedNetwork.link(sourceId, destId, label);
+            parsedNetwork.addLink(sourceId, destId, label);
         }
     }
 

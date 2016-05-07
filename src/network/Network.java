@@ -1,61 +1,67 @@
 package network;
 
-import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import policies.Label;
+import policies.Policy;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Network {
 
     private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
+    private Policy policy;                              // policy of the network
 
     /**
-	 * Creates a new empty network.
+	 * Creates a new empty network associated with the given policy.
 	 */
-	public Network() {
-	}
+	public Network(Policy policy) {
+        this.policy = policy;
+    }
 
 	/**
-     * Adds a new node to the network with the given id.
+     * Adds a node with the given ID to the network.
+     *
      * @param id id of the node to be added to the network.
-     * @throws NodeExistsException if a node with the given id already exists in the network.
+     * @return true if the node was added or false if there was already a node with the same ID.
      */
-	public void addNode(int id) throws NodeExistsException {
+	public boolean addNode(int id) {
         Node node = new Node(id);
-		if (nodes.putIfAbsent(id, node) != null) {
-            throw new NodeExistsException(String.format("node with id '%d' already exists", id));
+        if (nodes.putIfAbsent(id, node) != null) {
+            return false;   // indicate the node was not added
         }
 
         // node must store a self link to itself
         node.addOutLink(new SelfLink(node));
+
+        return true; // indicate the node was added
 	}
 
     /**
-     * Adds the node to the network.
+     * Adds a node to the network.
+     *
      * @param node node to be added to the network.
-     * @return true if node was added or false otherwise
+     * @return true if the node was added or false if the node already existed.
      */
     public boolean addNode(Node node) {
         if (nodes.putIfAbsent(node.getId(), node) != null) {
-            return false;
+            return false;   // indicate the node was not added
         }
 
         // node must store a self link to itself
         node.addOutLink(new SelfLink(node));
 
-        return true;
+        return true; // indicate the node was added
     }
 
     /**
      * Return a collection with the ids of all the nodes in the network.
+     *
      * @return collection with the ids of all the nodes in the network.
      */
-	public Set<Integer> getIds() {
+	public Collection<Integer> getIds() {
 		return nodes.keySet();
 	}
 
@@ -84,7 +90,7 @@ public class Network {
      * @param label label to be associated with the link.
      * @throws NodeNotFoundException if one of the ids does not correspond to an existing node.
      */
-    public void link(int srcId, int destId, Label label) throws NodeNotFoundException {
+    public void addLink(int srcId, int destId, Label label) throws NodeNotFoundException {
         Node sourceNode = nodes.get(srcId);
         Node destinationNode = nodes.get(destId);
 
@@ -103,7 +109,7 @@ public class Network {
      * @param link link to be added to the network
      */
     public void addLink(Link link) throws NodeNotFoundException {
-        this.link(link.getSource().getId(), link.getDestination().getId(), link.getLabel());
+        this.addLink(link.getSource().getId(), link.getDestination().getId(), link.getLabel());
     }
 
     /**
