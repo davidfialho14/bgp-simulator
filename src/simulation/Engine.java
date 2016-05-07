@@ -22,7 +22,7 @@ import static simulation.Route.invalidRoute;
  */
 public class Engine {
 
-    private final Protocol protocol;
+    private final Protocol protocol;    // FIXME remove this protocol
     private final Policy policy;
     private final Scheduler scheduler;
     private EventHandler eventHandler;
@@ -110,7 +110,7 @@ public class Engine {
      * @param network network to be simulated.
      */
     public void simulate(Network network) {
-        initNodesStates(network.getNodes());
+        initNodesStates(network.getNodes(), this.protocol);
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNodes());
@@ -125,7 +125,7 @@ public class Engine {
      * @param destinationId id of the destination node to simulate for.
      */
     public void simulate(Network network, int destinationId) {
-        initNodesStates(network.getNodes());
+        initNodesStates(network.getNodes(), this.protocol);
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNode(destinationId));
@@ -177,7 +177,7 @@ public class Engine {
     }
 
     public void reset() {
-        protocol.reset();
+        protocol.reset();   // FIXME reset each protocol for each node
         scheduler.reset();
         nodesStates.clear();
     }
@@ -417,9 +417,10 @@ public class Engine {
      * this method.
      *
      * @param nodes nodes to initialize the state for.
+     * @param protocol protocol to be used by all nodes.
      */
-    private void initNodesStates(Collection<Node> nodes) {
-        nodes.forEach(node -> nodesStates.put(node, new NodeState(node)));
+    private void initNodesStates(Collection<Node> nodes, Protocol protocol) {
+        nodes.forEach(node -> nodesStates.put(node, new NodeState(node, protocol)));
     }
 
     /**

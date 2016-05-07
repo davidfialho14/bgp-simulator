@@ -3,6 +3,7 @@ package simulation;
 import network.Link;
 import network.Node;
 import policies.Attribute;
+import protocols.Protocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,13 +15,44 @@ public class NodeState {
 
     private RouteTable table;
     private Map<Node, Route> selectedRoutes = new HashMap<>();
+    private Protocol protocol;
 
-    public NodeState(Node node) {
+    /**
+     * Initializes the state for the given node with an empty table and associates it with the given protocol.
+     *
+     * @param node node to create state for.
+     * @param protocol protocol to be used by the node.
+     */
+    public NodeState(Node node, Protocol protocol) {
         this.table = new RouteTable(node.getOutLinks());
+        this.protocol = protocol;
     }
 
+    /**
+     * Returns the current state of the route table.
+     *
+     * @return current state of the route table.
+     */
     public RouteTable getTable() {
         return table;
+    }
+
+    /**
+     * Returns the current protocol being used by the node.
+     *
+     * @return current protocol being used by the node.
+     */
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
+    /**
+     * Changes the protocol being used by the node to the given protocol.
+     *
+     * @param protocol protocol to be set.
+     */
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
     }
 
     /**
