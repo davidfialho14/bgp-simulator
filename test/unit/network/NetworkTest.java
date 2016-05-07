@@ -9,6 +9,7 @@ import stubs.StubLabel;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static wrappers.StubWrapper.stubLink;
 
@@ -89,6 +90,16 @@ public class NetworkTest {
         net.addLink(0, 0, new StubLabel());
 
         assertThat(net.getLinks(), containsInAnyOrder(stubLink(0, 0)));
+    }
+
+    @Test
+    public void removeLink_FromNode0ToNode0_DoesNotContainLinkFromNode0ToNode0() throws Exception {
+        net.addNode(0);
+        net.addLink(stubLink(0, 0));
+
+        net.removeLink(stubLink(0, 0));
+
+        assertThat(net.getLinks(), not(containsInAnyOrder(stubLink(0, 0))));
     }
 
 }

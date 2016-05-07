@@ -21,7 +21,16 @@ public class Network {
         this.policy = policy;
     }
 
-	/**
+    /**
+     * Returns the network policy.
+     *
+     * @return network policy.
+     */
+    public Policy getPolicy() {
+        return policy;
+    }
+
+    /**
      * Adds a node with the given ID to the network.
      *
      * @param id id of the node to be added to the network.
@@ -123,7 +132,7 @@ public class Network {
      * @param link link to be removed
      * @return true if link was removed and false otherwise.
      */
-    public boolean remove(Link link) {
+    public boolean removeLink(Link link) {
         Node source = getSource(link);
         Node destination = getDestination(link);
 
@@ -137,6 +146,7 @@ public class Network {
 
     /**
      * Returns a list with all the links in the network.
+     *
      * @return list with the links in the network.
      */
     public Collection<Link> getLinks() {
@@ -157,6 +167,8 @@ public class Network {
 
         return networkStr + "\n}";
     }
+
+    // ----- PRIVATE -----
 
     /**
      * Returns the node in the network corresponding to the source node of the given link.
