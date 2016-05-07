@@ -41,10 +41,9 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology0_Converges() throws Exception {
-        Network network0 = network(
+        Network network0 = network(new GaoRexfordPolicy(),
                 link(from(0), to(1), customerLabel()),
-                link(from(1), to(0), providerLabel())
-        );
+                link(from(1), to(0), providerLabel()));
 
         engine.simulate(network0, protocol);
 
@@ -63,12 +62,11 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology1_Converges() throws Exception {
-        Network network1 = network(
+        Network network1 = network(new GaoRexfordPolicy(),
                 link(from(0), to(1), customerLabel()),
                 link(from(1), to(0), providerLabel()),
                 link(from(2), to(1), customerLabel()),
-                link(from(1), to(2), providerLabel())
-        );
+                link(from(1), to(2), providerLabel()));
 
         engine.simulate(network1, protocol);
 
@@ -96,11 +94,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology2_Converges() throws Exception {
-        Network network2 = network(
+        Network network2 = network(new GaoRexfordPolicy(),
                 link(from(0), to(1), customerLabel()),
                 link(from(1), to(2), customerLabel()),
-                link(from(2), to(0), customerLabel())
-        );
+                link(from(2), to(0), customerLabel()));
 
         engine.simulate(network2, protocol);
 

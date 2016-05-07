@@ -45,9 +45,8 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology0_Converges() throws Exception {
-        Network network0 = network(
-                link(from(0), to(1), label(1))
-        );
+        Network network0 = network(new ShortestPathPolicy(),
+                link(from(0), to(1), label(1)));
 
         engine.simulate(network0, protocol, 1);
 
@@ -64,11 +63,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology1_Converges() throws Exception {
-        Network network1 = network(
+        Network network1 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)),
                 link(from(1), to(2), label(1)),
-                link(from(0), to(2), label(0))
-        );
+                link(from(0), to(2), label(0)));
 
         engine.simulate(network1, protocol);
 
@@ -93,11 +91,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology2_Converges() throws Exception {
-        Network network2 = network(
+        Network network2 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)),
                 link(from(1), to(2), label(1)),
-                link(from(2), to(0), label(1))
-        );
+                link(from(2), to(0), label(1)));
 
         engine.simulate(network2, protocol, 0);
 
@@ -120,26 +117,24 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     @Ignore
     public void simulate_Topology3_DoesNotConverge() throws Exception {
-        Network network3 = network(
+        Network network3 = network(new ShortestPathPolicy(),
                 link(from(1), to(0), label(0)),
                 link(from(2), to(0), label(0)),
                 link(from(3), to(0), label(0)),
                 link(from(1), to(2), label(-1)),
                 link(from(2), to(3), label(1)),
-                link(from(3), to(1), label(-2))
-        );
+                link(from(3), to(1), label(-2)));
 
         engine.simulate(network3, protocol, 0);
     }
 
     @Test(timeout = 2000)
     public void simulate_Topology4_Converges() throws Exception {
-        Network network4 = network(
+        Network network4 = network(new ShortestPathPolicy(),
                 link(from(1), to(0), label(0)),
                 link(from(1), to(2), label(1)),
                 link(from(2), to(3), label(1)),
-                link(from(3), to(1), label(1))
-        );
+                link(from(3), to(1), label(1)));
 
         engine.simulate(network4, protocol, 0);
 
@@ -166,10 +161,9 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology5_Converges() throws Exception {
-        Network network0 = network(
+        Network network0 = network(new ShortestPathPolicy(),
                 link(from(2), to(1), label(1)),
-                link(from(1), to(0), label(1))
-        );
+                link(from(1), to(0), label(1)));
 
         engine.simulate(network0, protocol, 0);
 
@@ -193,10 +187,9 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
     public void simulate_Topology5BreakingLink2To1OnInstant1_Converges() throws Exception {
         engine.setLinkBreaker(new FixedLinkBreaker(new Link(2, 1, new ShortestPathLabel(1)), 1L));
 
-        Network network0 = network(
+        Network network0 = network(new ShortestPathPolicy(),
                 link(from(2), to(1), label(1)),
-                link(from(1), to(0), label(1))
-        );
+                link(from(1), to(0), label(1)));
 
         engine.simulate(network0, protocol, 0);
 

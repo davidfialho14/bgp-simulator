@@ -1,12 +1,11 @@
 package network;
 
-import stubs.StubLabel;
-import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import stubs.StubLabel;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -22,7 +21,7 @@ public class NetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        net = new Network();
+        net = new Network(null);
     }
 
     @Test
@@ -40,12 +39,10 @@ public class NetworkTest {
     }
 
     @Test
-    public void add_NodeWithId0Twice_ThrowsNodeExistsException() throws Exception {
+    public void add_NodeWithId0Twice_SecondAddNodeReturnsFalse() throws Exception {
         net.addNode(0);
 
-        thrown.expect(NodeExistsException.class);
-        thrown.expectMessage("node with id '0' already exists");
-        net.addNode(0);
+        assertThat(net.addNode(0), is(false));
     }
 
     @Test

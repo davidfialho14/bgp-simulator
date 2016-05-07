@@ -59,7 +59,7 @@ public class TopologyParser {
 
         parsedProtocol = Protocols.getProtocol(graph.getAttribute("protocol"));
         parsedPolicy = Policies.getPolicy(graph.getAttribute("policy"));
-        parsedNetwork = new Network();
+        parsedNetwork = new Network(parsedPolicy);
 
         // add all nodes to the parsedNetwork
         for (Node node : graph.getNodes(true)) {
