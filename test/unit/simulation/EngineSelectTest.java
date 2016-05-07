@@ -25,7 +25,7 @@ public class EngineSelectTest {
     private Engine engine;  // class under test
 
     @Mock
-    private NodeState stubNodeStateInfo;
+    private NodeState stubNodeState;
 
     @Mock
     Protocol stubProtocol;
@@ -40,9 +40,9 @@ public class EngineSelectTest {
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteInvalid_InvalidRoute() throws Exception {
         Route invalidRoute = Route.invalidRoute(new Node(0));
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, invalidRoute), is(invalidRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, invalidRoute), is(invalidRoute));
     }
 
     @Test
@@ -50,9 +50,9 @@ public class EngineSelectTest {
     select_BetweenLearnedInvalidRouteAndExclRouteWithAttr0AndEmptyPath_RouteWithAttr0AndEmptyPath() throws Exception {
         Route learnedRoute = Route.invalidRoute(new Node(0));
         Route exlcRoute = route(0, stubAttr(0), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
@@ -60,9 +60,9 @@ public class EngineSelectTest {
     select_BetweenLearnedWithAttr0AndEmptyPathAndExclRouteInvalid_RouteWithAttr0AndEmptyPath() throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path());
         Route exlcRoute = Route.invalidRoute(new Node(0));
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(learnedRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(learnedRoute));
     }
 
     @Test
@@ -71,9 +71,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path());
         Route exlcRoute = route(0, stubAttr(1), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
@@ -82,9 +82,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(1), path());
         Route exlcRoute = route(0, stubAttr(0), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(learnedRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(learnedRoute));
     }
 
     @Test
@@ -93,9 +93,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path(0));
         Route exlcRoute = route(0, stubAttr(0), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
@@ -104,9 +104,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path());
         Route exlcRoute = route(0, stubAttr(0), path(0));
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(learnedRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(learnedRoute));
     }
 
     @Test
@@ -115,9 +115,9 @@ public class EngineSelectTest {
             throws Exception {
         Route invalidRoute = Route.invalidRoute(new Node(0));
         Route learnedRoute = route(0, stubAttr(0), path(1));
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(invalidRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(invalidRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(invalidRoute));
     }
 
     @Test
@@ -126,9 +126,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path(1));
         Route exlcRoute = route(0, stubAttr(0), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
@@ -137,9 +137,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path(1));
         Route exlcRoute = route(0, stubAttr(0), path(0, 3));
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
@@ -148,9 +148,9 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(1), path(1));
         Route exlcRoute = route(0, stubAttr(0), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
@@ -159,30 +159,30 @@ public class EngineSelectTest {
             throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path(1));
         Route exlcRoute = route(0, stubAttr(1), path());
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(exlcRoute);
 
-        assertThat(engine.select(stubNodeStateInfo, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
+        assertThat(engine.select(stubNodeState, stubLink(1, 2), null, learnedRoute), is(exlcRoute));
     }
 
     @Test
     public void
     select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteIsValid_TableUpdatedWithInvalidRoute()
             throws Exception {
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(route(0, stubAttr(1), path()));
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(route(0, stubAttr(1), path()));
 
-        engine.select(stubNodeStateInfo, stubLink(1, 2), null, route(0, stubAttr(0), path(1)));
+        engine.select(stubNodeState, stubLink(1, 2), null, route(0, stubAttr(0), path(1)));
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(new Node(0), stubLink(1, 2), invalid(), invalidPath());
+        verify(stubNodeState, times(1)).updateRoute(new Node(0), stubLink(1, 2), invalid(), invalidPath());
     }
 
     @Test
     public void
     select_BetweenLearnedWithAttr0AndExclRouteWithAttr1BothWithEmptyPaths_TableUpdatedWithRouteWithAttr0AndEmptyPath()
             throws Exception {
-        when(stubNodeStateInfo.getSelectedRoute(any(), any())).thenReturn(route(0, stubAttr(1), path()));
+        when(stubNodeState.getSelectedRoute(any(), any())).thenReturn(route(0, stubAttr(1), path()));
 
-        engine.select(stubNodeStateInfo, stubLink(1, 2), null, route(0, stubAttr(0), path()));
+        engine.select(stubNodeState, stubLink(1, 2), null, route(0, stubAttr(0), path()));
 
-        verify(stubNodeStateInfo, times(1)).updateRoute(new Node(0), stubLink(1, 2), stubAttr(0), path());
+        verify(stubNodeState, times(1)).updateRoute(new Node(0), stubLink(1, 2), stubAttr(0), path());
     }
 }

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Aggregates all the state information of one node in one unique class
+ * Aggregates all the state of one node in one unique class
  */
 public class NodeState {
 

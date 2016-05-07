@@ -29,8 +29,8 @@ public class Engine {
     private LinkBreaker linkBreaker;
     private LinkInserter linkInserter;
 
-    // state information of the nodes during and after simulation
-    private Map<Node, NodeState> nodesStateInfo = new HashMap<>();
+    // state of the nodes during and after simulation
+    private Map<Node, NodeState> nodesStates = new HashMap<>();
 
     /**
      * Class responsible for building engine instances. (Builder pattern)
@@ -110,7 +110,7 @@ public class Engine {
      * @param network network to be simulated.
      */
     public void simulate(Network network) {
-        initNodesStateInfo(network.getNodes());
+        initNodesStates(network.getNodes());
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNodes());
@@ -125,7 +125,7 @@ public class Engine {
      * @param destinationId id of the destination node to simulate for.
      */
     public void simulate(Network network, int destinationId) {
-        initNodesStateInfo(network.getNodes());
+        initNodesStates(network.getNodes());
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNode(destinationId));
@@ -140,7 +140,7 @@ public class Engine {
      * @return map containing the nodes associated with their respective route tables.
      */
     public Map<Node, RouteTable> getRouteTables() {
-        return nodesStateInfo.entrySet().stream()
+        return nodesStates.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().getTable()
@@ -153,7 +153,7 @@ public class Engine {
      * @return map containing the nodes associated with their respective route tables.
      */
     public RouteTable getRouteTable(Node node) {
-        return nodesStateInfo.get(node).getTable();
+        return nodesStates.get(node).getTable();
     }
 
     /**
@@ -164,7 +164,7 @@ public class Engine {
      * @return the route selected by the node to reach the destination.
      */
     public Route getSelectedRoute(Node node, Node destination) {
-        return nodesStateInfo.get(node).getSelectedRoute(destination, null);
+        return nodesStates.get(node).getSelectedRoute(destination, null);
     }
 
     /**
@@ -179,18 +179,17 @@ public class Engine {
     public void reset() {
         protocol.reset();
         scheduler.reset();
-        nodesStateInfo.clear();
+        nodesStates.clear();
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
-     * Processes a scheduled route by updating the state info of the learning node.
-     *
-     * @param nodeStateInfo state info of the learning node.
+     * Processes a scheduled route by updating the state of the learning node.
+     *  @param nodeState state of the learning node.
      * @param scheduledRoute scheduled route to process.
      */
-    void process(NodeState nodeStateInfo, ScheduledRoute scheduledRoute) {
+    void process(NodeState nodeState, ScheduledRoute scheduledRoute) {
         // unpack the link, exported route, and destination node
         Link link = scheduledRoute.getLink();
         Route exportedRoute = scheduledRoute.getRoute();
@@ -199,7 +198,7 @@ public class Engine {
         Route learnedRoute = learn(link, exportedRoute);
         eventHandler.onAfterLearn(link, exportedRoute, learnedRoute);
 
-        processSelection(nodeStateInfo, link, exportedRoute, learnedRoute, scheduledRoute);
+        processSelection(nodeState, link, exportedRoute, learnedRoute, scheduledRoute);
     }
 
     /**
@@ -228,19 +227,19 @@ public class Engine {
      * Selects the best route taking into account the new learned route. It also updates the route table while
      * selecting the best route with the new learned route.
      *
-     * @param nodeStateInfo state information of the node who learned the route.
+     * @param nodeState state of the node who learned the route.
      * @param link link from which the route was learned.
      * @param exportedRoute route when it was exported.
      * @param learnedRoute route after being learned.
      * @return route currently being selected by the learning node to reach the route's destination.
      */
-    Route select(NodeState nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute) {
+    Route select(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
         Node learningNode = link.getSource();
 
         // select the best route learned from all out-neighbours except the exporting out-link
-        Route exclRoute = nodeStateInfo.getSelectedRoute(destination, link);
+        Route exclRoute = nodeState.getSelectedRoute(destination, link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
@@ -264,9 +263,9 @@ public class Engine {
             selectedRoute = new Route(exclRoute);
         }
 
-        // update the node state information
-        nodeStateInfo.setSelected(destination, selectedRoute);
-        nodeStateInfo.updateRoute(destination, link, learnedRoute.getAttribute(), learnedRoute.getPath());
+        // update the node state
+        nodeState.setSelected(destination, selectedRoute);
+        nodeState.updateRoute(destination, link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
         return selectedRoute;
     }
@@ -314,26 +313,25 @@ public class Engine {
     /**
      * Selects the preferred route for the destination and if the selected route is different from the previously
      * selected route it exports all the new selected route to all of the in-neighbours.
-     *
-     * @param nodeStateInfo state information of the learning node.
+     *  @param nodeState state of the learning node.
      * @param link link from which the route was learned.
      * @param exportedRoute route that was exported through the link.
      * @param learnedRoute route that was learned by the node.
      * @param prevScheduledRoute previously scheduled route.
      */
-    void processSelection(NodeState nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+    void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute,
                           ScheduledRoute prevScheduledRoute) {
 
         Node destination = learnedRoute.getDestination();
 
         // store the currently selected attribute and path
-        Attribute prevSelectedAttribute = nodeStateInfo.getSelectedAttribute(destination);
-        PathAttribute prevSelectedPath = nodeStateInfo.getSelectedPath(destination);
+        Attribute prevSelectedAttribute = nodeState.getSelectedAttribute(destination);
+        PathAttribute prevSelectedPath = nodeState.getSelectedPath(destination);
 
-        eventHandler.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+        eventHandler.onBeforeSelect(nodeState, link, exportedRoute, learnedRoute,
                 prevSelectedAttribute, prevSelectedPath);
-        Route selectedRoute = select(nodeStateInfo, link, exportedRoute, learnedRoute);
-        eventHandler.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
+        Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
+        eventHandler.onAfterSelect(nodeState, link, exportedRoute, learnedRoute,
                 prevSelectedAttribute, prevSelectedPath, selectedRoute);
 
         if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
@@ -350,21 +348,20 @@ public class Engine {
      * Processes a broken link. It re-selects the preferred route and exports it if it is a different route than the
      * previously preferred. It also removes the link from the route table and it remvoes all routes being exported
      * through that link from the scheduler.
-     *
-     * @param nodeStateInfo state information of the source node of the broken link.
+     *  @param nodeState state of the source node of the broken link.
      * @param brokenLink link that was broken.
      * @param prevScheduledRoute previously scheduled route.
      */
-    void processBrokenLink(NodeState nodeStateInfo, Link brokenLink, ScheduledRoute prevScheduledRoute) {
+    void processBrokenLink(NodeState nodeState, Link brokenLink, ScheduledRoute prevScheduledRoute) {
         // breaking a link is the same thing that learning invalid routes for all destinations known through that link
 
-        for (Node destination : nodeStateInfo.getTable().getDestinationsLearnFrom(brokenLink)) {
-            processSelection(nodeStateInfo, brokenLink,
+        for (Node destination : nodeState.getTable().getDestinationsLearnFrom(brokenLink)) {
+            processSelection(nodeState, brokenLink,
                     invalidRoute(destination), invalidRoute(destination), prevScheduledRoute);
         }
 
         // remove the link from the sour node route table and remove all routes being exported through this link
-        nodeStateInfo.getTable().removeOutLink(brokenLink);
+        nodeState.getTable().removeOutLink(brokenLink);
         scheduler.removeRoutes(brokenLink);
     }
 
@@ -376,14 +373,14 @@ public class Engine {
      * @param prevScheduledRoute previously scheduled route.
      */
     void processInsertedLink(Link insertedLink, ScheduledRoute prevScheduledRoute) {
-        NodeState sourceStateInfo = nodesStateInfo.get(insertedLink.getSource());
-        NodeState destinationStateInfo = nodesStateInfo.get(insertedLink.getDestination());
+        NodeState sourceState = nodesStates.get(insertedLink.getSource());
+        NodeState destinationState = nodesStates.get(insertedLink.getDestination());
 
         // when inserting a new link the destination must export all of its selected routes through the new link
-        destinationStateInfo.getSelectedRoutes().values()
+        destinationState.getSelectedRoutes().values()
                 .forEach(route -> export(insertedLink, route, prevScheduledRoute));
 
-        sourceStateInfo.getTable().addOutLink(insertedLink);
+        sourceState.getTable().addOutLink(insertedLink);
     }
 
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
@@ -397,13 +394,13 @@ public class Engine {
         ScheduledRoute scheduledRoute;
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
-            process(nodesStateInfo.get(learningNode), scheduledRoute);
+            process(nodesStates.get(learningNode), scheduledRoute);
 
             Link brokenLink = linkBreaker.breakAnyLink(network, scheduledRoute.getTimestamp());
 
             if (brokenLink != null) {
                 eventHandler.onBrokenLink(brokenLink);
-                processBrokenLink(nodesStateInfo.get(brokenLink.getSource()), brokenLink, scheduledRoute);
+                processBrokenLink(nodesStates.get(brokenLink.getSource()), brokenLink, scheduledRoute);
             }
 
             Link insertedLink = linkInserter.insertAnyLink(network, scheduledRoute.getTimestamp());
@@ -416,13 +413,13 @@ public class Engine {
     }
 
     /**
-     * Initializes state info of for the given collection of nodes. All current node state information is cleared
-     * after calling this method.
+     * Initializes state of for the given collection of nodes. All current node state is cleared after calling
+     * this method.
      *
-     * @param nodes nodes to initialize the state info for.
+     * @param nodes nodes to initialize the state for.
      */
-    private void initNodesStateInfo(Collection<Node> nodes) {
-        nodes.forEach(node -> nodesStateInfo.put(node, new NodeState(node)));
+    private void initNodesStates(Collection<Node> nodes) {
+        nodes.forEach(node -> nodesStates.put(node, new NodeState(node)));
     }
 
     /**
@@ -440,12 +437,12 @@ public class Engine {
      * @param node node which the self route is to be exported.
      */
     private void exportSelfRoute(Node node) {
-        NodeState stateInfo = nodesStateInfo.get(node);
+        NodeState nodeState = nodesStates.get(node);
         Route selfRoute = Route.createSelf(node, policy);
 
         // add the self route to the node's route table
-        stateInfo.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
-        stateInfo.setSelected(node, selfRoute);
+        nodeState.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
+        nodeState.setSelected(node, selfRoute);
 
         node.getInLinks().forEach(link -> export(link, selfRoute, null));
     }
