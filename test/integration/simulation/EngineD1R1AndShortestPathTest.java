@@ -30,12 +30,7 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new Engine.Builder(
-                new ShortestPathPolicy(),
-                new FIFOScheduler())
-                .eventHandler(eventHandler)
-                .build();
-
+        engine = new Engine(new FIFOScheduler());
         protocol = new D1R1Protocol();
     }
 

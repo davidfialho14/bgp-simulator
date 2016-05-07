@@ -33,7 +33,7 @@ public class EngineProcessTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = spy(new Engine.Builder(null, null).build());
+        engine = spy(new Engine(null));
         // stub out the learn method
         doReturn(anyRoute(destination)).when(engine).learn(any(), any(), any());
     }

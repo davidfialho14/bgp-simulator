@@ -33,7 +33,7 @@ public class EngineLearnTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new Engine.Builder(null, null).build();
+        engine = new Engine(null);
         when(stubNodeState.getProtocol()).thenReturn(stubProtocol);
     }
 

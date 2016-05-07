@@ -7,8 +7,6 @@ import network.SelfLink;
 import policies.Attribute;
 import policies.Policy;
 import protocols.Protocol;
-import simulation.implementations.handlers.NullEventHandler;
-import simulation.implementations.linkbreakers.DummyLinkBreaker;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,81 +20,16 @@ import static simulation.Route.invalidRoute;
  */
 public class Engine {
 
-    private final Policy policy;
     private final Scheduler scheduler;
-    private EventHandler eventHandler;
-    private LinkBreaker linkBreaker;
-    private LinkInserter linkInserter;
 
     // state of the nodes during and after simulation
     private Map<Node, NodeState> nodesStates = new HashMap<>();
 
     /**
-     * Class responsible for building engine instances. (Builder pattern)
-     */
-    public static class Builder {
-
-        // Required dependencies
-        private final Policy policy;
-        private final Scheduler scheduler;
-
-        // Optional dependencies (initialized to the defaults)
-        private EventHandler eventHandler = new NullEventHandler();
-        private LinkBreaker linkBreaker = new DummyLinkBreaker();
-        private LinkInserter linkInserter= new DummyLinkInserter();
-
-        // Constructor with the required dependencies only
-
-        public Builder(Policy policy, Scheduler scheduler) {
-            this.policy = policy;
-            this.scheduler = scheduler;
-        }
-
-        // Set methods for optional dependencies
-
-        public Builder eventHandler(EventHandler eventHandler) {
-            this.eventHandler = eventHandler;
-            return this;
-        }
-
-        public Builder linkBreaker(LinkBreaker linkBreaker) {
-            this.linkBreaker = linkBreaker;
-            return this;
-        }
-
-        public Builder linkInserter(LinkInserter linkInserter) {
-            this.linkInserter = linkInserter;
-            return this;
-        }
-
-        // method to build the engine
-
-        public Engine build() {
-            return new Engine(this);
-        }
-
-    }
-
-    /**
      * Constructs an engine form a pre-configured builder.
      */
-    private Engine(Builder builder) {
-        this.policy = builder.policy;
-        this.scheduler = builder.scheduler;
-        this.eventHandler = builder.eventHandler;
-        this.linkBreaker = builder.linkBreaker;
-        this.linkInserter = builder.linkInserter;
-    }
-
-    // Setters to change optional dependencies only
-    // TODO after refactoring the integration tests, remove this setters
-
-    public void setEventHandler(EventHandler eventHandler) {
-        this.eventHandler = eventHandler;
-    }
-
-    public void setLinkBreaker(LinkBreaker linkBreaker) {
-        this.linkBreaker = linkBreaker;
+    public Engine(Scheduler scheduler) {
+        this.scheduler = scheduler;
     }
 
     /**
@@ -109,10 +42,8 @@ public class Engine {
     public void simulate(Network network, Protocol initialProtocol) {
         initNodesStates(network.getNodes(), initialProtocol);
 
-        eventHandler.onBeforeSimulate();
-        exportSelfRoute(network.getNodes());
+        exportSelfRoute(network.getNodes(), network.getPolicy());
         simulationLoop(network);
-        eventHandler.onAfterSimulate();
     }
 
     /**
@@ -124,10 +55,8 @@ public class Engine {
     public void simulate(Network network, Protocol initialProtocol, int destinationId) {
         initNodesStates(network.getNodes(), initialProtocol);
 
-        eventHandler.onBeforeSimulate();
-        exportSelfRoute(network.getNode(destinationId));
+        exportSelfRoute(network.getNode(destinationId), network.getPolicy());
         simulationLoop(network);
-        eventHandler.onAfterSimulate();
     }
 
     /**
@@ -164,15 +93,6 @@ public class Engine {
         return nodesStates.get(node).getSelectedRoute(destination, null);
     }
 
-    /**
-     * Returns the event handler associated with the engine.
-     *
-     * @return event handler associated with the engine.
-     */
-    public EventHandler getEventHandler() {
-        return eventHandler;
-    }
-
     public void reset() {
         nodesStates.values().forEach(nodeState -> nodeState.getProtocol().reset());
         scheduler.reset();
@@ -192,9 +112,7 @@ public class Engine {
         Link link = scheduledRoute.getLink();
         Route exportedRoute = scheduledRoute.getRoute();
 
-        eventHandler.onBeforeLearn(link, exportedRoute);
         Route learnedRoute = learn(nodeState, link, exportedRoute);
-        eventHandler.onAfterLearn(link, exportedRoute, learnedRoute);
 
         processSelection(nodeState, link, exportedRoute, learnedRoute, scheduledRoute);
     }
@@ -246,7 +164,6 @@ public class Engine {
             if (nodeState.getProtocol().isOscillation(link, exportedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
-                eventHandler.onOscillationDetection(link, exportedRoute, learnedRoute, exclRoute);
 
                 nodeState.getProtocol().setParameters(link, exportedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
@@ -293,8 +210,6 @@ public class Engine {
      * @param prevScheduledRoute scheduled route previously got from the scheduler.
      */
     void export(Link link, Route route, ScheduledRoute prevScheduledRoute) {
-        eventHandler.onBeforeExport(link, route, prevScheduledRoute);
-
         long timestamp;
         if (prevScheduledRoute == null) {
             // exporting self route
@@ -305,8 +220,6 @@ public class Engine {
 
         ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timestamp);
         scheduler.put(scheduledRoute);
-
-        eventHandler.onAfterExport(link, route, prevScheduledRoute, scheduledRoute);
     }
 
     /**
@@ -327,11 +240,7 @@ public class Engine {
         Attribute prevSelectedAttribute = nodeState.getSelectedAttribute(destination);
         PathAttribute prevSelectedPath = nodeState.getSelectedPath(destination);
 
-        eventHandler.onBeforeSelect(nodeState, link, exportedRoute, learnedRoute,
-                prevSelectedAttribute, prevSelectedPath);
         Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
-        eventHandler.onAfterSelect(nodeState, link, exportedRoute, learnedRoute,
-                prevSelectedAttribute, prevSelectedPath, selectedRoute);
 
         if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
                 !prevSelectedPath.equals(selectedRoute.getPath())) {
@@ -394,20 +303,6 @@ public class Engine {
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
             process(nodesStates.get(learningNode), scheduledRoute);
-
-            Link brokenLink = linkBreaker.breakAnyLink(network, scheduledRoute.getTimestamp());
-
-            if (brokenLink != null) {
-                eventHandler.onBrokenLink(brokenLink);
-                processBrokenLink(nodesStates.get(brokenLink.getSource()), brokenLink, scheduledRoute);
-            }
-
-            Link insertedLink = linkInserter.insertAnyLink(network, scheduledRoute.getTimestamp());
-
-            if (insertedLink != null) {
-                // TODO eventHandler.onInsertedLink(insertedLink);
-                processInsertedLink(insertedLink, scheduledRoute);
-            }
         }
     }
 
@@ -424,19 +319,20 @@ public class Engine {
 
     /**
      * Exports the self routes of each one of the given nodes.
-     *
-     * @param nodes nodes which the self routes are to be exported.
+     *  @param nodes nodes which the self routes are to be exported.
+     * @param policy
      */
-    private void exportSelfRoute(Collection<Node> nodes) {
-        nodes.forEach(this::exportSelfRoute);
+    private void exportSelfRoute(Collection<Node> nodes, Policy policy) {
+        nodes.forEach((node) -> exportSelfRoute(node, policy));
     }
 
     /**
      * Exports the self route of the given node.
      *
      * @param node node which the self route is to be exported.
+     * @param policy
      */
-    private void exportSelfRoute(Node node) {
+    private void exportSelfRoute(Node node, Policy policy) {
         NodeState nodeState = nodesStates.get(node);
         Route selfRoute = Route.createSelf(node, policy);
 

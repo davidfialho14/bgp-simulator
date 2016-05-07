@@ -30,12 +30,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new Engine.Builder(
-                new GaoRexfordPolicy(),
-                new FIFOScheduler())
-                .eventHandler(eventHandler)
-                .build();
-
+        engine = new Engine(new FIFOScheduler());
         protocol = new BGPProtocol();
     }
 
