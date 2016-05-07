@@ -31,11 +31,12 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
     @Before
     public void setUp() throws Exception {
         engine = new Engine.Builder(
-                new D1R1Protocol(),
                 new ShortestPathPolicy(),
                 new FIFOScheduler())
                 .eventHandler(eventHandler)
                 .build();
+
+        protocol = new D1R1Protocol();
     }
 
     @Test(timeout = 2000)
@@ -49,7 +50,7 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
                 link(from(3), to(1), label(-2))
         );
 
-        engine.simulate(network3, 0);
+        engine.simulate(network3, protocol, 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),

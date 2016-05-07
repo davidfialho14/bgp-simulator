@@ -80,7 +80,7 @@ public class Controller implements Initializable {
         TopologyParser parser = parse(new File(networkTextField.getText()));
 
         if (parser != null) {
-            Engine engine = new Engine.Builder(parser.getProtocol(), parser.getPolicy(), new RandomScheduler()).build();
+            Engine engine = new Engine.Builder(parser.getPolicy(), new RandomScheduler()).build();
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
@@ -88,9 +88,9 @@ public class Controller implements Initializable {
                 engine.setEventHandler(handler);
 
                 if (oneNodeRadioButton.isSelected()) {
-                    engine.simulate(parser.getParsedNetwork(), destinationIdSpinner.getValue());
+                    engine.simulate(parser.getParsedNetwork(), parser.getProtocol(), destinationIdSpinner.getValue());
                 } else {
-                    engine.simulate(parser.getParsedNetwork());
+                    engine.simulate(parser.getParsedNetwork(), parser.getProtocol());
                 }
 
                 reportGenerator.addMessageCount(handler.getMessageCount());

@@ -35,11 +35,12 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
     @Before
     public void setUp() throws Exception {
         engine = new Engine.Builder(
-                new BGPProtocol(),
                 new ShortestPathPolicy(),
                 new FIFOScheduler())
                 .eventHandler(eventHandler)
                 .build();
+
+        protocol = new BGPProtocol();
     }
 
     @Test(timeout = 2000)
@@ -48,7 +49,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(0), to(1), label(1))
         );
 
-        engine.simulate(network0, 1);
+        engine.simulate(network0, protocol, 1);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),    splink(0, 1, 1),
@@ -69,7 +70,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(0), to(2), label(0))
         );
 
-        engine.simulate(network1);
+        engine.simulate(network1, protocol);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
@@ -98,7 +99,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(2), to(0), label(1))
         );
 
-        engine.simulate(network2, 0);
+        engine.simulate(network2, protocol, 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is(table(
                                 selfLink(0),        splink(0, 1, 1),
@@ -128,7 +129,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(3), to(1), label(-2))
         );
 
-        engine.simulate(network3, 0);
+        engine.simulate(network3, protocol, 0);
     }
 
     @Test(timeout = 2000)
@@ -140,7 +141,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(3), to(1), label(1))
         );
 
-        engine.simulate(network4, 0);
+        engine.simulate(network4, protocol, 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is(table(
                                 selfLink(0),
@@ -170,7 +171,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(1), to(0), label(1))
         );
 
-        engine.simulate(network0, 0);
+        engine.simulate(network0, protocol, 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),
@@ -197,7 +198,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(1), to(0), label(1))
         );
 
-        engine.simulate(network0, 0);
+        engine.simulate(network0, protocol, 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),

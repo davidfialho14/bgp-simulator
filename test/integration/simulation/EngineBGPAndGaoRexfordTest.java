@@ -31,11 +31,12 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Before
     public void setUp() throws Exception {
         engine = new Engine.Builder(
-                new BGPProtocol(),
                 new GaoRexfordPolicy(),
                 new FIFOScheduler())
                 .eventHandler(eventHandler)
                 .build();
+
+        protocol = new BGPProtocol();
     }
 
     @Test(timeout = 2000)
@@ -45,7 +46,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
                 link(from(1), to(0), providerLabel())
         );
 
-        engine.simulate(network0);
+        engine.simulate(network0, protocol);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -69,7 +70,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
                 link(from(1), to(2), providerLabel())
         );
 
-        engine.simulate(network1);
+        engine.simulate(network1, protocol);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -101,7 +102,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
                 link(from(2), to(0), customerLabel())
         );
 
-        engine.simulate(network2);
+        engine.simulate(network2, protocol);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),    customerLink(0, 1),

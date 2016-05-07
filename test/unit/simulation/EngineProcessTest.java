@@ -33,9 +33,9 @@ public class EngineProcessTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = spy(new Engine.Builder(null, null, null).build());
+        engine = spy(new Engine.Builder(null, null).build());
         // stub out the learn method
-        doReturn(anyRoute(destination)).when(engine).learn(any(), any());
+        doReturn(anyRoute(destination)).when(engine).learn(any(), any(), any());
     }
 
     /**
@@ -136,7 +136,7 @@ public class EngineProcessTest {
     process_RouteBetterThanCurrentBestRouteAndWithDestinationEqualToLinkSourceNode_ExportsLearnedRoute()
             throws Exception {
         Route learnedRoute = route(0, stubAttr(-1), path());
-        doReturn(learnedRoute).when(engine).learn(any(), any());
+        doReturn(learnedRoute).when(engine).learn(any(), any(), any());
         setPreviouslySelected(stubAttr(0), path());
         doReturn(learnedRoute).when(engine).select(any(), any(), any(), any());
 

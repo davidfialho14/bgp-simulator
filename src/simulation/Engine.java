@@ -22,7 +22,6 @@ import static simulation.Route.invalidRoute;
  */
 public class Engine {
 
-    private final Protocol protocol;    // FIXME remove this protocol
     private final Policy policy;
     private final Scheduler scheduler;
     private EventHandler eventHandler;
@@ -38,7 +37,6 @@ public class Engine {
     public static class Builder {
 
         // Required dependencies
-        private final Protocol protocol;
         private final Policy policy;
         private final Scheduler scheduler;
 
@@ -49,8 +47,7 @@ public class Engine {
 
         // Constructor with the required dependencies only
 
-        public Builder(Protocol protocol, Policy policy, Scheduler scheduler) {
-            this.protocol = protocol;
+        public Builder(Policy policy, Scheduler scheduler) {
             this.policy = policy;
             this.scheduler = scheduler;
         }
@@ -84,7 +81,6 @@ public class Engine {
      * Constructs an engine form a pre-configured builder.
      */
     private Engine(Builder builder) {
-        this.protocol = builder.protocol;
         this.policy = builder.policy;
         this.scheduler = builder.scheduler;
         this.eventHandler = builder.eventHandler;
@@ -108,9 +104,10 @@ public class Engine {
      * During simulation the slot methods of the event handler are called in the appropriate time.
      *
      * @param network network to be simulated.
+     * @param initialProtocol initial protocol to be used by all the nodes.
      */
-    public void simulate(Network network) {
-        initNodesStates(network.getNodes(), this.protocol);
+    public void simulate(Network network, Protocol initialProtocol) {
+        initNodesStates(network.getNodes(), initialProtocol);
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNodes());
@@ -119,13 +116,13 @@ public class Engine {
     }
 
     /**
-     * Executes the simulation but just for one destination node. @see {@link Engine#simulate(Network)}
-     *
-     * @param network network being simulated.
+     * Executes the simulation but just for one destination node. @see {@link Engine#simulate(Network, Protocol)}
+     *  @param network network being simulated.
+     * @param initialProtocol initial protocol to be used by all the nodes.
      * @param destinationId id of the destination node to simulate for.
      */
-    public void simulate(Network network, int destinationId) {
-        initNodesStates(network.getNodes(), this.protocol);
+    public void simulate(Network network, Protocol initialProtocol, int destinationId) {
+        initNodesStates(network.getNodes(), initialProtocol);
 
         eventHandler.onBeforeSimulate();
         exportSelfRoute(network.getNode(destinationId));
@@ -177,7 +174,7 @@ public class Engine {
     }
 
     public void reset() {
-        protocol.reset();   // FIXME reset each protocol for each node
+        nodesStates.values().forEach(nodeState -> nodeState.getProtocol().reset());
         scheduler.reset();
         nodesStates.clear();
     }
@@ -186,7 +183,8 @@ public class Engine {
 
     /**
      * Processes a scheduled route by updating the state of the learning node.
-     *  @param nodeState state of the learning node.
+     *
+     * @param nodeState state of the learning node.
      * @param scheduledRoute scheduled route to process.
      */
     void process(NodeState nodeState, ScheduledRoute scheduledRoute) {
@@ -195,7 +193,7 @@ public class Engine {
         Route exportedRoute = scheduledRoute.getRoute();
 
         eventHandler.onBeforeLearn(link, exportedRoute);
-        Route learnedRoute = learn(link, exportedRoute);
+        Route learnedRoute = learn(nodeState, link, exportedRoute);
         eventHandler.onAfterLearn(link, exportedRoute, learnedRoute);
 
         processSelection(nodeState, link, exportedRoute, learnedRoute, scheduledRoute);
@@ -205,12 +203,13 @@ public class Engine {
      * Learns a new exported route, returning the route after the attribute has been exported and included the
      * out-neighbour in the path.
      *
+     * @param nodeState current state of the learning node.
      * @param link link through which the route was exported.
      * @param route exported route.
      * @return route after the attribute has been exported and included the out-neighbour in the path.
      */
-    Route learn(Link link, Route route) {
-        Attribute attribute = protocol.extend(route.getDestination(), link, route.getAttribute());
+    Route learn(NodeState nodeState, Link link, Route route) {
+        Attribute attribute = nodeState.getProtocol().extend(route.getDestination(), link, route.getAttribute());
 
         PathAttribute path;
         if (!attribute.isInvalid()) {
@@ -244,12 +243,12 @@ public class Engine {
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (protocol.isOscillation(link, exportedRoute,
+            if (nodeState.getProtocol().isOscillation(link, exportedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
                 eventHandler.onOscillationDetection(link, exportedRoute, learnedRoute, exclRoute);
 
-                protocol.setParameters(link, exportedRoute,
+                nodeState.getProtocol().setParameters(link, exportedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 

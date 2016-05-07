@@ -37,9 +37,9 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 
     @Test(timeout = 2000)
     public void simulate_BGPProtocolAndFIFOScheduler_Converges() throws Exception {
-        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler()).build();
+        engine = new Engine.Builder(shortestPathPolicy, new FIFOScheduler()).build();
 
-        engine.simulate(network, 0);
+        engine.simulate(network, new BGPProtocol(), 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),
@@ -56,9 +56,9 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
     public void
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1SelectsRouteWithAttr1AndPathWithNode0()
             throws Exception {
-        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler()).build();
+        engine = new Engine.Builder(shortestPathPolicy, new FIFOScheduler()).build();
 
-        engine.simulate(network, 0);
+        engine.simulate(network, new BGPProtocol(), 0);
 
         assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 1, path(0))));
     }
@@ -67,11 +67,11 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
     public void
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1LearnsRouteFromNewLink()
             throws Exception {
-        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler())
+        engine = new Engine.Builder(shortestPathPolicy, new FIFOScheduler())
                 .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
                 .build();
 
-        engine.simulate(network, 0);
+        engine.simulate(network, new BGPProtocol(), 0);
 
         assertThat(engine.getRouteTable(new Node(0)), is( table(
                                 selfLink(0),
@@ -87,11 +87,11 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
     @Test(timeout = 2000)
     public void
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1PrefersNewLink() throws Exception {
-        engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler())
+        engine = new Engine.Builder(shortestPathPolicy, new FIFOScheduler())
                 .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
                 .build();
 
-        engine.simulate(network, 0);
+        engine.simulate(network, new BGPProtocol(), 0);
 
         assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 0, path(0))));
     }

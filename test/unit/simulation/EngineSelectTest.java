@@ -32,8 +32,9 @@ public class EngineSelectTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new Engine.Builder(stubProtocol, null, null).build();
+        engine = new Engine.Builder(null, null).build();
         when(stubProtocol.isOscillation(any(), any(), any(), any(), any())).thenReturn(false);
+        when(stubNodeState.getProtocol()).thenReturn(stubProtocol);
     }
 
     @Test

@@ -4,7 +4,6 @@ import network.Network;
 import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
-import protocols.Protocol;
 import protocols.implementations.BGPProtocol;
 import protocols.implementations.D1R1Protocol;
 import simulation.Engine;
@@ -26,47 +25,33 @@ public class MessageAndDetectionCountHandlerTest {
     @Before
     public void setUp() throws Exception {
         eventHandler = new MessageAndDetectionCountHandler();
-    }
-
-    private Engine engineWithProtocol(Protocol protocol) {
-        return new Engine.Builder(
-                protocol,
+        engine = new Engine.Builder(
                 new ShortestPathPolicy(),
                 new FIFOScheduler())
                 .eventHandler(eventHandler)
                 .build();
     }
 
-    private static BGPProtocol BGP() {
-        return new BGPProtocol();
-    }
-
-    private static D1R1Protocol D1R1() {
-        return new D1R1Protocol();
-    }
-
     @Test
     public void messageCount_ForTopology0WithBGP_Is1() throws Exception {
-        engine = engineWithProtocol(BGP());
         Network network0 = network(
                 link(from(0), to(1), label(1))
         );
 
-        engine.simulate(network0);
+        engine.simulate(network0, new BGPProtocol());
 
         assertThat(eventHandler.getMessageCount(), is(1));
     }
 
     @Test
     public void messageCount_ForTopology1_Is4() throws Exception {
-        engine = engineWithProtocol(BGP());
         Network network1 = network(
                 link(from(0), to(1), label(1)),
                 link(from(1), to(2), label(1)),
                 link(from(0), to(2), label(0))
         );
 
-        engine.simulate(network1);
+        engine.simulate(network1, new BGPProtocol());
 
         assertThat(eventHandler.getMessageCount(), is(4));
     }
@@ -82,18 +67,14 @@ public class MessageAndDetectionCountHandlerTest {
 
     @Test
     public void messageCount_ForTopology3WithD1R1_Is() throws Exception {
-        engine = engineWithProtocol(D1R1());
-
-        engine.simulate(network3, 0);
+        engine.simulate(network3, new D1R1Protocol(), 0);
 
         assertThat(eventHandler.getMessageCount(), is(13));
     }
 
     @Test
     public void detectionCount_ForTopology3WithD1R1_Is2() throws Exception {
-        engine = engineWithProtocol(D1R1());
-
-        engine.simulate(network3, 0);
+        engine.simulate(network3, new D1R1Protocol(), 0);
 
         assertThat(eventHandler.getDetectionCount(), is(2));
     }
