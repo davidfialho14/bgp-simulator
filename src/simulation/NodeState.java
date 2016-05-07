@@ -10,12 +10,12 @@ import java.util.Map;
 /**
  * Aggregates all the state information of one node in one unique class
  */
-public class NodeStateInfo {
+public class NodeState {
 
     private RouteTable table;
     private Map<Node, Route> selectedRoutes = new HashMap<>();
 
-    public NodeStateInfo(Node node) {
+    public NodeState(Node node) {
         this.table = new RouteTable(node.getOutLinks());
     }
 

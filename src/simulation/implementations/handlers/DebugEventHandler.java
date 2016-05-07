@@ -33,7 +33,7 @@ public class DebugEventHandler extends EventHandler {
     }
 
 //    @Override
-//    protected void onBeforeSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+//    protected void onBeforeSelect(NodeState nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
 //                               Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
 //        super.onBeforeSelect(nodeStateInfo, link, exportedRoute, learnedRoute, prevSelectedAttribute, prevSelectedPath);
 //
@@ -42,8 +42,8 @@ public class DebugEventHandler extends EventHandler {
 //    }
 
     @Override
-    protected void onAfterSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
-                              Attribute prevSelectedAttribute, PathAttribute prevSelectedPath, Route selectedRoute) {
+    protected void onAfterSelect(NodeState nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                                 Attribute prevSelectedAttribute, PathAttribute prevSelectedPath, Route selectedRoute) {
         super.onAfterSelect(nodeStateInfo, link, exportedRoute, learnedRoute,
                 prevSelectedAttribute, prevSelectedPath, selectedRoute);
 

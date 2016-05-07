@@ -8,14 +8,12 @@ import org.junit.Test;
 import protocols.implementations.BGPProtocol;
 import simulation.Engine;
 import simulation.FixedTimeLinkInserter;
-import simulation.implementations.handlers.DebugEventHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
 import static wrappers.ShortestPathWrapper.*;
-import static wrappers.ShortestPathWrapper.sproute;
 import static wrappers.network.FromNodeElement.from;
 import static wrappers.network.LinkElement.link;
 import static wrappers.network.NetworkWrapper.network;
@@ -91,7 +89,6 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1PrefersNewLink() throws Exception {
         engine = new Engine.Builder(new BGPProtocol(), shortestPathPolicy, new FIFOScheduler())
                 .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
-                .eventHandler(new DebugEventHandler())
                 .build();
 
         engine.simulate(network, 0);

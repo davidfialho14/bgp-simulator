@@ -21,12 +21,12 @@ public abstract class EventHandler {
         // by default do nothing
     }
 
-    protected  void onBeforeSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
-                                Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
+    protected  void onBeforeSelect(NodeState nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                                   Attribute prevSelectedAttribute, PathAttribute prevSelectedPath) {
         // by default do nothing
     }
-    protected  void onAfterSelect(NodeStateInfo nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
-                               Attribute prevSelectedAttribute, PathAttribute prevSelectedPath, Route selectedRoute) {
+    protected  void onAfterSelect(NodeState nodeStateInfo, Link link, Route exportedRoute, Route learnedRoute,
+                                  Attribute prevSelectedAttribute, PathAttribute prevSelectedPath, Route selectedRoute) {
         // by default do nothing
     }
 

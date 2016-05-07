@@ -25,7 +25,7 @@ public class EngineProcessTest {
     private Engine engine;
 
     @Mock
-    private NodeStateInfo nodeStateInfo;
+    private NodeState nodeStateInfo;
 
     private final Node destination = new Node(0);
     private final Link link = stubLink(1, 2);

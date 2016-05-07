@@ -25,7 +25,7 @@ public class EngineSelectTest {
     private Engine engine;  // class under test
 
     @Mock
-    private NodeStateInfo stubNodeStateInfo;
+    private NodeState stubNodeStateInfo;
 
     @Mock
     Protocol stubProtocol;
