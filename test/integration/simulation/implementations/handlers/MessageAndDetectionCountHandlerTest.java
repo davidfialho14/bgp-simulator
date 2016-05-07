@@ -34,9 +34,8 @@ public class MessageAndDetectionCountHandlerTest {
 
     @Test
     public void messageCount_ForTopology0WithBGP_Is1() throws Exception {
-        Network network0 = network(
-                link(from(0), to(1), label(1))
-        );
+        Network network0 = network(new ShortestPathPolicy(),
+                link(from(0), to(1), label(1)));
 
         engine.simulate(network0, new BGPProtocol());
 
@@ -45,25 +44,23 @@ public class MessageAndDetectionCountHandlerTest {
 
     @Test
     public void messageCount_ForTopology1_Is4() throws Exception {
-        Network network1 = network(
+        Network network1 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)),
                 link(from(1), to(2), label(1)),
-                link(from(0), to(2), label(0))
-        );
+                link(from(0), to(2), label(0)));
 
         engine.simulate(network1, new BGPProtocol());
 
         assertThat(eventHandler.getMessageCount(), is(4));
     }
 
-    private static Network network3 = network(
+    private static Network network3 = network(new ShortestPathPolicy(),
             link(from(1), to(0), label(0)),
             link(from(2), to(0), label(0)),
             link(from(3), to(0), label(0)),
             link(from(1), to(2), label(-1)),
             link(from(2), to(3), label(1)),
-            link(from(3), to(1), label(-2))
-    );
+            link(from(3), to(1), label(-2)));
 
     @Test
     public void messageCount_ForTopology3WithD1R1_Is() throws Exception {

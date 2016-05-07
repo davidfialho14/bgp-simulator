@@ -5,6 +5,7 @@ import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
+import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.Engine;
 import simulation.FixedTimeLinkInserter;
@@ -30,9 +31,8 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        network = network(
-                link(from(1), to(0), label(1))
-        );
+        network = network(new ShortestPathPolicy(),
+                link(from(1), to(0), label(1)));
     }
 
     @Test(timeout = 2000)

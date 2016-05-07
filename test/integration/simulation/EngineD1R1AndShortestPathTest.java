@@ -41,14 +41,13 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology3_Converges() throws Exception {
-        Network network3 = network(
+        Network network3 = network(new ShortestPathPolicy(),
                 link(from(1), to(0), label(0)),
                 link(from(2), to(0), label(0)),
                 link(from(3), to(0), label(0)),
                 link(from(1), to(2), label(-1)),
                 link(from(2), to(3), label(1)),
-                link(from(3), to(1), label(-2))
-        );
+                link(from(3), to(1), label(-2)));
 
         engine.simulate(network3, protocol, 0);
 

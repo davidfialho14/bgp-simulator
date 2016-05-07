@@ -5,6 +5,7 @@ import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
+import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import protocols.implementations.D1R1Protocol;
 import protocols.implementations.D2R1Protocol;
@@ -34,15 +35,14 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        network = network(
+        network = network(new ShortestPathPolicy(),
                 link(from(1), to(0), label(0)),
                 link(from(2), to(0), label(5)),
                 link(from(3), to(1), label(1)),
                 link(from(3), to(2), label(5)),
                 link(from(3), to(4), label(1)),
                 link(from(4), to(5), label(1)),
-                link(from(5), to(3), label(1))
-        );
+                link(from(5), to(3), label(1)));
     }
 
     /**
