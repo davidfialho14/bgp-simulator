@@ -25,28 +25,28 @@ public class NetworkTest {
     }
 
     @Test
-    public void add_NodeWithId0_ContainsNodeWithId0() throws Exception {
+    public void addNode_NodeWithId0_ContainsNodeWithId0() throws Exception {
         net.addNode(0);
 
         assertThat(net.getIds(), containsInAnyOrder(0));
     }
 
     @Test
-    public void add_NodesWithIds0And1_ContainsNodesWithIds0And1() throws Exception {
+    public void addNode_NodesWithIds0And1_ContainsNodesWithIds0And1() throws Exception {
         net.addNode(0); net.addNode(1);
 
         assertThat(net.getIds(), containsInAnyOrder(0, 1));
     }
 
     @Test
-    public void add_NodeWithId0Twice_SecondAddNodeReturnsFalse() throws Exception {
+    public void addNode_NodeWithId0Twice_SecondAddNodeReturnsFalse() throws Exception {
         net.addNode(0);
 
         assertThat(net.addNode(0), is(false));
     }
 
     @Test
-    public void link_Node0ToNode1BothAlreadyAddedToTheNetwork_ContainsLinkBetweenNode0AndNode1() throws Exception {
+    public void addLink_Node0ToNode1BothAlreadyAddedToTheNetwork_ContainsLinkBetweenNode0AndNode1() throws Exception {
         net.addNode(0); net.addNode(1);
 
         net.addLink(0, 1, new StubLabel());
@@ -55,7 +55,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void link_Node0ToNode1ButNode0WasNotAddedToTheNetwork_ThrowsNodeNotFoundException() throws Exception {
+    public void addLink_Node0ToNode1ButNode0WasNotAddedToTheNetwork_ThrowsNodeNotFoundException() throws Exception {
         net.addNode(1);
 
         thrown.expect(NodeNotFoundException.class);
@@ -64,7 +64,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void link_Node0ToNode1ButNode1WasNotAddedToTheNetwork_ThrowsNodeNotFoundException() throws Exception {
+    public void addLink_Node0ToNode1ButNode1WasNotAddedToTheNetwork_ThrowsNodeNotFoundException() throws Exception {
         net.addNode(0);
 
         thrown.expect(NodeNotFoundException.class);
@@ -73,7 +73,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void link_Node0ToNode1Twice_ContainsOnlyOneLink() throws Exception {
+    public void addLink_Node0ToNode1Twice_ContainsOnlyOneLink() throws Exception {
         net.addNode(0); net.addNode(1);
 
         net.addLink(0, 1, new StubLabel());
@@ -83,7 +83,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void link_Node0ToNode0_ContainsLinkFromNode0ToNode0() throws Exception {
+    public void addLink_Node0ToNode0_ContainsLinkFromNode0ToNode0() throws Exception {
         net.addNode(0);
 
         net.addLink(0, 0, new StubLabel());
