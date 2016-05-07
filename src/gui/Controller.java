@@ -100,7 +100,7 @@ public class Controller implements Initializable {
             }
 
             try {
-                reportGenerator.generate(new File("data/report.html"));
+                reportGenerator.generate(new File("report.html"));
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
                 alert.setHeaderText("Report File Error");
