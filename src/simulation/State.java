@@ -4,7 +4,9 @@ import network.Network;
 import network.Node;
 import protocols.Protocol;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Responsible to hold all the current state of the simulation. This includes the current currentNetwork state, the current
@@ -17,7 +19,16 @@ public class State {
     private Protocol defaultProtocol;
     private Map<Node, NodeState> nodesStates;   // state of each node
 
-    private State() {}  // use the static create methods
+    /**
+     * This constructor is PRIVATE: use the static create methods
+     */
+    private State(Network network, Protocol defaultProtocol,
+                  Map<Node, NodeState> nodesStates) {
+        this.originalNetwork = network;
+        this.currentNetwork = new Network(network); // ensure the current network is a copy of the original
+        this.defaultProtocol = defaultProtocol;
+        this.nodesStates = nodesStates;
+    }
 
     /**
      * Creates an empty state for the given network. It initializes all nodes with the given protocol.
@@ -26,7 +37,12 @@ public class State {
      * @param protocol protocol to be used by all nodes by default.
      */
     public static State create(Network network, Protocol protocol) {
-        return null;
+        // associate each node with an empty state
+        Map<Node, NodeState> nodesStates = new HashMap<>(network.getNodeCount());
+        network.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, protocol)));
+
+
+        return new State(network, protocol, nodesStates);
     }
 
     /**
@@ -34,7 +50,11 @@ public class State {
      * returns the network to its original state.
      */
     public void reset() {
+        this.nodesStates.clear();
+        originalNetwork.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, this.defaultProtocol)));
 
+        // ensure the current network must be a copy of the original
+        this.currentNetwork = new Network(originalNetwork);
     }
 
     /**
@@ -53,7 +73,7 @@ public class State {
      * @return state of the node.
      */
     public NodeState get(Node node) {
-        return null;
+        return nodesStates.get(node);
     }
 
     /**
@@ -62,7 +82,11 @@ public class State {
      * @return a map associating each node with its current route table.
      */
     public Map<Node, RouteTable> getRouteTables() {
-        return null;
+        return nodesStates.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getTable()
+                ));
     }
 
     /**
@@ -71,21 +95,27 @@ public class State {
      * @return a map associating each node with its current selected route to reach the destination.
      */
     public Map<Node, Route> getSelectedRoutes(Node destination) {
-        return null;
+        return nodesStates.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getSelectedRoute(destination)
+                ));
     }
 
     /**
      * Adds a new link the current network. This alters the networks state.
      */
     public void addLink() {
-
+        // TODO implement
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Removes a link the current network. This alters the networks state.
      */
     public void removeLink() {
-
+        // TODO implement
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -95,6 +125,6 @@ public class State {
      * @param protocol protocol to replace current one.
      */
     public void updateProtocol(Node node, Protocol protocol) {
-
+        get(node).setProtocol(protocol);
     }
 }

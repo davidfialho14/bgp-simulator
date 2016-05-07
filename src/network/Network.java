@@ -11,14 +11,25 @@ import java.util.stream.Collectors;
 
 public class Network {
 
-    private Map<Integer, Node> nodes = new HashMap<>(); // each node must be unique in the network
-    private Policy policy;                              // policy of the network
+    private Map<Integer, Node> nodes;   // each node must be unique in the network
+    private Policy policy;              // policy of the network
 
     /**
 	 * Creates a new empty network associated with the given policy.
 	 */
 	public Network(Policy policy) {
+        this.nodes = new HashMap<>();
         this.policy = policy;
+    }
+
+    /**
+     * Copy constructor.
+     *
+     * @param network network to construct from.
+     */
+    public Network(Network network) {
+        this.nodes = new HashMap<>(network.nodes);
+        this.policy = network.policy;
     }
 
     /**
@@ -91,6 +102,15 @@ public class Network {
      */
     public Node getNode(int id) {
         return nodes.get(id);
+    }
+
+    /**
+     * Returns the number of nodes in the network.
+     *
+     * @return number of nodes in the network.
+     */
+    public int getNodeCount() {
+        return nodes.size();
     }
 
     /**

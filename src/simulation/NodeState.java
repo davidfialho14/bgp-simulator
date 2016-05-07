@@ -98,6 +98,16 @@ public class NodeState {
     }
 
     /**
+     * Returns the currently selected route for the given destination.
+     *
+     * @param destination destination to get selected route for.
+     * @return currently selected route.
+     */
+    public Route getSelectedRoute(Node destination) {
+        return table.getSelectedRoute(destination);
+    }
+
+    /**
      * Sets the given route as the currently selected route for the destination.
      *
      * @param destination destination to set route for.
@@ -120,7 +130,4 @@ public class NodeState {
         table.setRoute(outLink, new Route(destination, attribute, path));
     }
 
-    public void updateRoute(Link outLink, Route route) {
-        table.setRoute(outLink, route);
-    }
 }
