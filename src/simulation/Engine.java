@@ -4,9 +4,7 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
-import simulation.events.ImportEvent;
-import simulation.events.LearnEvent;
-import simulation.events.SimulationEventGenerator;
+import simulation.events.*;
 
 import static simulation.Route.invalidRoute;
 
@@ -124,6 +122,7 @@ public class Engine {
             if (nodeState.getProtocol().isOscillation(link, exportedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
+                eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
 
                 nodeState.getProtocol().setParameters(link, exportedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
@@ -180,6 +179,8 @@ public class Engine {
 
         ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timestamp);
         scheduler.put(scheduledRoute);
+
+        eventGenerator.fireExportEvent(new ExportEvent(link, route));
     }
 
     /**
@@ -196,14 +197,14 @@ public class Engine {
 
         Node destination = learnedRoute.getDestination();
 
-        // store the currently selected attribute and path
-        Attribute prevSelectedAttribute = nodeState.getSelectedAttribute(destination);
-        PathAttribute prevSelectedPath = nodeState.getSelectedPath(destination);
+        // store the currently selected route
+        Route prevSelectedRoute = nodeState.getSelectedRoute(destination);
 
         Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
 
-        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
-                !prevSelectedPath.equals(selectedRoute.getPath())) {
+        eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
+
+        if (prevSelectedRoute == null || !prevSelectedRoute.equals(selectedRoute)) {
             /*
                 must export the new route to all of the learning node's in-links except to the node
                 from which the route was learned.
