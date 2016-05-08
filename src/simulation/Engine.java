@@ -4,6 +4,8 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
+import simulation.events.LearnEvent;
+import simulation.events.SimulationEventGenerator;
 
 import static simulation.Route.invalidRoute;
 
@@ -12,13 +14,23 @@ import static simulation.Route.invalidRoute;
  */
 public class Engine {
 
-    private final Scheduler scheduler;
+    private Scheduler scheduler;
+    private SimulationEventGenerator eventGenerator = new SimulationEventGenerator();
 
     /**
      * Constructs an engine form a pre-configured builder.
      */
     public Engine(Scheduler scheduler) {
         this.scheduler = scheduler;
+    }
+
+    /**
+     * Returns the event generator used by the engine. Listeners can then be added to this generator.
+     *
+     * @return event generator used by the engine.
+     */
+    public SimulationEventGenerator getEventGenerator() {
+        return eventGenerator;
     }
 
     /**
@@ -63,7 +75,7 @@ public class Engine {
      * Learns a new exported route, returning the route after the attribute has been exported and included the
      * out-neighbour in the path.
      *
-     * @param nodeState current state of the learning node.
+      * @param nodeState current state of the learning node.
      * @param link link through which the route was exported.
      * @param route exported route.
      * @return route after the attribute has been exported and included the out-neighbour in the path.
@@ -79,7 +91,10 @@ public class Engine {
             path = PathAttribute.invalidPath();
         }
 
-        return new Route(route.getDestination(), attribute, path);
+        Route learnedRoute = new Route(route.getDestination(), attribute, path);
+        eventGenerator.fireLearnEvent(new LearnEvent(link, learnedRoute));
+
+        return learnedRoute;
     }
 
     /**

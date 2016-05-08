@@ -50,4 +50,27 @@ public class LearnEvent implements SimulationEvent {
         return link.getDestination();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LearnEvent event = (LearnEvent) o;
+
+        if (link != null ? !link.equals(event.link) : event.link != null) return false;
+        return route != null ? route.equals(event.route) : event.route == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = link != null ? link.hashCode() : 0;
+        result = 31 * result + (route != null ? route.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LearnEvent{" + link + ", " + route + '}';
+    }
 }
