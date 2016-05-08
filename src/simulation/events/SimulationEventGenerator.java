@@ -12,6 +12,7 @@ public class SimulationEventGenerator {
     private List<LearnListener> learnListeners = new ArrayList<>();     // stores all registered learn listeners
     private List<ImportListener> importListeners = new ArrayList<>();   // stores all registered import listeners
     private List<SelectListener> selectListeners = new ArrayList<>();   // stores all registered select listeners
+    private List<ExportListener> exportListeners = new ArrayList<>();   // stores all registered export listeners
 
     /**
      * Registers a new learn listener.
@@ -95,5 +96,33 @@ public class SimulationEventGenerator {
     public void fireSelectEvent(SelectEvent event) {
         // events are immutable so the same event object can be passed to all listeners
         selectListeners.forEach(listener -> listener.onSelected(event));
+    }
+
+    /**
+     * Registers a new export listener.
+     *
+     * @param listener export listener to register.
+     */
+    public void addExportListener(ExportListener listener) {
+        exportListeners.add(listener);
+    }
+
+    /**
+     * Unregisters a new export listener.
+     *
+     * @param listener export listener to unregister.
+     */
+    public void removeExportListener(ExportListener listener) {
+        exportListeners.remove(listener);
+    }
+
+    /**
+     * Fires a export event, notifying all registered listeners by invoking their onExported() method.
+     *
+     * @param event event to fire.
+     */
+    public void fireExportEvent(ExportEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        exportListeners.forEach(listener -> listener.onExported(event));
     }
 }

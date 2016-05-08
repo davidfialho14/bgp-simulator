@@ -4,10 +4,7 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
-import simulation.events.ImportEvent;
-import simulation.events.LearnEvent;
-import simulation.events.SelectEvent;
-import simulation.events.SimulationEventGenerator;
+import simulation.events.*;
 
 import static simulation.Route.invalidRoute;
 
@@ -181,6 +178,8 @@ public class Engine {
 
         ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timestamp);
         scheduler.put(scheduledRoute);
+
+        eventGenerator.fireExportEvent(new ExportEvent(link, route));
     }
 
     /**
