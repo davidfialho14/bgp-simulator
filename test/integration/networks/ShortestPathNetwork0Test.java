@@ -7,6 +7,7 @@ import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.Engine;
+import simulation.State;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,15 +37,16 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
     @Test(timeout = 2000)
     public void simulate_BGPProtocolAndFIFOScheduler_Converges() throws Exception {
         engine = new Engine(new FIFOScheduler());
+        State state = State.create(network, new BGPProtocol());
 
-        engine.simulate(network, new BGPProtocol(), 0);
+        engine.simulate(state, 0);
 
-        assertThat(engine.getRouteTable(new Node(0)), is( table(
+        assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(engine.getRouteTable(new Node(1)), is( table(
+        assertThat(state.get(new Node(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
@@ -55,10 +57,11 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1SelectsRouteWithAttr1AndPathWithNode0()
             throws Exception {
         engine = new Engine(new FIFOScheduler());
+        State state = State.create(network, new BGPProtocol());
 
-        engine.simulate(network, new BGPProtocol(), 0);
+        engine.simulate(state, 0);
 
-        assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 1, path(0))));
+        assertThat(state.get(new Node(1)).getSelectedRoute(new Node(0)), is(sproute(0, 1, path(0))));
     }
 
     @Test(timeout = 2000)
@@ -72,12 +75,12 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 //
 //        engine.simulate(network, new BGPProtocol(), 0);
 //
-//        assertThat(engine.getRouteTable(new Node(0)), is( table(
+//        assertThat(state.get(new Node(0)).getTable(), is( table(
 //                                selfLink(0),
 //                destination(0), sproute(0, path())
 //        )));
 //
-//        assertThat(engine.getRouteTable(new Node(1)), is( table(
+//        assertThat(state.get(new Node(1)).getTable(), is( table(
 //                                selfLink(1),    splink(1, 0, 1),     splink(1, 0, 0),
 //                destination(0), invalidRoute(), sproute(1, path(0)), sproute(0, path(0))
 //        )));

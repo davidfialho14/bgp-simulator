@@ -13,6 +13,7 @@ import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulation.Engine;
+import simulation.State;
 import simulation.implementations.schedulers.RandomScheduler;
 
 import java.io.File;
@@ -80,22 +81,23 @@ public class Controller implements Initializable {
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
+            State state = State.create(parser.getParsedNetwork(), parser.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
                 // TODO Event Handler include event handler for number of messages and detections
 
                 if (oneNodeRadioButton.isSelected()) {
-                    engine.simulate(parser.getParsedNetwork(), parser.getProtocol(), destinationIdSpinner.getValue());
+                    engine.simulate(state, destinationIdSpinner.getValue());
                 } else {
-                    engine.simulate(parser.getParsedNetwork(), parser.getProtocol());
+                    engine.simulate(state);
                 }
 
                 // TODO Event Handler
 //                reportGenerator.addMessageCount(handler.getMessageCount());
 //                reportGenerator.addDetectionCount(handler.getDetectionCount());
 
-                engine.reset();
+                state.reset();
             }
 
             try {

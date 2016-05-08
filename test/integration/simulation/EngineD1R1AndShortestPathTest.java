@@ -43,25 +43,26 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
                 link(from(1), to(2), label(-1)),
                 link(from(2), to(3), label(1)),
                 link(from(3), to(1), label(-2)));
+        State state = State.create(network3, protocol);
 
-        engine.simulate(network3, protocol, 0);
+        engine.simulate(state, 0);
 
-        assertThat(engine.getRouteTable(new Node(0)), is( table(
+        assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(engine.getRouteTable(new Node(1)), is( table(
+        assertThat(state.get(new Node(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 0),     splink(1, 2, -1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(engine.getRouteTable(new Node(2)), is( table(
+        assertThat(state.get(new Node(2)).getTable(), is( table(
                                 selfLink(2),    splink(2, 0, 0),     splink(2, 3, 1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(engine.getRouteTable(new Node(3)), is( table(
+        assertThat(state.get(new Node(3)).getTable(), is( table(
                                 selfLink(3),    splink(3, 0, 0),     splink(3, 1, -2),
                 destination(0), invalidRoute(), sproute(0, path(0)), sproute(-2, path(1, 0))
         )));

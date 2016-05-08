@@ -1,17 +1,9 @@
 package simulation;
 
 import network.Link;
-import network.Network;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
-import policies.Policy;
-import protocols.Protocol;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static simulation.Route.invalidRoute;
 
@@ -22,9 +14,6 @@ public class Engine {
 
     private final Scheduler scheduler;
 
-    // state of the nodes during and after simulation
-    private Map<Node, NodeState> nodesStates = new HashMap<>();
-
     /**
      * Constructs an engine form a pre-configured builder.
      */
@@ -33,70 +22,23 @@ public class Engine {
     }
 
     /**
-     * Simulates the BGP protocol according to the specifications of the engine for the given network.
-     * During simulation the slot methods of the event handler are called in the appropriate time.
+     * Simulates according to the given initial state. Simulates with all nodes as destinations.
      *
-     * @param network network to be simulated.
-     * @param initialProtocol initial protocol to be used by all the nodes.
+     * @param initialState initial state to start simulation.
      */
-    public void simulate(Network network, Protocol initialProtocol) {
-        initNodesStates(network.getNodes(), initialProtocol);
-
-        exportSelfRoute(network.getNodes(), network.getPolicy());
-        simulationLoop(network);
+    public void simulate(State initialState) {
+        exportSelfRoute(initialState);
+        simulationLoop(initialState);
     }
 
     /**
-     * Executes the simulation but just for one destination node. @see {@link Engine#simulate(Network, Protocol)}
-     *  @param network network being simulated.
-     * @param initialProtocol initial protocol to be used by all the nodes.
-     * @param destinationId id of the destination node to simulate for.
-     */
-    public void simulate(Network network, Protocol initialProtocol, int destinationId) {
-        initNodesStates(network.getNodes(), initialProtocol);
-
-        exportSelfRoute(network.getNode(destinationId), network.getPolicy());
-        simulationLoop(network);
-    }
-
-    /**
-     * Returns a map containing the nodes associated with their respective route tables. The route tables will only
-     * be filled after a simulation takes place.
+     * Simulates according to the given initial state. Simulates only for one destination.
      *
-     * @return map containing the nodes associated with their respective route tables.
+     * @param initialState initial state to start simulation.
      */
-    public Map<Node, RouteTable> getRouteTables() {
-        return nodesStates.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().getTable()
-                ));
-    }
-
-    /**
-     * Returns the route table of the given node. The route table will only be filled after a simulation takes place.
-     *
-     * @return map containing the nodes associated with their respective route tables.
-     */
-    public RouteTable getRouteTable(Node node) {
-        return nodesStates.get(node).getTable();
-    }
-
-    /**
-     * Returns the route selected by the node to reach the destination.
-     *
-     * @param node node to get selected route for.
-     * @param destination destination to get selected route for.
-     * @return the route selected by the node to reach the destination.
-     */
-    public Route getSelectedRoute(Node node, Node destination) {
-        return nodesStates.get(node).getSelectedRoute(destination, null);
-    }
-
-    public void reset() {
-        nodesStates.values().forEach(nodeState -> nodeState.getProtocol().reset());
-        scheduler.reset();
-        nodesStates.clear();
+    public void simulate(State initialState, int destinationId) {
+        exportSelfRoute(initialState.getNetwork().getNode(destinationId), initialState);
+        simulationLoop(initialState);
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
@@ -252,94 +194,46 @@ public class Engine {
         }
     }
 
-    /**
-     * Processes a broken link. It re-selects the preferred route and exports it if it is a different route than the
-     * previously preferred. It also removes the link from the route table and it remvoes all routes being exported
-     * through that link from the scheduler.
-     *  @param nodeState state of the source node of the broken link.
-     * @param brokenLink link that was broken.
-     * @param prevScheduledRoute previously scheduled route.
-     */
-    void processBrokenLink(NodeState nodeState, Link brokenLink, ScheduledRoute prevScheduledRoute) {
-        // breaking a link is the same thing that learning invalid routes for all destinations known through that link
-
-        for (Node destination : nodeState.getTable().getDestinationsLearnFrom(brokenLink)) {
-            processSelection(nodeState, brokenLink,
-                    invalidRoute(destination), invalidRoute(destination), prevScheduledRoute);
-        }
-
-        // remove the link from the sour node route table and remove all routes being exported through this link
-        nodeState.getTable().removeOutLink(brokenLink);
-        scheduler.removeRoutes(brokenLink);
-    }
-
-    /**
-     * Processes an inserted link. Exports all selected routes through the new link and adds the link to the route
-     * table of the source node of the link.
-     *
-     * @param insertedLink link that was inserted.
-     * @param prevScheduledRoute previously scheduled route.
-     */
-    void processInsertedLink(Link insertedLink, ScheduledRoute prevScheduledRoute) {
-        NodeState sourceState = nodesStates.get(insertedLink.getSource());
-        NodeState destinationState = nodesStates.get(insertedLink.getDestination());
-
-        // when inserting a new link the destination must export all of its selected routes through the new link
-        destinationState.getSelectedRoutes().values()
-                .forEach(route -> export(insertedLink, route, prevScheduledRoute));
-
-        sourceState.getTable().addOutLink(insertedLink);
-    }
-
     //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
 
     /**
-     * Executes the simulation loop for the given network.
+     * Executes the simulation loop for the given state.
      *
-     * @param network network being simulated.
+     * @param state current state.
      */
-    private void simulationLoop(Network network) {
+    private void simulationLoop(State state) {
+
         ScheduledRoute scheduledRoute;
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
-            process(nodesStates.get(learningNode), scheduledRoute);
+            process(state.get(learningNode), scheduledRoute);
         }
     }
 
     /**
-     * Initializes state of for the given collection of nodes. All current node state is cleared after calling
-     * this method.
+     * Exports the self route of one node. It updates that state of the node to selected the self route.
      *
-     * @param nodes nodes to initialize the state for.
-     * @param protocol protocol to be used by all nodes.
+     * @param node node to export self route.
+     * @param state current state.
      */
-    private void initNodesStates(Collection<Node> nodes, Protocol protocol) {
-        nodes.forEach(node -> nodesStates.put(node, new NodeState(node, protocol)));
-    }
-
-    /**
-     * Exports the self routes of each one of the given nodes.
-     *  @param nodes nodes which the self routes are to be exported.
-     * @param policy
-     */
-    private void exportSelfRoute(Collection<Node> nodes, Policy policy) {
-        nodes.forEach((node) -> exportSelfRoute(node, policy));
-    }
-
-    /**
-     * Exports the self route of the given node.
-     *
-     * @param node node which the self route is to be exported.
-     * @param policy
-     */
-    private void exportSelfRoute(Node node, Policy policy) {
-        NodeState nodeState = nodesStates.get(node);
-        Route selfRoute = Route.createSelf(node, policy);
+    private void exportSelfRoute(Node node, State state) {
+        NodeState nodeState = state.get(node);
+        Route selfRoute = Route.createSelf(node, state.getNetwork().getPolicy());
 
         // add the self route to the node's route table
         nodeState.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
         nodeState.setSelected(node, selfRoute);
 
         node.getInLinks().forEach(link -> export(link, selfRoute, null));
+    }
+
+    /**
+     * Exports the self route of all nodes in the network. It updates that state of the nodes to selected
+     * the self routes.
+     *
+     * @param state current state.
+     */
+    private void exportSelfRoute(State state) {
+        state.getNetwork().getNodes().forEach(node -> exportSelfRoute(node, state));
     }
 }

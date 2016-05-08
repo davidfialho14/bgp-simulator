@@ -10,6 +10,7 @@ import protocols.implementations.D1R1Protocol;
 import protocols.implementations.D2R1Protocol;
 import simulation.Engine;
 import simulation.RouteTable;
+import simulation.State;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -105,29 +106,31 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     @Test(timeout = 2000)
     public void simulate_BGPProtocolAndFIFOScheduler_Converges() throws Exception {
         engine = new Engine(new FIFOScheduler());
+        State state = State.create(network, new BGPProtocol());
 
-        engine.simulate(network, new BGPProtocol(), 0);
+        engine.simulate(state, 0);
 
-        assertThat(engine.getRouteTable(new Node(0)), is(BGPProtocolExpectedTables[0]));
-        assertThat(engine.getRouteTable(new Node(1)), is(BGPProtocolExpectedTables[1]));
-        assertThat(engine.getRouteTable(new Node(2)), is(BGPProtocolExpectedTables[2]));
-        assertThat(engine.getRouteTable(new Node(3)), is(BGPProtocolExpectedTables[3]));
-        assertThat(engine.getRouteTable(new Node(4)), is(BGPProtocolExpectedTables[4]));
-        assertThat(engine.getRouteTable(new Node(5)), is(BGPProtocolExpectedTables[5]));
+        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolExpectedTables[0]));
+        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolExpectedTables[1]));
+        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolExpectedTables[2]));
+        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolExpectedTables[3]));
+        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolExpectedTables[4]));
+        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
         engine = new Engine(new FIFOScheduler());
+        State state = State.create(network, new D1R1Protocol());
 
-        engine.simulate(network, new D1R1Protocol(), 0);
+        engine.simulate(state, 0);
 
-        assertThat(engine.getRouteTable(new Node(0)), is(BGPProtocolExpectedTables[0]));
-        assertThat(engine.getRouteTable(new Node(1)), is(BGPProtocolExpectedTables[1]));
-        assertThat(engine.getRouteTable(new Node(2)), is(BGPProtocolExpectedTables[2]));
-        assertThat(engine.getRouteTable(new Node(3)), is(BGPProtocolExpectedTables[3]));
-        assertThat(engine.getRouteTable(new Node(4)), is(BGPProtocolExpectedTables[4]));
-        assertThat(engine.getRouteTable(new Node(5)), is(BGPProtocolExpectedTables[5]));
+        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolExpectedTables[0]));
+        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolExpectedTables[1]));
+        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolExpectedTables[2]));
+        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolExpectedTables[3]));
+        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolExpectedTables[4]));
+        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
@@ -152,12 +155,12 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 //
 //        engine.simulate(network, new D1R1Protocol(), 0);
 //
-//        assertThat(engine.getRouteTable(new Node(0)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
-//        assertThat(engine.getRouteTable(new Node(1)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
-//        assertThat(engine.getRouteTable(new Node(2)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
-//        assertThat(engine.getRouteTable(new Node(3)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
-//        assertThat(engine.getRouteTable(new Node(4)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
-//        assertThat(engine.getRouteTable(new Node(5)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
+//        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
+//        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
+//        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
+//        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
+//        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
+//        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
@@ -178,15 +181,16 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
         engine = new Engine(new FIFOScheduler());
+        State state = State.create(network, new D2R1Protocol());
 
-        engine.simulate(network, new D2R1Protocol(), 0);
+        engine.simulate(state, 0);
 
-        assertThat(engine.getRouteTable(new Node(0)), is(BGPProtocolExpectedTables[0]));
-        assertThat(engine.getRouteTable(new Node(1)), is(BGPProtocolExpectedTables[1]));
-        assertThat(engine.getRouteTable(new Node(2)), is(BGPProtocolExpectedTables[2]));
-        assertThat(engine.getRouteTable(new Node(3)), is(BGPProtocolExpectedTables[3]));
-        assertThat(engine.getRouteTable(new Node(4)), is(BGPProtocolExpectedTables[4]));
-        assertThat(engine.getRouteTable(new Node(5)), is(BGPProtocolExpectedTables[5]));
+        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolExpectedTables[0]));
+        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolExpectedTables[1]));
+        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolExpectedTables[2]));
+        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolExpectedTables[3]));
+        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolExpectedTables[4]));
+        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
@@ -211,12 +215,12 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 //
 //        engine.simulate(network, new D2R1Protocol(), 0);
 //
-//        assertThat(engine.getRouteTable(new Node(0)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
-//        assertThat(engine.getRouteTable(new Node(1)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
-//        assertThat(engine.getRouteTable(new Node(2)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
-//        assertThat(engine.getRouteTable(new Node(3)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
-//        assertThat(engine.getRouteTable(new Node(4)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
-//        assertThat(engine.getRouteTable(new Node(5)), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
+//        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
+//        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
+//        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
+//        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
+//        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
+//        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
