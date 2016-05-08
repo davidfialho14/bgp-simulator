@@ -6,7 +6,7 @@ package simulation.events;
  * the component's addLearnListener method. When the learn event occurs, that object's onLearned() method
  * is invoked.
  */
-public interface LearnListener {
+public interface LearnListener extends SimulationEventListener {
 
     /**
      * Invoked when a learn event occurs.
