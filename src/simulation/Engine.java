@@ -6,6 +6,7 @@ import network.SelfLink;
 import policies.Attribute;
 import simulation.events.ImportEvent;
 import simulation.events.LearnEvent;
+import simulation.events.SelectEvent;
 import simulation.events.SimulationEventGenerator;
 
 import static simulation.Route.invalidRoute;
@@ -200,6 +201,8 @@ public class Engine {
         Route prevSelectedRoute = nodeState.getSelectedRoute(destination);
 
         Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
+
+        eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
 
         if (prevSelectedRoute == null || !prevSelectedRoute.equals(selectedRoute)) {
             /*
