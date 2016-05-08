@@ -122,6 +122,7 @@ public class Engine {
             if (nodeState.getProtocol().isOscillation(link, exportedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
+                eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
 
                 nodeState.getProtocol().setParameters(link, exportedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
