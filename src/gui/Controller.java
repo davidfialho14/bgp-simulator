@@ -14,6 +14,7 @@ import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulation.Engine;
 import simulation.State;
+import simulation.eventhandlers.MessageAndDetectionCountHandler;
 import simulation.implementations.schedulers.RandomScheduler;
 
 import java.io.File;
@@ -85,7 +86,8 @@ public class Controller implements Initializable {
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
-                // TODO Event Handler include event handler for number of messages and detections
+                MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
+                eventHandler.register(engine.getEventGenerator());
 
                 if (oneNodeRadioButton.isSelected()) {
                     engine.simulate(state, destinationIdSpinner.getValue());
@@ -93,9 +95,8 @@ public class Controller implements Initializable {
                     engine.simulate(state);
                 }
 
-                // TODO Event Handler
-//                reportGenerator.addMessageCount(handler.getMessageCount());
-//                reportGenerator.addDetectionCount(handler.getDetectionCount());
+                reportGenerator.addMessageCount(eventHandler.getMessageCount());
+                reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
 
                 state.reset();
             }
