@@ -178,14 +178,12 @@ public class Engine {
 
         Node destination = learnedRoute.getDestination();
 
-        // store the currently selected attribute and path
-        Attribute prevSelectedAttribute = nodeState.getSelectedAttribute(destination);
-        PathAttribute prevSelectedPath = nodeState.getSelectedPath(destination);
+        // store the currently selected route
+        Route prevSelectedRoute = nodeState.getSelectedRoute(destination);
 
         Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
 
-        if (prevSelectedAttribute == null || !prevSelectedAttribute.equals(selectedRoute.getAttribute()) ||
-                !prevSelectedPath.equals(selectedRoute.getPath())) {
+        if (prevSelectedRoute == null || !prevSelectedRoute.equals(selectedRoute)) {
             /*
                 must export the new route to all of the learning node's in-links except to the node
                 from which the route was learned.

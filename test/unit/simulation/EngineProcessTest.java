@@ -40,12 +40,12 @@ public class EngineProcessTest {
 
     /**
      * Sets the previously selected attribute and path for the node state.
-     *  @param attribute attribute previously selected.
+     *
+     * @param attribute attribute previously selected.
      * @param path path previously selected.
      */
     private void setPreviouslySelected(Attribute attribute, PathAttribute path) {
-        when(nodeState.getSelectedAttribute(any())).thenReturn(attribute);
-        when(nodeState.getSelectedPath(any())).thenReturn(path);
+        when(nodeState.getSelectedRoute(any())).thenReturn(new Route(destination, attribute, path));
     }
     
     @Test
