@@ -1,8 +1,5 @@
 package simulation.events;
 
-import network.Link;
-import simulation.Route;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +32,17 @@ public class SimulationEventGenerator {
     /**
      * Fires a learn event, notifying all registered listeners by invoking their onLearned() method.
      *
-     * @param learnLink link from which the route was learned.
-     * @param learnedRoute route learned.
+     * @param event event to fire.
      */
-    public void fireLearnEvent(Link learnLink, Route learnedRoute) {
+    public void fireLearnEvent(LearnEvent event) {
+        /*
+            By having the learn event as a parameter instead of the necessary parameters to build a learn event
+            makes changing the event constructor signature easier. If this method received the parameters to build
+            a learn event every time the learn event constructor's parameters changed the signature of this method
+            also would have to change.
+         */
+
         // events are immutable so the same event object can be passed to all listeners
-        LearnEvent event = new LearnEvent(learnLink, learnedRoute);
         learnListeners.forEach(listener -> listener.onLearned(event));
     }
 }
