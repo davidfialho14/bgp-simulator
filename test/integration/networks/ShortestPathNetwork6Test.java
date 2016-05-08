@@ -11,6 +11,7 @@ import protocols.implementations.D2R1Protocol;
 import simulation.Engine;
 import simulation.RouteTable;
 import simulation.State;
+import simulation.eventhandlers.MessageAndDetectionCountHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -135,15 +136,14 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
-        // TODO Event Handler
-//        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-//        engine = new Engine(new FIFOScheduler());
-//                .eventHandler(eventHandler)
-//                .build();
-//
-//        engine.simulate(network, new D1R1Protocol(), 0);
-//
-//        assertThat(eventHandler.getDetectionCount(), is(0));
+        engine = new Engine(new FIFOScheduler());
+        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
+        eventHandler.register(engine.getEventGenerator());
+        State state = State.create(network, new D1R1Protocol());
+
+        engine.simulate(state, 0);
+
+        assertThat(eventHandler.getDetectionCount(), is(0));
     }
 
     @Test(timeout = 2000)
@@ -165,7 +165,6 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_DetectsOnce() throws Exception {
-        // TODO Event Handler
         // TODO Link Breaker
 //        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
 //        engine = new Engine(new FIFOScheduler());
@@ -195,15 +194,14 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
-        // TODO Event Handler
-//        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-//        engine = new Engine(new FIFOScheduler());
-//                .eventHandler(eventHandler)
-//                .build();
-//
-//        engine.simulate(network, new D2R1Protocol(), 0);
-//
-//        assertThat(eventHandler.getDetectionCount(), is(0));
+        engine = new Engine(new FIFOScheduler());
+        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
+        eventHandler.register(engine.getEventGenerator());
+        State state = State.create(network, new D2R1Protocol());
+
+        engine.simulate(state, 0);
+
+        assertThat(eventHandler.getDetectionCount(), is(0));
     }
 
     @Test(timeout = 2000)
@@ -225,7 +223,6 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_NeverDetects() throws Exception {
-        // TODO Event Handler
         // TODO Link Breaker
 //        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
 //        engine = new Engine(new FIFOScheduler());
