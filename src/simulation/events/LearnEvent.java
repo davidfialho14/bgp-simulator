@@ -42,11 +42,20 @@ public class LearnEvent implements SimulationEvent {
     }
 
     /**
-     * Returns the node the learned the route.
+     * Returns the node that learned the route.
      *
      * @return node that learned the route
      */
     public Node getLearningNode() {
+        return link.getSource();
+    }
+
+    /**
+     * Returns the node that exported the route.
+     *
+     * @return node that exported the route
+     */
+    public Node getExportingNode() {
         return link.getDestination();
     }
 
