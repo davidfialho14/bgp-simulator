@@ -9,7 +9,8 @@ import java.util.List;
  */
 public class SimulationEventGenerator {
 
-    private List<LearnListener> learnListeners = new ArrayList<>(); // stores all registered learn listeners
+    private List<LearnListener> learnListeners = new ArrayList<>();     // stores all registered learn listeners
+    private List<ImportListener> importListeners = new ArrayList<>();   // stores all registered import listeners
 
     /**
      * Registers a new learn listener.
@@ -35,14 +36,35 @@ public class SimulationEventGenerator {
      * @param event event to fire.
      */
     public void fireLearnEvent(LearnEvent event) {
-        /*
-            By having the learn event as a parameter instead of the necessary parameters to build a learn event
-            makes changing the event constructor signature easier. If this method received the parameters to build
-            a learn event every time the learn event constructor's parameters changed the signature of this method
-            also would have to change.
-         */
-
         // events are immutable so the same event object can be passed to all listeners
         learnListeners.forEach(listener -> listener.onLearned(event));
+    }
+
+    /**
+     * Registers a new import listener.
+     *
+     * @param listener import listener to register.
+     */
+    public void addImportListener(ImportListener listener) {
+        importListeners.add(listener);
+    }
+
+    /**
+     * Unregisters a new import listener.
+     *
+     * @param listener import listener to unregister.
+     */
+    public void removeImportListener(ImportListener listener) {
+        importListeners.remove(listener);
+    }
+
+    /**
+     * Fires a import event, notifying all registered listeners by invoking their onImported() method.
+     *
+     * @param event event to fire.
+     */
+    public void fireImportEvent(ImportEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        importListeners.forEach(listener -> listener.onImported(event));
     }
 }

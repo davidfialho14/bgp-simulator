@@ -4,6 +4,7 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
+import simulation.events.ImportEvent;
 import simulation.events.LearnEvent;
 import simulation.events.SimulationEventGenerator;
 
@@ -75,12 +76,14 @@ public class Engine {
      * Learns a new exported route, returning the route after the attribute has been exported and included the
      * out-neighbour in the path.
      *
-      * @param nodeState current state of the learning node.
+     * @param nodeState current state of the learning node.
      * @param link link through which the route was exported.
      * @param route exported route.
      * @return route after the attribute has been exported and included the out-neighbour in the path.
      */
     Route learn(NodeState nodeState, Link link, Route route) {
+        eventGenerator.fireImportEvent(new ImportEvent(route, link));
+
         Attribute attribute = nodeState.getProtocol().extend(route.getDestination(), link, route.getAttribute());
 
         PathAttribute path;
