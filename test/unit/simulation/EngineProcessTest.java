@@ -9,17 +9,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
 import policies.PathAttribute;
-import simulation.schedulers.ScheduledRoute;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
 import static policies.PathAttribute.invalidPath;
-import static wrappers.StubWrapper.stubAttr;
-import static wrappers.StubWrapper.stubLink;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.anyRoute;
 import static wrappers.RouteWrapper.route;
+import static wrappers.StubWrapper.stubAttr;
+import static wrappers.StubWrapper.stubLink;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EngineProcessTest {
@@ -56,9 +55,9 @@ public class EngineProcessTest {
         setPreviouslySelected(invalid(), invalidPath());
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, never()).exportToInNeighbours(any(), any(), any(), any());
+        verify(engine, never()).exportToInNeighbours(any(), any(), any());
     }
 
     @Test
@@ -68,9 +67,9 @@ public class EngineProcessTest {
         Route selectedRoute = route(destination, stubAttr(0), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
     }
 
     @Test
@@ -79,9 +78,9 @@ public class EngineProcessTest {
         setPreviouslySelected(stubAttr(0), path());
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any());
     }
 
     @Test
@@ -90,9 +89,9 @@ public class EngineProcessTest {
         setPreviouslySelected(null, null);
         doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any());
     }
 
     @Test
@@ -102,9 +101,9 @@ public class EngineProcessTest {
         Route selectedRoute = route(destination, stubAttr(0), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
     }
 
     @Test
@@ -115,9 +114,9 @@ public class EngineProcessTest {
         Route selectedRoute = route(destination, stubAttr(1), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
     }
 
     @Test
@@ -128,9 +127,9 @@ public class EngineProcessTest {
         Route selectedRoute = route(destination, stubAttr(0), path(0));
         doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(invalidRoute, link, 0));
+        engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
     }
 
     @Test
@@ -142,8 +141,8 @@ public class EngineProcessTest {
         setPreviouslySelected(stubAttr(0), path());
         doReturn(learnedRoute).when(engine).select(any(), any(), any(), any());
 
-        engine.process(nodeState, new ScheduledRoute(anyRoute(0), stubLink(0, 2), 0));
+        engine.process(nodeState, stubLink(0, 2), anyRoute(0));
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(learnedRoute), any(), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(learnedRoute), any());
     }
 }
