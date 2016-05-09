@@ -37,6 +37,16 @@ public abstract class AbstractScheduler implements Scheduler {
         queue.offer(scheduledRoute);
     }
 
+    /**
+     * Checks if the scheduler has one more route.
+     *
+     * @return true if the scheduler has at least a route or false otherwise.
+     */
+    @Override
+    public boolean hasRoute() {
+        return !queue.isEmpty();
+    }
+
     abstract protected long schedule(ScheduledRoute scheduledRoute);
 
     /**
