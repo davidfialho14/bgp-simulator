@@ -17,6 +17,13 @@ public interface Scheduler {
     void put(ScheduledRoute scheduledRoute);
 
     /**
+     * Checks if the scheduler has one more route.
+     *
+     * @return true if the scheduler has at least a route or false otherwise.
+     */
+    boolean hasRoute();
+
+    /**
      * Removes all the routes being exported through the given link.
      *
      * @param link link exporting the routes to be removed.
