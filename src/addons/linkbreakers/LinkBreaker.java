@@ -1,22 +1,45 @@
 package addons.linkbreakers;
 
-import network.Link;
-import network.Network;
+import simulation.Engine;
+import simulation.State;
 
 /**
- * Defines the interface for a link breaker. A link breaker is able to break links of a network. When a link
- * is broken from the network, all routes being exported through that link are lost.
+ * A link breaker is assigned to a an engine and a state and will break links of the state's network depending on the
+ * information provided by the engine and the state.
  */
-public interface LinkBreaker {
+public abstract class LinkBreaker {
+
+    private Engine engine;  // assigned engine
+    private State state;    // assigned state
 
     /**
-     * Breaks any link from the network. If a link was broken it is removed completely from the network and the broken
-     * link is returned. If no link was broken null is returned.
-     *
-     * @param network network to break link from.
-     * @param currentTime current of the simulation.
-     * @return the broken link or null if no link was broken.
+     * Creates a link breaker not assigned to any engine and state.
      */
-    Link breakAnyLink(Network network, long currentTime);
+    public LinkBreaker() {
+        this.engine = null;
+        this.state = null;
+    }
+
+    /**
+     * Creates a link breaker assigned to an engine and state.
+     *
+     * @param engine engine to assign to.
+     * @param state state to assign to.
+     */
+    public LinkBreaker(Engine engine, State state) {
+        assignTo(engine, state);
+    }
+
+    /**
+     * Assigns the link breaker to an engine and state. If the link breaker is already assigned it the new assignment
+     * overrides the previous.
+     *
+     * @param engine engine to assign to.
+     * @param state state to assign to.
+     */
+    public void assignTo(Engine engine, State state) {
+        this.engine = engine;
+        this.state = state;
+    }
 
 }
