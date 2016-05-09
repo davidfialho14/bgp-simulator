@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
 import policies.PathAttribute;
+import simulation.schedulers.ScheduledRoute;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;

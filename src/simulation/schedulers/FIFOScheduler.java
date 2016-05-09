@@ -1,7 +1,5 @@
 package simulation.schedulers;
 
-import simulation.ScheduledRoute;
-
 public class FIFOScheduler extends AbstractScheduler {
 
     @Override

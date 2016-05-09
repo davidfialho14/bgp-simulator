@@ -1,6 +1,7 @@
-package simulation;
+package simulation.schedulers;
 
 import network.Link;
+import simulation.Route;
 
 /**
  * Implements the representation of a route that has been scheduled. It associates the exportation link and a

@@ -1,7 +1,6 @@
 package simulation.schedulers;
 
 import network.Link;
-import simulation.ScheduledRoute;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;

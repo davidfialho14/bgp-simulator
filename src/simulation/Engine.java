@@ -6,6 +6,7 @@ import network.SelfLink;
 import policies.Attribute;
 import policies.PathAttribute;
 import simulation.events.*;
+import simulation.schedulers.ScheduledRoute;
 import simulation.schedulers.Scheduler;
 
 import static simulation.Route.invalidRoute;

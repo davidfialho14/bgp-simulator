@@ -1,7 +1,6 @@
 package simulation.schedulers;
 
 import network.Link;
-import simulation.ScheduledRoute;
 
 import java.util.HashMap;
 import java.util.Map;
