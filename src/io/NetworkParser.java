@@ -12,8 +12,6 @@ import network.exceptions.NodeNotFoundException;
 import policies.Label;
 import policies.Policies;
 import policies.Policy;
-import protocols.Protocol;
-import protocols.Protocols;
 
 import java.io.File;
 import java.io.FileReader;
@@ -26,16 +24,18 @@ import java.io.IOException;
     TODO labels for the links are mandatory! it's an error when one is missing
  */
 
-public class TopologyParser {
+/**
+ * Network Parser is responsible for parsing a network file a constructing the respective network.
+ */
+public class NetworkParser {
 
     private Parser parser;              // DOT file parser
     private Network parsedNetwork;      // parsed parsedNetwork
-    private Protocol parsedProtocol;    // parsed parsedProtocol
     private Policy parsedPolicy;        // parsed attribute factory
 
     // -------- PUBLIC INTERFACE -------------------------------------------------------------------------------------
 
-    public TopologyParser() {
+    public NetworkParser() {
         this.parser = new Parser();
     }
 
@@ -57,7 +57,6 @@ public class TopologyParser {
         // here we just want the first graph
         Graph graph = parser.getGraphs().get(0);
 
-        parsedProtocol = Protocols.getProtocol(graph.getAttribute("protocol"));
         parsedPolicy = Policies.getPolicy(graph.getAttribute("policy"));
         parsedNetwork = new Network(parsedPolicy);
 
@@ -90,21 +89,12 @@ public class TopologyParser {
     }
 
     /**
-     * Returns the parsedNetwork parsed after the last call to the parse() method. If the parse() method has never been
+     * Returns the network parsed after the last call to the parse() method. If the parse() method has never been
      * called then null is returned.
      * @return the last parsedNetwork parse or null if the parse() method has never been called.
      */
-    public Network getParsedNetwork() {
+    public Network getNetwork() {
         return parsedNetwork;
-    }
-
-    /**
-     * Returns the parsedProtocol parsed after the last call to the parse() method. If the parse() method has never been
-     * called then null is returned.
-     * @return the last parsedProtocol parse or null if the parse() method has never been called.
-     */
-    public Protocol getProtocol() {
-        return parsedProtocol;
     }
 
     /**

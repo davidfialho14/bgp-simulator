@@ -4,7 +4,7 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import io.HTMLReportGenerator;
 import io.InvalidTagException;
-import io.TopologyParser;
+import io.NetworkParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -30,6 +30,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
     public RadioButton oneNodeRadioButton;
+    public ToggleGroup protocolGroup;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -78,11 +79,12 @@ public class Controller implements Initializable {
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
-        TopologyParser parser = parse(new File(networkTextField.getText()));
+        NetworkParser parser = parse(new File(networkTextField.getText()));
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
-            State state = State.create(parser.getParsedNetwork(), parser.getProtocol());
+            ProtocolRadioButton protocolRadioButton = (ProtocolRadioButton) protocolGroup.getSelectedToggle();
+            State state = State.create(parser.getNetwork(), protocolRadioButton.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
@@ -112,9 +114,9 @@ public class Controller implements Initializable {
         }
     }
 
-    private static TopologyParser parse(File networkFile) {
+    private static NetworkParser parse(File networkFile) {
         try {
-            TopologyParser parser = new TopologyParser();
+            NetworkParser parser = new NetworkParser();
             parser.parse(networkFile);
 
             return parser;
