@@ -16,6 +16,10 @@ public class TimeProperty {
         this.time = -1;
     }
 
+    public TimeProperty(long value) {
+        this.time = value;
+    }
+
     public long getTime() {
         return time;
     }
