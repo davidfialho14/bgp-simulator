@@ -12,6 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
+import protocols.Protocol;
+import protocols.implementations.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
 import simulation.eventhandlers.MessageAndDetectionCountHandler;
@@ -82,7 +84,8 @@ public class Controller implements Initializable {
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
-            State state = State.create(parser.getNetwork(), parser.getProtocol());
+            Protocol protocol = new D1R1Protocol(); // FIXME select the protocol from the radio buttons
+            State state = State.create(parser.getNetwork(), protocol);
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
