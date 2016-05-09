@@ -82,7 +82,7 @@ public class Controller implements Initializable {
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
-            State state = State.create(parser.getParsedNetwork(), parser.getProtocol());
+            State state = State.create(parser.getNetwork(), parser.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {

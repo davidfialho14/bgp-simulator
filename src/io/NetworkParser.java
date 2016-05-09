@@ -89,11 +89,11 @@ public class NetworkParser {
     }
 
     /**
-     * Returns the parsedNetwork parsed after the last call to the parse() method. If the parse() method has never been
+     * Returns the network parsed after the last call to the parse() method. If the parse() method has never been
      * called then null is returned.
      * @return the last parsedNetwork parse or null if the parse() method has never been called.
      */
-    public Network getParsedNetwork() {
+    public Network getNetwork() {
         return parsedNetwork;
     }
 
