@@ -1,4 +1,4 @@
-package simulation;
+package addons.linkinserters;
 
 import network.Link;
 import network.Network;

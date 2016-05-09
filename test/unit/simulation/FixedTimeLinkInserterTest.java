@@ -1,5 +1,6 @@
 package simulation;
 
+import addons.linkinserters.FixedTimeLinkInserter;
 import network.Network;
 import org.junit.Test;
 import org.junit.runner.RunWith;
