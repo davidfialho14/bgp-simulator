@@ -1,22 +1,22 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 import network.Link;
 import policies.Attribute;
 import policies.Label;
 
 import static policies.InvalidAttribute.invalid;
-import static policies.implementations.gaorexford.CustomerAttribute.customer;
+import static policies.gaorexford.ProviderAttribute.provider;
 
 /**
- * Implements the customer label.
+ * Implements the provider label.
  */
-public class CustomerLabel implements Label {
+public class ProviderLabel implements Label {
 
     /**
      * Table gives the result of extending each type of attribute.
      */
     private static final Attribute[] extendTable = {
-            customer(), customer(),   invalid(),  invalid()
+            provider(), provider(),   provider(),  provider()
     };
 
     @Override
@@ -29,16 +29,16 @@ public class CustomerLabel implements Label {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof CustomerLabel;
+        return o instanceof ProviderLabel;
     }
 
     @Override
     public int hashCode() {
-        return 31;  // must be different from all Gao Rexford labels
+        return 33;  // must be different from all Gao Rexford labels
     }
 
     @Override
     public String toString() {
-        return "C";
+        return "P";
     }
 }

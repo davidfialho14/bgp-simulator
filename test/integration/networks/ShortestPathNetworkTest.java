@@ -1,7 +1,7 @@
 package networks;
 
 import policies.Policy;
-import policies.implementations.shortestpath.ShortestPathPolicy;
+import policies.shortestpath.ShortestPathPolicy;
 
 public class ShortestPathNetworkTest {
 

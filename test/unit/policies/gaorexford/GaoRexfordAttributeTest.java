@@ -1,14 +1,14 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static policies.InvalidAttribute.invalid;
-import static policies.implementations.gaorexford.CustomerAttribute.customer;
-import static policies.implementations.gaorexford.PeerAttribute.peer;
-import static policies.implementations.gaorexford.ProviderAttribute.provider;
-import static policies.implementations.gaorexford.SelfAttribute.self;
+import static policies.gaorexford.CustomerAttribute.customer;
+import static policies.gaorexford.PeerAttribute.peer;
+import static policies.gaorexford.ProviderAttribute.provider;
+import static policies.gaorexford.SelfAttribute.self;
 
 public class GaoRexfordAttributeTest {
 

@@ -3,7 +3,7 @@ package simulation.implementations.handlers;
 import network.Network;
 import org.junit.Before;
 import org.junit.Test;
-import policies.implementations.shortestpath.ShortestPathPolicy;
+import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import simulation.Engine;

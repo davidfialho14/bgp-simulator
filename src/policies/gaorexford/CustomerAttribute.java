@@ -1,4 +1,4 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 /**
  * Represents a customer attribute. It is implemented as a singleton.

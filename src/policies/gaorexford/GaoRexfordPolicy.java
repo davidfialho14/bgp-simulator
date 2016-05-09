@@ -1,4 +1,4 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 import io.InvalidTagException;
 import network.Node;
@@ -6,7 +6,7 @@ import policies.Attribute;
 import policies.Label;
 import policies.Policy;
 
-import static policies.implementations.gaorexford.SelfAttribute.self;
+import static policies.gaorexford.SelfAttribute.self;
 
 public class GaoRexfordPolicy implements Policy {
 

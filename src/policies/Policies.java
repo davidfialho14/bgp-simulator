@@ -1,7 +1,7 @@
 package policies;
 
 import io.InvalidTagException;
-import policies.implementations.shortestpath.ShortestPathPolicy;
+import policies.shortestpath.ShortestPathPolicy;
 
 import java.util.HashMap;
 import java.util.Map;

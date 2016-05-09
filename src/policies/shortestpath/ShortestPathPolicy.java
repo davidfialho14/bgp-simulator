@@ -1,4 +1,4 @@
-package policies.implementations.shortestpath;
+package policies.shortestpath;
 
 import io.InvalidTagException;
 import network.Node;

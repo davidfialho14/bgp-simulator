@@ -1,17 +1,17 @@
 package wrappers;
 
 import policies.Label;
-import policies.implementations.gaorexford.CustomerLabel;
-import policies.implementations.gaorexford.PeerLabel;
-import policies.implementations.gaorexford.ProviderLabel;
+import policies.gaorexford.CustomerLabel;
+import policies.gaorexford.PeerLabel;
+import policies.gaorexford.ProviderLabel;
 import policies.PathAttribute;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 
-import static policies.implementations.gaorexford.CustomerAttribute.customer;
-import static policies.implementations.gaorexford.PeerAttribute.peer;
-import static policies.implementations.gaorexford.ProviderAttribute.provider;
-import static policies.implementations.gaorexford.SelfAttribute.self;
+import static policies.gaorexford.CustomerAttribute.customer;
+import static policies.gaorexford.PeerAttribute.peer;
+import static policies.gaorexford.ProviderAttribute.provider;
+import static policies.gaorexford.SelfAttribute.self;
 import static wrappers.PathWrapper.path;
 import static wrappers.routetable.OutLinkElement.outLink;
 import static wrappers.routetable.RouteElement.route;

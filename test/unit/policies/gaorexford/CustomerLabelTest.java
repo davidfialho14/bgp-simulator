@@ -1,4 +1,4 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,28 +7,28 @@ import policies.Label;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static policies.InvalidAttribute.invalid;
-import static policies.implementations.gaorexford.CustomerAttribute.customer;
-import static policies.implementations.gaorexford.PeerAttribute.peer;
-import static policies.implementations.gaorexford.ProviderAttribute.provider;
-import static policies.implementations.gaorexford.SelfAttribute.self;
+import static policies.gaorexford.CustomerAttribute.customer;
+import static policies.gaorexford.PeerAttribute.peer;
+import static policies.gaorexford.ProviderAttribute.provider;
+import static policies.gaorexford.SelfAttribute.self;
 
-public class PeerLabelTest {
+public class CustomerLabelTest {
 
     protected Label label;
 
     @Before
     public void setUp() throws Exception {
-        label = new PeerLabel();
+        label = new CustomerLabel();
     }
 
     @Test
     public void extend_SelfAttribute_ReturnsSelfAttribute() throws Exception {
-        assertThat(label.extend(null, self()), is(peer()));
+        assertThat(label.extend(null, self()), is(customer()));
     }
 
     @Test
-    public void extend_CustomerAttribute_ReturnsPeerAttribute() throws Exception {
-        assertThat(label.extend(null, customer()), is(peer()));
+    public void extend_CustomerAttribute_ReturnsCustomerAttribute() throws Exception {
+        assertThat(label.extend(null, customer()), is(customer()));
     }
 
     @Test

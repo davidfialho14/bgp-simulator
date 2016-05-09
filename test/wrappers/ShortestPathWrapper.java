@@ -1,8 +1,8 @@
 package wrappers;
 
 import network.Node;
-import policies.implementations.shortestpath.ShortestPathAttribute;
-import policies.implementations.shortestpath.ShortestPathLabel;
+import policies.shortestpath.ShortestPathAttribute;
+import policies.shortestpath.ShortestPathLabel;
 import policies.PathAttribute;
 import simulation.Route;
 import wrappers.routetable.OutLinkElement;

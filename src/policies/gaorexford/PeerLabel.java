@@ -1,11 +1,11 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 import network.Link;
 import policies.Attribute;
 import policies.Label;
 
 import static policies.InvalidAttribute.invalid;
-import static policies.implementations.gaorexford.PeerAttribute.peer;
+import static policies.gaorexford.PeerAttribute.peer;
 
 /**
  * Implements the peer label.

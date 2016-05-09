@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import policies.implementations.shortestpath.ShortestPathPolicy;
+import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
 import simulation.Engine;
 import simulation.State;

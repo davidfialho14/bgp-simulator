@@ -1,4 +1,4 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 import policies.Attribute;
 

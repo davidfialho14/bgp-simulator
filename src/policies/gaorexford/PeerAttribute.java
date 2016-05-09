@@ -1,4 +1,4 @@
-package policies.implementations.gaorexford;
+package policies.gaorexford;
 
 /**
  * Represents a peer attribute. It is implemented as a singleton.

@@ -4,7 +4,7 @@ import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
-import policies.implementations.gaorexford.GaoRexfordPolicy;
+import policies.gaorexford.GaoRexfordPolicy;
 import protocols.BGPProtocol;
 import simulation.schedulers.FIFOScheduler;
 
