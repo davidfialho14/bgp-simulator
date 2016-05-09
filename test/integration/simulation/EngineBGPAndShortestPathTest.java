@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
-import protocols.implementations.BGPProtocol;
+import protocols.BGPProtocol;
 import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;

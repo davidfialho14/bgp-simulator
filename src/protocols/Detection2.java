@@ -1,4 +1,4 @@
-package protocols.implementations;
+package protocols;
 
 import network.Node;
 import policies.Attribute;

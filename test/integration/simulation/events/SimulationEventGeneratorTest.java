@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.implementations.shortestpath.ShortestPathPolicy;
-import protocols.implementations.BGPProtocol;
+import protocols.BGPProtocol;
 import simulation.Engine;
 import simulation.State;
 import simulation.schedulers.FIFOScheduler;

@@ -5,7 +5,7 @@ import network.Node;
 import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
-import protocols.implementations.D2R1Protocol;
+import protocols.D2R1Protocol;
 import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;

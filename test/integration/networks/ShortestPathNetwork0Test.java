@@ -5,7 +5,7 @@ import network.Node;
 import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.shortestpath.ShortestPathPolicy;
-import protocols.implementations.BGPProtocol;
+import protocols.BGPProtocol;
 import simulation.Engine;
 import simulation.State;
 import simulation.schedulers.FIFOScheduler;

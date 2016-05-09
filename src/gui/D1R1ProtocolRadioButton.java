@@ -1,7 +1,7 @@
 package gui;
 
 import protocols.Protocol;
-import protocols.implementations.D1R1Protocol;
+import protocols.D1R1Protocol;
 
 /**
  * A D1R1 protocol radio button associates the D1R1 protocol with a radio button.

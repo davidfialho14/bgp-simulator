@@ -1,4 +1,4 @@
-package protocols.implementations;
+package protocols;
 
 import policies.Attribute;
 import simulation.Route;
