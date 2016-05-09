@@ -29,7 +29,6 @@ public class Controller implements Initializable {
     public Button startButton;
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
-    public RadioButton oneNodeRadioButton;
     public ToggleGroup protocolGroup;
 
     private FileChooser fileChooser = new FileChooser();
@@ -56,11 +55,6 @@ public class Controller implements Initializable {
         destinationIdSpinner.focusedProperty().addListener((observable, oldState, newState) -> {
             if (!newState)
                 commitValue(destinationIdSpinner);
-        });
-
-        // enable destination spinner only when the one node radio button is selected
-        oneNodeRadioButton.selectedProperty().addListener((observable, oldState, newState) -> {
-            destinationIdSpinner.setDisable(!newState);
         });
     }
 
@@ -91,11 +85,7 @@ public class Controller implements Initializable {
                 MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
                 eventHandler.register(engine.getEventGenerator());
 
-                if (oneNodeRadioButton.isSelected()) {
-                    engine.simulate(state, destinationIdSpinner.getValue());
-                } else {
-                    engine.simulate(state);
-                }
+                engine.simulate(state, destinationIdSpinner.getValue());
 
                 reportGenerator.addMessageCount(eventHandler.getMessageCount());
                 reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
