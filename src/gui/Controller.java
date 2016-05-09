@@ -12,8 +12,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import protocols.Protocol;
-import protocols.implementations.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
 import simulation.eventhandlers.MessageAndDetectionCountHandler;
@@ -32,6 +30,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
     public RadioButton oneNodeRadioButton;
+    public ToggleGroup protocolGroup;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -84,8 +83,8 @@ public class Controller implements Initializable {
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
-            Protocol protocol = new D1R1Protocol(); // FIXME select the protocol from the radio buttons
-            State state = State.create(parser.getNetwork(), protocol);
+            ProtocolRadioButton protocolRadioButton = (ProtocolRadioButton) protocolGroup.getSelectedToggle();
+            State state = State.create(parser.getNetwork(), protocolRadioButton.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
