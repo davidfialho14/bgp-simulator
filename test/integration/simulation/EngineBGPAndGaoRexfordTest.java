@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import policies.implementations.gaorexford.GaoRexfordPolicy;
 import protocols.implementations.BGPProtocol;
-import simulation.implementations.schedulers.FIFOScheduler;
+import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

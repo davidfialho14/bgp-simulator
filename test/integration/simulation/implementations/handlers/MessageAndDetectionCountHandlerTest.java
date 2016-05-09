@@ -9,7 +9,7 @@ import protocols.implementations.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
-import simulation.implementations.schedulers.FIFOScheduler;
+import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -11,7 +11,7 @@ import policies.implementations.shortestpath.ShortestPathPolicy;
 import protocols.implementations.BGPProtocol;
 import simulation.Engine;
 import simulation.State;
-import simulation.implementations.schedulers.FIFOScheduler;
+import simulation.schedulers.FIFOScheduler;
 
 import static org.mockito.Mockito.*;
 import static simulation.Route.invalidRoute;

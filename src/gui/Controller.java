@@ -15,7 +15,7 @@ import network.exceptions.NodeNotFoundException;
 import simulation.Engine;
 import simulation.State;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
-import simulation.implementations.schedulers.RandomScheduler;
+import simulation.schedulers.RandomScheduler;
 
 import java.io.File;
 import java.io.IOException;

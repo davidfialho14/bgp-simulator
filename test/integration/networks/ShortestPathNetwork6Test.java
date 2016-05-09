@@ -12,7 +12,7 @@ import simulation.Engine;
 import simulation.RouteTable;
 import simulation.State;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
-import simulation.implementations.schedulers.FIFOScheduler;
+import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

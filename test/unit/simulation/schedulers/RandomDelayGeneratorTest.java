@@ -1,4 +1,4 @@
-package simulation.implementations.schedulers;
+package simulation.schedulers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

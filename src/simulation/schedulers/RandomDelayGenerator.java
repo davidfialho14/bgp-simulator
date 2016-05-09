@@ -1,4 +1,4 @@
-package simulation.implementations.schedulers;
+package simulation.schedulers;
 
 import java.util.Random;
 
