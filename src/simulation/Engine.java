@@ -20,6 +20,8 @@ public class Engine {
     private Scheduler scheduler;
     private SimulationEventGenerator eventGenerator = new SimulationEventGenerator();
 
+    private State currentState; // current state on the simulation - null if not simulating
+
     /**
      * Constructs an engine form a pre-configured builder.
      */
@@ -42,9 +44,12 @@ public class Engine {
      * @param initialState initial state to start simulation.
      */
     public void simulate(State initialState) {
+        currentState = initialState;
         scheduler.reset();
         exportSelfRoute(initialState);
         simulationLoop(initialState);
+
+        currentState = null; // no longer simulating
     }
 
     /**
@@ -53,9 +58,12 @@ public class Engine {
      * @param initialState initial state to start simulation.
      */
     public void simulate(State initialState, int destinationId) {
+        currentState = initialState;
         scheduler.reset();
         exportSelfRoute(initialState.getNetwork().getNode(destinationId), initialState);
         simulationLoop(initialState);
+
+        currentState = null; // no longer simulating
     }
 
     //------------- PROPERTIES ----------------------------------------------------------------------------------------
