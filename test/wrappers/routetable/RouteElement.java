@@ -1,7 +1,7 @@
 package wrappers.routetable;
 
 import policies.Attribute;
-import simulation.PathAttribute;
+import policies.PathAttribute;
 import simulation.Route;
 
 /**

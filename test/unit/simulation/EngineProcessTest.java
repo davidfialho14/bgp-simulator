@@ -8,11 +8,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
+import policies.PathAttribute;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
-import static simulation.PathAttribute.invalidPath;
+import static policies.PathAttribute.invalidPath;
 import static wrappers.StubWrapper.stubAttr;
 import static wrappers.StubWrapper.stubLink;
 import static wrappers.PathWrapper.path;

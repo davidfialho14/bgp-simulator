@@ -1,7 +1,7 @@
 package wrappers;
 
 import network.Node;
-import simulation.PathAttribute;
+import policies.PathAttribute;
 
 /**
  * Implements wrapper methods to create paths in a more readable way.

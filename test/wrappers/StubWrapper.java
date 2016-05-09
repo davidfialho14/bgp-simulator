@@ -4,7 +4,7 @@ import stubs.StubAttribute;
 import stubs.StubLabel;
 import network.Link;
 import network.Node;
-import simulation.PathAttribute;
+import policies.PathAttribute;
 import simulation.Route;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;

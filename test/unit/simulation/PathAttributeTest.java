@@ -2,10 +2,11 @@ package simulation;
 
 import network.Node;
 import org.junit.Test;
+import policies.PathAttribute;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static simulation.PathAttribute.invalidPath;
+import static policies.PathAttribute.invalidPath;
 import static wrappers.PathWrapper.path;
 import static wrappers.network.NetworkWrapper.anyNode;
 

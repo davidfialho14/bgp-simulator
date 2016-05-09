@@ -1,7 +1,6 @@
-package simulation;
+package policies;
 
 import network.Node;
-import policies.Attribute;
 
 import java.util.Collections;
 import java.util.Iterator;

@@ -4,6 +4,7 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
+import policies.PathAttribute;
 import simulation.events.*;
 import simulation.schedulers.Scheduler;
 

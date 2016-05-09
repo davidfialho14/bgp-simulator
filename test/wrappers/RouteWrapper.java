@@ -3,7 +3,7 @@ package wrappers;
 import stubs.StubAttribute;
 import network.Node;
 import policies.Attribute;
-import simulation.PathAttribute;
+import policies.PathAttribute;
 import simulation.Route;
 
 import static wrappers.PathWrapper.path;

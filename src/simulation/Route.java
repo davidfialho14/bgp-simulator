@@ -2,6 +2,7 @@ package simulation;
 
 import network.Node;
 import policies.Attribute;
+import policies.PathAttribute;
 import policies.Policy;
 
 import static policies.InvalidAttribute.invalid;

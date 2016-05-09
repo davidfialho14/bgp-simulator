@@ -3,7 +3,7 @@ package protocols;
 import network.Link;
 import network.Node;
 import policies.Attribute;
-import simulation.PathAttribute;
+import policies.PathAttribute;
 import simulation.Route;
 
 public interface Protocol {

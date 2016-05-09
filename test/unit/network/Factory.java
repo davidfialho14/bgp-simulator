@@ -2,7 +2,7 @@ package network;
 
 import stubs.StubAttribute;
 import stubs.StubLabel;
-import simulation.PathAttribute;
+import policies.PathAttribute;
 import simulation.Route;
 
 /**
