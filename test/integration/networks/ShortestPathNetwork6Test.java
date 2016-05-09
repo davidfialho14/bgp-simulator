@@ -11,7 +11,7 @@ import protocols.implementations.D2R1Protocol;
 import simulation.Engine;
 import simulation.RouteTable;
 import simulation.State;
-import simulation.eventhandlers.MessageAndDetectionCountHandler;
+import addons.eventhandlers.MessageAndDetectionCountHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;

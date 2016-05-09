@@ -1,4 +1,4 @@
-package simulation.eventhandlers;
+package addons.eventhandlers;
 
 import simulation.events.*;
 

@@ -8,7 +8,7 @@ import protocols.implementations.BGPProtocol;
 import protocols.implementations.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
-import simulation.eventhandlers.MessageAndDetectionCountHandler;
+import addons.eventhandlers.MessageAndDetectionCountHandler;
 import simulation.implementations.schedulers.FIFOScheduler;
 
 import static org.hamcrest.CoreMatchers.is;
