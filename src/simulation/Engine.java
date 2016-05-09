@@ -45,6 +45,7 @@ public class Engine {
         scheduler.reset();
         exportSelfRoute(initialState);
         simulationLoop(initialState);
+        resetTime();
     }
 
     /**
@@ -56,6 +57,7 @@ public class Engine {
         scheduler.reset();
         exportSelfRoute(initialState.getNetwork().getNode(destinationId), initialState);
         simulationLoop(initialState);
+        resetTime();
     }
 
     //------------- PROPERTIES ----------------------------------------------------------------------------------------
@@ -269,5 +271,14 @@ public class Engine {
      */
     private void exportSelfRoute(State state) {
         state.getNetwork().getNodes().forEach(node -> exportSelfRoute(node, state));
+    }
+
+    /**
+     * Resets the time property by removing all listeners and setting the time to -1 in order to generate
+     * a time change when the simulation starts.
+     */
+    private void resetTime() {
+        timeProperty.removeAll();
+        timeProperty.setTime(-1);
     }
 }
