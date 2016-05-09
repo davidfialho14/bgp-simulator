@@ -236,13 +236,19 @@ public class Engine {
      */
     private void simulationLoop(State state) {
 
-        ScheduledRoute scheduledRoute;
         timeProperty.setTime(0);    // starting time must be set here to notify the listeners
-        while ((scheduledRoute = scheduler.get()) != null) {
-            Node learningNode = scheduledRoute.getLink().getSource();
-            process(state.get(learningNode), scheduledRoute);
+        while (scheduler.hasRoute()) {
+            // update the current time
+            timeProperty.setTime(scheduler.getCurrentTime());
 
-            timeProperty.setTime(scheduledRoute.getTimestamp());
+            ScheduledRoute scheduledRoute = scheduler.get();
+
+            // it is not guaranteed the scheduler has routes still since they can be removed by a link breaker
+            // when updating the time
+            if (scheduledRoute != null) {
+                Node learningNode = scheduledRoute.getLink().getSource();
+                process(state.get(learningNode), scheduledRoute);
+            }
         }
     }
 
