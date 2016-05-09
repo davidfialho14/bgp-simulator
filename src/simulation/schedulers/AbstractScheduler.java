@@ -12,7 +12,6 @@ public abstract class AbstractScheduler implements Scheduler {
         with the routes.
      */
     private PriorityQueue<ScheduledRoute> queue = new PriorityQueue<>();
-    private long currentTime = 0L;
 
     /**
      * Returns the next scheduled route.
@@ -20,11 +19,7 @@ public abstract class AbstractScheduler implements Scheduler {
      * @return next route scheduled or null if there is no routes scheduled.
      */
     public ScheduledRoute get() {
-        ScheduledRoute nextScheduledRoute = queue.poll();
-        if (nextScheduledRoute != null)
-            currentTime = nextScheduledRoute.getTimestamp();
-
-        return nextScheduledRoute;
+        return queue.poll();
     }
 
     /**
@@ -71,7 +66,12 @@ public abstract class AbstractScheduler implements Scheduler {
      */
     @Override
     public long getCurrentTime() {
-        return currentTime;
+        ScheduledRoute nextScheduledRoute = queue.peek();
+        if (nextScheduledRoute == null) {
+            return Long.MAX_VALUE;
+        } else {
+            return nextScheduledRoute.getTimestamp();
+        }
     }
 
     /**
