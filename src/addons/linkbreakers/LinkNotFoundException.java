@@ -1,4 +1,4 @@
-package simulation.implementations.linkbreakers;
+package addons.linkbreakers;
 
 /**
  * Thrown to indicate that a link does not exist in a given network.

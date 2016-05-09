@@ -1,8 +1,7 @@
-package simulation.implementations.linkbreakers;
+package addons.linkbreakers;
 
 import network.Link;
 import network.Network;
-import simulation.LinkBreaker;
 
 /**
  * Implements the breaking of a specific link on a protected method that can be used by future implementations.

@@ -1,4 +1,4 @@
-package simulation;
+package addons.linkbreakers;
 
 import network.Link;
 import network.Network;
