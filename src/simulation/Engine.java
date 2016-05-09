@@ -38,6 +38,7 @@ public class Engine {
      * @param initialState initial state to start simulation.
      */
     public void simulate(State initialState) {
+        scheduler.reset();
         exportSelfRoute(initialState);
         simulationLoop(initialState);
     }
@@ -48,6 +49,7 @@ public class Engine {
      * @param initialState initial state to start simulation.
      */
     public void simulate(State initialState, int destinationId) {
+        scheduler.reset();
         exportSelfRoute(initialState.getNetwork().getNode(destinationId), initialState);
         simulationLoop(initialState);
     }

@@ -51,6 +51,7 @@ public class State {
      */
     public void reset() {
         this.nodesStates.clear();
+        this.defaultProtocol.reset();
         originalNetwork.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, this.defaultProtocol)));
 
         // ensure the current network must be a copy of the original
