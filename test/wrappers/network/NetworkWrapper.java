@@ -3,6 +3,7 @@ package wrappers.network;
 import network.Network;
 import network.Node;
 import network.exceptions.NodeNotFoundException;
+import policies.Policy;
 
 /**
  * Implements a set of static method wrappers to improve generating a network statically in a more
@@ -16,11 +17,13 @@ public class NetworkWrapper {
 
     /**
      * Creates a network from the link elements.
+     *
+     * @param policy policy of the network.
      * @param links links of the network.
      * @return network instance initialized.
      */
-    public static Network network(LinkElement... links) {
-        Network network = new Network();
+    public static Network network(Policy policy, LinkElement... links) {
+        Network network = new Network(policy);
         try {
             for (LinkElement link : links)
                 link.addTo(network);

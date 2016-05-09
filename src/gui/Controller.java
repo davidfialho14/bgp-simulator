@@ -13,7 +13,8 @@ import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulation.Engine;
-import simulation.implementations.handlers.MessageAndDetectionCountHandler;
+import simulation.State;
+import simulation.eventhandlers.MessageAndDetectionCountHandler;
 import simulation.implementations.schedulers.RandomScheduler;
 
 import java.io.File;
@@ -80,23 +81,25 @@ public class Controller implements Initializable {
         TopologyParser parser = parse(new File(networkTextField.getText()));
 
         if (parser != null) {
-            Engine engine = new Engine.Builder(parser.getProtocol(), parser.getPolicy(), new RandomScheduler()).build();
+            Engine engine = new Engine(new RandomScheduler());
+            State state = State.create(parser.getParsedNetwork(), parser.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
-                MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
-                engine.setEventHandler(handler);
+                MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
+                eventHandler.register(engine.getEventGenerator());
 
                 if (oneNodeRadioButton.isSelected()) {
-                    engine.simulate(parser.getParsedNetwork(), destinationIdSpinner.getValue());
+                    engine.simulate(state, destinationIdSpinner.getValue());
                 } else {
-                    engine.simulate(parser.getParsedNetwork());
+                    engine.simulate(state);
                 }
 
-                reportGenerator.addMessageCount(handler.getMessageCount());
-                reportGenerator.addDetectionCount(handler.getDetectionCount());
+                reportGenerator.addMessageCount(eventHandler.getMessageCount());
+                reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
 
-                engine.reset();
+                state.reset();
+                engine.getEventGenerator().clearAll();
             }
 
             try {

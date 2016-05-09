@@ -23,7 +23,7 @@ public abstract class AbstractLinkBreaker implements LinkBreaker {
     protected void breakLink(Link link, Network network)
             throws LinkNotFoundException {
 
-        if (!network.remove(link)) {
+        if (!network.removeLink(link)) {
             throw new LinkNotFoundException("could not break '" + link + "'");
         }
     }

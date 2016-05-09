@@ -24,41 +24,47 @@ import static wrappers.network.NetworkWrapper.anyNode;
 public class EngineLearnTest {
 
     @Mock
-    Protocol protocol;
+    private NodeState stubNodeState;
 
-    Engine engine;
+    @Mock
+    private Protocol stubProtocol;
+
+    private Engine engine;
 
     @Before
     public void setUp() throws Exception {
-        engine = new Engine.Builder(protocol, null, null).build();
+        engine = new Engine(null);
+        when(stubNodeState.getProtocol()).thenReturn(stubProtocol);
     }
 
-    Node destination = anyNode();
+    private Node destination = anyNode();
 
     @Test
     public void
     learn_InvalidRoute_InvalidRoute() throws Exception {
-        when(protocol.extend(eq(destination), any(), any())).thenReturn(invalid());
+        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(invalid());
 
-        assertThat(engine.learn(anyStubLink(), invalidRoute(destination)), is(invalidRoute(destination)));
+        assertThat(engine.learn(stubNodeState, anyStubLink(), invalidRoute(destination)),
+                is(invalidRoute(destination)));
     }
 
     @Test
     public void
     learn_RouteWithAttributeThatExtendsToInvalid_InvalidRoute() throws Exception {
         Route exportedRoute = route(destination, stubAttr(0), path());
-        when(protocol.extend(eq(destination), any(), any())).thenReturn(invalid());
+        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(invalid());
 
-        assertThat(engine.learn(anyStubLink(), exportedRoute), is(invalidRoute(destination)));
+        assertThat(engine.learn(stubNodeState, anyStubLink(), exportedRoute), is(invalidRoute(destination)));
     }
 
     @Test
     public void
     learn_FromNode0RouteWithEmptyPathAndAttribute0WhichExtendsToAttribute1_Route1AndPathWithNode0() throws Exception {
         Route exportedRoute = route(destination, stubAttr(0), path());
-        when(protocol.extend(eq(destination), any(), any())).thenReturn(stubAttr(1));
+        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(stubAttr(1));
 
-        assertThat(engine.learn(stubLink(1, 0), exportedRoute), is(route(destination, stubAttr(1), path(0))));
+        assertThat(engine.learn(stubNodeState, stubLink(1, 0), exportedRoute),
+                is(route(destination, stubAttr(1), path(0))));
     }
 
     @Test
@@ -66,8 +72,9 @@ public class EngineLearnTest {
     learn_FromNode0RouteWithPathWithNode1AndAttribute0WhichExtendsToAttribute1_Route1AndPathWithNodes0And1()
             throws Exception {
         Route exportedRoute = route(destination, stubAttr(0), path(1));
-        when(protocol.extend(eq(destination), any(), any())).thenReturn(stubAttr(1));
+        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(stubAttr(1));
 
-        assertThat(engine.learn(stubLink(1, 0), exportedRoute), is(route(destination, stubAttr(1), path(0, 1))));
+        assertThat(engine.learn(stubNodeState, stubLink(1, 0), exportedRoute),
+                is(route(destination, stubAttr(1), path(0, 1))));
     }
 }

@@ -1,10 +1,10 @@
 package simulation;
 
-import simulation.implementations.handlers.NullEventHandler;
+import protocols.Protocol;
 
 public class SimulateEngineTest {
 
     protected Engine engine;
-    protected EventHandler eventHandler = new NullEventHandler();
+    protected Protocol protocol;
 
 }
