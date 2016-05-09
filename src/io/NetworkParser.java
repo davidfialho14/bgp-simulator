@@ -26,7 +26,10 @@ import java.io.IOException;
     TODO labels for the links are mandatory! it's an error when one is missing
  */
 
-public class TopologyParser {
+/**
+ * Network Parser is responsible for parsing a network file a constructing the respective network.
+ */
+public class NetworkParser {
 
     private Parser parser;              // DOT file parser
     private Network parsedNetwork;      // parsed parsedNetwork
@@ -35,7 +38,7 @@ public class TopologyParser {
 
     // -------- PUBLIC INTERFACE -------------------------------------------------------------------------------------
 
-    public TopologyParser() {
+    public NetworkParser() {
         this.parser = new Parser();
     }
 

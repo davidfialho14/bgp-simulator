@@ -4,7 +4,7 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import io.HTMLReportGenerator;
 import io.InvalidTagException;
-import io.TopologyParser;
+import io.NetworkParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -78,7 +78,7 @@ public class Controller implements Initializable {
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
-        TopologyParser parser = parse(new File(networkTextField.getText()));
+        NetworkParser parser = parse(new File(networkTextField.getText()));
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
@@ -112,9 +112,9 @@ public class Controller implements Initializable {
         }
     }
 
-    private static TopologyParser parse(File networkFile) {
+    private static NetworkParser parse(File networkFile) {
         try {
-            TopologyParser parser = new TopologyParser();
+            NetworkParser parser = new NetworkParser();
             parser.parse(networkFile);
 
             return parser;
