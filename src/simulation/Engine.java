@@ -13,6 +13,7 @@ import static simulation.Route.invalidRoute;
  */
 public class Engine {
 
+    private TimeProperty timeProperty = new TimeProperty();
     private Scheduler scheduler;
     private SimulationEventGenerator eventGenerator = new SimulationEventGenerator();
 
@@ -52,6 +53,12 @@ public class Engine {
         scheduler.reset();
         exportSelfRoute(initialState.getNetwork().getNode(destinationId), initialState);
         simulationLoop(initialState);
+    }
+
+    //------------- PROPERTIES ----------------------------------------------------------------------------------------
+
+    public TimeProperty timeProperty() {
+        return timeProperty;
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
@@ -225,9 +232,12 @@ public class Engine {
     private void simulationLoop(State state) {
 
         ScheduledRoute scheduledRoute;
+        timeProperty.setTime(0);    // starting time must be set here to notify the listeners
         while ((scheduledRoute = scheduler.get()) != null) {
             Node learningNode = scheduledRoute.getLink().getSource();
             process(state.get(learningNode), scheduledRoute);
+
+            timeProperty.setTime(scheduledRoute.getTimestamp());
         }
     }
 
