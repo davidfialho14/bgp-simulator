@@ -69,19 +69,15 @@ public class Engine {
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
-     * Processes a scheduled route by updating the state of the learning node.
+     * Processes an imported route by updating the state of the learning node.
      *
      * @param nodeState state of the learning node.
-     * @param scheduledRoute scheduled route to process.
+     * @param link link from which the route was imported.
+     * @param importedRoute route imported.
      */
-    void process(NodeState nodeState, ScheduledRoute scheduledRoute) {
-        // unpack the link, exported route, and destination node
-        Link link = scheduledRoute.getLink();
-        Route exportedRoute = scheduledRoute.getRoute();
-
-        Route learnedRoute = learn(nodeState, link, exportedRoute);
-
-        processSelection(nodeState, link, exportedRoute, learnedRoute, scheduledRoute);
+    void process(NodeState nodeState, Link link, Route importedRoute) {
+        Route learnedRoute = learn(nodeState, link, importedRoute);
+        processSelection(nodeState, link, importedRoute, learnedRoute);
     }
 
     /**
@@ -166,13 +162,11 @@ public class Engine {
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
      * @param nodeNotToExport node to which the route is not to be exported.
-     * @param prevScheduledRoute previously scheduled route.
      */
-    void exportToInNeighbours(Node exportingNode, Route route, Node nodeNotToExport,
-                              ScheduledRoute prevScheduledRoute) {
+    void exportToInNeighbours(Node exportingNode, Route route, Node nodeNotToExport) {
         exportingNode.getInLinks().stream()
                 .filter(inLink -> !inLink.getSource().equals(nodeNotToExport))  // exclude the nodeNotToExport
-                .forEach(inLink -> export(inLink, route, prevScheduledRoute));
+                .forEach(inLink -> export(inLink, route));
     }
 
     /**
@@ -180,18 +174,9 @@ public class Engine {
      *
      * @param link link to export the route to.
      * @param route route to be exported.
-     * @param prevScheduledRoute scheduled route previously got from the scheduler.
      */
-    void export(Link link, Route route, ScheduledRoute prevScheduledRoute) {
-        long timestamp;
-        if (prevScheduledRoute == null) {
-            // exporting self route
-            timestamp = 0;
-        } else {
-            timestamp = prevScheduledRoute.getTimestamp();
-        }
-
-        ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timestamp);
+    void export(Link link, Route route) {
+        ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timeProperty.getTime());
         scheduler.put(scheduledRoute);
 
         eventGenerator.fireExportEvent(new ExportEvent(link, route));
@@ -204,10 +189,8 @@ public class Engine {
      * @param link link from which the route was learned.
      * @param exportedRoute route that was exported through the link.
      * @param learnedRoute route that was learned by the node.
-     * @param prevScheduledRoute previously scheduled route.
      */
-    void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute,
-                          ScheduledRoute prevScheduledRoute) {
+    void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
 
         Node destination = learnedRoute.getDestination();
 
@@ -223,7 +206,7 @@ public class Engine {
                 must export the new route to all of the learning node's in-links except to the node
                 from which the route was learned.
              */
-            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination(), prevScheduledRoute);
+            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination());
         }
     }
 
@@ -247,7 +230,7 @@ public class Engine {
             // when updating the time
             if (scheduledRoute != null) {
                 Node learningNode = scheduledRoute.getLink().getSource();
-                process(state.get(learningNode), scheduledRoute);
+                process(state.get(learningNode), scheduledRoute.getLink(), scheduledRoute.getRoute());
             }
         }
     }
@@ -266,7 +249,7 @@ public class Engine {
         nodeState.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
         nodeState.setSelected(node, selfRoute);
 
-        node.getInLinks().forEach(link -> export(link, selfRoute, null));
+        node.getInLinks().forEach(link -> export(link, selfRoute));
     }
 
     /**
