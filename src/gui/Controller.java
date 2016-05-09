@@ -99,6 +99,7 @@ public class Controller implements Initializable {
                 reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
 
                 state.reset();
+                engine.getEventGenerator().clearAll();
             }
 
             try {

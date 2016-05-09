@@ -154,4 +154,15 @@ public class SimulationEventGenerator {
         // events are immutable so the same event object can be passed to all listeners
         detectListeners.forEach(listener -> listener.onDetected(event));
     }
+
+    /**
+     * Removes all listeners from the event generator.
+     */
+    public void clearAll() {
+        importListeners.clear();
+        learnListeners.clear();
+        selectListeners.clear();
+        exportListeners.clear();
+        detectListeners.clear();
+    }
 }
