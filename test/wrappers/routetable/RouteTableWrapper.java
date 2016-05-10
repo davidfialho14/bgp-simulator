@@ -2,11 +2,13 @@ package wrappers.routetable;
 
 import network.Link;
 import network.Node;
-import network.SelfLink;
 import simulation.Route;
 import simulation.RouteTable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -16,7 +18,7 @@ import java.util.*;
 public class RouteTableWrapper {
 
     private Collection<Link> outLinks = new ArrayList<>();
-    private Collection<Node> destinations = new ArrayList<>();
+    private Node destination;
     private List<Route> routes = new ArrayList<>();
 
     private RouteTableWrapper() {}  // can not be instantiated outside of the class
@@ -39,24 +41,14 @@ public class RouteTableWrapper {
         return wrapper.build();
     }
 
-    /**
-     * Builds an for the node with the given id.
-     *
-     * @param nodeId id of the node to create empty route table for.
-     * @return the built empty route table.
-     */
-    public static RouteTable emptyTable(int nodeId) {
-        return new RouteTable(Collections.singleton(new SelfLink(nodeId)));
-    }
-
     // ----- BUILD METHODS ------------------------------------------------------------------------------------------
 
     void addOutLink(Link outLink) {
         outLinks.add(outLink);
     }
 
-    void addDestination(Node destination) {
-        destinations.add(destination);
+    void setDestination(Node destination) {
+        this.destination = destination;
     }
 
     void addRoute(Route route) {
@@ -69,13 +61,15 @@ public class RouteTableWrapper {
      * @return built route table.
      */
     private RouteTable build() {
-        RouteTable table = new RouteTable(outLinks);
+        RouteTable table = new RouteTable(destination, outLinks);
 
-        // set each route in the list with each destination and out-link pair
-        // routes are stored in a list sequentially instead of divided in rows
-        Iterator<Route> routeItr = routes.iterator();
+        if (!routes.isEmpty()) {
+            // not empty route table
 
-        for (Node destination : destinations) {
+            // set each route in the list with each destination and out-link pair
+            // routes are stored in a list sequentially instead of divided in rows
+            Iterator<Route> routeItr = routes.iterator();
+
             for (Link outLink : outLinks) {
                 Route route = routeItr.next();
                 route.setDestination(destination);

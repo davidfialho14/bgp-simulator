@@ -39,21 +39,6 @@ public class Engine {
     }
 
     /**
-     * Simulates according to the given initial state. Simulates with all nodes as destinations.
-     *
-     * @param initialState initial state to start simulation.
-     */
-    public void simulate(State initialState) {
-        currentState = initialState;
-        scheduler.reset();
-        exportSelfRoute(initialState);
-        simulationLoop(initialState);
-        resetTime();
-
-        currentState = null; // no longer simulating
-    }
-
-    /**
      * Simulates according to the given initial state. Simulates only for one destination.
      *
      * @param initialState initial state to start simulation.
@@ -132,7 +117,7 @@ public class Engine {
         Node learningNode = link.getSource();
 
         // select the best route learned from all out-neighbours except the exporting out-link
-        Route exclRoute = nodeState.getSelectedRoute(destination, link);
+        Route exclRoute = nodeState.getSelectedRoute(link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
@@ -157,8 +142,8 @@ public class Engine {
         }
 
         // update the node state
-        nodeState.setSelected(destination, selectedRoute);
-        nodeState.updateRoute(destination, link, learnedRoute.getAttribute(), learnedRoute.getPath());
+        nodeState.setSelectedRoute(selectedRoute);
+        nodeState.updateRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
         return selectedRoute;
     }
@@ -200,10 +185,8 @@ public class Engine {
      */
     void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
 
-        Node destination = learnedRoute.getDestination();
-
         // store the currently selected route
-        Route prevSelectedRoute = nodeState.getSelectedRoute(destination);
+        Route prevSelectedRoute = nodeState.getSelectedRoute();
 
         Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
 
@@ -254,20 +237,10 @@ public class Engine {
         Route selfRoute = Route.createSelf(node, state.getNetwork().getPolicy());
 
         // add the self route to the node's route table
-        nodeState.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
-        nodeState.setSelected(node, selfRoute);
+        nodeState.updateRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
+        nodeState.setSelectedRoute(selfRoute);
 
         node.getInLinks().forEach(link -> export(link, selfRoute));
-    }
-
-    /**
-     * Exports the self route of all nodes in the network. It updates that state of the nodes to selected
-     * the self routes.
-     *
-     * @param state current state.
-     */
-    private void exportSelfRoute(State state) {
-        state.getNetwork().getNodes().forEach(node -> exportSelfRoute(node, state));
     }
 
     /**

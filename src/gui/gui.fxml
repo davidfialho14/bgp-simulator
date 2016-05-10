@@ -6,7 +6,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -22,7 +21,7 @@
         <ColumnConstraints hgrow="NEVER" maxWidth="90.0" minWidth="90.0" prefWidth="90.0"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="90.0" minWidth="90.0" prefWidth="90.0"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="90.0" minWidth="90.0" prefWidth="90.0"/>
-        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0"/>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0"/>
         <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="70.0" minWidth="70.0" prefWidth="70.0"/>
     </columnConstraints>
     <rowConstraints>
@@ -38,16 +37,8 @@
                 GridPane.columnIndex="6"/>
         <Label text="Destination:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
         <Label text="Repetitions:" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-        <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="92.0" selected="true" text="All Nodes"
-                     GridPane.columnIndex="2" GridPane.rowIndex="2">
-            <toggleGroup>
-                <ToggleGroup fx:id="destinationGroup"/>
-            </toggleGroup>
-        </RadioButton>
-        <RadioButton fx:id="oneNodeRadioButton" mnemonicParsing="false" text="Node:" toggleGroup="$destinationGroup"
-                     GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-        <Spinner fx:id="destinationIdSpinner" disable="true" editable="true" prefHeight="26.0" prefWidth="111.0"
-                 GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+        <Spinner fx:id="destinationIdSpinner" editable="true" prefHeight="26.0" prefWidth="111.0"
+                 GridPane.columnIndex="2" GridPane.rowIndex="2"/>
         <Spinner fx:id="repetitionsSpinner" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
         <Button fx:id="startButton" defaultButton="true" disable="true" maxWidth="67.0" minWidth="67.0"
                 mnemonicParsing="false" onAction="#handleClickedStartButton" prefWidth="67.0" text="Start"
