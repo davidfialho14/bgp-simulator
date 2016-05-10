@@ -37,7 +37,7 @@ public class RouteTableTest {
 
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
 
-        assertThat(routeTable.getRoute(outLink), is(nullValue()));
+        assertThat(routeTable.getRoute(outLink), is(stubRoute(0, 1, path())));
     }
 
     @Test
@@ -91,18 +91,6 @@ public class RouteTableTest {
 
     @Test
     public void
-    getRoute_ForDestination1OnTableWithOnlyKnownDestination0_InvalidRoute() throws Exception {
-        RouteTable routeTable = table(
-                                stubOutLink(0, 1),
-                destination(0), stubRoute(0, path())
-        );
-        Node destination1 = new Node(1);
-
-        assertThat(routeTable.getRoute(stubLink(0, 1)), is(Route.invalidRoute(destination1)));
-    }
-
-    @Test
-    public void
     getRoute_ForDestination0AndOutLink1To2ButTheRouteForDestination0WasOnlySetForOutLink1To3_InvalidRoute()
             throws Exception {
         Node destination = new Node(0);
@@ -140,13 +128,12 @@ public class RouteTableTest {
     clear_TableWithOutLinkBetween0And1AndKnownDestinations0And1_EmptyTableWithOutLinkBetween0And1() throws Exception {
         RouteTable routeTable = table(
                                 stubOutLink(0, 1),
-                destination(0), stubRoute(0, path()),
-                destination(1), stubRoute(0, path())
+                destination(0), stubRoute(0, path())
         );
 
         routeTable.clear();
 
-        assertThat(routeTable, is(table(stubOutLink(0, 1))));
+        assertThat(routeTable, is(table(destination(0), stubOutLink(0, 1))));
     }
 
     @Test
@@ -361,7 +348,7 @@ public class RouteTableTest {
     @Test
     public void
     getSelectedRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
-        RouteTable routeTable = table(stubOutLink(0, 1), stubOutLink(0, 2));
+        RouteTable routeTable = table(destination(0), stubOutLink(0, 1), stubOutLink(0, 2));
         routeTable.setRoute(stubLink(0, 1), route(0, stubAttr(0), path()));
         Node destination = new Node(0);
 
@@ -391,25 +378,8 @@ public class RouteTableTest {
                                 stubOutLink(0, 1),     stubOutLink(0, 2),
                 destination(0), stubRoute(0, path()),  invalidRoute()
         );
-        RouteTable routeTable2 = table(stubOutLink(0, 1),     stubOutLink(0, 2));
+        RouteTable routeTable2 = table(destination(0), stubOutLink(0, 1), stubOutLink(0, 2));
         routeTable2.setRoute(stubLink(0, 1), route(0, stubAttr(0), path()));
-
-        assertThat(routeTable1, is(equalTo(routeTable2)));
-    }
-
-    @Test
-    public void
-    equals_TableWithImplicitInvalidRoutesToDestination1AndTableWithImplicitInvalidRoutesToDestination1_AreEqual()
-            throws Exception {
-        RouteTable routeTable1 = table(
-                                stubOutLink(0, 1),     stubOutLink(0, 2),
-                destination(0), stubRoute(0, path()),  stubRoute(0, path()),
-                destination(1), invalidRoute(),         invalidRoute()
-        );
-        RouteTable routeTable2 = table(
-                                stubOutLink(0, 1),     stubOutLink(0, 2),
-                destination(0), stubRoute(0, path()),  stubRoute(0, path())
-        );
 
         assertThat(routeTable1, is(equalTo(routeTable2)));
     }

@@ -86,7 +86,7 @@ public class RouteTable {
      * Clears all the routes and destinations from the table. It keeps the out-links.
      */
     public void clear() {
-        routes.clear();
+        routes.replaceAll((link, route) -> invalidRoute(destination));
     }
 
     /**
