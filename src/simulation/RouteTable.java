@@ -151,27 +151,14 @@ public class RouteTable {
     }
 
     private TextTable getPrintableTable() {
-        Link[] outLinks = routes.keySet().stream().toArray(Link[]::new);
         String[] columns = routes.keySet().stream()
                 .map(Link::toString)
                 .toArray(String[]::new);
 
-        Node[] destinations = getDestinations().stream().toArray(Node[]::new);
-
-        Route[][] table = new Route[destinations.length][columns.length];
-        for (int i = 0; i < destinations.length; i++) {
-            for (int j = 0; j < columns.length; j++) {
-                table[i][j] = getRoute(outLinks[j]);
-            }
-        }
+        Object[] routes = this.routes.values().toArray();
+        Object[][] table = new Route[1][routes.length];
+        System.arraycopy(routes, 0, table[0], 0, routes.length);
 
         return new TextTable(columns, table);
-    }
-
-    private Set<Node> getDestinations() {
-        // FIXME: 10-05-2016 no longer needed
-        Set<Node> destinationsSet = new HashSet<>();
-        destinationsSet.add(destination);
-        return destinationsSet;
     }
 }
