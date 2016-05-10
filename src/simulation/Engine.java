@@ -137,7 +137,7 @@ public class Engine {
         }
 
         // update the node state
-        nodeState.setSelected(destination, selectedRoute);
+        nodeState.setSelectedRoute(destination, selectedRoute);
         nodeState.updateRoute(destination, link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
         return selectedRoute;
@@ -235,7 +235,7 @@ public class Engine {
 
         // add the self route to the node's route table
         nodeState.updateRoute(node, new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
-        nodeState.setSelected(node, selfRoute);
+        nodeState.setSelectedRoute(node, selfRoute);
 
         node.getInLinks().forEach(link -> export(link, selfRoute));
     }

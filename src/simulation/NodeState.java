@@ -6,8 +6,7 @@ import policies.Attribute;
 import policies.PathAttribute;
 import protocols.Protocol;
 
-import java.util.HashMap;
-import java.util.Map;
+import static simulation.Route.invalidRoute;
 
 /**
  * Aggregates all the state of one node in one unique class
@@ -15,7 +14,7 @@ import java.util.Map;
 public class NodeState {
 
     private RouteTable table;
-    private Map<Node, Route> selectedRoutes = new HashMap<>();
+    private Route selectedRoute;
     private Protocol protocol;
 
     /**
@@ -27,6 +26,7 @@ public class NodeState {
      */
     public NodeState(Node node, Node destination, Protocol protocol) {
         this.table = new RouteTable(destination, node.getOutLinks());
+        this.selectedRoute = invalidRoute(destination);
         this.protocol = protocol;
     }
 
@@ -37,6 +37,25 @@ public class NodeState {
      */
     public RouteTable getTable() {
         return table;
+    }
+
+    /**
+     * Returns the current selected route.
+     *
+     * @return current selected route.
+     */
+    public Route getSelectedRoute() {
+        return selectedRoute;
+    }
+
+    /**
+     * Sets the given route as the currently selected route for the destination.
+     *
+     * @param destination destination to set route for.
+     * @param route route to set as selected.
+     */
+    public void setSelectedRoute(Node destination, Route route) {
+        selectedRoute = route;
     }
 
     /**
@@ -55,36 +74,6 @@ public class NodeState {
      */
     public void setProtocol(Protocol protocol) {
         this.protocol = protocol;
-    }
-
-    /**
-     * Returns a map between the destinations and the respective selected routes
-     * @return a map between the destinations and the respective selected routes.
-     */
-    public Map<Node, Route> getSelectedRoutes() {
-        return selectedRoutes;
-    }
-
-    /**
-     * Returns the currently selected attribute for the given destination. If the destination was not yet known it
-     * returns null.
-     * @param destination destination to get the attribute for.
-     * @return currently selected attribute or null if the destination was not known.
-     */
-    public Attribute getSelectedAttribute(Node destination) {
-        Route selectedRoute = selectedRoutes.get(destination);
-        return selectedRoute != null ? selectedRoute.getAttribute() : null;
-    }
-
-    /**
-     * Returns the currently selected path for the given destination. If the destination was not yet known it
-     * returns null.
-     * @param destination destination to get the path for.
-     * @return currently selected path or null if the destination was not known.
-     */
-    public PathAttribute getSelectedPath(Node destination) {
-        Route selectedRoute = selectedRoutes.get(destination);
-        return selectedRoute != null ? selectedRoute.getPath() : null;
     }
 
     /**
@@ -107,17 +96,6 @@ public class NodeState {
      */
     public Route getSelectedRoute(Node destination) {
         return table.getSelectedRoute();
-    }
-
-    /**
-     * Sets the given route as the currently selected route for the destination.
-     *
-     * @param destination destination to set route for.
-     * @param route route to set
-     * @return currently selected route.
-     */
-    public void setSelected(Node destination, Route route) {
-        selectedRoutes.put(destination, route);
     }
 
     /**
