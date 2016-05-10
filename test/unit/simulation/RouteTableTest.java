@@ -4,17 +4,24 @@ import network.Link;
 import network.Node;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static wrappers.StubWrapper.*;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
+import static wrappers.StubWrapper.*;
 import static wrappers.network.NetworkWrapper.anyNode;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 public class RouteTableTest {
+
+    private static Collection<Link> links(Link... links) {
+        return Arrays.asList(links);
+    }
 
     @Test
     public void getRoute_OnTableWithoutOutLinks_Null() throws Exception {
@@ -43,9 +50,9 @@ public class RouteTableTest {
     @Test
     public void
     setRoute_FromOutLink1To2AndForDest0WithAttr1AndEmptyPath_GetsRouteWithAttr0AndEmptyPathForDest0() throws Exception {
-        RouteTable routeTable = table(stubOutLink(1, 2));
         Node destination = new Node(0);
         Link outLink = stubLink(1, 2);
+        RouteTable routeTable = new RouteTable(destination, links(outLink));
 
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
 
@@ -58,8 +65,8 @@ public class RouteTableTest {
             throws Exception {
         Node destination = new Node(0);
         Link outLink = stubLink(1, 2);
+        RouteTable routeTable = new RouteTable(destination, links(outLink));
         Route route = stubRoute(0, 0, path());
-        RouteTable routeTable = table(stubOutLink(1, 2));
 
         routeTable.setRoute(outLink, route);
         route.setAttribute(stubAttr(1));
@@ -97,11 +104,14 @@ public class RouteTableTest {
     public void
     getRoute_ForDestination0AndOutLink1To2ButTheRouteForDestination0WasOnlySetForOutLink1To3_InvalidRoute()
             throws Exception {
-        RouteTable table = table(stubOutLink(1, 2), stubOutLink(1, 3));
         Node destination = new Node(0);
-        table.setRoute(stubLink(1, 2), stubRoute(0, 0, path()));  // assigned attribute to other link
+        Link outLink1To2 = stubLink(1, 2);
+        Link outLink1To3 = stubLink(1, 3);
+        RouteTable routeTable = new RouteTable(destination, links(outLink1To2, outLink1To3));
 
-        assertThat(table.getRoute(destination, stubLink(1, 3)), is(Route.invalidRoute(destination)));
+        routeTable.setRoute(outLink1To2, stubRoute(0, 0, path()));  // assigned attribute to other link
+
+        assertThat(routeTable.getRoute(destination, outLink1To3), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -265,8 +275,8 @@ public class RouteTableTest {
     @Test
     public void
     getSelectedRoute_ForDestination0OnEmptyTable_Null() throws Exception {
-        RouteTable routeTable = table();
         Node destination0 = new Node(0);
+        RouteTable routeTable = new RouteTable(destination0);
 
         assertThat(routeTable.getSelectedRoute(destination0, anyStubLink()), is(nullValue()));
     }
@@ -274,8 +284,8 @@ public class RouteTableTest {
     @Test
     public void
     getSelectedRoute_ForDestination0OnTableWithoutKnownDestinations_InvalidRoute() throws Exception {
-        RouteTable routeTable = table(stubOutLink(0, 1));
         Node destination0 = new Node(0);
+        RouteTable routeTable = new RouteTable(destination0, links(stubLink(0, 1)));
 
         assertThat(routeTable.getSelectedRoute(destination0), is(Route.invalidRoute(destination0)));
     }

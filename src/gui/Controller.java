@@ -78,14 +78,15 @@ public class Controller implements Initializable {
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
             ProtocolRadioButton protocolRadioButton = (ProtocolRadioButton) protocolGroup.getSelectedToggle();
-            State state = State.create(parser.getNetwork(), protocolRadioButton.getProtocol());
+            int destinationId = destinationIdSpinner.getValue();
+            State state = State.create(parser.getNetwork(), destinationId, protocolRadioButton.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
                 MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
                 eventHandler.register(engine.getEventGenerator());
 
-                engine.simulate(state, destinationIdSpinner.getValue());
+                engine.simulate(state, destinationId);
 
                 reportGenerator.addMessageCount(eventHandler.getMessageCount());
                 reportGenerator.addDetectionCount(eventHandler.getDetectionCount());

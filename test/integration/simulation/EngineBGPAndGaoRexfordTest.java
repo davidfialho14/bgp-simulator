@@ -41,9 +41,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination0_Converges() throws Exception {
-        State state = State.create(network0, protocol);
+        int destinationId = 0;
+        State state = State.create(network0, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -58,9 +59,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination1_Converges() throws Exception {
-        State state = State.create(network0, protocol);
+        int destinationId = 1;
+        State state = State.create(network0, destinationId, protocol);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -82,9 +84,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination0_Converges() throws Exception {
-        State state = State.create(network1, protocol);
+        int destinationId = 0;
+        State state = State.create(network1, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -104,9 +107,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination1_Converges() throws Exception {
-        State state = State.create(network1, protocol);
+        int destinationId = 1;
+        State state = State.create(network1, destinationId, protocol);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -126,9 +130,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination2_Converges() throws Exception {
-        State state = State.create(network1, protocol);
+        int destinationId = 2;
+        State state = State.create(network1, destinationId, protocol);
 
-        engine.simulate(state, 2);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -154,9 +159,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination0_Converges() throws Exception {
-        State state = State.create(network2, protocol);
+        int destinationId = 0;
+        State state = State.create(network2, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -176,9 +182,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination1_Converges() throws Exception {
-        State state = State.create(network2, protocol);
+        int destinationId = 1;
+        State state = State.create(network2, destinationId, protocol);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),
@@ -198,9 +205,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination2_Converges() throws Exception {
-        State state = State.create(network2, protocol);
+        int destinationId = 2;
+        State state = State.create(network2, destinationId, protocol);
 
-        engine.simulate(state, 2);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    customerLink(0, 1),

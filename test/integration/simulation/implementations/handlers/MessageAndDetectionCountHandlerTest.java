@@ -33,26 +33,30 @@ public class MessageAndDetectionCountHandlerTest {
 
     @Test
     public void messageCount_ForNetwork0AndDestination1WithBGP_Is1() throws Exception {
+        int destinationId = 1;
         State state = State.create(
                 network(new ShortestPathPolicy(),
                         link(from(0), to(1), label(1))),
+                destinationId,
                 new BGPProtocol());
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         assertThat(eventHandler.getMessageCount(), is(1));
     }
 
     @Test
     public void messageCount_ForNetwork1AndDestination2_Is3() throws Exception {
+        int destinationId = 2;
         State state = State.create(
                 network(new ShortestPathPolicy(),
                         link(from(0), to(1), label(1)),
                         link(from(1), to(2), label(1)),
                         link(from(0), to(2), label(0))),
+                destinationId,
                 new BGPProtocol());
 
-        engine.simulate(state, 2);
+        engine.simulate(state, destinationId);
 
         assertThat(eventHandler.getMessageCount(), is(3));
     }
@@ -67,18 +71,20 @@ public class MessageAndDetectionCountHandlerTest {
 
     @Test
     public void messageCount_ForNetwork3WithD1R1_Is13() throws Exception {
-        State state = State.create(network3, new D1R1Protocol());
+        int destinationId = 0;
+        State state = State.create(network3, destinationId, new D1R1Protocol());
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(eventHandler.getMessageCount(), is(13));
     }
 
     @Test
     public void detectionCount_ForNetwork3WithD1R1_Is2() throws Exception {
-        State state = State.create(network3, new D1R1Protocol());
+        int destinationId = 0;
+        State state = State.create(network3, destinationId, new D1R1Protocol());
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(eventHandler.getDetectionCount(), is(2));
     }

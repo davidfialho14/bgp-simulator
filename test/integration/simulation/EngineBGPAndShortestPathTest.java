@@ -39,9 +39,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
     public void simulate_Network0_Converges() throws Exception {
         Network network0 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
-        State state = State.create(network0, protocol);
+        int destinationId = 1;
+        State state = State.create(network0, destinationId, protocol);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),    splink(0, 1, 1),
@@ -62,25 +63,33 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination0_Converges() throws Exception {
-        State state = State.create(network1, protocol);
+        int destinationId = 0;
+        State state = State.create(network1, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(0), sproute(0, path()), invalidRoute(),         invalidRoute()
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(selfLink(1), splink(1, 2, 1)) ));
+        assertThat(state.get(new Node(1)).getTable(), is( table(
+                                selfLink(1),    splink(1, 2, 1),
+                destination(0), invalidRoute(), invalidRoute()
+        )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(selfLink(2)) ));
+        assertThat(state.get(new Node(2)).getTable(), is( table(
+                                selfLink(2),
+                destination(0), invalidRoute()
+        )));
     }
 
-    @Test(timeout = 2000)
+    @Test//(timeout = 2000)
     public void simulate_Network1ForDestination1_Converges() throws Exception {
-        State state = State.create(network1, protocol);
+        int destinationId = 1;
+        State state = State.create(network1, destinationId, protocol);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
@@ -92,14 +101,18 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 destination(1), sproute(0, path()), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(selfLink(2)) ));
+        assertThat(state.get(new Node(2)).getTable(), is( table(
+                                selfLink(2),
+                destination(1), invalidRoute()
+        )));
     }
 
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination2_Converges() throws Exception {
-        State state = State.create(network1, protocol);
+        int destinationId = 2;
+        State state = State.create(network1, destinationId, protocol);
 
-        engine.simulate(state, 2);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
@@ -123,9 +136,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(0), to(1), label(1)),
                 link(from(1), to(2), label(1)),
                 link(from(2), to(0), label(1)));
-        State state = State.create(network2, protocol);
+        int destinationId = 0;
+        State state = State.create(network2, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is(table(
                                 selfLink(0),        splink(0, 1, 1),
@@ -153,9 +167,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(1), to(2), label(-1)),
                 link(from(2), to(3), label(1)),
                 link(from(3), to(1), label(-2)));
-        State state = State.create(network3, protocol);
+        int destinationId = 0;
+        State state = State.create(network3, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
     }
 
     @Test(timeout = 2000)
@@ -165,9 +180,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
                 link(from(1), to(2), label(1)),
                 link(from(2), to(3), label(1)),
                 link(from(3), to(1), label(1)));
-        State state = State.create(network4, protocol);
+        int destinationId = 0;
+        State state = State.create(network4, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is(table(
                                 selfLink(0),
@@ -195,9 +211,10 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         Network network5 = network(new ShortestPathPolicy(),
                 link(from(2), to(1), label(1)),
                 link(from(1), to(0), label(1)));
-        State state = State.create(network5, protocol);
+        int destinationId = 0;
+        State state = State.create(network5, destinationId, protocol);
 
-        engine.simulate(state, 0);
+        engine.simulate(state, destinationId);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),

@@ -22,10 +22,11 @@ public class NodeState {
      * Initializes the state for the given node with an empty table and associates it with the given protocol.
      *
      * @param node node to create state for.
+     * @param destination destination simulating for.
      * @param protocol protocol to be used by the node.
      */
-    public NodeState(Node node, Protocol protocol) {
-        this.table = new RouteTable(node.getOutLinks());
+    public NodeState(Node node, Node destination, Protocol protocol) {
+        this.table = new RouteTable(destination, node.getOutLinks());
         this.protocol = protocol;
     }
 
