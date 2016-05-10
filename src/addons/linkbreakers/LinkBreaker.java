@@ -1,5 +1,6 @@
 package addons.linkbreakers;
 
+import network.Link;
 import simulation.Engine;
 import simulation.State;
 
@@ -40,6 +41,17 @@ public abstract class LinkBreaker {
     public void assignTo(Engine engine, State state) {
         this.engine = engine;
         this.state = state;
+    }
+
+    /**
+     * Breaks a link. This method can be used by any link breaker implementation to break a link.
+     *
+     * @param link link to break.
+     */
+    protected void breakLink(Link link) {
+        state.getNetwork().removeLink(link);
+        engine.onBrokenLink(link);
+        state.get(link.getSource()).getTable().removeOutLink(link);
     }
 
 }

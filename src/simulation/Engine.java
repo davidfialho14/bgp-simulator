@@ -59,6 +59,25 @@ public class Engine {
         return timeProperty;
     }
 
+    //------------- TRIGGERS ------------------------------------------------------------------------------------------
+
+    /**
+     * Should be called when a link is broken to trigger the correct behaviour from the simulation when a link is
+     * broken. The source node updates the routes learned from the broken link to invalid routes. If the source node
+     * ends up selecting a new route it exports it to all of its in-neighbours. It also discards all routes being
+     * exported through the broken link.
+     *
+     * @param brokenLink link that was broken.
+     */
+    public void onBrokenLink(Link brokenLink) {
+        NodeState sourceNodeState = currentState.get(brokenLink.getSource());
+        Node destination = sourceNodeState.getTable().getDestination();
+        processSelection(sourceNodeState, brokenLink, invalidRoute(destination));
+
+        // remove all routes being exported through this link
+        scheduler.removeRoutes(brokenLink);
+    }
+
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
 
     /**
@@ -175,7 +194,6 @@ public class Engine {
      *
      * @param nodeState state of the learning node.
      * @param link link from which the route was learned.
-     * @param importedRoute route that was imported by the node.
      * @param learnedRoute route that was learned by the node.
      */
     void processSelection(NodeState nodeState, Link link, Route learnedRoute) {
