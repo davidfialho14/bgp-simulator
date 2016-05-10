@@ -176,15 +176,13 @@ public class Engine {
      * @param learnedRoute route that was learned by the node.
      */
     void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
-
         // store the currently selected route
         Route prevSelectedRoute = nodeState.getSelectedRoute();
 
         Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
-
         eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
 
-        if (prevSelectedRoute == null || !prevSelectedRoute.equals(selectedRoute)) {
+        if (!prevSelectedRoute.equals(selectedRoute)) {
             exportToInNeighbours(link.getSource(), selectedRoute);
         }
     }
