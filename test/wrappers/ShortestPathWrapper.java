@@ -57,7 +57,7 @@ public interface ShortestPathWrapper {
      * Wrapper around the ShortestPathAttribute constructor. It improves the readability when a SP attribute
      * instance is necessary.
      */
-    static ShortestPathAttribute spattribute(int length) {
+    static ShortestPathAttribute sp(int length) {
         return new ShortestPathAttribute(length);
     }
 
