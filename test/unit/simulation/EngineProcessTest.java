@@ -53,7 +53,7 @@ public class EngineProcessTest {
     public void
     process_PrevSelectedInvalidRouteAndSelectedInvalidRoute_DoesNotExport() throws Exception {
         setPreviouslySelected(invalid(), invalidPath());
-        doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(invalidRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -65,7 +65,7 @@ public class EngineProcessTest {
     process_PrevSelectedInvalidRouteAndSelectedValidRoute_ExportsSelectedRoute() throws Exception {
         setPreviouslySelected(invalid(), invalidPath());
         Route selectedRoute = route(destination, stubAttr(0), path());
-        doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(selectedRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -76,7 +76,7 @@ public class EngineProcessTest {
     public void
     process_PrevSelectedValidRouteAndSelectedInvalidRoute_ExportsInvalidRoute() throws Exception {
         setPreviouslySelected(stubAttr(0), path());
-        doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(invalidRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -87,7 +87,7 @@ public class EngineProcessTest {
     public void
     process_DestinationIsNotKnownAndSelectedInvalidRoute_ExportsInvalidRoute() throws Exception {
         setPreviouslySelected(null, null);
-        doReturn(invalidRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(invalidRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -99,7 +99,7 @@ public class EngineProcessTest {
     process_DestinationIsNotKnownAndSelectedValidRoute_ExportsSelectedRoute() throws Exception {
         setPreviouslySelected(null, null);
         Route selectedRoute = route(destination, stubAttr(0), path());
-        doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(selectedRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -112,7 +112,7 @@ public class EngineProcessTest {
             throws Exception {
         setPreviouslySelected(stubAttr(0), path());
         Route selectedRoute = route(destination, stubAttr(1), path());
-        doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(selectedRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -125,7 +125,7 @@ public class EngineProcessTest {
             throws Exception {
         setPreviouslySelected(stubAttr(0), path());
         Route selectedRoute = route(destination, stubAttr(0), path(0));
-        doReturn(selectedRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(selectedRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
 
@@ -139,7 +139,7 @@ public class EngineProcessTest {
         Route learnedRoute = route(0, stubAttr(-1), path());
         doReturn(learnedRoute).when(engine).learn(any(), any(), any());
         setPreviouslySelected(stubAttr(0), path());
-        doReturn(learnedRoute).when(engine).select(any(), any(), any(), any());
+        doReturn(learnedRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, stubLink(0, 2), anyRoute(0));
 

@@ -9,13 +9,13 @@ import simulation.Route;
 public class D1R1Protocol extends Reaction1 implements Protocol, Detection1 {
 
     @Override
-    public boolean isOscillation(Link link, Route importedRoute, Route learnedRoute, Route exclRoute) {
+    public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
         return Detection1.isOscillation(learnedRoute.getAttribute(), exclRoute);
     }
 
     @Override
-    public void setParameters(Link link, Route importedRoute, Route learnedRoute, Route exclRoute) {
-        setParameters(link, importedRoute);
+    public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
+        setParameters(link, learnedRoute);
     }
 
     @Override

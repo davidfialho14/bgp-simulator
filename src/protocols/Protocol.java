@@ -20,21 +20,19 @@ public interface Protocol {
     /**
      * Checks if the condition to detect an oscillation is verified.
      * @param link link from which the route was learned. Some of the following parameters might not be used.
-     * @param importedRoute route imported by the node.
      * @param learnedRoute route learned by the node.
      * @param exclRoute route preferred excluding the node from which the route was learned.  @return true if an oscillation is detected and false otherwise.
      */
-    boolean isOscillation(Link link, Route importedRoute, Route learnedRoute, Route exclRoute);
+    boolean isOscillation(Link link, Route learnedRoute, Route exclRoute);
 
     /**
      * Sets the parameters used by the extend operation. This adds more flexibility to configure the extend operation.
      * Some of the following parameters might not be used.
      * @param link link from which the route was learned.
-     * @param importedRoute route imported by the node.
      * @param learnedRoute route learned by the node.
      * @param exclRoute route preferred excluding the node from which the route was learned.
      */
-    void setParameters(Link link, Route importedRoute, Route learnedRoute, Route exclRoute);
+    void setParameters(Link link, Route learnedRoute, Route exclRoute);
 
     void reset();
 }

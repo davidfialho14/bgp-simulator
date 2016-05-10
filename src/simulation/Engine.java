@@ -65,7 +65,7 @@ public class Engine {
      */
     void process(NodeState nodeState, Link link, Route importedRoute) {
         Route learnedRoute = learn(nodeState, link, importedRoute);
-        processSelection(nodeState, link, importedRoute, learnedRoute);
+        processSelection(nodeState, link, learnedRoute);
     }
 
     /**
@@ -102,11 +102,10 @@ public class Engine {
      *
      * @param nodeState state of the node who learned the route.
      * @param link link from which the route was learned.
-     * @param importedRoute route imported by the node that is selecting.
      * @param learnedRoute route after being learned.
      * @return route currently being selected by the learning node to reach the route's destination.
      */
-    Route select(NodeState nodeState, Link link, Route importedRoute, Route learnedRoute) {
+    Route select(NodeState nodeState, Link link, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
         Node learningNode = link.getSource();
@@ -117,11 +116,11 @@ public class Engine {
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (nodeState.getProtocol().isOscillation(link, learnedRoute, importedRoute, exclRoute)) {
+            if (nodeState.getProtocol().isOscillation(link, learnedRoute, exclRoute)) {
                 // detected oscillation
                 eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
 
-                nodeState.getProtocol().setParameters(link, importedRoute, learnedRoute, exclRoute);
+                nodeState.getProtocol().setParameters(link, learnedRoute, exclRoute);
             }
 
             learnedRoute = invalidRoute(destination);
@@ -174,11 +173,11 @@ public class Engine {
      * @param importedRoute route that was imported by the node.
      * @param learnedRoute route that was learned by the node.
      */
-    void processSelection(NodeState nodeState, Link link, Route importedRoute, Route learnedRoute) {
+    void processSelection(NodeState nodeState, Link link, Route learnedRoute) {
         // store the currently selected route
         Route prevSelectedRoute = nodeState.getSelectedRoute();
 
-        Route selectedRoute = select(nodeState, link, importedRoute, learnedRoute);
+        Route selectedRoute = select(nodeState, link, learnedRoute);
         eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
 
         if (!prevSelectedRoute.equals(selectedRoute)) {
