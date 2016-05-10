@@ -1,13 +1,13 @@
-package networks.factories;
+package factories;
 
 import network.Network;
 import policies.gaorexford.GaoRexfordPolicy;
+import wrappers.network.NetworkWrapper;
 
 import static wrappers.GaoRexfordWrapper.customerLabel;
 import static wrappers.GaoRexfordWrapper.providerLabel;
 import static wrappers.network.FromNodeElement.from;
 import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
 import static wrappers.network.ToNodeElement.to;
 
 public class GaoRexfordNetworkFactory implements NetworkFactory {
@@ -15,17 +15,17 @@ public class GaoRexfordNetworkFactory implements NetworkFactory {
     private final static GaoRexfordPolicy GAO_REXFORD_POLICY = new GaoRexfordPolicy();
 
     private final static Network[] networks = {
-            network(GAO_REXFORD_POLICY,
+            NetworkWrapper.network(GAO_REXFORD_POLICY,
                     link(from(0), to(1), customerLabel()),
                     link(from(1), to(0), providerLabel())
             ),
-            network(GAO_REXFORD_POLICY,
+            NetworkWrapper.network(GAO_REXFORD_POLICY,
                     link(from(0), to(1), customerLabel()),
                     link(from(1), to(0), providerLabel()),
                     link(from(2), to(1), customerLabel()),
                     link(from(1), to(2), providerLabel())
             ),
-            network(GAO_REXFORD_POLICY,
+            NetworkWrapper.network(GAO_REXFORD_POLICY,
                     link(from(0), to(1), customerLabel()),
                     link(from(1), to(2), customerLabel()),
                     link(from(2), to(0), customerLabel())
@@ -39,7 +39,7 @@ public class GaoRexfordNetworkFactory implements NetworkFactory {
      * @return network created.
      */
     @Override
-    public Network create(int networkId) {
+    public Network network(int networkId) {
         return new Network(networks[networkId]);
     }
 

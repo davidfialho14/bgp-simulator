@@ -1,4 +1,4 @@
-package networks.factories;
+package factories;
 
 import network.Network;
 
@@ -13,6 +13,6 @@ public interface NetworkFactory {
      * @param networkId id of the network to create
      * @return network created.
      */
-    Network create(int networkId);
+    Network network(int networkId);
 
 }
