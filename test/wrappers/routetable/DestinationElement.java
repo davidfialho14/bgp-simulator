@@ -20,7 +20,7 @@ public class DestinationElement implements RouteTableElement {
      */
     @Override
     public void insert(RouteTableWrapper tableWrapper) {
-        tableWrapper.addDestination(node);
+        tableWrapper.setDestination(node);
     }
 
     /**

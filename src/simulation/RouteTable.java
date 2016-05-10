@@ -8,95 +8,38 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
+import static simulation.Route.invalidRoute;
+
+/**
+ * Stores the routes learned from each out-link to reach one destination.
+ */
 public class RouteTable {
 
-    /*
-        The first map represents the out-links. A out-link maps to a map with the destination as the key and the
-        associated route as the value. The out-link must be the initial map keys in order to be possible to create
-        the maps in the constructor.
-     */
-    private Map<Link, Map<Node, Route>> routes;
-    private Node node;
-
+    private Node destination;
+    private Map<Link, Route> routes;
 
     /**
-     * Constructs a new empty route table. Defines the outLinks included in the route table.
+     * Constructs a new empty route table for one destination and with no out-links.
      *
+     * @param destination destination of the routes to be stored.
+     */
+    public RouteTable(Node destination) {
+        this.destination = destination;
+        this.routes = new HashMap<>();
+    }
+
+    /**
+     * Constructs a new empty route table for one destination. The table is pre-initialized with the collection
+     * of out-links given.
+     *
+     * @param destination destination of the routes to be stored.
      * @param outLinks out out-links of the route table.
      */
-    public RouteTable(Collection<Link> outLinks) {
+    public RouteTable(Node destination, Collection<Link> outLinks) {
+        this.destination = destination;
         this.routes = new HashMap<>(outLinks.size());
 
-        // create empty maps for each out-link
         outLinks.forEach(this::addOutLink);
-    }
-
-    /**
-     * Associates a route with the given out-link. If the out-link does not exist this method will have no effect
-     * on the table. If the destination is unknown it will be added to the table.
-     *
-     * @param outLink out-link to associate route with.
-     * @param route route to be set.
-     */
-    public void setRoute(Link outLink, Route route) {
-        Map<Node, Route> destinationToRoute = routes.get(outLink);
-        if (destinationToRoute != null) {
-            // out link does exist
-            destinationToRoute.put(route.getDestination(), new Route(route));
-        }
-    }
-
-    /**
-     * Returns the route associated with the given destination and out-link pair. If the out-link does not exist in
-     * the table it will be returned null.
-     *
-     * @param destination destination to get route.
-     * @param outLink out-link to get route.
-     * @return route associated with the given pair or null if the out-link does not exist.
-     */
-    public Route getRoute(Node destination, Link outLink) {
-        Route route = null;
-
-        Map<Node, Route> destinationToRoute = routes.get(outLink);
-        if (destinationToRoute != null) {
-            // out-link does exist
-            route = destinationToRoute.getOrDefault(destination, Route.invalidRoute(destination));
-        }
-
-        return route;
-    }
-
-    /**
-     * Clears all the routes and destinations from the table. It keeps the out-links.
-     */
-    public void clear() {
-        routes.forEach((link, destinationToRoute) -> destinationToRoute.clear());
-    }
-
-    /**
-     * Returns the currently selected route for the given destination. If ignoredOutLink is not null it will select the
-     * best route associated with any out-link exception the ignoredOutLink.
-     *
-     * @param destination destination node to get selected route for.
-     * @param ignoredOutLink out-link to be ignored.
-     * @return currently selected route for the destination.
-     */
-    public Route getSelectedRoute(Node destination, Link ignoredOutLink) {
-        Route preferredRoute = null;
-
-        for (Link outLink : routes.keySet()) {
-            Route route = getRoute(destination, outLink);
-
-            if (!outLink.equals(ignoredOutLink) && (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
-                preferredRoute = route;
-            }
-        }
-
-        return preferredRoute;
-    }
-
-    Route getSelectedRoute(Node destination) {
-        return getSelectedRoute(destination, null);
     }
 
     /**
@@ -109,22 +52,75 @@ public class RouteTable {
     }
 
     /**
-     * Adds a new out-lin to the route table.
+     * Adds a new out-link to the route table.
      *
      * @param outLink out-link to add to the table.
      */
     public void addOutLink(Link outLink) {
-        routes.putIfAbsent(outLink, new HashMap<>());
+        routes.putIfAbsent(outLink, invalidRoute(destination));
     }
 
     /**
-     * Returns a collection with all the destinations learned from the given out-link.
+     * Returns the destination node associated with the route table.
      *
-     * @param outLink out-link to get destinations from.
-     * @return collection with all the destinations learned from the given out-link.
+     * @return the destination node associated with the route table.
      */
-    public Collection<Node> getDestinationsLearnFrom(Link outLink) {
-        return routes.get(outLink).keySet();
+    public Node getDestination() {
+        return destination;
+    }
+
+    /**
+     * Associates a route with the given out-link. If the out-link does not exist this method will have no effect
+     * on the table. If the destination is unknown it will be added to the table.
+     *
+     * @param outLink out-link to associate route with.
+     * @param route route to be set.
+     */
+    public void setRoute(Link outLink, Route route) {
+        routes.put(outLink, new Route(route));  // store a copy of the route
+    }
+
+    /**
+     * Returns the route associated with the given destination and out-link pair. If the out-link does not exist in
+     * the table it will be returned null.
+     *
+     * @param outLink out-link to get route.
+     * @return route associated with the given pair or null if the out-link does not exist.
+     */
+    public Route getRoute(Link outLink) {
+        return routes.get(outLink);
+    }
+
+    /**
+     * Clears all the routes and destinations from the table. It keeps the out-links.
+     */
+    public void clear() {
+        routes.replaceAll((link, route) -> invalidRoute(destination));
+    }
+
+    /**
+     * Returns the currently selected route. If ignoredOutLink is not null it will select the best route associated
+     * with any out-link exception the ignoredOutLink.
+     *
+     * @param ignoredOutLink out-link to be ignored.
+     * @return currently selected route for the destination.
+     */
+    public Route getSelectedRoute(Link ignoredOutLink) {
+        Route preferredRoute = null;
+
+        for (Link outLink : routes.keySet()) {
+            Route route = getRoute(outLink);
+
+            if (!outLink.equals(ignoredOutLink) && (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
+                preferredRoute = route;
+            }
+        }
+
+        return preferredRoute;
+    }
+
+    Route getSelectedRoute() {
+        return getSelectedRoute(null);
     }
 
     @Override
@@ -145,7 +141,7 @@ public class RouteTable {
 
         for (Link outLink : routes.keySet()) {
             for (Node destination : destinations) {
-                if (!this.getRoute(destination, outLink).equals(that.getRoute(destination, outLink))) {
+                if (!this.getRoute(outLink).equals(that.getRoute(outLink))) {
                     return false;
                 }
             }
@@ -183,7 +179,7 @@ public class RouteTable {
         Route[][] table = new Route[destinations.length][columns.length];
         for (int i = 0; i < destinations.length; i++) {
             for (int j = 0; j < columns.length; j++) {
-                table[i][j] = getRoute(destinations[i], outLinks[j]);
+                table[i][j] = getRoute(outLinks[j]);
             }
         }
 
@@ -191,11 +187,9 @@ public class RouteTable {
     }
 
     private Set<Node> getDestinations() {
+        // FIXME: 10-05-2016 no longer needed
         Set<Node> destinationsSet = new HashSet<>();
-        for (Map<Node, Route> nodeRouteMap : routes.values()) {
-            destinationsSet.addAll(nodeRouteMap.keySet());
-        }
-
+        destinationsSet.add(destination);
         return destinationsSet;
     }
 }

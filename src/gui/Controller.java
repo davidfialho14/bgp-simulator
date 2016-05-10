@@ -29,7 +29,6 @@ public class Controller implements Initializable {
     public Button startButton;
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
-    public RadioButton oneNodeRadioButton;
     public ToggleGroup protocolGroup;
 
     private FileChooser fileChooser = new FileChooser();
@@ -57,11 +56,6 @@ public class Controller implements Initializable {
             if (!newState)
                 commitValue(destinationIdSpinner);
         });
-
-        // enable destination spinner only when the one node radio button is selected
-        oneNodeRadioButton.selectedProperty().addListener((observable, oldState, newState) -> {
-            destinationIdSpinner.setDisable(!newState);
-        });
     }
 
     private static void commitValue(Spinner<Integer> spinner) {
@@ -84,18 +78,15 @@ public class Controller implements Initializable {
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
             ProtocolRadioButton protocolRadioButton = (ProtocolRadioButton) protocolGroup.getSelectedToggle();
-            State state = State.create(parser.getNetwork(), protocolRadioButton.getProtocol());
+            int destinationId = destinationIdSpinner.getValue();
+            State state = State.create(parser.getNetwork(), destinationId, protocolRadioButton.getProtocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
                 MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
                 eventHandler.register(engine.getEventGenerator());
 
-                if (oneNodeRadioButton.isSelected()) {
-                    engine.simulate(state, destinationIdSpinner.getValue());
-                } else {
-                    engine.simulate(state);
-                }
+                engine.simulate(state, destinationId);
 
                 reportGenerator.addMessageCount(eventHandler.getMessageCount());
                 reportGenerator.addDetectionCount(eventHandler.getDetectionCount());

@@ -16,33 +16,38 @@ public class State {
 
     private Network originalNetwork;
     private Network currentNetwork;
+    private final Node destination;
     private Protocol defaultProtocol;
     private Map<Node, NodeState> nodesStates;   // state of each node
 
     /**
      * This constructor is PRIVATE: use the static create methods
      */
-    private State(Network network, Protocol defaultProtocol,
+    private State(Network network, Node destination, Protocol defaultProtocol,
                   Map<Node, NodeState> nodesStates) {
         this.originalNetwork = network;
         this.currentNetwork = new Network(network); // ensure the current network is a copy of the original
+        this.destination = destination;
         this.defaultProtocol = defaultProtocol;
         this.nodesStates = nodesStates;
     }
 
     /**
      * Creates an empty state for the given network. It initializes all nodes with the given protocol.
-     *
      * @param network currentNetwork to create state for.
+     * @param destId id of the destination node to simulate for.
      * @param protocol protocol to be used by all nodes by default.
      */
-    public static State create(Network network, Protocol protocol) {
+    public static State create(Network network, int destId, Protocol protocol) {
         // associate each node with an empty state
         Map<Node, NodeState> nodesStates = new HashMap<>(network.getNodeCount());
-        network.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, protocol)));
+        Node destination = network.getNode(destId);
+        network.getNodes().forEach(node -> {
+            nodesStates.put(node, new NodeState(node, destination, protocol));
+        });
 
 
-        return new State(network, protocol, nodesStates);
+        return new State(network, destination, protocol, nodesStates);
     }
 
     /**
@@ -52,7 +57,8 @@ public class State {
     public void reset() {
         this.nodesStates.clear();
         this.defaultProtocol.reset();
-        originalNetwork.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, this.defaultProtocol)));
+        originalNetwork.getNodes()
+                .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
 
         // ensure the current network must be a copy of the original
         this.currentNetwork = new Network(originalNetwork);
@@ -95,11 +101,11 @@ public class State {
      *
      * @return a map associating each node with its current selected route to reach the destination.
      */
-    public Map<Node, Route> getSelectedRoutes(Node destination) {
+    public Map<Node, Route> getSelectedRoutes() {
         return nodesStates.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getSelectedRoute(destination)
+                        entry -> entry.getValue().getSelectedRoute()
                 ));
     }
 

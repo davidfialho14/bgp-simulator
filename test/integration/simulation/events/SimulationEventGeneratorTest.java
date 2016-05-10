@@ -38,10 +38,11 @@ public class SimulationEventGeneratorTest {
 
         Network network0 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
-        State state = State.create(network0, new BGPProtocol());
+        int destinationId = 1;
+        State state = State.create(network0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addLearnListener(listener);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         verify(listener, times(1)).onLearned(new LearnEvent(new Link(0, 1, splabel(1)), sproute(1, 1, path(1))));
     }
@@ -52,10 +53,11 @@ public class SimulationEventGeneratorTest {
 
         Network network0 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
-        State state = State.create(network0, new BGPProtocol());
+        int destinationId = 1;
+        State state = State.create(network0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addImportListener(listener);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         verify(listener, times(1)).onImported(new ImportEvent(sproute(1, 0, path()), new Link(0, 1, splabel(1))));
     }
@@ -67,10 +69,11 @@ public class SimulationEventGeneratorTest {
 
         Network network0 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
-        State state = State.create(network0, new BGPProtocol());
+        int destinationId = 1;
+        State state = State.create(network0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addSelectListener(listener);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         verify(listener, times(1)).onSelected(new SelectEvent(invalidRoute(new Node(1)), sproute(1, 1, path(1))));
     }
@@ -82,10 +85,11 @@ public class SimulationEventGeneratorTest {
 
         Network network0 = network(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
-        State state = State.create(network0, new BGPProtocol());
+        int destinationId = 1;
+        State state = State.create(network0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addExportListener(listener);
 
-        engine.simulate(state, 1);
+        engine.simulate(state, destinationId);
 
         verify(listener, times(1)).onExported(new ExportEvent(new Link(0, 1, splabel(1)), sproute(1, 0, path())));
     }
