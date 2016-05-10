@@ -61,6 +61,15 @@ public class RouteTable {
     }
 
     /**
+     * Returns the destination node associated with the route table.
+     *
+     * @return the destination node associated with the route table.
+     */
+    public Node getDestination() {
+        return destination;
+    }
+
+    /**
      * Associates a route with the given out-link. If the out-link does not exist this method will have no effect
      * on the table. If the destination is unknown it will be added to the table.
      *

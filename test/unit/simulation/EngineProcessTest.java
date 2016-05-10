@@ -46,7 +46,7 @@ public class EngineProcessTest {
      * @param path path previously selected.
      */
     private void setPreviouslySelected(Attribute attribute, PathAttribute path) {
-        when(nodeState.getSelectedRoute(any())).thenReturn(new Route(destination, attribute, path));
+        when(nodeState.getSelectedRoute()).thenReturn(new Route(destination, attribute, path));
     }
     
     @Test

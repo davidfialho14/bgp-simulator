@@ -101,11 +101,11 @@ public class State {
      *
      * @return a map associating each node with its current selected route to reach the destination.
      */
-    public Map<Node, Route> getSelectedRoutes(Node destination) {
+    public Map<Node, Route> getSelectedRoutes() {
         return nodesStates.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getSelectedRoute(destination)
+                        entry -> entry.getValue().getSelectedRoute()
                 ));
     }
 

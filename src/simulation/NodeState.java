@@ -51,10 +51,9 @@ public class NodeState {
     /**
      * Sets the given route as the currently selected route for the destination.
      *
-     * @param destination destination to set route for.
      * @param route route to set as selected.
      */
-    public void setSelectedRoute(Node destination, Route route) {
+    public void setSelectedRoute(Route route) {
         selectedRoute = route;
     }
 
@@ -80,34 +79,22 @@ public class NodeState {
      * Returns the currently selected route for the given destination. If the ignored link is specified it selects
      * the preferred route excluding the route learned from that out-link.
      *
-     * @param destination destination to get selected route for.
      * @param ignoredLink out-link to be ignored.
      * @return currently selected route.
      */
-    public Route getSelectedRoute(Node destination, Link ignoredLink) {
+    public Route getSelectedRoute(Link ignoredLink) {
         return table.getSelectedRoute(ignoredLink);
-    }
-
-    /**
-     * Returns the currently selected route for the given destination.
-     *
-     * @param destination destination to get selected route for.
-     * @return currently selected route.
-     */
-    public Route getSelectedRoute(Node destination) {
-        return table.getSelectedRoute();
     }
 
     /**
      * Updates the attribute and/or path of the route for the given destination and out-link.
      *
-     * @param destination destination to update.
      * @param outLink out-link to update.
      * @param attribute attribute to update route to.
      * @param path path to update to.
      */
-    public void updateRoute(Node destination, Link outLink, Attribute attribute, PathAttribute path) {
-        table.setRoute(outLink, new Route(destination, attribute, path));
+    public void updateRoute(Link outLink, Attribute attribute, PathAttribute path) {
+        table.setRoute(outLink, new Route(table.getDestination(), attribute, path));
     }
 
 }

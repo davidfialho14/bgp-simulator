@@ -63,7 +63,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 
         engine.simulate(state, destinationId);
 
-        assertThat(state.get(new Node(1)).getSelectedRoute(new Node(0)), is(sproute(0, 1, path(0))));
+        assertThat(state.get(new Node(1)).getSelectedRoute(), is(sproute(0, 1, path(0))));
     }
 
     @Test(timeout = 2000)
