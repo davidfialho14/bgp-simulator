@@ -70,7 +70,7 @@ public class Engine {
      */
     void process(NodeState nodeState, Link link, Route importedRoute) {
         Route learnedRoute = learn(nodeState, link, importedRoute);
-        processSelection(nodeState, link, importedRoute, learnedRoute);
+        processSelection(nodeState, link, learnedRoute);
     }
 
     /**
@@ -107,11 +107,10 @@ public class Engine {
      *
      * @param nodeState state of the node who learned the route.
      * @param link link from which the route was learned.
-     * @param exportedRoute route when it was exported.
      * @param learnedRoute route after being learned.
      * @return route currently being selected by the learning node to reach the route's destination.
      */
-    Route select(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
+    Route select(NodeState nodeState, Link link, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
         Node learningNode = link.getSource();
@@ -122,13 +121,11 @@ public class Engine {
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (nodeState.getProtocol().isOscillation(link, exportedRoute,
-                    learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
+            if (nodeState.getProtocol().isOscillation(link, learnedRoute, exclRoute)) {
                 // detected oscillation
                 eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
 
-                nodeState.getProtocol().setParameters(link, exportedRoute,
-                        learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
+                nodeState.getProtocol().setParameters(link, learnedRoute, exclRoute);
             }
 
             learnedRoute = invalidRoute(destination);
@@ -149,16 +146,13 @@ public class Engine {
     }
 
     /**
-     * Exports the given route to all of the in-neighbours of the exporting node except to node indicated as
-     * not to export.
+     * Exports a route to all in-neighbours of the exporting node
      *
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
-     * @param nodeNotToExport node to which the route is not to be exported.
      */
-    void exportToInNeighbours(Node exportingNode, Route route, Node nodeNotToExport) {
-        exportingNode.getInLinks().stream()
-                .filter(inLink -> !inLink.getSource().equals(nodeNotToExport))  // exclude the nodeNotToExport
+    void exportToInNeighbours(Node exportingNode, Route route) {
+        exportingNode.getInLinks()
                 .forEach(inLink -> export(inLink, route));
     }
 
@@ -178,26 +172,21 @@ public class Engine {
     /**
      * Selects the preferred route for the destination and if the selected route is different from the previously
      * selected route it exports all the new selected route to all of the in-neighbours.
-     *  @param nodeState state of the learning node.
+     *
+     * @param nodeState state of the learning node.
      * @param link link from which the route was learned.
-     * @param exportedRoute route that was exported through the link.
+     * @param importedRoute route that was imported by the node.
      * @param learnedRoute route that was learned by the node.
      */
-    void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
-
+    void processSelection(NodeState nodeState, Link link, Route learnedRoute) {
         // store the currently selected route
         Route prevSelectedRoute = nodeState.getSelectedRoute();
 
-        Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
-
+        Route selectedRoute = select(nodeState, link, learnedRoute);
         eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
 
-        if (prevSelectedRoute == null || !prevSelectedRoute.equals(selectedRoute)) {
-            /*
-                must export the new route to all of the learning node's in-links except to the node
-                from which the route was learned.
-             */
-            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination());
+        if (!prevSelectedRoute.equals(selectedRoute)) {
+            exportToInNeighbours(link.getSource(), selectedRoute);
         }
     }
 

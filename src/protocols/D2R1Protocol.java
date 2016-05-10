@@ -1,8 +1,6 @@
 package protocols;
 
 import network.Link;
-import policies.Attribute;
-import policies.PathAttribute;
 import simulation.Route;
 
 /**
@@ -11,12 +9,13 @@ import simulation.Route;
 public class D2R1Protocol extends Reaction1 implements Protocol, Detection2 {
 
     @Override
-    public boolean isOscillation(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute) {
-        return Detection2.isOscillation(link.getSource(), attribute, path, exclRoute);
+    public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
+        return Detection2.isOscillation(link.getSource(),
+                learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
     }
 
     @Override
-    public void setParameters(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute) {
+    public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
         setParameters(link, learnedRoute);
     }
 

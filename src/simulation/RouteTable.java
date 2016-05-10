@@ -130,34 +130,16 @@ public class RouteTable {
 
         RouteTable that = (RouteTable) o;
 
-        if (routes == null && that.routes == null) return true;
-        else if (routes == null || that.routes == null) return false;
-
-        if (!routes.keySet().equals(that.routes.keySet())) return false;
-
-        // consider all that destinations from both tables
-        Set<Node> destinations = getDestinations();
-        destinations.addAll(that.getDestinations());
-
-        for (Link outLink : routes.keySet()) {
-            for (Node destination : destinations) {
-                if (!this.getRoute(outLink).equals(that.getRoute(outLink))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        if (destination != null ? !destination.equals(that.destination) : that.destination != null) return false;
+        return routes != null ? routes.equals(that.routes) : that.routes == null;
 
     }
 
-    /*
-        The hashCode() method does not respect the equals() method. But the equals method is only used for testing
-        and the hashCode() is never used. FIX this if the hashCode() becomes relevant
-     */
     @Override
     public int hashCode() {
-        return routes != null ? routes.hashCode() : 0;
+        int result = destination != null ? destination.hashCode() : 0;
+        result = 31 * result + (routes != null ? routes.hashCode() : 0);
+        return result;
     }
 
     @Override
