@@ -84,6 +84,16 @@ public class State {
     }
 
     /**
+     * Returns the state of a node from its id.
+     *
+     * @param nodeId id of the node to get state for.
+     * @return state of the node.
+     */
+    public NodeState get(int nodeId) {
+        return nodesStates.get(new Node(nodeId));
+    }
+
+    /**
      * Returns the current route tables for each node.
      *
      * @return a map associating each node with its current route table.

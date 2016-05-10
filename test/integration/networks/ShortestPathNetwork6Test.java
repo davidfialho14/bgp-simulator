@@ -2,9 +2,10 @@ package networks;
 
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import network.Network;
-import network.Node;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
@@ -35,6 +36,9 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     private Network network;
     private int destinationId = 0;
 
+    @Rule
+    public ErrorCollector collector;
+
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
@@ -46,6 +50,8 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
                 link(from(3), to(4), label(1)),
                 link(from(4), to(5), label(1)),
                 link(from(5), to(3), label(1)));
+
+        collector = new ErrorCollector();
     }
 
     /**
@@ -123,112 +129,59 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     }
 
     @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node0GetsExpectedTable() throws Exception {
+    public void simulate_BGPProtocolAndFIFOScheduler_GetsExpectedTables() throws Exception {
         State state = simulateWith(new BGPProtocol());
 
-        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolExpectedTables[0]));
+        collector.checkThat(state.get(0).getTable(), is(BGPProtocolExpectedTables[0]));
+        collector.checkThat(state.get(1).getTable(), is(BGPProtocolExpectedTables[1]));
+        collector.checkThat(state.get(2).getTable(), is(BGPProtocolExpectedTables[2]));
+        collector.checkThat(state.get(3).getTable(), is(BGPProtocolExpectedTables[3]));
+        collector.checkThat(state.get(4).getTable(), is(BGPProtocolExpectedTables[4]));
+        collector.checkThat(state.get(5).getTable(), is(BGPProtocolExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node1GetsExpectedTable() throws Exception {
+    public void simulate_BGPProtocolAndFIFOScheduler_CorrectSelectedRoutes() throws Exception {
         State state = simulateWith(new BGPProtocol());
 
-        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolExpectedTables[1]));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node2GetsExpectedTable() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolExpectedTables[2]));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node3GetsExpectedTable() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolExpectedTables[3]));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node4GetsExpectedTable() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolExpectedTables[4]));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node5GetsExpectedTable() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolExpectedTables[5]));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node0SelectsRouteWith0AndEmptyPath() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(0)).getSelectedRoute(), is(route(destinationId, sp(0), path())));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node1SelectsRouteWith0AndPathWithNode0() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(1)).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node2SelectsRouteWith5AndPathWithNode0() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(2)).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_BGPProtocolAndFIFOScheduler_Node3SelectsRouteWith1AndPathWithNodes1And0() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(3)).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
-    }
-
-    @Test(timeout = 2000)
-    public void
-    simulate_BGPProtocolAndFIFOScheduler_Node4SelectsRouteWith3AndPathWithNodes5And3And1And0() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(4)).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
-    }
-
-    @Test(timeout = 2000)
-    public void
-    simulate_BGPProtocolAndFIFOScheduler_Node5SelectsRouteWith2AndPathWithNodesAnd3And1And0() throws Exception {
-        State state = simulateWith(new BGPProtocol());
-
-        assertThat(state.get(new Node(5)).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
+        collector.checkThat(state.get(0).getSelectedRoute(), is(route(destinationId, sp(0), path())));
+        collector.checkThat(state.get(1).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
+        collector.checkThat(state.get(2).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
+        collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
+        collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
     }
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
-        State state = State.create(network, destinationId, new D1R1Protocol());
+        State state = simulateWith(new D1R1Protocol());
 
-        engine.simulate(state, destinationId);
+        assertThat(state.get(0).getTable(), is(BGPProtocolExpectedTables[0]));
+        assertThat(state.get(1).getTable(), is(BGPProtocolExpectedTables[1]));
+        assertThat(state.get(2).getTable(), is(BGPProtocolExpectedTables[2]));
+        assertThat(state.get(3).getTable(), is(BGPProtocolExpectedTables[3]));
+        assertThat(state.get(4).getTable(), is(BGPProtocolExpectedTables[4]));
+        assertThat(state.get(5).getTable(), is(BGPProtocolExpectedTables[5]));
+    }
 
-        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolExpectedTables[0]));
-        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolExpectedTables[1]));
-        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolExpectedTables[2]));
-        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolExpectedTables[3]));
-        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolExpectedTables[4]));
-        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolExpectedTables[5]));
+    @Test(timeout = 2000)
+    public void simulate_D1R1ProtocolAndFIFOScheduler_CorrectSelectedRoutes() throws Exception {
+        State state = simulateWith(new D1R1Protocol());
+
+        collector.checkThat(state.get(0).getSelectedRoute(), is(route(destinationId, sp(0), path())));
+        collector.checkThat(state.get(1).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
+        collector.checkThat(state.get(2).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
+        collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
+        collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
     }
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
         eventHandler.register(engine.getEventGenerator());
-        State state = State.create(network, destinationId, new D1R1Protocol());
 
-        engine.simulate(state, destinationId);
+        simulateWith(new D1R1Protocol());
 
         assertThat(eventHandler.getDetectionCount(), is(0));
     }
@@ -242,12 +195,12 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 //
 //        engine.simulate(network, new D1R1Protocol(), 0);
 //
-//        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
-//        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
-//        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
-//        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
-//        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
-//        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
+//        assertThat(state.get(0).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
+//        assertThat(state.get(1).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
+//        assertThat(state.get(2).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
+//        assertThat(state.get(3).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
+//        assertThat(state.get(4).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
+//        assertThat(state.get(5).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
@@ -265,16 +218,14 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
-        State state = State.create(network, destinationId, new D2R1Protocol());
+        State state = simulateWith(new D2R1Protocol());
 
-        engine.simulate(state, destinationId);
-
-        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolExpectedTables[0]));
-        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolExpectedTables[1]));
-        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolExpectedTables[2]));
-        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolExpectedTables[3]));
-        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolExpectedTables[4]));
-        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolExpectedTables[5]));
+        collector.checkThat(state.get(0).getTable(), is(BGPProtocolExpectedTables[0]));
+        collector.checkThat(state.get(1).getTable(), is(BGPProtocolExpectedTables[1]));
+        collector.checkThat(state.get(2).getTable(), is(BGPProtocolExpectedTables[2]));
+        collector.checkThat(state.get(3).getTable(), is(BGPProtocolExpectedTables[3]));
+        collector.checkThat(state.get(4).getTable(), is(BGPProtocolExpectedTables[4]));
+        collector.checkThat(state.get(5).getTable(), is(BGPProtocolExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
@@ -296,12 +247,12 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 //
 //        engine.simulate(network, new D2R1Protocol(), 0);
 //
-//        assertThat(state.get(new Node(0)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
-//        assertThat(state.get(new Node(1)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
-//        assertThat(state.get(new Node(2)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
-//        assertThat(state.get(new Node(3)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
-//        assertThat(state.get(new Node(4)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
-//        assertThat(state.get(new Node(5)).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
+//        assertThat(state.get(0).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
+//        assertThat(state.get(1).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
+//        assertThat(state.get(2).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
+//        assertThat(state.get(3).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
+//        assertThat(state.get(4).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
+//        assertThat(state.get(5).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
     }
 
     @Test(timeout = 2000)
