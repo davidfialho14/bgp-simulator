@@ -57,7 +57,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, never()).exportToInNeighbours(any(), any(), any());
+        verify(engine, never()).exportToInNeighbours(any(), any());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(invalidRoute));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class EngineProcessTest {
 
         engine.process(nodeState, link, invalidRoute);
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(selectedRoute));
     }
 
     @Test
@@ -143,6 +143,6 @@ public class EngineProcessTest {
 
         engine.process(nodeState, stubLink(0, 2), anyRoute(0));
 
-        verify(engine, times(1)).exportToInNeighbours(any(), eq(learnedRoute), any());
+        verify(engine, times(1)).exportToInNeighbours(any(), eq(learnedRoute));
     }
 }

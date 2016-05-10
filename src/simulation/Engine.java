@@ -144,16 +144,13 @@ public class Engine {
     }
 
     /**
-     * Exports the given route to all of the in-neighbours of the exporting node except to node indicated as
-     * not to export.
+     * Exports a route to all in-neighbours of the exporting node
      *
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
-     * @param nodeNotToExport node to which the route is not to be exported.
      */
-    void exportToInNeighbours(Node exportingNode, Route route, Node nodeNotToExport) {
-        exportingNode.getInLinks().stream()
-                .filter(inLink -> !inLink.getSource().equals(nodeNotToExport))  // exclude the nodeNotToExport
+    void exportToInNeighbours(Node exportingNode, Route route) {
+        exportingNode.getInLinks()
                 .forEach(inLink -> export(inLink, route));
     }
 
@@ -188,11 +185,7 @@ public class Engine {
         eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
 
         if (prevSelectedRoute == null || !prevSelectedRoute.equals(selectedRoute)) {
-            /*
-                must export the new route to all of the learning node's in-links except to the node
-                from which the route was learned.
-             */
-            exportToInNeighbours(link.getSource(), selectedRoute, link.getDestination());
+            exportToInNeighbours(link.getSource(), selectedRoute);
         }
     }
 
