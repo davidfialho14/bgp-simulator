@@ -96,7 +96,7 @@ public class NodeState {
      * @return currently selected route.
      */
     public Route getSelectedRoute(Node destination, Link ignoredLink) {
-        return table.getSelectedRoute(destination, ignoredLink);
+        return table.getSelectedRoute(ignoredLink);
     }
 
     /**
@@ -106,7 +106,7 @@ public class NodeState {
      * @return currently selected route.
      */
     public Route getSelectedRoute(Node destination) {
-        return table.getSelectedRoute(destination);
+        return table.getSelectedRoute();
     }
 
     /**

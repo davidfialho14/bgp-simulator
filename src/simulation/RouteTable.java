@@ -75,11 +75,10 @@ public class RouteTable {
      * Returns the route associated with the given destination and out-link pair. If the out-link does not exist in
      * the table it will be returned null.
      *
-     * @param destination destination to get route.
      * @param outLink out-link to get route.
      * @return route associated with the given pair or null if the out-link does not exist.
      */
-    public Route getRoute(Node destination, Link outLink) {
+    public Route getRoute(Link outLink) {
         return routes.get(outLink);
     }
 
@@ -91,18 +90,17 @@ public class RouteTable {
     }
 
     /**
-     * Returns the currently selected route for the given destination. If ignoredOutLink is not null it will select the
-     * best route associated with any out-link exception the ignoredOutLink.
+     * Returns the currently selected route. If ignoredOutLink is not null it will select the best route associated
+     * with any out-link exception the ignoredOutLink.
      *
-     * @param destination destination node to get selected route for.
      * @param ignoredOutLink out-link to be ignored.
      * @return currently selected route for the destination.
      */
-    public Route getSelectedRoute(Node destination, Link ignoredOutLink) {
+    public Route getSelectedRoute(Link ignoredOutLink) {
         Route preferredRoute = null;
 
         for (Link outLink : routes.keySet()) {
-            Route route = getRoute(destination, outLink);
+            Route route = getRoute(outLink);
 
             if (!outLink.equals(ignoredOutLink) && (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
                 preferredRoute = route;
@@ -112,8 +110,8 @@ public class RouteTable {
         return preferredRoute;
     }
 
-    Route getSelectedRoute(Node destination) {
-        return getSelectedRoute(destination, null);
+    Route getSelectedRoute() {
+        return getSelectedRoute(null);
     }
 
     @Override
@@ -134,7 +132,7 @@ public class RouteTable {
 
         for (Link outLink : routes.keySet()) {
             for (Node destination : destinations) {
-                if (!this.getRoute(destination, outLink).equals(that.getRoute(destination, outLink))) {
+                if (!this.getRoute(outLink).equals(that.getRoute(outLink))) {
                     return false;
                 }
             }
@@ -172,7 +170,7 @@ public class RouteTable {
         Route[][] table = new Route[destinations.length][columns.length];
         for (int i = 0; i < destinations.length; i++) {
             for (int j = 0; j < columns.length; j++) {
-                table[i][j] = getRoute(destinations[i], outLinks[j]);
+                table[i][j] = getRoute(outLinks[j]);
             }
         }
 

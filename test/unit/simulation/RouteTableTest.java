@@ -12,7 +12,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
 import static wrappers.StubWrapper.*;
-import static wrappers.network.NetworkWrapper.anyNode;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
@@ -25,18 +24,18 @@ public class RouteTableTest {
 
     @Test
     public void getRoute_OnTableWithoutOutLinks_Null() throws Exception {
-        assertThat(table().getRoute(anyNode(), anyStubLink()), is(nullValue()));
+        assertThat(table().getRoute(anyStubLink()), is(nullValue()));
     }
 
     @Test
-    public void setRoute_WithAttr1AndEmptyPathOnTableWithoutOutLinks_GetsNull() throws Exception {
-        RouteTable routeTable = table();
+    public void setRoute_WithAttr1AndEmptyPathOnTableWithoutOutLinks_GetsRouteWithAttr1AndEmptyPath() throws Exception {
         Node destination = new Node(0);
+        RouteTable routeTable = new RouteTable(destination);
         Link outLink = stubLink(1, 2);
 
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
 
-        assertThat(routeTable.getRoute(destination, outLink), is(nullValue()));
+        assertThat(routeTable.getRoute(outLink), is(nullValue()));
     }
 
     @Test
@@ -44,7 +43,7 @@ public class RouteTableTest {
         RouteTable routeTable = table(stubOutLink(1, 2));
         Node destination = new Node(0);
 
-        assertThat(routeTable.getRoute(destination, stubLink(1, 2)), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getRoute(stubLink(1, 2)), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -56,7 +55,7 @@ public class RouteTableTest {
 
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
 
-        assertThat(routeTable.getRoute(destination, outLink), is(stubRoute(0, 1, path())));
+        assertThat(routeTable.getRoute(outLink), is(stubRoute(0, 1, path())));
     }
 
     @Test
@@ -71,7 +70,7 @@ public class RouteTableTest {
         routeTable.setRoute(outLink, route);
         route.setAttribute(stubAttr(1));
 
-        assertThat(routeTable.getRoute(destination, outLink), is(stubRoute(0, 0, path())));
+        assertThat(routeTable.getRoute(outLink), is(stubRoute(0, 0, path())));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class RouteTableTest {
 
         routeTable.setRoute(outLink, stubRoute(0, 2, path()));
 
-        assertThat(routeTable.getRoute(destination, outLink), is(stubRoute(0, 2, path())));
+        assertThat(routeTable.getRoute(outLink), is(stubRoute(0, 2, path())));
     }
 
     @Test
@@ -97,7 +96,7 @@ public class RouteTableTest {
         );
         Node destination1 = new Node(1);
 
-        assertThat(routeTable.getRoute(destination1, stubLink(0, 1)), is(Route.invalidRoute(destination1)));
+        assertThat(routeTable.getRoute(stubLink(0, 1)), is(Route.invalidRoute(destination1)));
     }
 
     @Test
@@ -111,7 +110,7 @@ public class RouteTableTest {
 
         routeTable.setRoute(outLink1To2, stubRoute(0, 0, path()));  // assigned attribute to other link
 
-        assertThat(routeTable.getRoute(destination, outLink1To3), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getRoute(outLink1To3), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -212,7 +211,7 @@ public class RouteTableTest {
 
         routeTable.removeOutLink(removedOutLink);
 
-        assertThat(routeTable.getRoute(destination, removedOutLink), is(nullValue()));
+        assertThat(routeTable.getRoute(removedOutLink), is(nullValue()));
     }
 
     @Test
@@ -255,7 +254,7 @@ public class RouteTableTest {
 
         routeTable.addOutLink(addedOutLink);
 
-        assertThat(routeTable.getRoute(destination, addedOutLink), is(stubRoute(0, 0, path())));
+        assertThat(routeTable.getRoute(addedOutLink), is(stubRoute(0, 0, path())));
     }
 
     @Test
@@ -269,7 +268,7 @@ public class RouteTableTest {
 
         routeTable.addOutLink(addedOutLink);
 
-        assertThat(routeTable.getRoute(destination, addedOutLink), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getRoute(addedOutLink), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -278,7 +277,7 @@ public class RouteTableTest {
         Node destination0 = new Node(0);
         RouteTable routeTable = new RouteTable(destination0);
 
-        assertThat(routeTable.getSelectedRoute(destination0, anyStubLink()), is(nullValue()));
+        assertThat(routeTable.getSelectedRoute(anyStubLink()), is(nullValue()));
     }
 
     @Test
@@ -287,7 +286,7 @@ public class RouteTableTest {
         Node destination0 = new Node(0);
         RouteTable routeTable = new RouteTable(destination0, links(stubLink(0, 1)));
 
-        assertThat(routeTable.getSelectedRoute(destination0), is(Route.invalidRoute(destination0)));
+        assertThat(routeTable.getSelectedRoute(), is(Route.invalidRoute(destination0)));
     }
 
     @Test
@@ -298,7 +297,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path())
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, stubAttr(0), path())));
+        assertThat(routeTable.getSelectedRoute(), is(route(0, stubAttr(0), path())));
     }
 
     @Test
@@ -310,7 +309,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path()), stubRoute(1, path())
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, stubAttr(1), path())));
+        assertThat(routeTable.getSelectedRoute(), is(route(0, stubAttr(1), path())));
     }
 
     @Test
@@ -321,7 +320,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path()), invalidRoute()
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0)), is(route(0, stubAttr(0), path())));
+        assertThat(routeTable.getSelectedRoute(), is(route(0, stubAttr(0), path())));
     }
 
     @Test
@@ -331,7 +330,7 @@ public class RouteTableTest {
                 destination(0), invalidRoute(),     invalidRoute()
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0)), is(Route.invalidRoute(new Node(0))));
+        assertThat(routeTable.getSelectedRoute(), is(Route.invalidRoute(new Node(0))));
     }
 
     @Test
@@ -343,7 +342,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path()),  stubRoute(1, path())
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0), stubLink(0, 2)), is(route(0, stubAttr(0), path())));
+        assertThat(routeTable.getSelectedRoute(stubLink(0, 2)), is(route(0, stubAttr(0), path())));
     }
 
     @Test
@@ -354,7 +353,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path())
         );
 
-        assertThat(routeTable.getSelectedRoute(new Node(0), stubLink(0, 1)), is(nullValue()));
+        assertThat(routeTable.getSelectedRoute(stubLink(0, 1)), is(nullValue()));
     }
 
     @Test
@@ -364,7 +363,7 @@ public class RouteTableTest {
         routeTable.setRoute(stubLink(0, 1), route(0, stubAttr(0), path()));
         Node destination = new Node(0);
 
-        assertThat(routeTable.getSelectedRoute(destination, stubLink(0, 1)), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getSelectedRoute(stubLink(0, 1)), is(Route.invalidRoute(destination)));
     }
 
 
