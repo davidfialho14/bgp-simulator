@@ -37,18 +37,6 @@ public class Engine {
     }
 
     /**
-     * Simulates according to the given initial state. Simulates with all nodes as destinations.
-     *
-     * @param initialState initial state to start simulation.
-     */
-    public void simulate(State initialState) {
-        scheduler.reset();
-        exportSelfRoute(initialState);
-        simulationLoop(initialState);
-        resetTime();
-    }
-
-    /**
      * Simulates according to the given initial state. Simulates only for one destination.
      *
      * @param initialState initial state to start simulation.

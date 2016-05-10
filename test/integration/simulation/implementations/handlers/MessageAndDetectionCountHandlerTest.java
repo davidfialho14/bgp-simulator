@@ -32,7 +32,7 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void messageCount_ForTopology0WithBGP_Is1() throws Exception {
+    public void messageCount_ForNetwork0AndDestination1WithBGP_Is1() throws Exception {
         State state = State.create(
                 network(new ShortestPathPolicy(),
                         link(from(0), to(1), label(1))),
@@ -44,7 +44,7 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void messageCount_ForTopology1_Is4() throws Exception {
+    public void messageCount_ForNetwork1AndDestination2_Is3() throws Exception {
         State state = State.create(
                 network(new ShortestPathPolicy(),
                         link(from(0), to(1), label(1)),
@@ -52,9 +52,9 @@ public class MessageAndDetectionCountHandlerTest {
                         link(from(0), to(2), label(0))),
                 new BGPProtocol());
 
-        engine.simulate(state);
+        engine.simulate(state, 2);
 
-        assertThat(eventHandler.getMessageCount(), is(4));
+        assertThat(eventHandler.getMessageCount(), is(3));
     }
 
     private static Network network3 = network(new ShortestPathPolicy(),
@@ -66,7 +66,7 @@ public class MessageAndDetectionCountHandlerTest {
             link(from(3), to(1), label(-2)));
 
     @Test
-    public void messageCount_ForTopology3WithD1R1_Is13() throws Exception {
+    public void messageCount_ForNetwork3WithD1R1_Is13() throws Exception {
         State state = State.create(network3, new D1R1Protocol());
 
         engine.simulate(state, 0);
@@ -75,7 +75,7 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void detectionCount_ForTopology3WithD1R1_Is2() throws Exception {
+    public void detectionCount_ForNetwork3WithD1R1_Is2() throws Exception {
         State state = State.create(network3, new D1R1Protocol());
 
         engine.simulate(state, 0);
