@@ -241,16 +241,6 @@ public class Engine {
     }
 
     /**
-     * Exports the self route of all nodes in the network. It updates that state of the nodes to selected
-     * the self routes.
-     *
-     * @param state current state.
-     */
-    private void exportSelfRoute(State state) {
-        state.getNetwork().getNodes().forEach(node -> exportSelfRoute(node, state));
-    }
-
-    /**
      * Resets the time property by removing all listeners and setting the time to -1 in order to generate
      * a time change when the simulation starts.
      */
