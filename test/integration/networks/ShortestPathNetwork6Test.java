@@ -1,6 +1,9 @@
 package networks;
 
 import addons.eventhandlers.MessageAndDetectionCountHandler;
+import addons.linkbreakers.FixedTimeLinkBreaker;
+import addons.linkbreakers.LinkBreaker;
+import network.Link;
 import network.Network;
 import org.junit.Before;
 import org.junit.Rule;
@@ -128,6 +131,8 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
         return state;
     }
 
+    // ----- BGP PROTOCOL -----
+
     @Test(timeout = 2000)
     public void simulate_BGPProtocolAndFIFOScheduler_GetsExpectedTables() throws Exception {
         State state = simulateWith(new BGPProtocol());
@@ -151,6 +156,8 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
         collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
         collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
     }
+
+    // ----- D1R1 PROTOCOL -----
 
     @Test(timeout = 2000)
     public void simulate_D1R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
@@ -186,35 +193,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
         assertThat(eventHandler.getDetectionCount(), is(0));
     }
 
-    @Test(timeout = 2000)
-    public void simulate_D1R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_Converges() throws Exception {
-        // TODO Link Breaker
-//        engine = new Engine(new FIFOScheduler());
-//                .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
-//                .build();
-//
-//        engine.simulate(network, new D1R1Protocol(), 0);
-//
-//        assertThat(state.get(0).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
-//        assertThat(state.get(1).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
-//        assertThat(state.get(2).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
-//        assertThat(state.get(3).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
-//        assertThat(state.get(4).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
-//        assertThat(state.get(5).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
-    }
-
-    @Test(timeout = 2000)
-    public void simulate_D1R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_DetectsOnce() throws Exception {
-        // TODO Link Breaker
-//        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-//                .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
-//                .eventHandler(eventHandler)
-//                .build();
-//
-//        engine.simulate(network, new D1R1Protocol(), 0);
-//
-//        assertThat(eventHandler.getDetectionCount(), is(1));
-    }
+    // ----- D2R1 PROTOCOL -----
 
     @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_ConvergesToSameRouteTablesAsWithBGPProtocol() throws Exception {
@@ -229,6 +208,18 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     }
 
     @Test(timeout = 2000)
+    public void simulate_D2R1ProtocolAndFIFOScheduler_CorrectSelectedRoutes() throws Exception {
+        State state = simulateWith(new D2R1Protocol());
+
+        collector.checkThat(state.get(0).getSelectedRoute(), is(route(destinationId, sp(0), path())));
+        collector.checkThat(state.get(1).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
+        collector.checkThat(state.get(2).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
+        collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
+        collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
+    }
+
+    @Test(timeout = 2000)
     public void simulate_D2R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
         eventHandler.register(engine.getEventGenerator());
@@ -239,32 +230,40 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
         assertThat(eventHandler.getDetectionCount(), is(0));
     }
 
-    @Test(timeout = 2000)
-    public void simulate_D2R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_Converges() throws Exception {
-        // TODO Link Breaker
-//                .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
-//                .build();
-//
-//        engine.simulate(network, new D2R1Protocol(), 0);
-//
-//        assertThat(state.get(0).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
-//        assertThat(state.get(1).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
-//        assertThat(state.get(2).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
-//        assertThat(state.get(3).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
-//        assertThat(state.get(4).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
-//        assertThat(state.get(5).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
+    // ----- LINK BREAKERS -----
+
+    private State simulateBreak(Protocol protocol, Link linkToBreak, long timeToBreak) {
+        State state = State.create(network, destinationId, protocol);
+
+        LinkBreaker linkBreaker = new FixedTimeLinkBreaker(linkToBreak, timeToBreak);
+        linkBreaker.assignTo(engine, state);
+
+        engine.simulate(state, destinationId);
+
+        return state;
     }
 
     @Test(timeout = 2000)
-    public void simulate_D2R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant3_NeverDetects() throws Exception {
-        // TODO Link Breaker
-//        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-//                .linkBreaker(new FixedLinkBreaker(new Link(3, 1, splabel(1)), 2L))
-//                .eventHandler(eventHandler)
-//                .build();
-//
-//        engine.simulate(network, new D2R1Protocol(), 0);
-//
-//        assertThat(eventHandler.getDetectionCount(), is(0));
+    public void simulate_D1R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant1_Converges() throws Exception {
+        State state = simulateBreak(new D1R1Protocol(), new Link(3, 1, splabel(1)), 1L);
+
+        collector.checkThat(state.get(0).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
+        collector.checkThat(state.get(1).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
+        collector.checkThat(state.get(2).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
+        collector.checkThat(state.get(3).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
+        collector.checkThat(state.get(4).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
+        collector.checkThat(state.get(5).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
+    }
+
+    @Test(timeout = 2000)
+    public void simulate_D2R1ProtocolAndFIFOSchedulerAndBreakingLink3To1OnInstant1_Converges() throws Exception {
+        State state = simulateBreak(new D2R1Protocol(), new Link(3, 1, splabel(1)), 1L);
+
+        collector.checkThat(state.get(0).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[0]));
+        collector.checkThat(state.get(1).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[1]));
+        collector.checkThat(state.get(2).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[2]));
+        collector.checkThat(state.get(3).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[3]));
+        collector.checkThat(state.get(4).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[4]));
+        collector.checkThat(state.get(5).getTable(), is(BGPProtocolAndBrokenLink3To1ExpectedTables[5]));
     }
 }
