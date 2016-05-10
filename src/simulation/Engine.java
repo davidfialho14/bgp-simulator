@@ -102,11 +102,11 @@ public class Engine {
      *
      * @param nodeState state of the node who learned the route.
      * @param link link from which the route was learned.
-     * @param exportedRoute route when it was exported.
+     * @param importedRoute route imported by the node that is selecting.
      * @param learnedRoute route after being learned.
      * @return route currently being selected by the learning node to reach the route's destination.
      */
-    Route select(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
+    Route select(NodeState nodeState, Link link, Route importedRoute, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
         Node learningNode = link.getSource();
@@ -117,12 +117,12 @@ public class Engine {
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (nodeState.getProtocol().isOscillation(link, exportedRoute,
+            if (nodeState.getProtocol().isOscillation(link, importedRoute,
                     learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
                 // detected oscillation
                 eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
 
-                nodeState.getProtocol().setParameters(link, exportedRoute,
+                nodeState.getProtocol().setParameters(link, importedRoute,
                         learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
             }
 
@@ -170,16 +170,17 @@ public class Engine {
     /**
      * Selects the preferred route for the destination and if the selected route is different from the previously
      * selected route it exports all the new selected route to all of the in-neighbours.
-     *  @param nodeState state of the learning node.
+     *
+     * @param nodeState state of the learning node.
      * @param link link from which the route was learned.
-     * @param exportedRoute route that was exported through the link.
+     * @param importedRoute route that was imported by the node.
      * @param learnedRoute route that was learned by the node.
      */
-    void processSelection(NodeState nodeState, Link link, Route exportedRoute, Route learnedRoute) {
+    void processSelection(NodeState nodeState, Link link, Route importedRoute, Route learnedRoute) {
         // store the currently selected route
         Route prevSelectedRoute = nodeState.getSelectedRoute();
 
-        Route selectedRoute = select(nodeState, link, exportedRoute, learnedRoute);
+        Route selectedRoute = select(nodeState, link, importedRoute, learnedRoute);
         eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
 
         if (!prevSelectedRoute.equals(selectedRoute)) {
