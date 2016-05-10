@@ -33,7 +33,7 @@ public class EngineSelectTest {
     @Before
     public void setUp() throws Exception {
         engine = new Engine(null);
-        when(stubProtocol.isOscillation(any(), any(), any(), any(), any())).thenReturn(false);
+        when(stubProtocol.isOscillation(any(), any(), any(), any())).thenReturn(false);
         when(stubNodeState.getProtocol()).thenReturn(stubProtocol);
     }
 

@@ -3,7 +3,6 @@ package protocols;
 import network.Link;
 import network.Node;
 import policies.Attribute;
-import policies.PathAttribute;
 import simulation.Route;
 
 public class BGPProtocol implements Protocol {
@@ -14,12 +13,12 @@ public class BGPProtocol implements Protocol {
     }
 
     @Override
-    public boolean isOscillation(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute) {
+    public boolean isOscillation(Link link, Route importedRoute, Route learnedRoute, Route exclRoute) {
         return false;
     }
 
     @Override
-    public void setParameters(Link link, Route learnedRoute, Attribute attribute, PathAttribute path, Route exclRoute) {
+    public void setParameters(Link link, Route importedRoute, Route learnedRoute, Route exclRoute) {
         // ignore
     }
 

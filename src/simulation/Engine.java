@@ -117,13 +117,11 @@ public class Engine {
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (nodeState.getProtocol().isOscillation(link, importedRoute,
-                    learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute)) {
+            if (nodeState.getProtocol().isOscillation(link, learnedRoute, importedRoute, exclRoute)) {
                 // detected oscillation
                 eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
 
-                nodeState.getProtocol().setParameters(link, importedRoute,
-                        learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
+                nodeState.getProtocol().setParameters(link, importedRoute, learnedRoute, exclRoute);
             }
 
             learnedRoute = invalidRoute(destination);
