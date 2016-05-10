@@ -18,6 +18,9 @@ import static wrappers.routetable.RouteTableWrapper.table;
 
 public class RouteTableTest {
 
+    /**
+     * Creates a list of links from varargs.
+     */
     private static Collection<Link> links(Link... links) {
         return Arrays.asList(links);
     }
@@ -29,8 +32,7 @@ public class RouteTableTest {
 
     @Test
     public void setRoute_WithAttr1AndEmptyPathOnTableWithoutOutLinks_GetsRouteWithAttr1AndEmptyPath() throws Exception {
-        Node destination = new Node(0);
-        RouteTable routeTable = new RouteTable(destination);
+        RouteTable routeTable = new RouteTable(new Node(0));
         Link outLink = stubLink(1, 2);
 
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
@@ -40,8 +42,8 @@ public class RouteTableTest {
 
     @Test
     public void getRoute_ForOutLink1To2OnTableWithoutKnownDestinationsAndOutLinkFrom1To2_Invalid() throws Exception {
-        RouteTable routeTable = table(stubOutLink(1, 2));
         Node destination = new Node(0);
+        RouteTable routeTable = new RouteTable(destination, links(stubLink(1, 2)));
 
         assertThat(routeTable.getRoute(stubLink(1, 2)), is(Route.invalidRoute(destination)));
     }
@@ -77,9 +79,9 @@ public class RouteTableTest {
     public void
     setRoute_WithAttr2AndEmptyPathForOutLinkAlreadyAssignedWithRouteWithAttr1AndEmpty_GetsRouteWithAttr2AndEmptyPath()
             throws Exception {
-        RouteTable routeTable = table(stubOutLink(0, 1));
-        Link outLink = stubLink(0, 1);
         Node destination = new Node(0);
+        Link outLink = stubLink(0, 1);
+        RouteTable routeTable = new RouteTable(destination, links(outLink));
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
 
         routeTable.setRoute(outLink, stubRoute(0, 2, path()));

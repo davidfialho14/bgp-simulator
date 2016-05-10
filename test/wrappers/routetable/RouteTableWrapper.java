@@ -63,14 +63,18 @@ public class RouteTableWrapper {
     private RouteTable build() {
         RouteTable table = new RouteTable(destination, outLinks);
 
-        // set each route in the list with each destination and out-link pair
-        // routes are stored in a list sequentially instead of divided in rows
-        Iterator<Route> routeItr = routes.iterator();
+        if (!routes.isEmpty()) {
+            // not empty route table
 
-        for (Link outLink : outLinks) {
-            Route route = routeItr.next();
-            route.setDestination(destination);
-            table.setRoute(outLink, route);
+            // set each route in the list with each destination and out-link pair
+            // routes are stored in a list sequentially instead of divided in rows
+            Iterator<Route> routeItr = routes.iterator();
+
+            for (Link outLink : outLinks) {
+                Route route = routeItr.next();
+                route.setDestination(destination);
+                table.setRoute(outLink, route);
+            }
         }
 
         return table;
