@@ -28,7 +28,10 @@ public class Network {
      * @param network network to construct from.
      */
     public Network(Network network) {
-        this.nodes = new HashMap<>(network.nodes);
+        this.nodes = new HashMap<>(network.nodes.size());
+        // store a copy of each node
+        network.nodes.forEach((integer, node) -> this.nodes.put(integer, new Node(node)));
+
         this.policy = network.policy;
     }
 
