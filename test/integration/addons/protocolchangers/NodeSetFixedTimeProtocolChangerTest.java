@@ -27,12 +27,11 @@ public class NodeSetFixedTimeProtocolChangerTest {
     private Engine engine;
 
     @Rule
-    public ErrorCollector collector;
+    public ErrorCollector collector = new ErrorCollector();
 
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
-        collector = new ErrorCollector();
     }
 
     /**
@@ -61,7 +60,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
         collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
         collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
     }
 
     @Test(timeout = 2000)
@@ -73,7 +72,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
         simulate(3, 0, new D1R1Protocol(), 2, 3L);
 
-        assertThat(handler.getMessageCount(), is(14));
+        assertThat(handler.getMessageCount(), is(15));
     }
 
     @Test(timeout = 2000)
@@ -96,7 +95,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
         collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
         collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
     }
 
 }
