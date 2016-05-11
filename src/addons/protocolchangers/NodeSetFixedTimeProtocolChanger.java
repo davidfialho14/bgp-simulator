@@ -6,6 +6,7 @@ import simulation.Engine;
 import simulation.State;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -44,6 +45,7 @@ public class NodeSetFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
     public NodeSetFixedTimeProtocolChanger(Engine engine, State state, long changeTime, Protocol protocol, Node... nodes) {
         super(engine, state, changeTime);
         this.protocolToChangeTo = protocol;
+        this.nodesToChange =  new HashSet<>(nodes.length);
         Collections.addAll(nodesToChange, nodes);
     }
 
