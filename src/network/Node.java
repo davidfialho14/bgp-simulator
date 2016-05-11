@@ -19,6 +19,17 @@ public class Node {
 	}
 
     /**
+     * Copy constructor.
+     *
+     * @param node node to copy.
+     */
+    public Node(Node node) {
+        this.id = node.id;
+        this.outLinks = new HashSet<>(node.outLinks);
+        this.inLinks = new HashSet<>(node.inLinks);
+    }
+
+    /**
      * Returns the id of the node.
      * @return id of the node.
      */
