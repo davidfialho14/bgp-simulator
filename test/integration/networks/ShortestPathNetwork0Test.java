@@ -1,10 +1,10 @@
 package networks;
 
+import factories.ShortestPathNetworkFactory;
 import network.Network;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
-import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
 import simulation.Engine;
 import simulation.State;
@@ -13,11 +13,8 @@ import simulation.schedulers.FIFOScheduler;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
-import static wrappers.ShortestPathWrapper.*;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
-import static wrappers.network.ToNodeElement.to;
+import static wrappers.ShortestPathWrapper.splink;
+import static wrappers.ShortestPathWrapper.sproute;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
@@ -30,8 +27,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        network = network(new ShortestPathPolicy(),
-                link(from(1), to(0), label(1)));
+        network = new ShortestPathNetworkFactory().network(0);
     }
 
     @Test(timeout = 2000)

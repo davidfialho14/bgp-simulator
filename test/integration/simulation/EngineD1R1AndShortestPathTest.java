@@ -1,21 +1,18 @@
 package simulation;
 
-import network.Network;
+import factories.NetworkFactory;
+import factories.ShortestPathNetworkFactory;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
-import policies.shortestpath.ShortestPathPolicy;
 import protocols.D1R1Protocol;
 import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
-import static wrappers.ShortestPathWrapper.*;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
-import static wrappers.network.ToNodeElement.to;
+import static wrappers.ShortestPathWrapper.splink;
+import static wrappers.ShortestPathWrapper.sproute;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
@@ -28,6 +25,8 @@ import static wrappers.routetable.RouteTableWrapper.table;
 @SuppressWarnings("Duplicates")
 public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
+    private NetworkFactory factory = new ShortestPathNetworkFactory();
+    
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
@@ -36,15 +35,8 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Topology3_Converges() throws Exception {
-        Network network3 = network(new ShortestPathPolicy(),
-                link(from(1), to(0), label(0)),
-                link(from(2), to(0), label(0)),
-                link(from(3), to(0), label(0)),
-                link(from(1), to(2), label(-1)),
-                link(from(2), to(3), label(1)),
-                link(from(3), to(1), label(-2)));
         int destinationId = 0;
-        State state = State.create(network3, destinationId, protocol);
+        State state = State.create(factory.network(3), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 

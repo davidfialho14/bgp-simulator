@@ -3,13 +3,13 @@ package networks;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import addons.linkbreakers.FixedTimeLinkBreaker;
 import addons.linkbreakers.LinkBreaker;
+import factories.ShortestPathNetworkFactory;
 import network.Link;
 import network.Network;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
-import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
@@ -24,10 +24,6 @@ import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
 import static wrappers.ShortestPathWrapper.*;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
-import static wrappers.network.ToNodeElement.to;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
@@ -45,15 +41,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
-        network = network(new ShortestPathPolicy(),
-                link(from(1), to(0), label(0)),
-                link(from(2), to(0), label(5)),
-                link(from(3), to(1), label(1)),
-                link(from(3), to(2), label(5)),
-                link(from(3), to(4), label(1)),
-                link(from(4), to(5), label(1)),
-                link(from(5), to(3), label(1)));
-
+        network = new ShortestPathNetworkFactory().network(6);
         collector = new ErrorCollector();
     }
 

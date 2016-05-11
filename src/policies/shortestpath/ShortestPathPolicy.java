@@ -22,4 +22,14 @@ public class ShortestPathPolicy implements Policy {
             throw new InvalidTagException(tag, "the ShortestPath policy's label tags must be integers");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ShortestPathPolicy;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }
