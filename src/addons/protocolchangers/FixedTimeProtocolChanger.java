@@ -59,9 +59,10 @@ public abstract class FixedTimeProtocolChanger extends ProtocolChanger implement
     protected boolean isTimeToChange(long currentTime) {
         if (!changed && currentTime >= changeTime) {
             changed = true;
+            return true;
         }
 
-        return changed;
+        return false;
     }
 
 }

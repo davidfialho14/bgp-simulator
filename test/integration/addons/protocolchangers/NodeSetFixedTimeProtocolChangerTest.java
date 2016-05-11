@@ -1,6 +1,5 @@
 package addons.protocolchangers;
 
-import addons.eventhandlers.DebugEventHandler;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import factories.NetworkFactory;
 import factories.ShortestPathNetworkFactory;
@@ -116,10 +115,6 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
         handler.register(engine.getEventGenerator());
-
-        DebugEventHandler debug = new DebugEventHandler(false);
-        debug.setExportEnabled(true);
-        debug.register(engine.getEventGenerator());
 
         simulate(3, 0, new D1R1Protocol(), 1, 3L);
 
