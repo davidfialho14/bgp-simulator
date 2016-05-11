@@ -1,10 +1,10 @@
 package simulation;
 
-import network.Network;
 import network.Node;
+import factories.GaoRexfordNetworkFactory;
+import factories.NetworkFactory;
 import org.junit.Before;
 import org.junit.Test;
-import policies.gaorexford.GaoRexfordPolicy;
 import protocols.BGPProtocol;
 import simulation.schedulers.FIFOScheduler;
 
@@ -12,10 +12,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.GaoRexfordWrapper.*;
 import static wrappers.PathWrapper.path;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
-import static wrappers.network.ToNodeElement.to;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
@@ -28,21 +24,18 @@ import static wrappers.routetable.RouteTableWrapper.table;
 @SuppressWarnings("Duplicates")
 public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
+    private NetworkFactory factory = new GaoRexfordNetworkFactory();
+
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
         protocol = new BGPProtocol();
     }
 
-    private static Network network0 = network(new GaoRexfordPolicy(),
-            link(from(0), to(1), customerLabel()),
-            link(from(1), to(0), providerLabel())
-    );
-    
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        State state = State.create(network0, destinationId, protocol);
+        State state = State.create(factory.network(0), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -60,7 +53,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        State state = State.create(network0, destinationId, protocol);
+        State state = State.create(factory.network(0), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -75,17 +68,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         )));
     }
 
-    private static Network network1 = network(new GaoRexfordPolicy(),
-            link(from(0), to(1), customerLabel()),
-            link(from(1), to(0), providerLabel()),
-            link(from(2), to(1), customerLabel()),
-            link(from(1), to(2), providerLabel())
-    );
-
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        State state = State.create(network1, destinationId, protocol);
+        State state = State.create(factory.network(1), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -108,7 +94,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        State state = State.create(network1, destinationId, protocol);
+        State state = State.create(factory.network(1), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -131,7 +117,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination2_Converges() throws Exception {
         int destinationId = 2;
-        State state = State.create(network1, destinationId, protocol);
+        State state = State.create(factory.network(1), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -151,16 +137,10 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
         )));
     }
 
-    private static Network network2 = network(new GaoRexfordPolicy(),
-            link(from(0), to(1), customerLabel()),
-            link(from(1), to(2), customerLabel()),
-            link(from(2), to(0), customerLabel())
-    );
-
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        State state = State.create(network2, destinationId, protocol);
+        State state = State.create(factory.network(2), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -183,7 +163,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        State state = State.create(network2, destinationId, protocol);
+        State state = State.create(factory.network(2), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -206,7 +186,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination2_Converges() throws Exception {
         int destinationId = 2;
-        State state = State.create(network2, destinationId, protocol);
+        State state = State.create(factory.network(2), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 

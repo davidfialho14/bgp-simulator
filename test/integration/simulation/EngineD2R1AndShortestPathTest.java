@@ -1,21 +1,18 @@
 package simulation;
 
-import network.Network;
+import factories.NetworkFactory;
+import factories.ShortestPathNetworkFactory;
 import network.Node;
 import org.junit.Before;
 import org.junit.Test;
-import policies.shortestpath.ShortestPathPolicy;
 import protocols.D2R1Protocol;
 import simulation.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
-import static wrappers.ShortestPathWrapper.*;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
-import static wrappers.network.ToNodeElement.to;
+import static wrappers.ShortestPathWrapper.splink;
+import static wrappers.ShortestPathWrapper.sproute;
 import static wrappers.routetable.DestinationElement.destination;
 import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
@@ -27,6 +24,8 @@ import static wrappers.routetable.RouteTableWrapper.table;
  */
 @SuppressWarnings("Duplicates")
 public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
+    
+    private NetworkFactory factory = new ShortestPathNetworkFactory();
 
     @Before
     public void setUp() throws Exception {
@@ -36,34 +35,26 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination1_Converges() throws Exception {
-        Network network0 = network(new ShortestPathPolicy(),
-                link(from(0), to(1), label(1)));
-        int destinationId = 1;
-        State state = State.create(network0, destinationId, protocol);
+        int destinationId = 0;
+        State state = State.create(factory.network(0), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
-                                selfLink(0),    splink(0, 1, 1),
-                destination(1), invalidRoute(), sproute(1, path(1))
+        assertThat(state.get(new Node(1)).getTable(), is( table(
+                                selfLink(1),    splink(1, 0, 1),
+                destination(0), invalidRoute(), sproute(1, path(0))
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
-                                selfLink(1),
-                destination(1), sproute(0, path())
+        assertThat(state.get(new Node(0)).getTable(), is( table(
+                                selfLink(0),
+                destination(0), sproute(0, path())
         )));
     }
 
-    private static Network network1 = network(new ShortestPathPolicy(), 
-            link(from(0), to(1), label(1)), 
-            link(from(1), to(2), label(1)), 
-            link(from(0), to(2), label(0))
-    );
-    
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        State state = State.create(network1, destinationId, protocol);
+        State state = State.create(factory.network(1), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -86,7 +77,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        State state = State.create(network1, destinationId, protocol);
+        State state = State.create(factory.network(1), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -109,7 +100,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination2_Converges() throws Exception {
         int destinationId = 2;
-        State state = State.create(network1, destinationId, protocol);
+        State state = State.create(factory.network(1), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -131,12 +122,8 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination0_Converges() throws Exception {
-        Network network2 = network(new ShortestPathPolicy(),
-                link(from(0), to(1), label(1)),
-                link(from(1), to(2), label(1)),
-                link(from(2), to(0), label(1)));
         int destinationId = 0;
-        State state = State.create(network2, destinationId, protocol);
+        State state = State.create(factory.network(2), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -158,15 +145,8 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network3ForDestination0_Converges() throws Exception {
-        Network network3 = network(new ShortestPathPolicy(),
-                link(from(1), to(0), label(0)),
-                link(from(2), to(0), label(0)),
-                link(from(3), to(0), label(0)),
-                link(from(1), to(2), label(-1)),
-                link(from(2), to(3), label(1)),
-                link(from(3), to(1), label(-2)));
         int destinationId = 0;
-        State state = State.create(network3, destinationId, protocol);
+        State state = State.create(factory.network(3), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
@@ -193,13 +173,8 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
     @Test(timeout = 2000)
     public void simulate_Network4ForDestination0_Converges() throws Exception {
-        Network network4 = network(new ShortestPathPolicy(),
-                link(from(1), to(0), label(0)),
-                link(from(1), to(2), label(1)),
-                link(from(2), to(3), label(1)),
-                link(from(3), to(1), label(1)));
         int destinationId = 0;
-        State state = State.create(network4, destinationId, protocol);
+        State state = State.create(factory.network(4), destinationId, protocol);
 
         engine.simulate(state, destinationId);
 
