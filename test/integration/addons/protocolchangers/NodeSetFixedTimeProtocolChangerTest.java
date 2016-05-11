@@ -10,10 +10,12 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
+import protocols.Protocol;
 import simulation.Engine;
 import simulation.State;
 import simulation.schedulers.FIFOScheduler;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
@@ -33,14 +35,29 @@ public class NodeSetFixedTimeProtocolChangerTest {
         collector = new ErrorCollector();
     }
 
+    /**
+     *
+     * @param networkId ID of the network to simulate.
+     * @param destId ID of the destination.
+     * @param protocol protocol to change to.
+     * @param nodeId ID of the node to change the protocol.
+     * @param time time to change the protocol.
+     * @return final state.
+     */
+    private State simulate(int networkId, int destId, Protocol protocol, int nodeId, long time) {
+        State state = State.create(factory.network(networkId), destId, new BGPProtocol());
+        new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new Node(nodeId));
+
+        engine.simulate(state, 0);
+
+        return state;
+    }
+
     @Test(timeout = 2000)
     public void
     changeProtocol_OfNode2ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_CorrectSelectedRoutes()
             throws Exception {
-        State state = State.create(factory.network(3), 0, new BGPProtocol());   // start all with the BGP protocol
-        new NodeSetFixedTimeProtocolChanger(engine, state, 3L, new D1R1Protocol(), new Node(2));
-
-        engine.simulate(state, 0);
+        State state = simulate(3, 0, new D1R1Protocol(), 2, 3L);
 
         collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
         collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
@@ -49,18 +66,37 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
     @Test(timeout = 2000)
     public void
-    changeProtocol_OfNode2ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_MessageCountIs14AndDetectedOnce()
+    changeProtocol_OfNode2ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_MessageCountIs14()
             throws Exception {
-        State state = State.create(factory.network(3), 0, new BGPProtocol());   // start all with the BGP protocol
-        new NodeSetFixedTimeProtocolChanger(engine, state, 3L, new D1R1Protocol(), new Node(2));
-
         MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
         handler.register(engine.getEventGenerator());
 
-        engine.simulate(state, 0);
+        simulate(3, 0, new D1R1Protocol(), 2, 3L);
 
-        collector.checkThat(handler.getMessageCount(), is(14));
-        collector.checkThat(handler.getDetectionCount(), is(1));
+        assertThat(handler.getMessageCount(), is(14));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    changeProtocol_OfNode2ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_DetectionCountIs1()
+            throws Exception {
+        MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
+        handler.register(engine.getEventGenerator());
+
+        simulate(3, 0, new D1R1Protocol(), 2, 3L);
+
+        assertThat(handler.getDetectionCount(), is(1));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    changeProtocol_OfNode2ToD1R1OnInstant15WhileSimulatingNetwork3ForDestination0_CorrectSelectedRoutes()
+            throws Exception {
+        State state = simulate(3, 0, new D1R1Protocol(), 2, 15L);
+
+        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
+        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
     }
 
 }
