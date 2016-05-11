@@ -36,13 +36,12 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     private int destinationId = 0;
 
     @Rule
-    public ErrorCollector collector;
+    public ErrorCollector collector = new ErrorCollector();
 
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
         network = new ShortestPathNetworkFactory().network(6);
-        collector = new ErrorCollector();
     }
 
     /**
