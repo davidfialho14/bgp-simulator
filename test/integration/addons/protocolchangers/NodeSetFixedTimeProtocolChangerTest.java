@@ -1,5 +1,6 @@
 package addons.protocolchangers;
 
+import addons.eventhandlers.DebugEventHandler;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import factories.NetworkFactory;
 import factories.ShortestPathNetworkFactory;
@@ -65,7 +66,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
     @Test(timeout = 2000)
     public void
-    changeProtocol_OfNode2ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_MessageCountIs14()
+    changeProtocol_OfNode2ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_MessageCountIs15()
             throws Exception {
         MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
         handler.register(engine.getEventGenerator());
@@ -96,6 +97,45 @@ public class NodeSetFixedTimeProtocolChangerTest {
         collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
         collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
         collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    changeProtocol_OfNode1ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_CorrectSelectedRoutes()
+            throws Exception {
+        State state = simulate(3, 0, new D1R1Protocol(), 1, 3L);
+
+        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(-1), path(3, 1, 0))));
+        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    changeProtocol_OfNode1ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_MessageCountIs16()
+            throws Exception {
+        MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
+        handler.register(engine.getEventGenerator());
+
+        DebugEventHandler debug = new DebugEventHandler(false);
+        debug.setExportEnabled(true);
+        debug.register(engine.getEventGenerator());
+
+        simulate(3, 0, new D1R1Protocol(), 1, 3L);
+
+        assertThat(handler.getMessageCount(), is(14));
+    }
+
+    @Test(timeout = 2000)
+    public void
+    changeProtocol_OfNode1ToD1R1OnInstant3WhileSimulatingNetwork3ForDestination0_DetectionCountIs1()
+            throws Exception {
+        MessageAndDetectionCountHandler handler = new MessageAndDetectionCountHandler();
+        handler.register(engine.getEventGenerator());
+
+        simulate(3, 0, new D1R1Protocol(), 1, 3L);
+
+        assertThat(handler.getDetectionCount(), is(1));
     }
 
 }
