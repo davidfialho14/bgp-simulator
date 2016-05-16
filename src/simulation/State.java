@@ -94,6 +94,15 @@ public class State {
     }
 
     /**
+     * Returns the destination node for this state.
+     *
+     * @return the destination node for this state.
+     */
+    public Node getDestination() {
+        return destination;
+    }
+
+    /**
      * Returns the current route tables for each node.
      *
      * @return a map associating each node with its current route table.
