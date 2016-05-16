@@ -86,7 +86,7 @@ public class Controller implements Initializable {
                 MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
                 eventHandler.register(engine.getEventGenerator());
 
-                engine.simulate(state, destinationId);
+                engine.simulate(state);
 
                 reportGenerator.addMessageCount(eventHandler.getMessageCount());
                 reportGenerator.addDetectionCount(eventHandler.getDetectionCount());

@@ -47,7 +47,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
         State state = State.create(factory.network(networkId), destId, new BGPProtocol());
         new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new Node(nodeId));
 
-        engine.simulate(state, 0);
+        engine.simulate(state);
 
         return state;
     }

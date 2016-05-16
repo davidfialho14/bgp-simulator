@@ -36,7 +36,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
         int destinationId = 0;
         State state = State.create(network, destinationId, new BGPProtocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),
@@ -57,7 +57,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
         int destinationId = 0;
         State state = State.create(network, destinationId, new BGPProtocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(state.get(new Node(1)).getSelectedRoute(), is(sproute(0, 1, path(0))));
     }

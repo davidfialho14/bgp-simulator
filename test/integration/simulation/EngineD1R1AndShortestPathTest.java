@@ -38,7 +38,7 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
         int destinationId = 0;
         State state = State.create(factory.network(3), destinationId, protocol);
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(state.get(new Node(0)).getTable(), is( table(
                                 selfLink(0),

@@ -113,7 +113,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     private State simulateWith(Protocol protocol) {
         State state = State.create(network, destinationId, protocol);
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         return state;
     }
@@ -212,7 +212,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
         eventHandler.register(engine.getEventGenerator());
         State state = State.create(network, destinationId, new D2R1Protocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(eventHandler.getDetectionCount(), is(0));
     }
@@ -225,7 +225,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
         LinkBreaker linkBreaker = new FixedTimeLinkBreaker(linkToBreak, timeToBreak);
         linkBreaker.assignTo(engine, state);
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         return state;
     }

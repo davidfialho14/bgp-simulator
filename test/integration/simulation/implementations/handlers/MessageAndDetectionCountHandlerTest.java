@@ -40,7 +40,7 @@ public class MessageAndDetectionCountHandlerTest {
                 destinationId,
                 new BGPProtocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(eventHandler.getMessageCount(), is(1));
     }
@@ -56,7 +56,7 @@ public class MessageAndDetectionCountHandlerTest {
                 destinationId,
                 new BGPProtocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(eventHandler.getMessageCount(), is(3));
     }
@@ -74,7 +74,7 @@ public class MessageAndDetectionCountHandlerTest {
         int destinationId = 0;
         State state = State.create(network3, destinationId, new D1R1Protocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(eventHandler.getMessageCount(), is(13));
     }
@@ -84,7 +84,7 @@ public class MessageAndDetectionCountHandlerTest {
         int destinationId = 0;
         State state = State.create(network3, destinationId, new D1R1Protocol());
 
-        engine.simulate(state, destinationId);
+        engine.simulate(state);
 
         assertThat(eventHandler.getDetectionCount(), is(2));
     }
