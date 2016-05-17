@@ -2,6 +2,7 @@ package gui;
 
 import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
+import gui.basics.NumberSpinner;
 import io.HTMLReportGenerator;
 import io.InvalidTagException;
 import io.NetworkParser;
@@ -12,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
+import protocols.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
@@ -41,21 +43,8 @@ public class Controller implements Initializable {
             startButton.setDisable(newText.isEmpty());
         });
 
-        // accept only positive integers for the destination ID
-        destinationIdSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE));
-
-        // accept only 1 or more repetitions
-        repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
-
-        // commit values when the spinners are unfocused
-        repetitionsSpinner.focusedProperty().addListener((observable, oldState, newState) -> {
-            if (!newState)
-                commitValue(repetitionsSpinner);
-        });
-        destinationIdSpinner.focusedProperty().addListener((observable, oldState, newState) -> {
-            if (!newState)
-                commitValue(destinationIdSpinner);
-        });
+        NumberSpinner.setupNumberSpinner(destinationIdSpinner, 0, Integer.MAX_VALUE, 0);
+        NumberSpinner.setupNumberSpinner(repetitionsSpinner, 1, Integer.MAX_VALUE, 1);
     }
 
     private static void commitValue(Spinner<Integer> spinner) {
@@ -77,9 +66,8 @@ public class Controller implements Initializable {
 
         if (parser != null) {
             Engine engine = new Engine(new RandomScheduler());
-            ProtocolRadioButton protocolRadioButton = (ProtocolRadioButton) protocolGroup.getSelectedToggle();
             int destinationId = destinationIdSpinner.getValue();
-            State state = State.create(parser.getNetwork(), destinationId, protocolRadioButton.getProtocol());
+            State state = State.create(parser.getNetwork(), destinationId, new D1R1Protocol());
             HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
 
             for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
