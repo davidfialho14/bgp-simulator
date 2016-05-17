@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 /**
  * Generates reports in HTML form.
  */
-public class HTMLReportGenerator {
+public class HTMLReportGenerator implements ReportGenerator {
 
     private static final String resourcesDirectory = "reports/html/";
     private static final String modelHtmlFile = resourcesDirectory + "index.html";
@@ -23,17 +23,21 @@ public class HTMLReportGenerator {
     private List<Integer> messageCounts = new ArrayList<>();
     private List<Integer> detectionCounts = new ArrayList<>();
 
+    /**
+     * @param count new message count.
+     */
     public void addMessageCount(int count) {
         messageCounts.add(count);
     }
 
+    /**
+     * @param count new detection count.
+     */
     public void addDetectionCount(int count) {
         detectionCounts.add(count);
     }
 
     /**
-     * Generates the report based on the current available data.
-     *
      * @param outputFile file to output the report.
      * @throws IOException
      */
