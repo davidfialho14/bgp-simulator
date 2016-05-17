@@ -35,7 +35,7 @@
         <TitledPane animated="false" prefHeight="301.0" prefWidth="385.0" text="Partial Deployment"
                     GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
             <content>
-                <fx:include fx:id="partialDeployment" source="partialdeployment/partial_deployment.fxml"/>
+                <fx:include fx:id="partialDeploymentForm" source="partialdeployment/partial_deployment.fxml"/>
             </content>
         </TitledPane>
     </children>

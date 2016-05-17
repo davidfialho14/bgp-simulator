@@ -1,23 +1,16 @@
 package gui;
 
 import com.alexmerz.graphviz.ParseException;
-import com.alexmerz.graphviz.TokenMgrError;
 import gui.basics.NumberSpinner;
-import io.HTMLReportGenerator;
-import io.InvalidTagException;
-import io.NetworkParser;
+import gui.partialdeployment.PartialDeploymentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import network.exceptions.NodeExistsException;
-import network.exceptions.NodeNotFoundException;
-import protocols.D1R1Protocol;
-import simulation.Engine;
-import simulation.State;
-import addons.eventhandlers.MessageAndDetectionCountHandler;
-import simulation.schedulers.RandomScheduler;
+import simulation.simulators.PartialDeploymentSimulator;
+import simulation.simulators.Simulator;
+import simulation.simulators.StandardSimulator;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +24,7 @@ public class Controller implements Initializable {
     public Button startButton;
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
-    public ToggleGroup protocolGroup;
+    public PartialDeploymentController partialDeploymentFormController;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -56,55 +49,32 @@ public class Controller implements Initializable {
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
-        NetworkParser parser = parse(new File(networkTextField.getText()));
+        File networkFile = new File(networkTextField.getText());
+        int destinationId = destinationIdSpinner.getValue();
+        int repetitionCount = repetitionsSpinner.getValue();
 
-        if (parser != null) {
-            Engine engine = new Engine(new RandomScheduler());
-            int destinationId = destinationIdSpinner.getValue();
-            State state = State.create(parser.getNetwork(), destinationId, new D1R1Protocol());
-            HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
+        // simulator that will be used to simulate
+        Simulator simulator;
 
-            for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
-                MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-                eventHandler.register(engine.getEventGenerator());
-
-                engine.simulate(state);
-
-                reportGenerator.addMessageCount(eventHandler.getMessageCount());
-                reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
-
-                state.reset();
-                engine.getEventGenerator().clearAll();
-            }
-
-            try {
-                reportGenerator.generate(new File("report.html"));
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
-                alert.setHeaderText("Report File Error");
-                alert.showAndWait();
-            }
+        if (!partialDeploymentFormController.activateToggle.isSelected()) {
+            simulator = new StandardSimulator(networkFile, destinationId, repetitionCount);
+        } else {
+            simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount);
         }
-    }
 
-    private static NetworkParser parse(File networkFile) {
         try {
-            NetworkParser parser = new NetworkParser();
-            parser.parse(networkFile);
-
-            return parser;
+            simulator.simulate();
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
             alert.setHeaderText("Network File Error");
             alert.showAndWait();
-        } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
+        } catch (ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();
         }
 
-        return null;    // there was an error
     }
 
 }
