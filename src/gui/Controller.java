@@ -4,6 +4,7 @@ import com.alexmerz.graphviz.ParseException;
 import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
 import io.HTMLReportGenerator;
+import io.ReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -60,11 +61,14 @@ public class Controller implements Initializable {
         if (!partialDeploymentFormController.activateToggle.isSelected()) {
             simulator = new StandardSimulator(networkFile, destinationId, repetitionCount);
         } else {
-            simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount);
+            int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
+            simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount, timeToChange);
         }
 
+        ReportGenerator reportGenerator = new HTMLReportGenerator();
+
         try {
-            simulator.simulate(new HTMLReportGenerator());
+            simulator.simulate(reportGenerator);
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
@@ -73,6 +77,15 @@ public class Controller implements Initializable {
         } catch (ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
+            alert.showAndWait();
+        }
+
+        try {
+            reportGenerator.generate(new File("report.html"));
+
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
+            alert.setHeaderText("Report File Error");
             alert.showAndWait();
         }
 

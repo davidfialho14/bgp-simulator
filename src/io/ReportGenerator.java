@@ -30,4 +30,18 @@ public interface ReportGenerator {
      */
     void addDetectionCount(int count);
 
+    /**
+     * Adds a new detecting nodes count.
+     *
+     * @param count new detecting nodes count.
+     */
+    void addDetectingNodesCount(int count);
+
+    /**
+     * Adds a new cut-off links count.
+     *
+     * @param count new cut-off links count.
+     */
+    void addCutOffLinksCount(int count);
+
 }

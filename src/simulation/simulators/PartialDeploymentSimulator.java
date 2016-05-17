@@ -1,5 +1,6 @@
 package simulation.simulators;
 
+import addons.statsmanagers.StatsManager;
 import io.ReportGenerator;
 import network.Network;
 import protocols.BGPProtocol;
@@ -13,8 +14,11 @@ import java.io.File;
  */
 public class PartialDeploymentSimulator extends Simulator {
 
-    public PartialDeploymentSimulator(File networkFile, int destinationId, int repetitions) {
+    private long timeToChange;
+
+    public PartialDeploymentSimulator(File networkFile, int destinationId, int repetitions, long timeToChange) {
         super(networkFile, destinationId, repetitions);
+        this.timeToChange = timeToChange;
     }
 
     /**
@@ -36,8 +40,20 @@ public class PartialDeploymentSimulator extends Simulator {
      */
     @Override
     protected void simulationLoop(ReportGenerator reportGenerator) {
-        // TODO to implement
-        throw new UnsupportedOperationException();
+
+        for (int i = 0; i < repetitions; i++) {
+            StatsManager statsManager = new StatsManager(engine, state, timeToChange);
+
+            engine.simulate(state);
+
+            reportGenerator.addMessageCount(statsManager.getMessageCount());
+            reportGenerator.addCutOffLinksCount(statsManager.getCutOffLinkCount());
+            reportGenerator.addDetectingNodesCount(statsManager.getDetectingNodesCount());
+
+            state.reset();
+            engine.getEventGenerator().clearAll();
+        }
+
     }
 
 }

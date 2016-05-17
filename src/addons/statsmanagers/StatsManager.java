@@ -22,9 +22,9 @@ import java.util.Set;
  */
 public class StatsManager extends FixedTimeProtocolChanger implements ImportListener, DetectListener {
 
-    private long messageCount = 0;                      // message count after changing all protocols
+    private int messageCount = 0;                      // message count after changing all protocols
     private int cutOffLinkCount = 0;                    // number of cut-off links
-    private Set<Node> cutOffNodes = new HashSet<>();    // stores the nodes that cut-off links
+    private Set<Node> detectingNodes = new HashSet<>(); // stores all the different detecting nodes
 
     private boolean protocolChanged = false;    // indicates if the protocols have been changed
 
@@ -40,7 +40,7 @@ public class StatsManager extends FixedTimeProtocolChanger implements ImportList
      *
      * @return count of exchanged messages after the protocols have been changed.
      */
-    public long getMessageCount() {
+    public int getMessageCount() {
         return messageCount;
     }
 
@@ -58,8 +58,8 @@ public class StatsManager extends FixedTimeProtocolChanger implements ImportList
      *
      * @return number of nodes that have cut-off links.
      */
-    public int getCutOffNodeCount() {
-        return cutOffNodes.size();
+    public int getDetectingNodesCount() {
+        return detectingNodes.size();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class StatsManager extends FixedTimeProtocolChanger implements ImportList
      */
     @Override
     public void onDetected(DetectEvent event) {
-        cutOffNodes.add(event.getDetectingNode());
+        detectingNodes.add(event.getDetectingNode());
         cutOffLinkCount++;
     }
 

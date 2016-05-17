@@ -22,6 +22,8 @@ public class HTMLReportGenerator implements ReportGenerator {
 
     private List<Integer> messageCounts = new ArrayList<>();
     private List<Integer> detectionCounts = new ArrayList<>();
+    private List<Integer> detectingNodesCounts = new ArrayList<>();
+    private List<Integer> cutOffLinksCounts = new ArrayList<>();
 
     /**
      * @param count new message count.
@@ -35,6 +37,26 @@ public class HTMLReportGenerator implements ReportGenerator {
      */
     public void addDetectionCount(int count) {
         detectionCounts.add(count);
+    }
+
+    /**
+     * Adds a new detecting nodes count.
+     *
+     * @param count new detecting nodes count.
+     */
+    @Override
+    public void addDetectingNodesCount(int count) {
+        detectingNodesCounts.add(count);
+    }
+
+    /**
+     * Adds a new cut-off links count.
+     *
+     * @param count new cut-off links count.
+     */
+    @Override
+    public void addCutOffLinksCount(int count) {
+        cutOffLinksCounts.add(count);
     }
 
     /**
