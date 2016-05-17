@@ -4,6 +4,8 @@ import addons.protocolchangers.FixedTimeProtocolChanger;
 import protocols.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
+import simulation.events.ImportEvent;
+import simulation.events.ImportListener;
 
 /**
  * All nodes start with no ability to detect oscillations. After one fixed moment of time T all nodes start to detect
@@ -12,11 +14,13 @@ import simulation.State;
  *  - number of links that were cut-off
  *  - number of nodes that have cut-off links
  */
-public class StatsManager extends FixedTimeProtocolChanger {
+public class StatsManager extends FixedTimeProtocolChanger implements ImportListener {
 
     private long messageCount = 0;      // message count after changing all protocols
     private long cutOffLinkCount = 0;   // number of cut-off links after changing protocols
     private long cutOffNodeCount = 0;   // number of nodes that have cut-off link after changing protocols
+
+    private boolean protocolChanged = false;    // indicates if the protocols have been changed
 
     /**
      * Creates a stats manager.
@@ -25,10 +29,32 @@ public class StatsManager extends FixedTimeProtocolChanger {
         super(engine, state, timeToChange);
     }
 
+    /**
+     * Returns the count of exchanged messages after the protocols have been changed.
+     *
+     * @return count of exchanged messages after the protocols have been changed.
+     */
+    public long getMessageCount() {
+        return messageCount;
+    }
+
     @Override
     public void onTimeChange(long newTime) {
         if (isTimeToChange(newTime)) {
             changeAllProtocols(new D1R1Protocol());
+            protocolChanged = true;
+        }
+    }
+
+    /**
+     * Called every time a new message is received by any node.
+     *
+     * @param event import event that occurred.
+     */
+    @Override
+    public void onImported(ImportEvent event) {
+        if (protocolChanged) {
+            messageCount++;
         }
     }
 
