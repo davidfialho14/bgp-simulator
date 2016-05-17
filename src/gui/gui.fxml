@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import gui.BGPProtocolRadioButton?>
-<?import gui.D1R1ProtocolRadioButton?>
-<?import gui.D2R1ProtocolRadioButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <GridPane fx:id="pane" hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.65"
           xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Controller">
     <columnConstraints>
@@ -25,34 +14,30 @@
         <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="70.0" minWidth="70.0" prefWidth="70.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="250.0" minHeight="-Infinity" prefHeight="226.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="5.0" vgrow="ALWAYS"/>
     </rowConstraints>
     <children>
         <Label fx:id="networkLabel" text="Network:"/>
         <TextField fx:id="networkTextField" GridPane.columnIndex="1" GridPane.columnSpan="5"/>
         <Button fx:id="browseButton" mnemonicParsing="false" onAction="#handleClickedBrowseButton" text="Browse"
                 GridPane.columnIndex="6"/>
-        <Label text="Destination:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        <Label text="Repetitions:" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Destination:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Repetitions:" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
         <Spinner fx:id="destinationIdSpinner" editable="true" prefHeight="26.0" prefWidth="111.0"
-                 GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-        <Spinner fx:id="repetitionsSpinner" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                 GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <Spinner fx:id="repetitionsSpinner" editable="true" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
         <Button fx:id="startButton" defaultButton="true" disable="true" maxWidth="67.0" minWidth="67.0"
                 mnemonicParsing="false" onAction="#handleClickedStartButton" prefWidth="67.0" text="Start"
                 GridPane.columnIndex="6" GridPane.rowIndex="1"/>
-        <Label text="Protocol:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <BGPProtocolRadioButton selected="true" text="BGP" GridPane.columnIndex="2" GridPane.rowIndex="1">
-            <toggleGroup>
-                <ToggleGroup fx:id="protocolGroup"/>
-            </toggleGroup>
-        </BGPProtocolRadioButton>
-        <D1R1ProtocolRadioButton text="D1R1" toggleGroup="$protocolGroup" GridPane.columnIndex="3"
-                                 GridPane.rowIndex="1"/>
-        <D2R1ProtocolRadioButton text="D2R1" toggleGroup="$protocolGroup" GridPane.columnIndex="4"
-                                 GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+        <TitledPane animated="false" prefHeight="301.0" prefWidth="385.0" text="Partial Deployment"
+                    GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+            <content>
+                <fx:include fx:id="partialDeployment" source="partialdeployment/partial_deployment.fxml"/>
+            </content>
+        </TitledPane>
     </children>
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
