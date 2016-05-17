@@ -1,11 +1,17 @@
 package addons.statsmanagers;
 
 import addons.protocolchangers.FixedTimeProtocolChanger;
+import network.Node;
 import protocols.D1R1Protocol;
 import simulation.Engine;
 import simulation.State;
+import simulation.events.DetectEvent;
+import simulation.events.DetectListener;
 import simulation.events.ImportEvent;
 import simulation.events.ImportListener;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * All nodes start with no ability to detect oscillations. After one fixed moment of time T all nodes start to detect
@@ -14,11 +20,11 @@ import simulation.events.ImportListener;
  *  - number of links that were cut-off
  *  - number of nodes that have cut-off links
  */
-public class StatsManager extends FixedTimeProtocolChanger implements ImportListener {
+public class StatsManager extends FixedTimeProtocolChanger implements ImportListener, DetectListener {
 
-    private long messageCount = 0;      // message count after changing all protocols
-    private long cutOffLinkCount = 0;   // number of cut-off links after changing protocols
-    private long cutOffNodeCount = 0;   // number of nodes that have cut-off link after changing protocols
+    private long messageCount = 0;                      // message count after changing all protocols
+    private int cutOffLinkCount = 0;                    // number of cut-off links
+    private Set<Node> cutOffNodes = new HashSet<>();    // stores the nodes that cut-off links
 
     private boolean protocolChanged = false;    // indicates if the protocols have been changed
 
@@ -36,6 +42,24 @@ public class StatsManager extends FixedTimeProtocolChanger implements ImportList
      */
     public long getMessageCount() {
         return messageCount;
+    }
+
+    /**
+     * Returns the number of links the were cut-off.
+     *
+     * @return number of links the were cut-off.
+     */
+    public int getCutOffLinkCount() {
+        return cutOffLinkCount;
+    }
+
+    /**
+     * Returns number of nodes that have cut-off links.
+     *
+     * @return number of nodes that have cut-off links.
+     */
+    public int getCutOffNodeCount() {
+        return cutOffNodes.size();
     }
 
     @Override
@@ -56,6 +80,17 @@ public class StatsManager extends FixedTimeProtocolChanger implements ImportList
         if (protocolChanged) {
             messageCount++;
         }
+    }
+
+    /**
+     * Invoked when a detect event occurs.
+     *
+     * @param event detect event that occurred.
+     */
+    @Override
+    public void onDetected(DetectEvent event) {
+        cutOffNodes.add(event.getDetectingNode());
+        cutOffLinkCount++;
     }
 
 }
