@@ -41,7 +41,7 @@
                   </children>
               </VBox>
               <Label text="Start detecting on:" GridPane.rowIndex="1" />
-              <Spinner maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+              <Spinner fx:id="detectingTimeSpinner" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           </children>
       </GridPane>
       <Label text="Activate:" />
