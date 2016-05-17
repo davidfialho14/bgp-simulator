@@ -8,10 +8,8 @@ import org.junit.rules.ExpectedException;
 import stubs.StubLabel;
 import stubs.StubPolicy;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static wrappers.StubWrapper.stubLink;
 
 public class NetworkTest {
@@ -61,7 +59,6 @@ public class NetworkTest {
         net.addNode(1);
 
         thrown.expect(NodeNotFoundException.class);
-        thrown.expectMessage("node with id '0' does not exist");
         net.addLink(0, 1, new StubLabel());
     }
 
@@ -70,7 +67,6 @@ public class NetworkTest {
         net.addNode(0);
 
         thrown.expect(NodeNotFoundException.class);
-        thrown.expectMessage("node with id '1' does not exist");
         net.addLink(0, 1, new StubLabel());
     }
 
