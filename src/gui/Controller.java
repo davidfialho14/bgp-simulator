@@ -47,12 +47,6 @@ public class Controller implements Initializable {
         NumberSpinner.setupNumberSpinner(repetitionsSpinner, 1, Integer.MAX_VALUE, 1);
     }
 
-    private static void commitValue(Spinner<Integer> spinner) {
-        String text = spinner.getEditor().getText();
-        Integer value = spinner.getValueFactory().getConverter().fromString(text);
-        spinner.getValueFactory().setValue(value);
-    }
-
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
 
