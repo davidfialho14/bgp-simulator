@@ -1,5 +1,6 @@
 package simulation.simulators;
 
+import io.ReportGenerator;
 import network.Network;
 import protocols.BGPProtocol;
 import simulation.State;
@@ -30,9 +31,11 @@ public class PartialDeploymentSimulator extends Simulator {
     /**
      * Invoked to execute the simulation loop according to the specific simulation configuration.
      * When this method is invoked the initSimulation() was already called.
+     *
+     * @param reportGenerator generator to add simulation data to.
      */
     @Override
-    protected void simulationLoop() {
+    protected void simulationLoop(ReportGenerator reportGenerator) {
         // TODO to implement
         throw new UnsupportedOperationException();
     }

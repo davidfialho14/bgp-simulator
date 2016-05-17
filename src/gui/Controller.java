@@ -3,6 +3,7 @@ package gui;
 import com.alexmerz.graphviz.ParseException;
 import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
+import io.HTMLReportGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -63,7 +64,7 @@ public class Controller implements Initializable {
         }
 
         try {
-            simulator.simulate();
+            simulator.simulate(new HTMLReportGenerator());
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);

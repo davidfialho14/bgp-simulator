@@ -1,6 +1,7 @@
 package simulation.simulators;
 
 import addons.eventhandlers.MessageAndDetectionCountHandler;
+import io.ReportGenerator;
 import network.Network;
 import protocols.D1R1Protocol;
 import simulation.State;
@@ -31,15 +32,20 @@ public class StandardSimulator extends Simulator {
     /**
      * Invoked to execute the simulation loop according to the specific simulation configuration.
      * When this method is invoked the initSimulation() was already called.
+     *
+     * @param reportGenerator generator to add simulation data to.
      */
     @Override
-    protected void simulationLoop() {
+    protected void simulationLoop(ReportGenerator reportGenerator) {
 
         for (int i = 0; i < repetitions; i++) {
             MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
             eventHandler.register(engine.getEventGenerator());
 
             engine.simulate(state);
+
+            reportGenerator.addMessageCount(eventHandler.getMessageCount());
+            reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
 
             state.reset();
             engine.getEventGenerator().clearAll();
