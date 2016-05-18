@@ -36,6 +36,20 @@ public class StatsManager extends FixedTimeProtocolChanger implements ImportList
     }
 
     /**
+     * Assigns the protocol changer to an engine and state and registers the protocol changer to the time
+     * property of the engine. It also registers on the engine event generator for import and detect events.
+     *
+     * @param engine engine to assign to.
+     * @param state  state to assign to.
+     */
+    @Override
+    public void assignTo(Engine engine, State state) {
+        super.assignTo(engine, state);
+        engine.getEventGenerator().addImportListener(this);
+        engine.getEventGenerator().addDetectListener(this);
+    }
+
+    /**
      * Returns the count of exchanged messages after the protocols have been changed.
      *
      * @return count of exchanged messages after the protocols have been changed.
