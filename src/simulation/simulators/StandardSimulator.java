@@ -45,9 +45,6 @@ public class StandardSimulator extends Simulator {
 
         reportGenerator.addMessageCount(eventHandler.getMessageCount());
         reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
-
-        state.reset();
-        engine.getEventGenerator().clearAll();
     }
 
 }

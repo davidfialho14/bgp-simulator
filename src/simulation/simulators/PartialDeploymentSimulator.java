@@ -48,9 +48,6 @@ public class PartialDeploymentSimulator extends Simulator {
         reportGenerator.addMessageCount(statsManager.getMessageCount());
         reportGenerator.addCutOffLinksCount(statsManager.getCutOffLinkCount());
         reportGenerator.addDetectingNodesCount(statsManager.getDetectingNodesCount());
-
-        state.reset();
-        engine.getEventGenerator().clearAll();
     }
 
 }

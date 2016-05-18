@@ -49,6 +49,7 @@ public abstract class Simulator {
             initSimulation(parser.getNetwork());
             for (int i = 0; i < repetitions; i++) {
                 executeSimulation(reportGenerator);
+                clearSimulation();
             }
 
         } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
@@ -71,5 +72,15 @@ public abstract class Simulator {
      * @param reportGenerator generator to add simulation data to.
      */
     protected abstract void executeSimulation(ReportGenerator reportGenerator);
+
+    /**
+     * Invoked after each repetition to clear the state for the next simulation.
+     * By default it resets the state and clears the event generator of the engine.
+     * Subclasses should override this method to implement a proper clearing depending of its needs.
+     */
+    protected void clearSimulation() {
+        state.reset();
+        engine.getEventGenerator().clearAll();
+    }
 
 }
