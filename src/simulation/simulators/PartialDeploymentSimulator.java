@@ -1,7 +1,7 @@
 package simulation.simulators;
 
 import addons.statsmanagers.StatsManager;
-import io.ReportGenerator;
+import io.Reporter;
 import network.Network;
 import protocols.BGPProtocol;
 import simulation.State;
@@ -36,18 +36,18 @@ public class PartialDeploymentSimulator extends Simulator {
      * Invoked to execute each repetition of the simulation according to the specific simulation configuration.
      * When this method is invoked the initSimulation() was already called.
      *
-     * @param reportGenerator generator to add simulation data to.
+     * @param reporter generator to add simulation data to.
      */
     @Override
-    protected void executeSimulation(ReportGenerator reportGenerator) {
+    protected void executeSimulation(Reporter reporter) {
 
         StatsManager statsManager = new StatsManager(engine, state, timeToChange);
 
         engine.simulate(state);
 
-        reportGenerator.addMessageCount(statsManager.getMessageCount());
-        reportGenerator.addCutOffLinksCount(statsManager.getCutOffLinkCount());
-        reportGenerator.addDetectingNodesCount(statsManager.getDetectingNodesCount());
+        reporter.addMessageCount(statsManager.getMessageCount());
+        reporter.addCutOffLinksCount(statsManager.getCutOffLinkCount());
+        reporter.addDetectingNodesCount(statsManager.getDetectingNodesCount());
     }
 
 }

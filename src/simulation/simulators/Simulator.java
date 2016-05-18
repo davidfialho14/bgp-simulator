@@ -4,7 +4,7 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import io.InvalidTagException;
 import io.NetworkParser;
-import io.ReportGenerator;
+import io.Reporter;
 import network.Network;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
@@ -37,18 +37,18 @@ public abstract class Simulator {
     /**
      * Executes the simulation based on the simulator configurations.
      *
-     * @param reportGenerator generator to output report of the simulation.
+     * @param reporter generator to output report of the simulation.
      * @throws IOException if an error occurs while trying to open the network file.
      * @throws ParseException if the network file is corrupted.
      */
-    public void simulate(ReportGenerator reportGenerator) throws IOException, ParseException {
+    public void simulate(Reporter reporter) throws IOException, ParseException {
         try {
             NetworkParser parser = new NetworkParser();
             parser.parse(networkFile);
 
             initSimulation(parser.getNetwork());
             for (int i = 0; i < repetitions; i++) {
-                executeSimulation(reportGenerator);
+                executeSimulation(reporter);
                 clearSimulation();
             }
 
@@ -69,9 +69,9 @@ public abstract class Simulator {
      * Invoked to execute each repetition of the simulation according to the specific simulation configuration.
      * When this method is invoked the initSimulation() was already called.
      *
-     * @param reportGenerator generator to add simulation data to.
+     * @param reporter generator to add simulation data to.
      */
-    protected abstract void executeSimulation(ReportGenerator reportGenerator);
+    protected abstract void executeSimulation(Reporter reporter);
 
     /**
      * Invoked after each repetition to clear the state for the next simulation.

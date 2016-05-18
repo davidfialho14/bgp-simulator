@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Interface for any report geenrator.
+ * Interface for any reporter.
  */
-public interface ReportGenerator {
+public interface Reporter {
 
     /**
      * Generates the report based on the current available data.
