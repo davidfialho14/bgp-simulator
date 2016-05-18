@@ -6,11 +6,11 @@ public class DebugEventHandler
         implements ImportListener, LearnListener, SelectListener, ExportListener, DetectListener {
 
     // listen to all events by default
-    private boolean importEventsEnabled = true;
-    private boolean learnEventsEnabled = true;
-    private boolean selectEventsEnabled = true;
-    private boolean detectEventsEnabled = true;
-    private boolean exportEventsEnabled = true;
+    private boolean importEventsEnabled;
+    private boolean learnEventsEnabled;
+    private boolean selectEventsEnabled;
+    private boolean detectEventsEnabled;
+    private boolean exportEventsEnabled;
 
     public DebugEventHandler(boolean enabled) {
         importEventsEnabled = enabled;
