@@ -98,7 +98,7 @@ public class DebugEventHandler
     public void onExported(ExportEvent event) {
         if (exportEventsEnabled) {
             printStream.println("Export:\t" + event.getExportingNode() + " exported to " + event.getLearningNode() +
-                                        pretty(event.getRoute()));
+                                        " " + pretty(event.getRoute()));
         }
     }
 
@@ -111,7 +111,7 @@ public class DebugEventHandler
     public void onImported(ImportEvent event) {
         if (importEventsEnabled) {
             printStream.println("Import:\t" + event.getImportingNode() + " imported from " + event.getExportingNode() +
-                                        pretty(event.getRoute()));
+                                        " " + pretty(event.getRoute()));
         }
     }
 
@@ -124,7 +124,7 @@ public class DebugEventHandler
     public void onLearned(LearnEvent event) {
         if (learnEventsEnabled) {
             printStream.println("Learn:\t" + event.getLearningNode() + " learned through " + pretty(event.getLink()) +
-                                        pretty(event.getRoute()));
+                                        " " + pretty(event.getRoute()));
         }
     }
 
@@ -136,8 +136,14 @@ public class DebugEventHandler
     @Override
     public void onSelected(SelectEvent event) {
         if (selectEventsEnabled) {
-            printStream.println("Select:\t" + event.getSelectingNode() + " selected " +
-                                        pretty(event.getSelectedRoute()) + " over " + pretty(event.getPreviousRoute()));
+            if (event.getPreviousRoute().equals(event.getSelectedRoute())) {
+                printStream.println("Select:\t" + event.getSelectingNode() + " selected same " +
+                                            pretty(event.getSelectedRoute()));
+            } else {
+                printStream.println("Select:\t" + event.getSelectingNode() + " selected " +
+                                            pretty(event.getSelectedRoute()) + " over " +
+                                            pretty(event.getPreviousRoute()));
+            }
         }
     }
 
