@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -21,7 +22,7 @@
     </rowConstraints>
     <children>
         <Label fx:id="networkLabel" text="Network:"/>
-        <TextField fx:id="networkTextField" GridPane.columnIndex="1" GridPane.columnSpan="5"/>
+        <TextField fx:id="networkTextField" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="5"/>
         <Button fx:id="browseButton" mnemonicParsing="false" onAction="#handleClickedBrowseButton" text="Browse"
                 GridPane.columnIndex="6"/>
         <Label text="Destination:" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
