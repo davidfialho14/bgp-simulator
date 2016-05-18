@@ -1,21 +1,18 @@
 package gui;
 
 import com.alexmerz.graphviz.ParseException;
-import com.alexmerz.graphviz.TokenMgrError;
-import io.HTMLReportGenerator;
-import io.InvalidTagException;
-import io.NetworkParser;
+import gui.basics.NumberSpinner;
+import gui.partialdeployment.PartialDeploymentController;
+import io.CSVReporter;
+import io.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import network.exceptions.NodeExistsException;
-import network.exceptions.NodeNotFoundException;
-import simulation.Engine;
-import simulation.State;
-import addons.eventhandlers.MessageAndDetectionCountHandler;
-import simulation.schedulers.RandomScheduler;
+import simulation.simulators.PartialDeploymentSimulator;
+import simulation.simulators.Simulator;
+import simulation.simulators.StandardSimulator;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +26,7 @@ public class Controller implements Initializable {
     public Button startButton;
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
-    public ToggleGroup protocolGroup;
+    public PartialDeploymentController partialDeploymentFormController;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -41,27 +38,8 @@ public class Controller implements Initializable {
             startButton.setDisable(newText.isEmpty());
         });
 
-        // accept only positive integers for the destination ID
-        destinationIdSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE));
-
-        // accept only 1 or more repetitions
-        repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
-
-        // commit values when the spinners are unfocused
-        repetitionsSpinner.focusedProperty().addListener((observable, oldState, newState) -> {
-            if (!newState)
-                commitValue(repetitionsSpinner);
-        });
-        destinationIdSpinner.focusedProperty().addListener((observable, oldState, newState) -> {
-            if (!newState)
-                commitValue(destinationIdSpinner);
-        });
-    }
-
-    private static void commitValue(Spinner<Integer> spinner) {
-        String text = spinner.getEditor().getText();
-        Integer value = spinner.getValueFactory().getConverter().fromString(text);
-        spinner.getValueFactory().setValue(value);
+        NumberSpinner.setupNumberSpinner(destinationIdSpinner, 0, Integer.MAX_VALUE, 0);
+        NumberSpinner.setupNumberSpinner(repetitionsSpinner, 1, Integer.MAX_VALUE, 1);
     }
 
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
@@ -73,56 +51,44 @@ public class Controller implements Initializable {
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
-        NetworkParser parser = parse(new File(networkTextField.getText()));
+        File networkFile = new File(networkTextField.getText());
+        int destinationId = destinationIdSpinner.getValue();
+        int repetitionCount = repetitionsSpinner.getValue();
 
-        if (parser != null) {
-            Engine engine = new Engine(new RandomScheduler());
-            ProtocolRadioButton protocolRadioButton = (ProtocolRadioButton) protocolGroup.getSelectedToggle();
-            int destinationId = destinationIdSpinner.getValue();
-            State state = State.create(parser.getNetwork(), destinationId, protocolRadioButton.getProtocol());
-            HTMLReportGenerator reportGenerator = new HTMLReportGenerator();
+        // simulator that will be used to simulate
+        Simulator simulator;
 
-            for (int i = 0; i < repetitionsSpinner.getValue(); i++) {
-                MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-                eventHandler.register(engine.getEventGenerator());
-
-                engine.simulate(state);
-
-                reportGenerator.addMessageCount(eventHandler.getMessageCount());
-                reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
-
-                state.reset();
-                engine.getEventGenerator().clearAll();
-            }
-
-            try {
-                reportGenerator.generate(new File("report.html"));
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
-                alert.setHeaderText("Report File Error");
-                alert.showAndWait();
-            }
+        if (!partialDeploymentFormController.activateToggle.isSelected()) {
+            simulator = new StandardSimulator(networkFile, destinationId, repetitionCount);
+        } else {
+            int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
+            simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount, timeToChange);
         }
-    }
 
-    private static NetworkParser parse(File networkFile) {
+        Reporter reporter = new CSVReporter();
+
         try {
-            NetworkParser parser = new NetworkParser();
-            parser.parse(networkFile);
-
-            return parser;
+            simulator.simulate(reporter);
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
             alert.setHeaderText("Network File Error");
             alert.showAndWait();
-        } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
+        } catch (ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();
         }
 
-        return null;    // there was an error
+        try {
+            reporter.generate(new File("report.csv"));
+
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
+            alert.setHeaderText("Report File Error");
+            alert.showAndWait();
+        }
+
     }
 
 }
