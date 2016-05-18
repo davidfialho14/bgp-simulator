@@ -1,7 +1,8 @@
 package io;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.stats.Stat;
+
+import java.util.*;
 
 /**
  * Implements the basics of a reporter like storing the multiple counts.
@@ -9,48 +10,27 @@ import java.util.List;
  */
 public abstract class AbstractReporter implements Reporter {
 
-    protected List<Integer> messageCounts = new ArrayList<>();
-    protected List<Integer> detectionCounts = new ArrayList<>();
-    protected List<Integer> detectingNodesCounts = new ArrayList<>();
-    protected List<Integer> cutOffLinksCounts = new ArrayList<>();
+    protected Map<Stat, List<Integer>> statsCounts = new LinkedHashMap<>();
+    protected int countsLength = 0; // length for the stats counts (all stats must have the same amount of data)
 
     /**
-     * Adds a new message count.
+     * Adds a new count for the stat.
      *
      * @param count new message count.
      */
-    @Override
-    public void addMessageCount(int count) {
-        messageCounts.add(count);
+    public void addCount(Stat stat, int count) {
+        List<Integer> counts = statsCounts.get(stat);
+        if (counts == null) {
+            counts = new ArrayList<>();
+            statsCounts.put(stat, counts);
+        }
+
+        counts.add(count);
+
+        // update the counts length
+        if (counts.size() > countsLength) {
+            countsLength = counts.size();
+        }
     }
 
-    /**
-     * Adds a new detection count.
-     *
-     * @param count new detection count.
-     */
-    @Override
-    public void addDetectionCount(int count) {
-        detectionCounts.add(count);
-    }
-
-    /**
-     * Adds a new detecting nodes count.
-     *
-     * @param count new detecting nodes count.
-     */
-    @Override
-    public void addDetectingNodesCount(int count) {
-        detectingNodesCounts.add(count);
-    }
-
-    /**
-     * Adds a new cut-off links count.
-     *
-     * @param count new cut-off links count.
-     */
-    @Override
-    public void addCutOffLinksCount(int count) {
-        cutOffLinksCounts.add(count);
-    }
 }

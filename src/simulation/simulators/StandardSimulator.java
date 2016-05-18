@@ -2,6 +2,8 @@ package simulation.simulators;
 
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import io.Reporter;
+import io.stats.DetectionCountStat;
+import io.stats.MessageCountStat;
 import network.Network;
 import protocols.D1R1Protocol;
 import simulation.State;
@@ -13,6 +15,9 @@ import java.io.File;
  * of messages exchanged and the number of detections.
  */
 public class StandardSimulator extends Simulator {
+
+    private static final MessageCountStat MESSAGE_COUNT_STAT = new MessageCountStat();
+    private static final DetectionCountStat DETECTION_COUNT_STAT = new DetectionCountStat();
 
     public StandardSimulator(File networkFile, int destinationId, int repetitions) {
         super(networkFile, destinationId, repetitions);
@@ -43,8 +48,8 @@ public class StandardSimulator extends Simulator {
 
         engine.simulate(state);
 
-        reporter.addMessageCount(eventHandler.getMessageCount());
-        reporter.addDetectionCount(eventHandler.getDetectionCount());
+        reporter.addCount(MESSAGE_COUNT_STAT, eventHandler.getMessageCount());
+        reporter.addCount(DETECTION_COUNT_STAT, eventHandler.getDetectionCount());
     }
 
 }
