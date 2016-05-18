@@ -1,9 +1,7 @@
 package io;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -11,7 +9,7 @@ import java.util.stream.IntStream;
 /**
  * Generates reports in HTML form.
  */
-public class HTMLReporter implements Reporter {
+public class HTMLReporter extends AbstractReporter {
 
     private static final String resourcesDirectory = "reports/html/";
     private static final String modelHtmlFile = resourcesDirectory + "index.html";
@@ -19,45 +17,6 @@ public class HTMLReporter implements Reporter {
     private static final Pattern dataFieldPattern = Pattern.compile("\\s*var\\s*(?<dataType>\\w+)\\s*=\\s*\\[\\s*\\];");
     private static final Pattern javaScriptLinkPattern = Pattern.compile(
             "<script\\s+type=\"text/javascript\"\\s+src=\"(?<scriptFile>[\\w/\\.]+)\"(\\s+|)>(\\s+|)</script>(\\s+|)");
-
-    private List<Integer> messageCounts = new ArrayList<>();
-    private List<Integer> detectionCounts = new ArrayList<>();
-    private List<Integer> detectingNodesCounts = new ArrayList<>();
-    private List<Integer> cutOffLinksCounts = new ArrayList<>();
-
-    /**
-     * @param count new message count.
-     */
-    public void addMessageCount(int count) {
-        messageCounts.add(count);
-    }
-
-    /**
-     * @param count new detection count.
-     */
-    public void addDetectionCount(int count) {
-        detectionCounts.add(count);
-    }
-
-    /**
-     * Adds a new detecting nodes count.
-     *
-     * @param count new detecting nodes count.
-     */
-    @Override
-    public void addDetectingNodesCount(int count) {
-        detectingNodesCounts.add(count);
-    }
-
-    /**
-     * Adds a new cut-off links count.
-     *
-     * @param count new cut-off links count.
-     */
-    @Override
-    public void addCutOffLinksCount(int count) {
-        cutOffLinksCounts.add(count);
-    }
 
     /**
      * @param outputFile file to output the report.
