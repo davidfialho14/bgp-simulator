@@ -2,8 +2,12 @@ package addons.eventhandlers;
 
 import simulation.events.*;
 
+import java.io.PrintStream;
+
 public class DebugEventHandler
         implements ImportListener, LearnListener, SelectListener, ExportListener, DetectListener {
+
+    private PrintStream printStream;    // print stream to print debug messages
 
     // listen to all events by default
     private boolean importEventsEnabled;
@@ -12,7 +16,27 @@ public class DebugEventHandler
     private boolean detectEventsEnabled;
     private boolean exportEventsEnabled;
 
+    /**
+     * Creates a debug event handler that will print to the stdout by default.
+     *
+     * @param enabled sets all events as enabled or disabled.
+     */
     public DebugEventHandler(boolean enabled) {
+        this.printStream = System.out;
+        setAllEnabled(enabled);
+    }
+
+    /**
+     * Creates a debug event handler that will print to the given print stream.
+     *
+     * @param enabled sets all events as enabled or disabled.
+     */
+    public DebugEventHandler(PrintStream printStream, boolean enabled) {
+        this.printStream = printStream;
+        setAllEnabled(enabled);
+    }
+
+    public void setAllEnabled(boolean enabled) {
         importEventsEnabled = enabled;
         learnEventsEnabled = enabled;
         selectEventsEnabled = enabled;
@@ -56,7 +80,7 @@ public class DebugEventHandler
     @Override
     public void onDetected(DetectEvent event) {
         if (detectEventsEnabled)
-            System.out.println("DETECT:\t" + event);
+            printStream.println("DETECT:\t" + event);
     }
 
     /**
@@ -67,7 +91,7 @@ public class DebugEventHandler
     @Override
     public void onExported(ExportEvent event) {
         if (exportEventsEnabled)
-            System.out.println("Export:\t" + event);
+            printStream.println("Export:\t" + event);
     }
 
     /**
@@ -78,7 +102,7 @@ public class DebugEventHandler
     @Override
     public void onImported(ImportEvent event) {
         if (importEventsEnabled)
-            System.out.println("Import:\t" + event);
+            printStream.println("Import:\t" + event);
     }
 
     /**
@@ -89,7 +113,7 @@ public class DebugEventHandler
     @Override
     public void onLearned(LearnEvent event) {
         if (learnEventsEnabled)
-            System.out.println("Learn:\t" + event);
+            printStream.println("Learn:\t" + event);
     }
 
     /**
@@ -100,6 +124,6 @@ public class DebugEventHandler
     @Override
     public void onSelected(SelectEvent event) {
         if (selectEventsEnabled)
-            System.out.println("Select:\t" + event);
+            printStream.println("Select:\t" + event);
     }
 }
