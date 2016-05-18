@@ -42,6 +42,9 @@ public class Controller implements Initializable {
 
         NumberSpinner.setupNumberSpinner(destinationIdSpinner, 0, Integer.MAX_VALUE, 0);
         NumberSpinner.setupNumberSpinner(repetitionsSpinner, 1, Integer.MAX_VALUE, 1);
+
+        // accept only *.gv file in the file chooser
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Network files (*.gv)", "*.gv"));
     }
 
     /**
