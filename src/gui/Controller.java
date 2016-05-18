@@ -60,7 +60,19 @@ public class Controller implements Initializable {
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
-        File networkFile = new File(networkTextField.getText());
+
+        for (String networkFilePath : networkTextField.getText().split(" ; ")) {
+            simulate(new File(networkFilePath));
+        }
+
+    }
+
+    /**
+     * Simulates each network file.
+     *
+     * @param networkFile network file to be simulated.
+     */
+    private void simulate(File networkFile) {
         int destinationId = destinationIdSpinner.getValue();
         int repetitionCount = repetitionsSpinner.getValue();
 
@@ -90,14 +102,16 @@ public class Controller implements Initializable {
         }
 
         try {
-            reporter.generate(new File("report.csv"));
+            // store the report file in the same directory as the network file and with the same name bu with
+            // different extension
+            String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
+            reporter.generate(new File(networkFile.getParent(), reportFileName));
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
             alert.setHeaderText("Report File Error");
             alert.showAndWait();
         }
-
     }
 
 }
