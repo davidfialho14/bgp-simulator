@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 /**
  * Generates reports in HTML form.
  */
-public class HTMLReportGenerator implements ReportGenerator {
+public class HTMLReporter implements Reporter {
 
     private static final String resourcesDirectory = "reports/html/";
     private static final String modelHtmlFile = resourcesDirectory + "index.html";

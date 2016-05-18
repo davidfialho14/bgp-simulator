@@ -3,8 +3,8 @@ package gui;
 import com.alexmerz.graphviz.ParseException;
 import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
-import io.HTMLReportGenerator;
-import io.ReportGenerator;
+import io.HTMLReporter;
+import io.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -65,10 +65,10 @@ public class Controller implements Initializable {
             simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount, timeToChange);
         }
 
-        ReportGenerator reportGenerator = new HTMLReportGenerator();
+        Reporter reporter = new HTMLReporter();
 
         try {
-            simulator.simulate(reportGenerator);
+            simulator.simulate(reporter);
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
@@ -81,7 +81,7 @@ public class Controller implements Initializable {
         }
 
         try {
-            reportGenerator.generate(new File("report.html"));
+            reporter.generate(new File("report.html"));
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
