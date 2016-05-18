@@ -30,26 +30,24 @@ public class StandardSimulator extends Simulator {
     }
 
     /**
-     * Invoked to execute the simulation loop according to the specific simulation configuration.
+     * Invoked to execute each repetition of the simulation according to the specific simulation configuration.
      * When this method is invoked the initSimulation() was already called.
      *
      * @param reportGenerator generator to add simulation data to.
      */
     @Override
-    protected void simulationLoop(ReportGenerator reportGenerator) {
+    protected void executeSimulation(ReportGenerator reportGenerator) {
 
-        for (int i = 0; i < repetitions; i++) {
-            MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
-            eventHandler.register(engine.getEventGenerator());
+        MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
+        eventHandler.register(engine.getEventGenerator());
 
-            engine.simulate(state);
+        engine.simulate(state);
 
-            reportGenerator.addMessageCount(eventHandler.getMessageCount());
-            reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
+        reportGenerator.addMessageCount(eventHandler.getMessageCount());
+        reportGenerator.addDetectionCount(eventHandler.getDetectionCount());
 
-            state.reset();
-            engine.getEventGenerator().clearAll();
-        }
+        state.reset();
+        engine.getEventGenerator().clearAll();
     }
 
 }

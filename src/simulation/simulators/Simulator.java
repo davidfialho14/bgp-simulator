@@ -47,7 +47,9 @@ public abstract class Simulator {
             parser.parse(networkFile);
 
             initSimulation(parser.getNetwork());
-            simulationLoop(reportGenerator);
+            for (int i = 0; i < repetitions; i++) {
+                executeSimulation(reportGenerator);
+            }
 
         } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
             throw new ParseException("network file is corrupted");
@@ -63,11 +65,11 @@ public abstract class Simulator {
     protected abstract void initSimulation(Network network);
 
     /**
-     * Invoked to execute the simulation loop according to the specific simulation configuration.
+     * Invoked to execute each repetition of the simulation according to the specific simulation configuration.
      * When this method is invoked the initSimulation() was already called.
      *
      * @param reportGenerator generator to add simulation data to.
      */
-    protected abstract void simulationLoop(ReportGenerator reportGenerator);
+    protected abstract void executeSimulation(ReportGenerator reportGenerator);
 
 }
