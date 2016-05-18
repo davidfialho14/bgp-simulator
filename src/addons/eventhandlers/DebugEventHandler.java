@@ -136,8 +136,8 @@ public class DebugEventHandler
     @Override
     public void onSelected(SelectEvent event) {
         if (selectEventsEnabled) {
-            printStream.println("Select: selected " + pretty(event.getSelectedRoute()) +
-                                        " over " + pretty(event.getPreviousRoute()));
+            printStream.println("Select: " + event.getSelectingNode() + " selected " +
+                                        pretty(event.getSelectedRoute()) + " over " + pretty(event.getPreviousRoute()));
         }
     }
 
