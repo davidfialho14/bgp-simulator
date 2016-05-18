@@ -3,7 +3,7 @@ package gui;
 import com.alexmerz.graphviz.ParseException;
 import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
-import io.HTMLReporter;
+import io.CSVReporter;
 import io.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -65,7 +65,7 @@ public class Controller implements Initializable {
             simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount, timeToChange);
         }
 
-        Reporter reporter = new HTMLReporter();
+        Reporter reporter = new CSVReporter();
 
         try {
             simulator.simulate(reporter);
@@ -81,7 +81,7 @@ public class Controller implements Initializable {
         }
 
         try {
-            reporter.generate(new File("report.html"));
+            reporter.generate(new File("report.csv"));
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
