@@ -51,12 +51,14 @@ public class Controller implements Initializable {
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
         List<File> files = fileChooser.showOpenMultipleDialog(pane.getScene().getWindow());
 
-        List<String> filePaths = files.stream()
-                                         .filter(File::exists)
-                                         .map(File::getAbsolutePath)
-                                         .collect(Collectors.toList());
+        if (files != null) {
+            List<String> filePaths = files.stream()
+                                             .filter(File::exists)
+                                             .map(File::getAbsolutePath)
+                                             .collect(Collectors.toList());
 
-        networkTextField.setText(String.join(" ; ", filePaths));
+            networkTextField.setText(String.join(" ; ", filePaths));
+        }
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
