@@ -2,6 +2,9 @@ package simulation.simulators;
 
 import addons.statsmanagers.StatsManager;
 import io.Reporter;
+import io.stats.CutOffLinksCountStat;
+import io.stats.DetectingNodesCountStat;
+import io.stats.MessageCountStat;
 import network.Network;
 import protocols.BGPProtocol;
 import simulation.State;
@@ -13,6 +16,10 @@ import java.io.File;
  * a given moment of time all nodes start to detect. It counts the number of messages
  */
 public class PartialDeploymentSimulator extends Simulator {
+
+    private static final MessageCountStat MESSAGE_COUNT_STAT = new MessageCountStat();
+    private static final CutOffLinksCountStat CUT_OFF_LINKS_COUNT_STAT = new CutOffLinksCountStat();
+    private static final DetectingNodesCountStat DETECTING_NODES_COUNT_STAT = new DetectingNodesCountStat();
 
     private long timeToChange;
 
@@ -45,9 +52,9 @@ public class PartialDeploymentSimulator extends Simulator {
 
         engine.simulate(state);
 
-        reporter.addMessageCount(statsManager.getMessageCount());
-        reporter.addCutOffLinksCount(statsManager.getCutOffLinkCount());
-        reporter.addDetectingNodesCount(statsManager.getDetectingNodesCount());
+        reporter.addCount(MESSAGE_COUNT_STAT, statsManager.getMessageCount());
+        reporter.addCount(CUT_OFF_LINKS_COUNT_STAT, statsManager.getCutOffLinkCount());
+        reporter.addCount(DETECTING_NODES_COUNT_STAT, statsManager.getDetectingNodesCount());
     }
 
 }

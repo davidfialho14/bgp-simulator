@@ -1,5 +1,7 @@
 package io;
 
+import io.stats.Stat;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -17,31 +19,10 @@ public interface Reporter {
     void generate(File outputFile) throws IOException;
 
     /**
-     * Adds a new message count.
+     * Adds a new count for the stat.
      *
      * @param count new message count.
      */
-    void addMessageCount(int count);
-
-    /**
-     * Adds a new detection count.
-     *
-     * @param count new detection count.
-     */
-    void addDetectionCount(int count);
-
-    /**
-     * Adds a new detecting nodes count.
-     *
-     * @param count new detecting nodes count.
-     */
-    void addDetectingNodesCount(int count);
-
-    /**
-     * Adds a new cut-off links count.
-     *
-     * @param count new cut-off links count.
-     */
-    void addCutOffLinksCount(int count);
+    void addCount(Stat stat, int count);
 
 }
