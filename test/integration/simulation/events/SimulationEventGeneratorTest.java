@@ -75,7 +75,8 @@ public class SimulationEventGeneratorTest {
 
         engine.simulate(state);
 
-        verify(listener, times(1)).onSelected(new SelectEvent(invalidRoute(new Node(1)), sproute(1, 1, path(1))));
+        verify(listener, times(1)).onSelected(
+                new SelectEvent(new Node(0), invalidRoute(new Node(1)), sproute(1, 1, path(1))));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package simulation.simulators;
 
+import addons.eventhandlers.DebugEventHandler;
 import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import io.InvalidTagException;
@@ -14,6 +15,7 @@ import simulation.schedulers.RandomScheduler;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * Base class to model a simulator. This models any simulator implementing the basic operations for a simulation.
@@ -21,17 +23,19 @@ import java.io.IOException;
  */
 public abstract class Simulator {
 
-    private File networkFile;
+    protected File networkFile;
     protected int destinationId;
     protected int repetitions;
+    protected boolean debug;
 
     protected Engine engine = new Engine(new RandomScheduler());
     protected State state;
 
-    public Simulator(File networkFile, int destinationId, int repetitions) {
+    public Simulator(File networkFile, int destinationId, int repetitions, boolean debug) {
         this.networkFile = networkFile;
         this.destinationId = destinationId;
         this.repetitions = repetitions;
+        this.debug = debug;
     }
 
     /**
@@ -45,6 +49,12 @@ public abstract class Simulator {
         try {
             NetworkParser parser = new NetworkParser();
             parser.parse(networkFile);
+
+            if (debug) {
+                DebugEventHandler debugEventHandler = new DebugEventHandler(
+                               new PrintStream(networkFile.getPath().replaceFirst("\\.gv", ".debug")), true);
+                debugEventHandler.register(engine.getEventGenerator());
+            }
 
             initSimulation(parser.getNetwork());
             for (int i = 0; i < repetitions; i++) {

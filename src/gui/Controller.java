@@ -29,6 +29,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
     public PartialDeploymentController partialDeploymentFormController;
+    public CheckBox debugCheckBox;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -85,10 +86,11 @@ public class Controller implements Initializable {
         Simulator simulator;
 
         if (!partialDeploymentFormController.activateToggle.isSelected()) {
-            simulator = new StandardSimulator(networkFile, destinationId, repetitionCount);
+            simulator = new StandardSimulator(networkFile, destinationId, repetitionCount, debugCheckBox.isSelected());
         } else {
             int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
-            simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount, timeToChange);
+            simulator = new PartialDeploymentSimulator(networkFile, destinationId, repetitionCount,
+                                                              debugCheckBox.isSelected(), timeToChange);
         }
 
         Reporter reporter = new CSVReporter();

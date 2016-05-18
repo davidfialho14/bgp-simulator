@@ -201,7 +201,7 @@ public class Engine {
         Route prevSelectedRoute = nodeState.getSelectedRoute();
 
         Route selectedRoute = select(nodeState, link, learnedRoute);
-        eventGenerator.fireSelectEvent(new SelectEvent(prevSelectedRoute, selectedRoute));
+        eventGenerator.fireSelectEvent(new SelectEvent(link.getSource(), prevSelectedRoute, selectedRoute));
 
         if (!prevSelectedRoute.equals(selectedRoute)) {
             exportToInNeighbours(link.getSource(), selectedRoute);

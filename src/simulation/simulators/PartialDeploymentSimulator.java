@@ -23,8 +23,9 @@ public class PartialDeploymentSimulator extends Simulator {
 
     private long timeToChange;
 
-    public PartialDeploymentSimulator(File networkFile, int destinationId, int repetitions, long timeToChange) {
-        super(networkFile, destinationId, repetitions);
+    public PartialDeploymentSimulator(File networkFile, int destinationId, int repetitions, boolean debug,
+                                      long timeToChange) {
+        super(networkFile, destinationId, repetitions, debug);
         this.timeToChange = timeToChange;
     }
 

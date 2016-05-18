@@ -19,8 +19,8 @@ public class StandardSimulator extends Simulator {
     private static final MessageCountStat MESSAGE_COUNT_STAT = new MessageCountStat();
     private static final DetectionCountStat DETECTION_COUNT_STAT = new DetectionCountStat();
 
-    public StandardSimulator(File networkFile, int destinationId, int repetitions) {
-        super(networkFile, destinationId, repetitions);
+    public StandardSimulator(File networkFile, int destinationId, int repetitions, boolean debug) {
+        super(networkFile, destinationId, repetitions, debug);
     }
 
     /**
