@@ -1,5 +1,7 @@
 package addons.eventhandlers;
 
+import network.Link;
+import simulation.Route;
 import simulation.events.*;
 
 import java.io.PrintStream;
@@ -79,8 +81,12 @@ public class DebugEventHandler
      */
     @Override
     public void onDetected(DetectEvent event) {
-        if (detectEventsEnabled)
-            printStream.println("DETECT:\t" + event);
+        if (detectEventsEnabled) {
+            printStream.println("Detect: " + event.getDetectingNode() + " detected with " +
+                                        pretty(event.getLearnedRoute()) + " learned from " +
+                                        pretty(event.getOutLink()) + " other option was " +
+                                        pretty(event.getExclRoute()));
+        }
     }
 
     /**
@@ -90,8 +96,10 @@ public class DebugEventHandler
      */
     @Override
     public void onExported(ExportEvent event) {
-        if (exportEventsEnabled)
-            printStream.println("Export:\t" + event);
+        if (exportEventsEnabled) {
+            printStream.println("Export: " + event.getExportingNode() + " exported to " + event.getLearningNode() +
+                                        pretty(event.getRoute()));
+        }
     }
 
     /**
@@ -101,8 +109,10 @@ public class DebugEventHandler
      */
     @Override
     public void onImported(ImportEvent event) {
-        if (importEventsEnabled)
-            printStream.println("Import:\t" + event);
+        if (importEventsEnabled) {
+            printStream.println("Import: " + event.getImportingNode() + " imported from " + event.getExportingNode() +
+                                        pretty(event.getRoute()));
+        }
     }
 
     /**
@@ -112,8 +122,10 @@ public class DebugEventHandler
      */
     @Override
     public void onLearned(LearnEvent event) {
-        if (learnEventsEnabled)
-            printStream.println("Learn:\t" + event);
+        if (learnEventsEnabled) {
+            printStream.println("Learn: " + event.getLearningNode() + " learned through " + pretty(event.getLink()) +
+                                        pretty(event.getRoute()));
+        }
     }
 
     /**
@@ -123,7 +135,21 @@ public class DebugEventHandler
      */
     @Override
     public void onSelected(SelectEvent event) {
-        if (selectEventsEnabled)
-            printStream.println("Select:\t" + event);
+        if (selectEventsEnabled) {
+            printStream.println("Select: selected " + pretty(event.getSelectedRoute()) +
+                                        " over " + pretty(event.getPreviousRoute()));
+        }
+    }
+
+    /*
+        Set of methods to print components in a prettier way.
+     */
+
+    private static String pretty(Route route) {
+        return String.format("route (%s, %s)", route.getAttribute(), route.getPath());
+    }
+
+    private static String pretty(Link link) {
+        return String.format("link (%s->%s, %s)", link.getSource(), link.getDestination(), link.getLabel());
     }
 }
