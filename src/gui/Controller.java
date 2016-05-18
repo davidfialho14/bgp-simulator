@@ -17,7 +17,9 @@ import simulation.simulators.StandardSimulator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
 
@@ -42,12 +44,19 @@ public class Controller implements Initializable {
         NumberSpinner.setupNumberSpinner(repetitionsSpinner, 1, Integer.MAX_VALUE, 1);
     }
 
+    /**
+     * Handles browsing for network files. Opens up a file chooser for the user to select the network files to
+     * simulate.
+     */
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
-        File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
+        List<File> files = fileChooser.showOpenMultipleDialog(pane.getScene().getWindow());
 
-        if (file != null && file.exists()) {
-            networkTextField.setText(file.getAbsolutePath());
-        }
+        List<String> filePaths = files.stream()
+                                         .filter(File::exists)
+                                         .map(File::getAbsolutePath)
+                                         .collect(Collectors.toList());
+
+        networkTextField.setText(String.join(" ; ", filePaths));
     }
 
     public void handleClickedStartButton(ActionEvent actionEvent) {
