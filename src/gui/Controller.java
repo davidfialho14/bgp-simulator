@@ -3,7 +3,6 @@ package gui;
 import com.alexmerz.graphviz.ParseException;
 import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
-import io.CSVReporter;
 import io.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -93,7 +92,8 @@ public class Controller implements Initializable {
                                                               debugCheckBox.isSelected(), timeToChange);
         }
 
-        Reporter reporter = new CSVReporter();
+        // FIXME add a reporter implementation
+        Reporter reporter = null;
 
         try {
             simulator.simulate(reporter);
