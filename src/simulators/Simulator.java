@@ -1,6 +1,7 @@
 package simulators;
 
 import io.reporters.Reporter;
+import network.Network;
 import simulation.Engine;
 import simulation.State;
 import simulation.schedulers.RandomScheduler;
@@ -19,13 +20,24 @@ public abstract class Simulator {
     protected State state;                                          // state to be simulated
 
     /**
-     * Constructs a simulator by assigning it the state to be simulated.
+     * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
+     * method createInitialState().
      *
-     * @param state state to be simulated.
+     * @param network network to simulate.
+     * @param destinationId id of the destination node.
      */
-    public Simulator(State state) {
-        this.state = state;
+    public Simulator(Network network, int destinationId) {
+        this.state = createInitialState(network, destinationId);
     }
+
+    /**
+     * Creates the initial state. Each subclass must implement this method according to its configurations.
+     *
+     * @param network network to simulate.
+     * @param destinationId id of the destination node.
+     * @return created state.
+     */
+    protected abstract State createInitialState(Network network, int destinationId);
 
     /**
      * Executes one simulation. Stats are stored for each simulation, no stat is ever discarded.
