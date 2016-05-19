@@ -9,9 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import simulation.simulators.PartialDeploymentSimulator;
-import simulation.simulators.Simulator;
-import simulation.simulators.StandardSimulator;
+import simulators.PartialDeploymentSimulator;
+import simulators.Simulator;
+import simulators.StandardSimulator;
 
 import java.io.File;
 import java.io.IOException;

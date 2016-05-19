@@ -1,4 +1,4 @@
-package simulation.simulators;
+package simulators;
 
 import addons.eventhandlers.DebugEventHandler;
 import com.alexmerz.graphviz.ParseException;

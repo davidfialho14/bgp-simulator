@@ -1,4 +1,4 @@
-package simulation.simulators;
+package simulators;
 
 import io.Reporter;
 import network.Network;
