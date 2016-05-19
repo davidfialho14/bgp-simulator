@@ -50,6 +50,24 @@ public class BasicStatsCollector {
     }
 
     /**
+     * Returns the number of simulations performed.
+     *
+     * @return number of simulations performed.
+     */
+    public int getSimulationCount() {
+        return simulationCount;
+    }
+
+    /**
+     * Returns the total message counts for each simulation in order (from first to last simulation).
+     *
+     * @return total message counts for each simulation in order (from first to last simulation).
+     */
+    public List<Integer> getTotalMessageCounts() {
+        return totalMessageCounts;
+    }
+
+    /**
      * Indicates the collector that a new simulation will start. This method must be called before every
      * new simulation to tell the collector to start a new counter for the new simulation.
      */
