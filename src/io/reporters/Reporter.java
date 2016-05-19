@@ -1,5 +1,7 @@
 package io.reporters;
 
+import simulators.statscollectors.BasicStatsCollector;
+
 import java.io.File;
 
 /**
@@ -18,5 +20,10 @@ public abstract class Reporter {
     public Reporter(File outputFile) {
         this.outputFile = outputFile;
     }
+
+    /**
+     * Generates report for a basic stats collector.
+     */
+    public abstract void generate(BasicStatsCollector statsCollector);
 
 }
