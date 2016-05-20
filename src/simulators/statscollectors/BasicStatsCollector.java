@@ -141,6 +141,13 @@ public class BasicStatsCollector {
         totalMessageCounts.set(simulationCount - 1, currentCount + 1);
     }
 
+    /**
+     * Should be invoked every time a new detection takes place. It adds the detecting node to the set of detecting
+     * nodes if the node is not already there. Adds the cut-off link to the list of cut-off links.
+     *
+     * @param detectingNode node that detected.
+     * @param cutoffLink link that was cut off.
+     */
     public void newDetection(Node detectingNode, Link cutoffLink) {
         detectingNodes.get(simulationCount - 1).add(detectingNode);
         cutoffLinks.get(simulationCount - 1).add(cutoffLink);
