@@ -6,7 +6,7 @@ import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
 import io.InvalidTagException;
 import io.NetworkParser;
-import io.reporters.DebugReporter;
+import io.reporters.CSVReporter;
 import io.reporters.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -111,7 +111,7 @@ public class Controller implements Initializable {
                 String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
 
                 // FIXME add a reporter implementation
-                Reporter reporter = new DebugReporter(new File(reportFileName));
+                Reporter reporter = new CSVReporter(new File(networkFile.getParent(), reportFileName));
 
                 simulator.report(reporter);
 

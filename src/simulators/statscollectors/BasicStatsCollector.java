@@ -106,6 +106,19 @@ public class BasicStatsCollector {
     }
 
     /**
+     * Returns the count of detecting nodes in the simulation with the given number.
+     *
+     * @param simulationNumber number of the simulation to get count for.
+     * @return count of detecting nodes in the simulation with the given number.
+     */
+    public int getDetectingNodesCount(int simulationNumber) {
+        return (int) detections.get(simulationNumber).stream()
+                .map(Detection::getDetectingNode)
+                .distinct()
+                .count();
+    }
+
+    /**
      * Returns the list of cut-off links for each simulation in order (from first to last simulation).
      *
      * @return list of cut-off links for each simulation in order (from first to last simulation).
@@ -130,12 +143,34 @@ public class BasicStatsCollector {
     }
 
     /**
+     * Returns the count of cut-off links in the simulation with the given number.
+     *
+     * @param simulationNumber number of the simulation to get count for.
+     * @return count of cut-off links in the simulation with the given number.
+     */
+    public int getCutOffLinksCount(int simulationNumber) {
+        return (int) detections.get(simulationNumber).stream()
+                .map(Detection::getCutoffLink)
+                .count();
+    }
+
+    /**
      * Returns the count of cut-off links for each simulation in order (from first to last simulation).
      *
      * @return count of cut-off links for each simulation in order (from first to last simulation).
      */
     public List<List<Detection>> getDetections() {
         return detections;
+    }
+
+    /**
+     * Returns a list with all the detections that occurred in the simulation with the given number.
+     *
+     * @param simulationNumber number of the simulation to get detections for.
+     * @return list with all the detections that occurred in the simulation with the given number
+     */
+    public List<Detection> getDetections(int simulationNumber) {
+        return detections.get(simulationNumber);
     }
 
     /**

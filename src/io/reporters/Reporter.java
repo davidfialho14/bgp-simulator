@@ -3,6 +3,7 @@ package io.reporters;
 import simulators.statscollectors.BasicStatsCollector;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Base class that all reports must extend.
@@ -24,6 +25,6 @@ public abstract class Reporter {
     /**
      * Generates report for a basic stats collector.
      */
-    public abstract void generate(BasicStatsCollector statsCollector);
+    public abstract void generate(BasicStatsCollector statsCollector) throws IOException;
 
 }
