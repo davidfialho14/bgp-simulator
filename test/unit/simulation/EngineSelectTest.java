@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
-import static policies.PathAttribute.invalidPath;
+import static policies.Path.invalidPath;
 import static wrappers.StubWrapper.stubAttr;
 import static wrappers.StubWrapper.stubLink;
 import static wrappers.PathWrapper.path;

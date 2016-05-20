@@ -4,7 +4,7 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.events.*;
 import simulation.schedulers.ScheduledRoute;
 import simulation.schedulers.Scheduler;
@@ -106,12 +106,12 @@ public class Engine {
 
         Attribute attribute = nodeState.getProtocol().extend(route.getDestination(), link, route.getAttribute());
 
-        PathAttribute path;
+        Path path;
         if (!attribute.isInvalid()) {
-            path = new PathAttribute(route.getPath());
+            path = new Path(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
-            path = PathAttribute.invalidPath();
+            path = Path.invalidPath();
         }
 
         Route learnedRoute = new Route(route.getDestination(), attribute, path);
