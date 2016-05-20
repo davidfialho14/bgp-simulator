@@ -82,6 +82,7 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
      */
     @Override
     public void onDetected(DetectEvent event) {
-        statsCollector.newDetection(event.getDetectingNode(), event.getOutLink());
+        // FIXME change the learned path to the correct cycle
+        statsCollector.newDetection(event.getDetectingNode(), event.getOutLink(), event.getLearnedRoute().getPath());
     }
 }

@@ -2,22 +2,22 @@ package simulators.statscollectors;
 
 import network.Link;
 import network.Node;
+import policies.Path;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * The basic stats collector collects some basic stats that most collectors have:
- *  - network's node count
- *  - network's link count
- *  - total message count
- *  - number of detecting nodes
- *  - list of detecting nodes
- *  - number of cut-off links
- *  - links that were cut-off
+ * - network's node count
+ * - network's link count
+ * - total message count
+ * - number of detecting nodes
+ * - list of detecting nodes
+ * - number of cut-off links
+ * - links that were cut-off
  */
 public class BasicStatsCollector {
 
@@ -29,10 +29,9 @@ public class BasicStatsCollector {
 
     // stores the total message counts for each simulation
     protected List<Integer> totalMessageCounts = new ArrayList<>();
-    // stores a set of detecting nodes for each simulation
-    protected List<Set<Node>> detectingNodes = new ArrayList<>();
-    // stores a list with the cut-off links for each simulation
-    protected List<List<Link>> cutoffLinks = new ArrayList<>();
+
+    // stores list of detections for each simulation
+    protected List<List<Detection>> detections = new ArrayList<>();
 
     /**
      * Constructs a basic stats collector. Initializes the node and link counts.
@@ -87,7 +86,12 @@ public class BasicStatsCollector {
      * @return set of detecting nodes for each simulation in order (from first to last simulation).
      */
     public List<Set<Node>> getDetectingNodes() {
-        return detectingNodes;
+        return detections.stream()
+                .map(simulationDetections -> simulationDetections.stream()
+                        .map(Detection::getDetectingNode)
+                        .collect(Collectors.toSet()))
+                .collect(Collectors.toList());
+
     }
 
     /**
@@ -96,7 +100,7 @@ public class BasicStatsCollector {
      * @return count of detecting nodes for each simulation in order (from first to last simulation).
      */
     public List<Integer> getDetectingNodesCounts() {
-        return detectingNodes.stream()
+        return getDetectingNodes().stream()
                 .map(Set::size)
                 .collect(Collectors.toList());
     }
@@ -107,7 +111,11 @@ public class BasicStatsCollector {
      * @return list of cut-off links for each simulation in order (from first to last simulation).
      */
     public List<List<Link>> getCutoffLinks() {
-        return cutoffLinks;
+        return detections.stream()
+                .map(simulationDetections -> simulationDetections.stream()
+                        .map(Detection::getCutoffLink)
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -116,9 +124,18 @@ public class BasicStatsCollector {
      * @return count of cut-off links for each simulation in order (from first to last simulation).
      */
     public List<Integer> getCutOffLinksCounts() {
-        return cutoffLinks.stream()
-                       .map(List::size)
-                       .collect(Collectors.toList());
+        return getCutoffLinks().stream()
+                .map(List::size)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the count of cut-off links for each simulation in order (from first to last simulation).
+     *
+     * @return count of cut-off links for each simulation in order (from first to last simulation).
+     */
+    public List<List<Detection>> getDetections() {
+        return detections;
     }
 
     /**
@@ -128,8 +145,7 @@ public class BasicStatsCollector {
     public void newSimulation() {
         simulationCount++;
         totalMessageCounts.add(0);  // start new count
-        detectingNodes.add(new HashSet<>());
-        cutoffLinks.add(new ArrayList<>());
+        detections.add(new ArrayList<>());
     }
 
     /**
@@ -146,10 +162,10 @@ public class BasicStatsCollector {
      * nodes if the node is not already there. Adds the cut-off link to the list of cut-off links.
      *
      * @param detectingNode node that detected.
-     * @param cutoffLink link that was cut off.
+     * @param cutoffLink    link that was cut off.
+     * @param cycle         cycle that originated the detection.
      */
-    public void newDetection(Node detectingNode, Link cutoffLink) {
-        detectingNodes.get(simulationCount - 1).add(detectingNode);
-        cutoffLinks.get(simulationCount - 1).add(cutoffLink);
+    public void newDetection(Node detectingNode, Link cutoffLink, Path cycle) {
+        detections.get(simulationCount - 1).add(new Detection(detectingNode, cutoffLink, cycle));
     }
 }

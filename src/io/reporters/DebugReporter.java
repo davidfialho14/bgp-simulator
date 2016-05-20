@@ -27,6 +27,7 @@ public class DebugReporter extends Reporter {
         System.out.println("detecting nodes: " + statsCollector.getDetectingNodes());
         System.out.println("cut-off links count: " + statsCollector.getCutOffLinksCounts());
         System.out.println("cut-off links: " + statsCollector.getCutoffLinks());
+        System.out.println("detections: " + statsCollector.getDetections());
     }
 
 }
