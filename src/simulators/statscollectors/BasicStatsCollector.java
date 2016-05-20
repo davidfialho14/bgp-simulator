@@ -91,12 +91,34 @@ public class BasicStatsCollector {
     }
 
     /**
+     * Returns the count of detecting nodes for each simulation in order (from first to last simulation).
+     *
+     * @return count of detecting nodes for each simulation in order (from first to last simulation).
+     */
+    public List<Integer> getDetectingNodesCounts() {
+        return detectingNodes.stream()
+                .map(Set::size)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Returns the list of cut-off links for each simulation in order (from first to last simulation).
      *
      * @return list of cut-off links for each simulation in order (from first to last simulation).
      */
     public List<List<Link>> getCutoffLinks() {
         return cutoffLinks;
+    }
+
+    /**
+     * Returns the count of cut-off links for each simulation in order (from first to last simulation).
+     *
+     * @return count of cut-off links for each simulation in order (from first to last simulation).
+     */
+    public List<Integer> getCutOffLinksCounts() {
+        return cutoffLinks.stream()
+                       .map(List::size)
+                       .collect(Collectors.toList());
     }
 
     /**
