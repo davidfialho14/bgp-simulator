@@ -92,7 +92,7 @@ public class Controller implements Initializable {
             parser.parse(networkFile);
 
             // simulator that will be used to simulate
-            Simulator simulator = null;
+            Simulator simulator;
 
             if (!partialDeploymentFormController.activateToggle.isSelected()) {
                 simulator = new StandardSimulator(parser.getNetwork(), destinationId);

@@ -83,6 +83,6 @@ public class FullDeploymentSimulator extends StandardSimulator {
      */
     @Override
     public void report(Reporter reporter) throws IOException {
-        // FIXME adjust the report call
+        reporter.generate(fullDeploymentStatsCollector);
     }
 }

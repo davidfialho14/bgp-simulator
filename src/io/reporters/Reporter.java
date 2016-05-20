@@ -1,6 +1,7 @@
 package io.reporters;
 
 import simulators.statscollectors.BasicStatsCollector;
+import simulators.statscollectors.FullDeploymentStatsCollector;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,5 +27,10 @@ public abstract class Reporter {
      * Generates report for a basic stats collector.
      */
     public abstract void generate(BasicStatsCollector statsCollector) throws IOException;
+
+    /**
+     * Generates report for a full deployment stats collector.
+     */
+    public abstract void generate(FullDeploymentStatsCollector statsCollector) throws IOException;
 
 }

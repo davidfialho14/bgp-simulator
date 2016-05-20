@@ -1,8 +1,10 @@
 package io.reporters;
 
 import simulators.statscollectors.BasicStatsCollector;
+import simulators.statscollectors.FullDeploymentStatsCollector;
 
 import java.io.File;
+import java.io.IOException;
 
 public class DebugReporter extends Reporter {
 
@@ -30,4 +32,12 @@ public class DebugReporter extends Reporter {
         System.out.println("detections: " + statsCollector.getDetections());
     }
 
+    /**
+     * Generates report for a full deployment stats collector.
+     */
+    @Override
+    public void generate(FullDeploymentStatsCollector statsCollector) throws IOException {
+        generate((BasicStatsCollector) statsCollector);
+        System.out.println("message counts after deployment: " + statsCollector.getMessageCountsAfterDeployment());
+    }
 }
