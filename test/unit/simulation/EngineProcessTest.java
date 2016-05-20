@@ -8,12 +8,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static policies.InvalidAttribute.invalid;
-import static policies.PathAttribute.invalidPath;
+import static policies.Path.invalidPath;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.anyRoute;
 import static wrappers.RouteWrapper.route;
@@ -45,7 +45,7 @@ public class EngineProcessTest {
      * @param attribute attribute previously selected.
      * @param path path previously selected.
      */
-    private void setPreviouslySelected(Attribute attribute, PathAttribute path) {
+    private void setPreviouslySelected(Attribute attribute, Path path) {
         when(nodeState.getSelectedRoute()).thenReturn(new Route(destination, attribute, path));
     }
     

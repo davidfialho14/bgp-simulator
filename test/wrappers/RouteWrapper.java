@@ -3,7 +3,7 @@ package wrappers;
 import stubs.StubAttribute;
 import network.Node;
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.Route;
 
 import static wrappers.PathWrapper.path;
@@ -16,14 +16,14 @@ public interface RouteWrapper {
     /**
      * More readable way to create a route instance.
      */
-    static Route route(Node destination, Attribute attribute, PathAttribute path) {
+    static Route route(Node destination, Attribute attribute, Path path) {
         return new Route(destination, attribute, path);
     }
 
     /**
      * More readable way to create a route instance.
      */
-    static Route route(int destId, Attribute attribute, PathAttribute path) {
+    static Route route(int destId, Attribute attribute, Path path) {
         return route(new Node(destId), attribute, path);
     }
 

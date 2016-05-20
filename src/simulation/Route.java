@@ -2,7 +2,7 @@ package simulation;
 
 import network.Node;
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 import policies.Policy;
 
 import static policies.InvalidAttribute.invalid;
@@ -11,7 +11,7 @@ public class Route implements Comparable<Route> {
 
     private Node destination;
     private Attribute attribute;
-    private PathAttribute path;
+    private Path path;
 
     /**
      * Constructs a new route assigning it a destination, attribute, and path.
@@ -19,7 +19,7 @@ public class Route implements Comparable<Route> {
      * @param attribute policy attribute of the route.
      * @param path path to reach the destination.
      */
-    public Route(Node destination, Attribute attribute, PathAttribute path) {
+    public Route(Node destination, Attribute attribute, Path path) {
         this.destination = destination;
         this.attribute = attribute;
         this.path = path;
@@ -33,7 +33,7 @@ public class Route implements Comparable<Route> {
     public Route(Route route) {
         this.destination = route.destination;
         this.attribute = route.attribute;
-        this.path = new PathAttribute(route.path);
+        this.path = new Path(route.path);
     }
 
     /**
@@ -42,7 +42,7 @@ public class Route implements Comparable<Route> {
      * @return new invalid Route instance.
      */
     public static Route invalidRoute(Node destination) {
-        return new Route(destination, invalid(), PathAttribute.invalidPath());
+        return new Route(destination, invalid(), Path.invalidPath());
     }
 
     /**
@@ -52,7 +52,7 @@ public class Route implements Comparable<Route> {
      * @return new self Route instance to the given node.
      */
     public static Route createSelf(Node node, Policy policy) {
-        return new Route(node, policy.createSelf(node), new PathAttribute());
+        return new Route(node, policy.createSelf(node), new Path());
     }
 
     /**
@@ -75,7 +75,7 @@ public class Route implements Comparable<Route> {
      * Assigns the given path to the route.
      * @param path path to be assigned.
      */
-    public void setPath(PathAttribute path) {
+    public void setPath(Path path) {
         this.path = path;
     }
 
@@ -99,7 +99,7 @@ public class Route implements Comparable<Route> {
      * Returns the route's path.
      * @return path of the route.
      */
-    public PathAttribute getPath() {
+    public Path getPath() {
         return path;
     }
 

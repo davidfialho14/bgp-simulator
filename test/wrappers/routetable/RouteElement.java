@@ -1,7 +1,7 @@
 package wrappers.routetable;
 
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.Route;
 
 /**
@@ -32,7 +32,7 @@ public class RouteElement implements RouteTableElement {
      * @param path path of the route.
      * @return route element corresponding to the route.
      */
-    public static RouteElement route(Attribute attribute, PathAttribute path) {
+    public static RouteElement route(Attribute attribute, Path path) {
         // the route destination node does not need to be specified since it will be replaced
         // when building the route table
         return new RouteElement(new Route(null, attribute, path));

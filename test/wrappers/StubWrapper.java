@@ -4,7 +4,7 @@ import stubs.StubAttribute;
 import stubs.StubLabel;
 import network.Link;
 import network.Node;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.Route;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
@@ -56,14 +56,14 @@ public interface StubWrapper {
     /**
      * Wrapper around the usual route wrapper for stub attributes.
      */
-    static RouteElement stubRoute(int value, PathAttribute path) {
+    static RouteElement stubRoute(int value, Path path) {
         return route(new StubAttribute(value), path);
     }
 
     /**
      * Wrapper around the route constructor to create a route with a stub attribute
      */
-    static Route stubRoute(int destination, int value, PathAttribute path) {
+    static Route stubRoute(int destination, int value, Path path) {
         return new Route(new Node(destination), new StubAttribute(value), path);
     }
 }

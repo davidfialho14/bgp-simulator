@@ -3,7 +3,7 @@ package simulation;
 import network.Link;
 import network.Node;
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 import protocols.Protocol;
 
 import static simulation.Route.invalidRoute;
@@ -93,7 +93,7 @@ public class NodeState {
      * @param attribute attribute to update route to.
      * @param path path to update to.
      */
-    public void updateRoute(Link outLink, Attribute attribute, PathAttribute path) {
+    public void updateRoute(Link outLink, Attribute attribute, Path path) {
         table.setRoute(outLink, new Route(table.getDestination(), attribute, path));
     }
 
