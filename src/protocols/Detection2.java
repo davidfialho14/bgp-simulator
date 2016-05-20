@@ -2,7 +2,7 @@ package protocols;
 
 import network.Node;
 import policies.Attribute;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.Route;
 
 /**
@@ -11,7 +11,7 @@ import simulation.Route;
  */
 interface Detection2 {
 
-    static boolean isOscillation(Node learningNode, Attribute attribute, PathAttribute path, Route exclRoute) {
+    static boolean isOscillation(Node learningNode, Attribute attribute, Path path, Route exclRoute) {
         return attribute.compareTo(exclRoute.getAttribute()) < 0
                        && path.getPathAfter(learningNode).equals(exclRoute.getPath());
     }

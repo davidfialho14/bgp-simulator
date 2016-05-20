@@ -2,7 +2,7 @@ package network;
 
 import stubs.StubAttribute;
 import stubs.StubLabel;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.Route;
 
 /**
@@ -92,7 +92,7 @@ public class Factory {
      * @return new route instance.
      */
     public static Route createRandomRoute() {
-        return new Route(createRandomNode(), new StubAttribute(), new PathAttribute());
+        return new Route(createRandomNode(), new StubAttribute(), new Path());
     }
 
     /**
@@ -102,7 +102,7 @@ public class Factory {
     public static Route[] createRandomRoutes(int n) {
         Route[] routes = new Route[n];
         for (int i = 0; i < n; i++) {
-            routes[i] = new Route(createRandomNode(), new StubAttribute(), new PathAttribute());
+            routes[i] = new Route(createRandomNode(), new StubAttribute(), new Path());
         }
 
         return routes;

@@ -99,4 +99,21 @@ public class NetworkTest {
         assertThat(net.getLinks(), not(containsInAnyOrder(stubLink(0, 0))));
     }
 
+    @Test
+    public void linkCount_OfNetworkWith1Link1_Is1() throws Exception {
+        net.addNode(0); net.addNode(1);
+        net.addLink(0, 1, new StubLabel());
+
+        assertThat(net.getLinkCount(), is(1));
+    }
+
+    @Test
+    public void linkCount_OfNetworkWith2Links_Is2() throws Exception {
+        net.addNode(0); net.addNode(1); net.addNode(2);
+        net.addLink(0, 1, new StubLabel());
+        net.addLink(1, 2, new StubLabel());
+
+        assertThat(net.getLinkCount(), is(2));
+    }
+
 }

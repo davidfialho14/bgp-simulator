@@ -3,7 +3,7 @@ package wrappers;
 import network.Node;
 import policies.shortestpath.ShortestPathAttribute;
 import policies.shortestpath.ShortestPathLabel;
-import policies.PathAttribute;
+import policies.Path;
 import simulation.Route;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
@@ -40,7 +40,7 @@ public interface ShortestPathWrapper {
      *
      * @return a new route instance with a attribute and path.
      */
-    static RouteElement sproute(int length, PathAttribute path) {
+    static RouteElement sproute(int length, Path path) {
         return route(new ShortestPathAttribute(length), path);
     }
 
@@ -49,7 +49,7 @@ public interface ShortestPathWrapper {
      *
      * @return a new route instance with shortest path attribute.
      */
-    static Route sproute(int destId, int length, PathAttribute path) {
+    static Route sproute(int destId, int length, Path path) {
         return new Route(new Node(destId), new ShortestPathAttribute(length), path);
     }
 

@@ -4,7 +4,7 @@ import policies.Label;
 import policies.gaorexford.CustomerLabel;
 import policies.gaorexford.PeerLabel;
 import policies.gaorexford.ProviderLabel;
-import policies.PathAttribute;
+import policies.Path;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 
@@ -74,7 +74,7 @@ public interface GaoRexfordWrapper {
      *
      * @return a new route instance with a customer attribute and path.
      */
-    static RouteElement customerRoute(PathAttribute path) {
+    static RouteElement customerRoute(Path path) {
         return route(customer(), path);
     }
 
@@ -83,7 +83,7 @@ public interface GaoRexfordWrapper {
      *
      * @return a new route instance with a peer attribute and path.
      */
-    static RouteElement peerRoute(PathAttribute path) {
+    static RouteElement peerRoute(Path path) {
         return route(peer(), path);
     }
 
@@ -92,7 +92,7 @@ public interface GaoRexfordWrapper {
      *
      * @return a new route instance with a provider attribute and path.
      */
-    static RouteElement providerRoute(PathAttribute path) {
+    static RouteElement providerRoute(Path path) {
         return route(provider(), path);
     }
 
