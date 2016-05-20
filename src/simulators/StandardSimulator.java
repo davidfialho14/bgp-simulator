@@ -2,6 +2,7 @@ package simulators;
 
 import io.reporters.Reporter;
 import network.Network;
+import policies.Path;
 import protocols.D1R1Protocol;
 import simulation.State;
 import simulation.events.DetectEvent;
@@ -82,7 +83,9 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
      */
     @Override
     public void onDetected(DetectEvent event) {
-        // FIXME change the learned path to the correct cycle
-        statsCollector.newDetection(event.getDetectingNode(), event.getOutLink(), event.getLearnedRoute().getPath());
+        Path cycle = event.getLearnedRoute().getPath().getSubPathBefore(event.getDetectingNode());
+        cycle.add(event.getDetectingNode());    // include the detecting node in the start and end of the cycle path
+
+        statsCollector.newDetection(event.getDetectingNode(), event.getOutLink(), cycle);
     }
 }

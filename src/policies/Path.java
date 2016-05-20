@@ -56,6 +56,13 @@ public class Path extends Attribute {
     }
 
     /**
+     * Only to be used to create path internally.
+     */
+    private Path(LinkedList<Node> path) {
+        this.path = path;
+    }
+
+    /**
      * Returns an invalid path instance.
      * @return invalid path instance.
      */
@@ -107,6 +114,27 @@ public class Path extends Attribute {
         nodeItr.forEachRemaining(pathAfterNode.path::add);
 
         return pathAfterNode;
+    }
+
+    /**
+     * Returns the sub-path until reaching the ending node. The sub-path returned includes all node from start until
+     * the ending node (inclusive). If the node is never found it returns null.
+
+     * @param endingNode ending node.
+     * @return sub-path until reaching the ending node or null if the ending node does not exist.
+     */
+    public Path getSubPathBefore(Node endingNode) {
+        LinkedList<Node> subpath = new LinkedList<>();
+
+        for (Node node : path) {
+            subpath.add(node);
+
+            if (node.equals(endingNode)) {
+                return new Path(subpath);
+            }
+        }
+
+        return null; // ending node was not found
     }
 
     @Override
