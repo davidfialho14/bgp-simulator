@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
+import simulators.FullDeploymentSimulator;
 import simulators.Simulator;
 import simulators.StandardSimulator;
 
@@ -97,8 +98,7 @@ public class Controller implements Initializable {
                 simulator = new StandardSimulator(parser.getNetwork(), destinationId);
             } else {
                 int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
-                // FIXME reimplement the full deployment simulator
-                // simulator = new PartialDeploymentSimulator(networkFile, destinationId, timeToChange);
+                simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId, timeToChange);
             }
 
             for (int i = 0; i < repetitionCount; i++) {

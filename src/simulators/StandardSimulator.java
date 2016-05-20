@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class StandardSimulator extends Simulator implements ExportListener, DetectListener {
 
-    private BasicStatsCollector statsCollector;
+    protected BasicStatsCollector statsCollector;
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -29,7 +29,7 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
      */
     public StandardSimulator(Network network, int destinationId) {
         super(network, destinationId);
-        this.statsCollector = new BasicStatsCollector(network.getNodeCount(), network.getLinkCount());
+        this.statsCollector = createStatsCollector(network.getNodeCount(), network.getLinkCount());
 
         // register to listen for export events
         this.engine.getEventGenerator().addExportListener(this);
@@ -46,6 +46,18 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
     @Override
     protected State createInitialState(Network network, int destinationId) {
         return State.create(network, destinationId, new D1R1Protocol());
+    }
+
+    /**
+     * Called in the constructor to create the stats collector. By default it returns a BasicStatsCollector object.
+     * Each subclass should override this method if this is not the intended behaviour.
+     *
+     * @param nodeCount number of nodes in the network.
+     * @param linkCount number of links in the network.
+     * @return new basic stats collector object.
+     */
+    protected BasicStatsCollector createStatsCollector(int nodeCount, int linkCount) {
+        return new BasicStatsCollector(nodeCount, linkCount);
     }
 
     /**
