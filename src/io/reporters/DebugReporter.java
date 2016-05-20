@@ -23,6 +23,8 @@ public class DebugReporter extends Reporter {
         System.out.println("node count: " + statsCollector.getNodeCount());
         System.out.println("link count: " + statsCollector.getLinkCount());
         System.out.println("message counts: " + statsCollector.getTotalMessageCounts());
+        System.out.println("detecting nodes: " + statsCollector.getDetectingNodes());
+        System.out.println("cut-off links: " + statsCollector.getCutoffLinks());
     }
 
 }

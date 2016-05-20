@@ -4,6 +4,8 @@ import io.reporters.Reporter;
 import network.Network;
 import protocols.D1R1Protocol;
 import simulation.State;
+import simulation.events.DetectEvent;
+import simulation.events.DetectListener;
 import simulation.events.ExportEvent;
 import simulation.events.ExportListener;
 import simulators.statscollectors.BasicStatsCollector;
@@ -13,7 +15,7 @@ import java.io.IOException;
 /**
  * The standard simulator simulate a network with all nodes detecting from start to end.
  */
-public class StandardSimulator extends Simulator implements ExportListener {
+public class StandardSimulator extends Simulator implements ExportListener, DetectListener {
 
     private BasicStatsCollector statsCollector;
 
@@ -30,6 +32,7 @@ public class StandardSimulator extends Simulator implements ExportListener {
 
         // register to listen for export events
         this.engine.getEventGenerator().addExportListener(this);
+        this.engine.getEventGenerator().addDetectListener(this);
     }
 
     /**
@@ -72,5 +75,13 @@ public class StandardSimulator extends Simulator implements ExportListener {
     @Override
     public void onExported(ExportEvent event) {
         statsCollector.newMessage();
+    }
+
+    /**
+     * Invoked when a detect event occurs.
+     */
+    @Override
+    public void onDetected(DetectEvent event) {
+        statsCollector.newDetection(event.getDetectingNode(), event.getOutLink());
     }
 }

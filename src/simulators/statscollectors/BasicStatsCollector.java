@@ -1,13 +1,23 @@
 package simulators.statscollectors;
 
+import network.Link;
+import network.Node;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The basic stats collector collects some basic stats that most collectors have:
  *  - network's node count
  *  - network's link count
  *  - total message count
+ *  - number of detecting nodes
+ *  - list of detecting nodes
+ *  - number of cut-off links
+ *  - links that were cut-off
  */
 public class BasicStatsCollector {
 
@@ -19,6 +29,10 @@ public class BasicStatsCollector {
 
     // stores the total message counts for each simulation
     protected List<Integer> totalMessageCounts = new ArrayList<>();
+    // stores a set of detecting nodes for each simulation
+    protected List<Set<Node>> detectingNodes = new ArrayList<>();
+    // stores a list with the cut-off links for each simulation
+    protected List<List<Link>> cutoffLinks = new ArrayList<>();
 
     /**
      * Constructs a basic stats collector. Initializes the node and link counts.
@@ -68,12 +82,32 @@ public class BasicStatsCollector {
     }
 
     /**
+     * Returns the set of detecting nodes for each simulation in order (from first to last simulation).
+     *
+     * @return set of detecting nodes for each simulation in order (from first to last simulation).
+     */
+    public List<Set<Node>> getDetectingNodes() {
+        return detectingNodes;
+    }
+
+    /**
+     * Returns the list of cut-off links for each simulation in order (from first to last simulation).
+     *
+     * @return list of cut-off links for each simulation in order (from first to last simulation).
+     */
+    public List<List<Link>> getCutoffLinks() {
+        return cutoffLinks;
+    }
+
+    /**
      * Indicates the collector that a new simulation will start. This method must be called before every
      * new simulation to tell the collector to start a new counter for the new simulation.
      */
     public void newSimulation() {
         simulationCount++;
         totalMessageCounts.add(0);  // start new count
+        detectingNodes.add(new HashSet<>());
+        cutoffLinks.add(new ArrayList<>());
     }
 
     /**
@@ -83,5 +117,10 @@ public class BasicStatsCollector {
     public void newMessage() {
         int currentCount = totalMessageCounts.get(simulationCount - 1);
         totalMessageCounts.set(simulationCount - 1, currentCount + 1);
+    }
+
+    public void newDetection(Node detectingNode, Link cutoffLink) {
+        detectingNodes.get(simulationCount - 1).add(detectingNode);
+        cutoffLinks.get(simulationCount - 1).add(cutoffLink);
     }
 }
