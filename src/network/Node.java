@@ -1,15 +1,15 @@
 package network;
 
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Node {
 
     private int id;   // id must be unique in each network
-    private Set<Link> outLinks = new HashSet<>();
-    private Set<Link> inLinks = new HashSet<>();
+
+    // can only have one for link for each neighbour
+    private Map<Node, Link> outLinks = new HashMap<>();
+    private Map<Node, Link> inLinks = new HashMap<>();
 
     /**
 	 * @param id    id to assign to the node.
@@ -25,8 +25,8 @@ public class Node {
      */
     public Node(Node node) {
         this.id = node.id;
-        this.outLinks = new HashSet<>(node.outLinks);
-        this.inLinks = new HashSet<>(node.inLinks);
+        this.outLinks = new HashMap<>(node.outLinks);
+        this.inLinks = new HashMap<>(node.inLinks);
     }
 
     /**
@@ -43,7 +43,7 @@ public class Node {
      * @return true if the link was added and false otherwise.
      */
     public boolean addOutLink(Link link) {
-        return outLinks.add(link);
+        return outLinks.put(link.getDestination(), link) != null;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Node {
      * @return true if the link was added and false otherwise.
      */
     public boolean addInLink(Link link) {
-        return inLinks.add(link);
+        return inLinks.put(link.getSource(), link) != null;
     }
 
     /**
@@ -62,7 +62,7 @@ public class Node {
      * @return true if the link existed and was removed and false otherwise.
      */
     public boolean removeOutLink(Link link) {
-        return outLinks.remove(link);
+        return outLinks.remove(link.getDestination()) != null;
     }
 
     /**
@@ -72,7 +72,7 @@ public class Node {
      * @return true if the link existed and was removed and false otherwise.
      */
     public boolean removeInLink(Link link) {
-        return inLinks.remove(link);
+        return inLinks.remove(link.getSource()) != null;
     }
 
     /**
@@ -80,7 +80,7 @@ public class Node {
      * @return collection with all the in-links of the node.
      */
     public Collection<Link> getInLinks() {
-        return inLinks;
+        return inLinks.values();
     }
 
     /**
@@ -88,7 +88,27 @@ public class Node {
      * @return collection with all the out-links of the node.
      */
     public Collection<Link> getOutLinks() {
-        return outLinks;
+        return outLinks.values();
+    }
+
+    /**
+     * Returns the out-link to a neighbour.
+     *
+     * @param neighbour neighbour to get out-link for.
+     * @return out-link to the neighbour or null if there is not out-link for that neighbour.
+     */
+    public Link getOutLink(Node neighbour) {
+        return outLinks.get(neighbour);
+    }
+
+    /**
+     * Returns the in-link to a neighbour.
+     *
+     * @param neighbour neighbour to get in-link for.
+     * @return in-link to the neighbour or null if there is not in-link for that neighbour.
+     */
+    public Link getInLink(Node neighbour) {
+        return inLinks.get(neighbour);
     }
 
     /**
