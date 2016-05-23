@@ -178,6 +178,17 @@ public class Network {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the number of links in the network.
+     *
+     * @return number of links in the network.
+     */
+    public int getLinkCount() {
+        return (int) nodes.values().stream()
+                         .flatMap(node -> node.getInLinks().stream())
+                         .count();
+    }
+
     @Override
     public String toString() {
         String networkStr = "Network{";

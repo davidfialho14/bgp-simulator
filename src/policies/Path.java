@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Path extends Attribute {
+public class Path extends Attribute implements Iterable<Node> {
 
     private static final Path INVALID;
 
@@ -53,6 +53,13 @@ public class Path extends Attribute {
     public Path(Path path) {
         if (!path.isInvalid())
             this.path = new LinkedList<>(path.path);
+    }
+
+    /**
+     * Only to be used to create path internally.
+     */
+    private Path(LinkedList<Node> path) {
+        this.path = path;
     }
 
     /**
@@ -109,6 +116,27 @@ public class Path extends Attribute {
         return pathAfterNode;
     }
 
+    /**
+     * Returns the sub-path until reaching the ending node. The sub-path returned includes all node from start until
+     * the ending node (inclusive). If the node is never found it returns null.
+
+     * @param endingNode ending node.
+     * @return sub-path until reaching the ending node or null if the ending node does not exist.
+     */
+    public Path getSubPathBefore(Node endingNode) {
+        LinkedList<Node> subpath = new LinkedList<>();
+
+        for (Node node : path) {
+            subpath.add(node);
+
+            if (node.equals(endingNode)) {
+                return new Path(subpath);
+            }
+        }
+
+        return null; // ending node was not found
+    }
+
     @Override
     public boolean isInvalid() {
         return path == null;
@@ -152,5 +180,15 @@ public class Path extends Attribute {
         } else {
             return "Path" + path;
         }
+    }
+
+    /**
+     * Returns an iterator over nodes of the path.
+     *
+     * @return an Iterator of nodes.
+     */
+    @Override
+    public Iterator<Node> iterator() {
+        return path.iterator();
     }
 }

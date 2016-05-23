@@ -15,6 +15,15 @@ public class ShortestPathLabel implements Label {
     }
 
     /**
+     * Return the label's length.
+     *
+     * @return label's length.
+     */
+    public int getLength() {
+        return length;
+    }
+
+    /**
      * It returns a ShortestPathAttribute with the length equal to the sum of the given attribute length and the
      * label length.
      * @param link link used to extend.
