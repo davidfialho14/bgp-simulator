@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Path extends Attribute {
+public class Path extends Attribute implements Iterable<Node> {
 
     private static final Path INVALID;
 
@@ -180,5 +180,15 @@ public class Path extends Attribute {
         } else {
             return "Path" + path;
         }
+    }
+
+    /**
+     * Returns an iterator over nodes of the path.
+     *
+     * @return an Iterator of nodes.
+     */
+    @Override
+    public Iterator<Node> iterator() {
+        return path.iterator();
     }
 }

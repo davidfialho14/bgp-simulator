@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
 import simulators.FullDeploymentSimulator;
+import simulators.SPPolicyStandardSimulator;
 import simulators.Simulator;
 import simulators.StandardSimulator;
 
@@ -25,6 +26,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static policies.shortestpath.ShortestPathPolicy.isShortestPath;
 
 public class Controller implements Initializable {
 
@@ -95,7 +98,13 @@ public class Controller implements Initializable {
             Simulator simulator;
 
             if (!partialDeploymentFormController.activateToggle.isSelected()) {
-                simulator = new StandardSimulator(parser.getNetwork(), destinationId);
+
+                if (isShortestPath(parser.getNetwork().getPolicy())) {
+                    simulator = new SPPolicyStandardSimulator(parser.getNetwork(), destinationId);
+                } else {
+                    simulator = new StandardSimulator(parser.getNetwork(), destinationId);
+                }
+
             } else {
                 int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
                 simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId, timeToChange);

@@ -8,6 +8,16 @@ import policies.Policy;
 
 public class ShortestPathPolicy implements Policy {
 
+    /**
+     * Checks if a policy is a shortest path policy. This method does not require to create a new ShortestPathPolicy
+     * instance to check if it is the desired policy.
+     *
+     * @return true if the policy is shortest path or false otherwise.
+     */
+    public static boolean isShortestPath(Policy policy) {
+        return policy instanceof ShortestPathPolicy;
+    }
+
     @Override
     public Attribute createSelf(Node node) {
         return new ShortestPathAttribute(0);
