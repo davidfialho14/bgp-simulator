@@ -16,11 +16,17 @@ public class Detection {
     private Node detectingNode;
     private Link cutoffLink;
     private Path cycle;
+    private boolean falsePositive;
 
-    public Detection(Node detectingNode, Link cutoffLink, Path cycle) {
+    public Detection(Node detectingNode, Link cutoffLink, Path cycle, boolean falsePositive) {
         this.detectingNode = detectingNode;
         this.cutoffLink = cutoffLink;
         this.cycle = cycle;
+        this.falsePositive = falsePositive;
+    }
+
+    public Detection(Node detectingNode, Link cutoffLink, Path cycle) {
+        this(detectingNode, cutoffLink, cycle, false);
     }
 
     public Node getDetectingNode() {
@@ -33,6 +39,10 @@ public class Detection {
 
     public Path getCycle() {
         return cycle;
+    }
+
+    public boolean isFalsePositive() {
+        return falsePositive;
     }
 
     @Override
