@@ -198,8 +198,7 @@ public class BasicStatsCollector {
      * It increases the total message count for the current simulation.
      */
     public void newMessage() {
-        int currentCount = totalMessageCounts.get(simulationCount - 1);
-        totalMessageCounts.set(simulationCount - 1, currentCount + 1);
+        incrementCount(totalMessageCounts);
     }
 
     /**
@@ -212,5 +211,15 @@ public class BasicStatsCollector {
      */
     public void newDetection(Node detectingNode, Link cutoffLink, Path cycle) {
         detections.get(simulationCount - 1).add(new Detection(detectingNode, cutoffLink, cycle));
+    }
+
+    /**
+     * Helper method to increment a count for the current simulation in the list of counts.
+     *
+     * @param counts respective list to increment count for.
+     */
+    protected void incrementCount(List<Integer> counts) {
+        Integer count = counts.get(simulationCount - 1);
+        counts.set(simulationCount - 1, count + 1);
     }
 }
