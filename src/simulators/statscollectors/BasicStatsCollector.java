@@ -81,6 +81,16 @@ public class BasicStatsCollector {
     }
 
     /**
+     * Returns the total message count in the simulation with the given number.
+     *
+     * @param simulationNumber number of the simulation to get count for.
+     * @return total message count in the simulation with the given number.
+     */
+    public int getTotalMessageCount(int simulationNumber) {
+        return totalMessageCounts.get(simulationNumber);
+    }
+
+    /**
      * Returns the set of detecting nodes for each simulation in order (from first to last simulation).
      *
      * @return set of detecting nodes for each simulation in order (from first to last simulation).

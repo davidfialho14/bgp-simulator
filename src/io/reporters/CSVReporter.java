@@ -36,6 +36,7 @@ public class CSVReporter extends Reporter {
             for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
                 report.newLine();
                 report.write("Simulation " + i + ":"); report.newLine();
+                report.write("; Total message count:; " + statsCollector.getTotalMessageCount(i)); report.newLine();
                 report.write("; Detecting nodes count:; " + statsCollector.getDetectingNodesCount(i)); report.newLine();
                 report.write("; Cut-off links count:; " + statsCollector.getCutOffLinksCount(i)); report.newLine();
 
@@ -63,6 +64,7 @@ public class CSVReporter extends Reporter {
             for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
                 report.newLine();
                 report.write("Simulation " + i + ":"); report.newLine();
+                report.write("; Total message count:; " + statsCollector.getTotalMessageCount(i)); report.newLine();
                 report.write("; Detecting nodes count:; " + statsCollector.getDetectingNodesCount(i)); report.newLine();
                 report.write("; Cut-off links count:; " + statsCollector.getCutOffLinksCount(i)); report.newLine();
                 report.write("; Message Count After Deployment:; " + statsCollector.getMessageCountAfterDeployment(i));
