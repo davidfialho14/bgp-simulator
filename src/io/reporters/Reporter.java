@@ -2,6 +2,7 @@ package io.reporters;
 
 import simulators.statscollectors.BasicStatsCollector;
 import simulators.statscollectors.FullDeploymentStatsCollector;
+import simulators.statscollectors.SPPolicyBasicStatsCollector;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,4 +34,8 @@ public abstract class Reporter {
      */
     public abstract void generate(FullDeploymentStatsCollector statsCollector) throws IOException;
 
+    /**
+     * Generates report for a basic stats collector for the SP policy.
+     */
+    public abstract void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException;
 }
