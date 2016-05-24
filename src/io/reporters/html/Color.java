@@ -1,5 +1,9 @@
 package io.reporters.html;
 
+/**
+ * Represents a color for the chart. The color is defined in the RGB format.
+ * The transparencies for each element of the chart is defined by default.
+ */
 public class Color {
 
     private final int red;
@@ -11,13 +15,22 @@ public class Color {
     private static final double hoverBackgroundTransparency = 0.4;
     private static final double hoverBorderTransparency = 1;
 
+    /**
+     * Creates a new color from an RGB code.
+     */
     public Color(int red, int green, int blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
     }
 
-    String getJavacriptObject() {
+    /**
+     * Returns a string with the javascript object representing the color to be used in the loadChart() javascript
+     * method.
+     *
+     * @return a string with the javascript object representing the color.
+     */
+    String getJavascriptObject() {
         return "{" +
                 "background: \"" + rgba(backgroundTransparency) + "\"," +
                 "border: \"" + rgba(borderTransparency) + "\"," +

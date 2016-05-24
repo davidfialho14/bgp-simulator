@@ -109,7 +109,7 @@ public abstract class AbstractChart implements Chart {
 
         // load chart
         htmlWriter.writer.write(String.format("var %s = loadChart($(\"#%s\"), \"%s\", labels, %s, %s, %s);",
-                canvasId, canvasId, getTitle(), dataVarName, getType(), color.getJavacriptObject()));
+                canvasId, canvasId, getTitle(), dataVarName, getType(), color.getJavascriptObject()));
         htmlWriter.writer.newLine();
 
         htmlWriter.writer.write("</script>");
