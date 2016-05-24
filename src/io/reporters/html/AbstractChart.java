@@ -1,6 +1,8 @@
 package io.reporters.html;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base implementation for any chart type.
@@ -12,8 +14,8 @@ public abstract class AbstractChart implements Chart {
     private int id = idCount++;
     private String title;
 
-    protected Iterable<Integer> data = null;
-    protected Iterable<String> labels = null;
+    protected List<Integer> data = null;
+    protected List<String> labels = null;
 
     /**
      * Creates a new chart with a title.
@@ -48,7 +50,7 @@ public abstract class AbstractChart implements Chart {
      *
      * @param data data to be set.
      */
-    public void setData(Iterable<Integer> data) {
+    public void setData(List<Integer> data) {
         this.data = data;
     }
 
@@ -57,7 +59,7 @@ public abstract class AbstractChart implements Chart {
      *
      * @param labels labels to be set
      */
-    public void setLabels(Iterable<String> labels) {
+    public void setLabels(List<String> labels) {
         this.labels = labels;
     }
 

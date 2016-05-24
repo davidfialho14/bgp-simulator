@@ -1,6 +1,7 @@
 package io.reporters.html;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Interface to be implemented by any chart.
@@ -25,14 +26,14 @@ public interface Chart {
      *
      * @param data data to be set.
      */
-    void setData(Iterable<Integer> data);
+    void setData(List<Integer> data);
 
     /**
      * Sets the labels for the chart.
      *
      * @param labels labels to be set
      */
-    void setLabels(Iterable<String> labels);
+    void setLabels(List<String> labels);
 
     /**
      * Writes the chart to an HTML file
