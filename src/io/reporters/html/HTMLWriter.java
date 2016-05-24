@@ -79,20 +79,23 @@ public class HTMLWriter implements Closeable, AutoCloseable {
 
     /**
      * Writes initial part of the HTML file. It must be called before writing any other thing or the
-     * output HTML will not be correct.
+     * output HTML will not be correct. It also imports the CSS file used for the HTML file.
      */
     private void start() throws IOException {
         writer.write("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
-                "    <title>Title</title>\n" +
-                "    <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n" +
+                "    <title>Report</title>\n" +
                 "    <script src=\"https://code.jquery.com/jquery-2.2.3.js\"></script>\n" +
                 "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.js\"></script>\n" +
                 "</head>\n" +
                 "<body>");
         writer.newLine();
+
+        writer.write("<style scoped>"); writer.newLine();
+        importFile(getClass().getResourceAsStream("css/style.css"));
+        writer.write("</style>"); writer.newLine();
     }
 
     /**
@@ -103,5 +106,20 @@ public class HTMLWriter implements Closeable, AutoCloseable {
         writer.write("</body>\n" +
                 "</html>");
         writer.newLine();
+    }
+
+    /**
+     * Writes the content of a file to the current position of the output file.
+     * Helper method that can be used to import both CSS and Javascript files.
+     */
+    private void importFile(InputStream input) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line); writer.newLine();
+            }
+
+        }
     }
 }
