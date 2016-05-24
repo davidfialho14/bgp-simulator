@@ -115,6 +115,14 @@ public abstract class AbstractChart implements Chart {
         htmlWriter.writer.newLine();
         writeSubChartScript(htmlWriter, canvasId, dataVarName, "Histogram", "lengthLabels", "dummyOperation");
         htmlWriter.writer.newLine();
+        writeSubChartScript(htmlWriter, canvasId, dataVarName, "Cumulative Distribution", "maxLabels",
+                "accumulatedDistribution");
+        htmlWriter.writer.newLine();
+        writeSubChartScript(htmlWriter, canvasId, dataVarName, "Complementary Cumulative Distribution", "maxLabels",
+                "complementaryAccumulatedDistribution");
+        htmlWriter.writer.newLine();
+        writeSubChartScript(htmlWriter, canvasId, dataVarName, "Probability Density", "maxLabels", "probabilityDensity");
+        htmlWriter.writer.newLine();
 
         htmlWriter.writer.write(String.format("$(\"#%s\").click();", radioButtonId("Histogram")));
         htmlWriter.writer.newLine();
