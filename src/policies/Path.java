@@ -5,6 +5,7 @@ import network.Node;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.stream.Stream;
 
 public class Path extends Attribute implements Iterable<Node> {
 
@@ -190,5 +191,9 @@ public class Path extends Attribute implements Iterable<Node> {
     @Override
     public Iterator<Node> iterator() {
         return path.iterator();
+    }
+
+    public Stream<Node> stream() {
+        return path.stream();
     }
 }

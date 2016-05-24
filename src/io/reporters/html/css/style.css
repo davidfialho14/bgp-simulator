@@ -1,0 +1,122 @@
+header {
+    text-align: center;
+}
+
+.detection {
+    margin: 40px 20px;
+}
+
+.detection header {
+    width: 100%;
+    height: 20px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+    padding-left: 40px;
+}
+
+.detection header span {
+    font-size: 30px;
+    background-color: white;
+    padding: 0 10px;
+}
+
+.stat-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ccc;
+    width: 95%;
+    display: table;
+    margin: 20px auto;
+}
+
+.stat-table th, .stat-table td {
+    border-right: 1px solid #ddd;
+    padding: 6px 8px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: center
+}
+
+.stat-table tr {
+    border-bottom: 1px solid #ddd
+}
+
+.stat-table tr:nth-child(odd) {
+    background-color: #fff
+}
+
+.stat-table tr:nth-child(even) {
+    background-color: #f1f1f1
+}
+
+.stat-table caption {
+    font-size: 20px;
+    margin: 10px;
+}
+
+.summary .stat-table th:first-child, .stat-table td:first-child {
+    width: 80px;
+}
+
+.summary .stat-table th:last-child, .stat-table td:last-child {
+    width: 110px;
+}
+
+.counts .stat-table {
+    width: 400px;
+}
+
+.counts .stat-table td {
+    text-align: left
+}
+
+.counts .stat-table th:first-child, .counts .stat-table td:first-child {
+    width: 80%;
+    border-right: 1px solid #ddd;
+}
+
+.counts .stat-table th:last-child, .counts .stat-table td:last-child {
+    width: 20%;
+    text-align: center;
+}
+
+.network-info .stat-table {
+    width: 200px;
+}
+
+.network-info .stat-table td {
+    text-align: left
+}
+
+.network-info .stat-table th:first-child, .network-info .stat-table td:first-child {
+    width: 80%;
+    border-right: 1px solid #ddd;
+}
+
+.network-info .stat-table th:last-child, .network-info .stat-table td:last-child {
+    width: 20%;
+    text-align: center;
+}
+
+canvas {
+    margin: 30px 0;
+}
+
+.basicStats p {
+    margin: 3px 8px;
+    display: inline;
+}
+
+.basicStats {
+    position: relative;
+    top: 75px;
+    text-align: left;
+    padding-left: 20px;
+    font-size: 15px;
+}
+
+.chartTypeSelector {
+    text-align: center;
+    position: relative;
+    top: 10px;
+}
