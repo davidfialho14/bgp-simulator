@@ -5,10 +5,11 @@ public class BarChart extends AbstractChart {
     /**
      * Creates a new chart with a title.
      *
-     * @param title  title for the chart.
+     * @param title title for the chart.
+     * @param color color for the chart.
      */
-    public BarChart(String title) {
-        super(title);
+    public BarChart(String title, Color color) {
+        super(title, color);
     }
 
     /**

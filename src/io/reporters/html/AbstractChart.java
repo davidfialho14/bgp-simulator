@@ -13,6 +13,7 @@ public abstract class AbstractChart implements Chart {
 
     private int id = idCount++;
     private String title;
+    private Color color;
 
     protected List<Integer> data = null;
     protected List<String> labels = null;
@@ -21,9 +22,11 @@ public abstract class AbstractChart implements Chart {
      * Creates a new chart with a title.
      *
      * @param title title for the chart.
+     * @param color color for the chart.
      */
-    public AbstractChart(String title) {
+    public AbstractChart(String title, Color color) {
         this.title = title;
+        this.color = color;
     }
 
     /**
@@ -105,8 +108,8 @@ public abstract class AbstractChart implements Chart {
         htmlWriter.writer.newLine();
 
         // load chart
-        htmlWriter.writer.write(String.format("var %s = loadChart($(\"#%s\"), \"%s\", labels, %s, %s, RED);",
-                canvasId, canvasId, getTitle(), dataVarName, getType()));
+        htmlWriter.writer.write(String.format("var %s = loadChart($(\"#%s\"), \"%s\", labels, %s, %s, %s);",
+                canvasId, canvasId, getTitle(), dataVarName, getType(), color.getJavacriptObject()));
         htmlWriter.writer.newLine();
 
         htmlWriter.writer.write("</script>");

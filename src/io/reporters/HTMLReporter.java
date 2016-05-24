@@ -59,15 +59,15 @@ public class HTMLReporter extends Reporter {
 
             // --- counts charts ---
 
-            Chart chart = new LineChart("Total Message Counts");
+            Chart chart = new LineChart("Total Message Counts", Colors.RED);
             chart.setData(statsCollector.getTotalMessageCounts());
             htmlWriter.writeChart(chart);
 
-            chart = new LineChart("Detecting Nodes Counts");
+            chart = new LineChart("Detecting Nodes Counts", Colors.BLUE);
             chart.setData(statsCollector.getDetectingNodesCounts());
             htmlWriter.writeChart(chart);
 
-            chart = new LineChart("Cut-Off Link Counts");
+            chart = new LineChart("Cut-Off Link Counts", Colors.RED);
             chart.setData(statsCollector.getCutOffLinksCounts());
             htmlWriter.writeChart(chart);
 

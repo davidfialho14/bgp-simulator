@@ -2,14 +2,14 @@ package io.reporters.html;
 
 public class LineChart extends AbstractChart {
 
-
     /**
      * Creates a new chart with a title.
      *
-     * @param title  title for the chart.
+     * @param title title for the chart.
+     * @param color color for the chart.
      */
-    public LineChart(String title) {
-        super(title);
+    public LineChart(String title, Color color) {
+        super(title, color);
     }
 
     /**
