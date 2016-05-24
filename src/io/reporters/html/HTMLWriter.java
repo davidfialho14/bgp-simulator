@@ -122,4 +122,16 @@ public class HTMLWriter implements Closeable, AutoCloseable {
 
         }
     }
+
+    /**
+     * Imports a javascript file to the current output file position. It puts the script code between the
+     * tags <script> and </script>.
+     *
+     * @param input stream of the javascript file.
+     */
+    private void importScript(InputStream input) throws IOException {
+        writer.write("<script>"); writer.newLine();
+        importFile(input);
+        writer.write("</script>"); writer.newLine();
+    }
 }
