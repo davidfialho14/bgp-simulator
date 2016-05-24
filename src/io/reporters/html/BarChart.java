@@ -1,24 +1,23 @@
 package io.reporters.html;
 
-public class LineChart extends AbstractChart {
-
+public class BarChart extends AbstractChart {
 
     /**
      * Creates a new chart with a title.
      *
      * @param title  title for the chart.
      */
-    public LineChart(String title) {
+    public BarChart(String title) {
         super(title);
     }
 
     /**
-     * Returns the string 'line'.
+     * Returns the string 'bar'.
      *
-     * @return string 'line'.
+     * @return string 'bar'.
      */
     @Override
     protected String getType() {
-        return "\'line\'";
+        return "\'bar\'";
     }
 }
