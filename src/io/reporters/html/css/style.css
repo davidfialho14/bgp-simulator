@@ -101,3 +101,15 @@ header {
 canvas {
     margin: 30px 0;
 }
+
+.basicStats p {
+    margin: 3px 8px;
+    display: inline;
+}
+
+.basicStats {
+    position: relative;
+    top: 30px;
+    text-align: center;
+    font-size: 15px;
+}

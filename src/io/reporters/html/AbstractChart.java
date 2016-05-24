@@ -72,6 +72,17 @@ public abstract class AbstractChart implements Chart {
     public void write(HTMLWriter htmlWriter) throws IOException {
         String canvasId = "chart" + getId();
 
+        // include the minimum, average and maximum labels
+        String minimumId = canvasId + "Minimum";
+        String averageId = canvasId + "Average";
+        String maximumId = canvasId + "Maximum";
+
+        htmlWriter.beginClass("basicStats");
+            htmlWriter.writer.write("<p id=\"" + minimumId + "\">Minimum: </p>");
+            htmlWriter.writer.write("<p id=\"" + averageId + "\">Average: </p>");
+            htmlWriter.writer.write("<p id=\"" + maximumId + "\">Maximum: </p>");
+        htmlWriter.endClass();
+
         // the canvas must be placed before the script
         htmlWriter.writer.write(String.format("<canvas id=\"%s\" width=\"300\" height=\"100\"></canvas>", canvasId));
         htmlWriter.writer.newLine();
@@ -79,12 +90,26 @@ public abstract class AbstractChart implements Chart {
         Iterable<String> labels = this.labels != null ? this.labels : labelsRange(1, data.size());
 
         // write the script
-        htmlWriter.writer.write(String.format("<script>\n" +
-                "    var labels = %s;\n" +
-                "    var data = %s;\n" +
-                "    %s = loadChart($(\"#%s\"), \"%s\", labels, data, %s, RED);\n" +
-                "\n" +
-                "</script>", labels, data, canvasId, canvasId, getTitle(), getType()));
+        htmlWriter.writer.write("<script>"); htmlWriter.writer.newLine();
+
+        // write the data
+        String dataVarName = canvasId + "Data";
+        htmlWriter.writer.write(String.format("var labels = %s;\n" + "var %s = %s;", labels, dataVarName, data));
+
+        // write code to compute minimum, average, and maximum values
+        htmlWriter.writer.write(
+                String.format("$(\"#%s\").text(\"Minimum: \" + (Math.min.apply(null, %s)));\n" +
+                        "$(\"#%s\").text(\"Average: \" + avg(%s));\n" +
+                        "$(\"#%s\").text(\"Maximum: \" + Math.max.apply(null, %s));",
+                        minimumId, dataVarName, averageId, dataVarName, maximumId, dataVarName));
+        htmlWriter.writer.newLine();
+
+        // load chart
+        htmlWriter.writer.write(String.format("var %s = loadChart($(\"#%s\"), \"%s\", labels, %s, %s, RED);",
+                canvasId, canvasId, getTitle(), dataVarName, getType()));
+        htmlWriter.writer.newLine();
+
+        htmlWriter.writer.write("</script>");
         htmlWriter.writer.newLine();
     }
 
