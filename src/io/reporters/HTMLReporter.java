@@ -1,7 +1,6 @@
 package io.reporters;
 
-import io.reporters.html.HTMLTableWriter;
-import io.reporters.html.HTMLWriter;
+import io.reporters.html.*;
 import network.Link;
 import network.Node;
 import org.apache.commons.lang.StringUtils;
@@ -58,9 +57,25 @@ public class HTMLReporter extends Reporter {
                         .end();
             htmlWriter.endClass();
 
+            // --- counts charts ---
+
+            Chart chart = new LineChart("Total Message Counts");
+            chart.setData(statsCollector.getTotalMessageCounts());
+            htmlWriter.writeChart(chart);
+
+            chart = new LineChart("Detecting Nodes Counts");
+            chart.setData(statsCollector.getDetectingNodesCounts());
+            htmlWriter.writeChart(chart);
+
+            chart = new LineChart("Cut-Off Link Counts");
+            chart.setData(statsCollector.getCutOffLinksCounts());
+            htmlWriter.writeChart(chart);
+
+            // --- detections ---
+
             htmlWriter.beginClass("detection");
             for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
-                htmlWriter.writeTitleSeparator("Simulation" + (i + 1));
+                htmlWriter.writeTitleSeparator("Simulation " + (i + 1));
 
                 htmlWriter.beginClass("counts");
                     htmlWriter.getTableWriter("Counts")
