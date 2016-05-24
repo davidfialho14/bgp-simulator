@@ -76,6 +76,8 @@ public abstract class AbstractChart implements Chart {
         htmlWriter.writer.write(String.format("<canvas id=\"%s\" width=\"300\" height=\"100\"></canvas>", canvasId));
         htmlWriter.writer.newLine();
 
+        Iterable<String> labels = this.labels != null ? this.labels : labelsRange(1, data.size());
+
         // write the script
         htmlWriter.writer.write(String.format("<script>\n" +
                 "    var labels = %s;\n" +
@@ -92,5 +94,22 @@ public abstract class AbstractChart implements Chart {
      * @return string that defines the type of chart.
      */
     protected abstract String getType();
+
+    /**
+     * Returns a list with 'length' integer labels from the start value.
+     *
+     * @param start value to start with.
+     * @param length total length of the range.
+     * @return list with values between start and start + length.
+     */
+    private List<String> labelsRange(int start, int length) {
+        List<String> labels = new ArrayList<>(length);
+
+        for (int i = 0; i < length; i++) {
+            labels.add(String.valueOf(start + i));
+        }
+
+        return labels;
+    }
 
 }
