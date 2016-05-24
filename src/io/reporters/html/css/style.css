@@ -109,7 +109,14 @@ canvas {
 
 .basicStats {
     position: relative;
-    top: 30px;
-    text-align: center;
+    top: 75px;
+    text-align: left;
+    padding-left: 20px;
     font-size: 15px;
+}
+
+.chartTypeSelector {
+    text-align: center;
+    position: relative;
+    top: 10px;
 }

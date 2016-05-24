@@ -86,6 +86,9 @@ public abstract class AbstractChart implements Chart {
             htmlWriter.writer.write("<p id=\"" + maximumId + "\">Maximum: </p>");
         htmlWriter.endClass();
 
+        // include a chart selector
+        writeChartSelector(htmlWriter);
+
         // the canvas must be placed before the script
         htmlWriter.writer.write(String.format("<canvas id=\"%s\" width=\"300\" height=\"100\"></canvas>", canvasId));
         htmlWriter.writer.newLine();
@@ -138,6 +141,33 @@ public abstract class AbstractChart implements Chart {
         }
 
         return labels;
+    }
+
+    /**
+     * Writes a chart selector for the chart.
+     *
+     * @param htmlWriter writer used to write the chart selector.
+     */
+    private void writeChartSelector(HTMLWriter htmlWriter) throws IOException {
+        htmlWriter.writer.write("<form class=\"chartTypeSelector\" action=\"\">\n" +
+                radioButton("Histogram") +
+                radioButton("Cumulative Distribution") +
+                radioButton("Complementary Cumulative Distribution") +
+                radioButton("Probability Density") +
+                "</form>");
+    }
+
+    /**
+     * Returns the html code for a radio button with a label.
+     *
+     * @param label label for the radio button.
+     * @return html code for a radio button with a label.
+     */
+    private String radioButton(String label) {
+        String buttonId = "radioButton" + label.replace(" ", "") + getId();
+
+        return String.format("<input id=\"%s\" type=\"radio\" name=\"chart\">\n" +
+                "<label for=\"%s\">%s</label>\n", buttonId, buttonId, label);
     }
 
 }
