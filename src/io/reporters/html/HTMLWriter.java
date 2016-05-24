@@ -76,7 +76,8 @@ public class HTMLWriter implements Closeable, AutoCloseable {
     public void writeChart(Chart chart) throws IOException {
 
         if (!chartsImported) {
-            importScript(getClass().getResourceAsStream("js/charts.js"));
+            importScript(getClass().getResourceAsStream("js/operations.js"));
+            importScript(getClass().getResourceAsStream("js/utils.js"));
             chartsImported = true;
         }
 

@@ -111,8 +111,12 @@ public abstract class AbstractChart implements Chart {
         htmlWriter.writer.newLine();
 
         // load chart
-        htmlWriter.writer.write(String.format("var %s = loadChart($(\"#%s\"), \"%s\", labels, %s, %s, %s);",
-                canvasId, canvasId, getTitle(), dataVarName, getType(), color.getJavascriptObject()));
+        htmlWriter.writer.write("var " + canvasId +  " = null;");
+        htmlWriter.writer.newLine();
+        writeSubChartScript(htmlWriter, canvasId, dataVarName, "Histogram", "lengthLabels", "dummyOperation");
+        htmlWriter.writer.newLine();
+
+        htmlWriter.writer.write(String.format("$(\"#%s\").click();", radioButtonId("Histogram")));
         htmlWriter.writer.newLine();
 
         htmlWriter.writer.write("</script>");
@@ -164,10 +168,28 @@ public abstract class AbstractChart implements Chart {
      * @return html code for a radio button with a label.
      */
     private String radioButton(String label) {
-        String buttonId = "radioButton" + label.replace(" ", "") + getId();
+        String buttonId = radioButtonId(label);
 
         return String.format("<input id=\"%s\" type=\"radio\" name=\"chart\">\n" +
                 "<label for=\"%s\">%s</label>\n", buttonId, buttonId, label);
+    }
+
+    private String radioButtonId(String label) {
+        return "radioButton" + label.replace(" ", "") + getId();
+    }
+
+    private void writeSubChartScript(HTMLWriter htmlWriter, String canvasId, String dataVarName, String subTitle,
+                                     String labelsOperation, String dataOperation) throws IOException {
+        String chartTitle = getTitle() + " " + subTitle;
+
+        htmlWriter.writer.write(String.format("$(\"#%s\").click(function () {\n" +
+                "    clearChart(%s);\n" +
+                "    var labels = %s(%s);\n" +
+                "    %s = loadChart($(\"#%s\"), \"%s\",\n" +
+                "        labels, %s(%s), %s, %s);\n" +
+                "});",
+                radioButtonId(subTitle), canvasId, labelsOperation, dataVarName, canvasId, canvasId, chartTitle,
+                dataOperation, dataVarName, getType(), color.getJavascriptObject()));
     }
 
 }
