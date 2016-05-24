@@ -6,6 +6,8 @@ public class HTMLWriter implements Closeable, AutoCloseable {
 
     BufferedWriter writer = null;
 
+    private boolean chartsImported = false; // indicates if the charts.js script was imported
+
     /**
      * Opens the output file and gets ready to write.
      *
@@ -64,6 +66,21 @@ public class HTMLWriter implements Closeable, AutoCloseable {
      */
     public HTMLTableWriter getTableWriter(String caption) {
         return new HTMLTableWriter(this, caption);
+    }
+
+    /**
+     * Writes a chart to the HTML file.
+     *
+     * @param chart chart to be written.
+     */
+    public void writeChart(Chart chart) throws IOException {
+
+        if (!chartsImported) {
+            importScript(getClass().getResourceAsStream("js/charts.js"));
+            chartsImported = true;
+        }
+
+        chart.write(this);
     }
 
     // ----- END Write Methods ------
