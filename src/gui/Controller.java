@@ -6,6 +6,7 @@ import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
 import io.InvalidTagException;
 import io.NetworkParser;
+import io.reporters.CSVReporter;
 import io.reporters.HTMLReporter;
 import io.reporters.Reporter;
 import javafx.event.ActionEvent;
@@ -37,6 +38,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> maxDelaySpinner;
     public PartialDeploymentController partialDeploymentFormController;
     public CheckBox debugCheckBox;
+    public RadioButton htmlRadioButton;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -143,12 +145,19 @@ public class Controller implements Initializable {
             }
 
             try {
-                // store the report file in the same directory as the network file and with the same name bu with
+                // store the report file in the same directory as the network file and with the same name but with
                 // different extension
-                String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".html");
 
-                // FIXME add a reporter implementation
-                Reporter reporter = new HTMLReporter(new File(networkFile.getParent(), reportFileName));
+                Reporter reporter;
+                if (htmlRadioButton.isSelected()) {
+                    String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".html");
+                    File reportFile = new File(networkFile.getParent(), reportFileName);
+                    reporter = new HTMLReporter(reportFile);
+                } else {
+                    String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
+                    File reportFile = new File(networkFile.getParent(), reportFileName);
+                    reporter = new CSVReporter(reportFile);
+                }
 
                 simulator.report(reporter);
 
