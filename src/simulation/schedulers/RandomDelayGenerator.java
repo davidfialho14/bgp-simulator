@@ -26,25 +26,21 @@ public class RandomDelayGenerator {
      * @param max maximum value.
      */
     public RandomDelayGenerator(int min, int max) {
-        if (max <= min) {
-            throw new IllegalArgumentException("max must be higher then min");
-        }
-
-        this.min = min;
-        this.max = max;
+        setMax(max);
+        setMin(min);
     }
 
     public void setMin(int min) {
-        if (max <= min) {
-            throw new IllegalArgumentException("max must be higher then min");
+        if (min > max) {
+            throw new IllegalArgumentException("min must be lower or equal to to max");
         }
 
         this.min = min;
     }
 
     public void setMax(int max) {
-        if (max <= min) {
-            throw new IllegalArgumentException("max must be higher then min");
+        if (max < min) {
+            throw new IllegalArgumentException("max must be higher or equal to min");
         }
 
         this.max = max;
@@ -55,7 +51,9 @@ public class RandomDelayGenerator {
      * @return next delay value in the valid interval.
      */
     public int nextDelay() {
-        return random.nextInt(max - min + 1)  + min;
+        int delay = random.nextInt(max - min + 1)  + min;
+        System.out.println(delay);
+        return delay;
     }
 
 }
