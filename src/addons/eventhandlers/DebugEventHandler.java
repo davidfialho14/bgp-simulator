@@ -24,8 +24,7 @@ public class DebugEventHandler
      * @param enabled sets all events as enabled or disabled.
      */
     public DebugEventHandler(boolean enabled) {
-        this.printStream = System.out;
-        setAllEnabled(enabled);
+        this(System.out, enabled);
     }
 
     /**
@@ -72,6 +71,14 @@ public class DebugEventHandler
         eventGenerator.addSelectListener(this);
         eventGenerator.addExportListener(this);
         eventGenerator.addDetectListener(this);
+    }
+
+    public void unregister(SimulationEventGenerator eventGenerator) {
+        eventGenerator.removeImportListener(this);
+        eventGenerator.removeLearnListener(this);
+        eventGenerator.removeSelectListener(this);
+        eventGenerator.removeExportListener(this);
+        eventGenerator.removeDetectListener(this);
     }
 
     /**
