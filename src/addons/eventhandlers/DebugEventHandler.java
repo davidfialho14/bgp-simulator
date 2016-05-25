@@ -94,7 +94,7 @@ public class DebugEventHandler
      */
     @Override
     public void onStarted(StartEvent event) {
-        printStream.println("Started Simulation " + simulationCount);
+        printStream.println("Started Simulation " + (simulationCount + 1));
     }
 
     /**
@@ -104,7 +104,7 @@ public class DebugEventHandler
      */
     @Override
     public void onEnded(EndEvent event) {
-        printStream.println("Ended Simulation " + simulationCount);
+        printStream.println("Ended Simulation " + (simulationCount + 1));
         simulationCount++;
     }
 
