@@ -76,6 +76,7 @@ public class HTMLWriter implements Closeable, AutoCloseable {
     public void writeChart(Chart chart) throws IOException {
 
         if (!chartsImported) {
+            importScript(getClass().getResourceAsStream("js/chartjs.js"));
             importScript(getClass().getResourceAsStream("js/operations.js"));
             importScript(getClass().getResourceAsStream("js/utils.js"));
             chartsImported = true;
@@ -105,8 +106,6 @@ public class HTMLWriter implements Closeable, AutoCloseable {
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <title>Report</title>\n" +
-                "    <script src=\"https://code.jquery.com/jquery-2.2.3.js\"></script>\n" +
-                "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.js\"></script>\n" +
                 "</head>\n" +
                 "<body>");
         writer.newLine();
@@ -114,6 +113,8 @@ public class HTMLWriter implements Closeable, AutoCloseable {
         writer.write("<style scoped>"); writer.newLine();
         importFile(getClass().getResourceAsStream("css/style.css"));
         writer.write("</style>"); writer.newLine();
+
+        importScript(getClass().getResourceAsStream("js/jquery.js"));
     }
 
     /**
