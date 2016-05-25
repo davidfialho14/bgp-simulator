@@ -188,7 +188,6 @@ public abstract class AbstractChart implements Chart {
 
     private void writeSubChartScript(HTMLWriter htmlWriter, String canvasId, String dataVarName, String subTitle,
                                      String labelsOperation, String dataOperation) throws IOException {
-        String chartTitle = getTitle() + " " + subTitle;
 
         htmlWriter.writer.write(String.format("$(\"#%s\").click(function () {\n" +
                 "    clearChart(%s);\n" +
@@ -196,7 +195,7 @@ public abstract class AbstractChart implements Chart {
                 "    %s = loadChart($(\"#%s\"), \"%s\",\n" +
                 "        labels, %s(%s), %s, %s);\n" +
                 "});",
-                radioButtonId(subTitle), canvasId, labelsOperation, dataVarName, canvasId, canvasId, chartTitle,
+                radioButtonId(subTitle), canvasId, labelsOperation, dataVarName, canvasId, canvasId, title,
                 dataOperation, dataVarName, getType(), color.getJavascriptObject()));
     }
 
