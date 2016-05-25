@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Charts Test</title>
+    <script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.js"></script>
+</head>
+<body>
+
+<style scoped>
+
+    .chartTypeSelector {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .basicStats {
+        position: relative;
+        top: 65px;
+        left: 60px;
+    }
+
+    p {
+        display: inline;
+        padding-right: 20px;
+    }
+
+</style>
+
+<div class="basicStats">
+    <p id="messageCountMinimum">Minimum: </p>
+    <p id="messageCountAverage">Average: </p>
+    <p id="messageCountMaximum">Maximum: </p>
+</div>
+
+<form class="chartTypeSelector" action="">
+    <input id="messageHistogramRadioButton" type="radio" name="chart" value="bar" checked="checked">
+    <label for="messageHistogramRadioButton">Histogram</label>
+    <input id="messageCumulativeRadioButton" type="radio" name="chart" value="line">
+    <label for="messageCumulativeRadioButton">Cumulative Distribution</label>
+    <input id="messageComplementaryCumulativeRadioButton" type="radio" name="chart" value="line">
+    <label for="messageComplementaryCumulativeRadioButton">ComplementaryCumulative Distribution</label>
+    <input id="messageProbabilityDensityRadioButton" type="radio" name="chart" value="line">
+    <label for="messageProbabilityDensityRadioButton">Probability Density</label>
+</form>
+
+<canvas id="messageCountChart" width="300" height="100"></canvas>
+
+<div class="basicStats">
+    <p id="detectionCountMinimum">Minimum: </p>
+    <p id="detectionCountAverage">Average: </p>
+    <p id="detectionCountMaximum">Maximum: </p>
+</div>
+
+<form class="chartTypeSelector" action="">
+    <input id="barDetectionHistogramRadioButton" type="radio" name="chart" value="bar">
+    <label for="barDetectionHistogramRadioButton">Bar Chart</label>
+    <input id="lineDetectionHistogramRadioButton" type="radio" name="chart" value="line">
+    <label for="lineDetectionHistogramRadioButton">Line Chart</label>
+</form>
+
+<canvas id="detectionCountChart" width="300" height="100"></canvas>
+
+<script type="text/javascript" src="js/script.js"></script>
+
+</body>
+</html>
