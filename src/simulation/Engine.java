@@ -46,11 +46,16 @@ public class Engine {
     public void simulate(State initialState) {
         currentState = initialState;
         scheduler.reset();
+
+        eventGenerator.fireStartEvent(new StartEvent());
+
         exportSelfRoute(initialState.getDestination(), initialState);
         simulationLoop(initialState);
         resetTime();
 
         currentState = null; // no longer simulating
+
+        eventGenerator.fireEndEvent(new EndEvent());
     }
 
     //------------- PROPERTIES ----------------------------------------------------------------------------------------

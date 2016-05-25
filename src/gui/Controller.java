@@ -135,6 +135,9 @@ public class Controller implements Initializable {
                 }
             }
 
+            String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
+            simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
+
             for (int i = 0; i < repetitionCount; i++) {
                 simulator.simulate();
             }

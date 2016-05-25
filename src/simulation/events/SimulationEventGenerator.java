@@ -9,11 +9,69 @@ import java.util.List;
  */
 public class SimulationEventGenerator {
 
+    private List<StartListener> startListeners = new ArrayList<>();     // stores all registered start listeners
+    private List<EndListener> endListeners = new ArrayList<>();     // stores all registered end listeners
     private List<LearnListener> learnListeners = new ArrayList<>();     // stores all registered learn listeners
     private List<ImportListener> importListeners = new ArrayList<>();   // stores all registered import listeners
     private List<SelectListener> selectListeners = new ArrayList<>();   // stores all registered select listeners
     private List<ExportListener> exportListeners = new ArrayList<>();   // stores all registered export listeners
     private List<DetectListener> detectListeners = new ArrayList<>();   // stores all registered detect listeners
+
+    /**
+     * Registers a new start listener.
+     *
+     * @param listener start listener to register.
+     */
+    public void addStartListener(StartListener listener) {
+        startListeners.add(listener);
+    }
+
+    /**
+     * Unregisters a new start listener.
+     *
+     * @param listener start listener to unregister.
+     */
+    public void removeStartListener(StartListener listener) {
+        startListeners.remove(listener);
+    }
+
+    /**
+     * Fires a start event, notifying all registered listeners by invoking their onLearned() method.
+     *
+     * @param event event to fire.
+     */
+    public void fireStartEvent(StartEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        startListeners.forEach(listener -> listener.onStarted(event));
+    }
+
+    /**
+     * Registers a new end listener.
+     *
+     * @param listener end listener to register.
+     */
+    public void addEndListener(EndListener listener) {
+        endListeners.add(listener);
+    }
+
+    /**
+     * Unregisters a new end listener.
+     *
+     * @param listener end listener to unregister.
+     */
+    public void removeEndListener(EndListener listener) {
+        endListeners.remove(listener);
+    }
+
+    /**
+     * Fires a end event, notifying all registered listeners by invoking their onLearned() method.
+     *
+     * @param event event to fire.
+     */
+    public void fireEndEvent(EndEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        endListeners.forEach(listener -> listener.onEnded(event));
+    }
 
     /**
      * Registers a new learn listener.
