@@ -51,9 +51,7 @@ public class RandomDelayGenerator {
      * @return next delay value in the valid interval.
      */
     public int nextDelay() {
-        int delay = random.nextInt(max - min + 1)  + min;
-        System.out.println(delay);
-        return delay;
+        return random.nextInt(max - min + 1)  + min;
     }
 
 }
