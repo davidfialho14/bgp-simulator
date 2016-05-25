@@ -69,7 +69,7 @@
                 <ToggleGroup fx:id="reportFormatGroup"/>
             </toggleGroup>
         </RadioButton>
-        <RadioButton mnemonicParsing="false" prefWidth="79.0" selected="true" text="HTML"
+        <RadioButton fx:id="htmlRadioButton" mnemonicParsing="false" prefWidth="79.0" selected="true" text="HTML"
                      toggleGroup="$reportFormatGroup" GridPane.columnIndex="2" GridPane.columnSpan="2"
                      GridPane.rowIndex="4"/>
     </children>
