@@ -24,6 +24,7 @@ public abstract class Simulator {
     protected State state;      // state to be simulated
     private boolean debugEnabled = false;
     private DebugEventHandler debugEventHandler = null;
+    private PrintStream debugStream;
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -60,7 +61,7 @@ public abstract class Simulator {
         if (!this.debugEnabled && enable) { // enabling
             debugEventHandler = new DebugEventHandler(new PrintStream(debugFile), true);
             debugEventHandler.register(engine.getEventGenerator());
-        } else if (this.debugEnabled && ! enable) { // disabling
+        } else if (this.debugEnabled && !enable) { // disabling
             debugEventHandler.unregister(engine.getEventGenerator());
             debugEventHandler = null;
         }

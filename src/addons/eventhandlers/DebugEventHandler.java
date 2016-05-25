@@ -7,9 +7,11 @@ import simulation.events.*;
 import java.io.PrintStream;
 
 public class DebugEventHandler
-        implements ImportListener, LearnListener, SelectListener, ExportListener, DetectListener {
+        implements StartListener, EndListener, ImportListener, LearnListener, SelectListener, ExportListener,
+        DetectListener {
 
     private PrintStream printStream;    // print stream to print debug messages
+    private int simulationCount = 0;    // counts the simulations
 
     // listen to all events by default
     private boolean importEventsEnabled;
@@ -66,6 +68,8 @@ public class DebugEventHandler
     }
 
     public void register(SimulationEventGenerator eventGenerator) {
+        eventGenerator.addStartListener(this);
+        eventGenerator.addEndListener(this);
         eventGenerator.addImportListener(this);
         eventGenerator.addLearnListener(this);
         eventGenerator.addSelectListener(this);
@@ -74,11 +78,34 @@ public class DebugEventHandler
     }
 
     public void unregister(SimulationEventGenerator eventGenerator) {
+        eventGenerator.removeStartListener(this);
+        eventGenerator.removeEndListener(this);
         eventGenerator.removeImportListener(this);
         eventGenerator.removeLearnListener(this);
         eventGenerator.removeSelectListener(this);
         eventGenerator.removeExportListener(this);
         eventGenerator.removeDetectListener(this);
+    }
+
+    /**
+     * Invoked when a start event occurs.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        printStream.println("Started Simulation " + simulationCount);
+    }
+
+    /**
+     * Invoked when a end event occurs.
+     *
+     * @param event end event that occurred.
+     */
+    @Override
+    public void onEnded(EndEvent event) {
+        printStream.println("Ended Simulation " + simulationCount);
+        simulationCount++;
     }
 
     /**
