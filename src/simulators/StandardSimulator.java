@@ -26,9 +26,11 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
      *
      * @param network       network to simulate.
      * @param destinationId id of the destination node.
+     * @param minDelay      minimum message delay.
+     * @param maxDelay      maximum message delay.
      */
-    public StandardSimulator(Network network, int destinationId) {
-        super(network, destinationId);
+    public StandardSimulator(Network network, int destinationId, int minDelay, int maxDelay) {
+        super(network, destinationId, minDelay, maxDelay);
         this.statsCollector = createStatsCollector(network.getNodeCount(), network.getLinkCount());
 
         // register to listen for export events

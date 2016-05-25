@@ -36,6 +36,8 @@ public class Controller implements Initializable {
     public Button startButton;
     public Spinner<Integer> destinationIdSpinner;
     public Spinner<Integer> repetitionsSpinner;
+    public Spinner<Integer> minDelaySpinner;
+    public Spinner<Integer> maxDelaySpinner;
     public PartialDeploymentController partialDeploymentFormController;
     public CheckBox debugCheckBox;
 
@@ -51,6 +53,22 @@ public class Controller implements Initializable {
 
         NumberSpinner.setupNumberSpinner(destinationIdSpinner, 0, Integer.MAX_VALUE, 0);
         NumberSpinner.setupNumberSpinner(repetitionsSpinner, 1, Integer.MAX_VALUE, 1);
+        NumberSpinner.setupNumberSpinner(minDelaySpinner, 0, Integer.MAX_VALUE, 0);
+        NumberSpinner.setupNumberSpinner(maxDelaySpinner, 0, Integer.MAX_VALUE, 10);
+
+        // enforces the minimum delay is never higher than the maximum delay
+        minDelaySpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue > maxDelaySpinner.getValue()) {
+                maxDelaySpinner.getValueFactory().setValue(newValue);
+            }
+        });
+
+        // enforces the maximum delay is never lower than the minimum delay
+        maxDelaySpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue < minDelaySpinner.getValue()) {
+                minDelaySpinner.getValueFactory().setValue(newValue);
+            }
+        });
 
         // accept only *.gv file in the file chooser
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Network files (*.gv)", "*.gv"));
@@ -89,6 +107,8 @@ public class Controller implements Initializable {
     private void simulate(File networkFile) {
         int destinationId = destinationIdSpinner.getValue();
         int repetitionCount = repetitionsSpinner.getValue();
+        int minDelay = minDelaySpinner.getValue();
+        int maxDelay = maxDelaySpinner.getValue();
 
         try {
             NetworkParser parser = new NetworkParser();
@@ -100,14 +120,15 @@ public class Controller implements Initializable {
             if (!partialDeploymentFormController.activateToggle.isSelected()) {
 
                 if (isShortestPath(parser.getNetwork().getPolicy())) {
-                    simulator = new SPPolicyStandardSimulator(parser.getNetwork(), destinationId);
+                    simulator = new SPPolicyStandardSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
                 } else {
-                    simulator = new StandardSimulator(parser.getNetwork(), destinationId);
+                    simulator = new StandardSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
                 }
 
             } else {
                 int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
-                simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId, timeToChange);
+                simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay,
+                        timeToChange);
             }
 
             for (int i = 0; i < repetitionCount; i++) {

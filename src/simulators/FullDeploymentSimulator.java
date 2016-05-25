@@ -25,9 +25,12 @@ public class FullDeploymentSimulator extends StandardSimulator {
      *
      * @param network       network to simulate.
      * @param destinationId id of the destination node.
+     * @param minDelay      minimum message delay.
+     * @param maxDelay      maximum message delay.
+     * @param deployTime    time to start deployment.
      */
-    public FullDeploymentSimulator(Network network, int destinationId, long deployTime) {
-        super(network, destinationId);
+    public FullDeploymentSimulator(Network network, int destinationId, int minDelay, int maxDelay, long deployTime) {
+        super(network, destinationId, minDelay, maxDelay);
         this.deployTime = deployTime;
 
         // create a cast of the basic stats collector

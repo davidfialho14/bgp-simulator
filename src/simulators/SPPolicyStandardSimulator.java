@@ -8,15 +8,18 @@ import simulators.statscollectors.SPPolicyBasicStatsCollector;
 import java.io.IOException;
 
 public class SPPolicyStandardSimulator extends StandardSimulator {
+
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
      * method createInitialState(). Initializes the stats collector.
      *
      * @param network       network to simulate.
      * @param destinationId id of the destination node.
+     * @param minDelay      minimum message delay.
+     * @param maxDelay      maximum message delay.
      */
-    public SPPolicyStandardSimulator(Network network, int destinationId) {
-        super(network, destinationId);
+    public SPPolicyStandardSimulator(Network network, int destinationId, int minDelay, int maxDelay) {
+        super(network, destinationId, minDelay, maxDelay);
     }
 
     /**

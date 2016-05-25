@@ -41,4 +41,18 @@ public interface Scheduler {
      * Resets the scheduler.
      */
     void reset();
+
+    /**
+     * Sets the minimum message delay. (implementation is optional)
+     *
+     * @param delay delay to set as minimum.
+     */
+    void setMinDelay(int delay);
+
+    /**
+     * Sets the maximum message delay. (implementation is optional)
+     *
+     * @param delay delay to set as maximum.
+     */
+    void setMaxDelay(int delay);
 }

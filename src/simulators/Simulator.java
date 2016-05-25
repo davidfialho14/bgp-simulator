@@ -16,8 +16,8 @@ import java.io.IOException;
  */
 public abstract class Simulator {
 
-    protected Engine engine = new Engine(new RandomScheduler());    // engine used for simulation
-    protected State state;                                          // state to be simulated
+    protected Engine engine;    // engine used for simulation
+    protected State state;      // state to be simulated
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -25,8 +25,11 @@ public abstract class Simulator {
      *
      * @param network network to simulate.
      * @param destinationId id of the destination node.
+     * @param minDelay minimum message delay.
+     * @param maxDelay maximum message delay.
      */
-    public Simulator(Network network, int destinationId) {
+    public Simulator(Network network, int destinationId, int minDelay, int maxDelay) {
+        this.engine = new Engine(new RandomScheduler(minDelay, maxDelay));
         this.state = createInitialState(network, destinationId);
     }
 
