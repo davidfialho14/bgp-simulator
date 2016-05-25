@@ -15,10 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulators.FullDeploymentSimulator;
-import simulators.SPPolicyStandardSimulator;
-import simulators.Simulator;
-import simulators.StandardSimulator;
+import simulators.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -126,9 +123,16 @@ public class Controller implements Initializable {
                 }
 
             } else {
+
                 int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
-                simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay,
-                        timeToChange);
+
+                if (isShortestPath(parser.getNetwork().getPolicy())) {
+                    simulator = new SPPolicyFullDeploymentSimulator(parser.getNetwork(), destinationId,
+                            minDelay, maxDelay, timeToChange);
+                } else {
+                    simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId,
+                            minDelay, maxDelay, timeToChange);
+                }
             }
 
             for (int i = 0; i < repetitionCount; i++) {

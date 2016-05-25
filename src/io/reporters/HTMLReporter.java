@@ -5,10 +5,7 @@ import network.Link;
 import network.Node;
 import org.apache.commons.lang.StringUtils;
 import policies.Path;
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.Detection;
-import simulators.statscollectors.FullDeploymentStatsCollector;
-import simulators.statscollectors.SPPolicyBasicStatsCollector;
+import simulators.statscollectors.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,6 +101,81 @@ public class HTMLReporter extends Reporter {
                         detectionNumber++;
                     }
                     summaryTable.end();
+
+                htmlWriter.endClass();
+            }
+            htmlWriter.endClass();
+        }
+    }
+
+    /**
+     * Generates report for a full deployment collector for the SP policy.
+     */
+    @Override
+    public void generate(SPPolicyFullDeploymentStatsCollector statsCollector) throws IOException {
+        try (HTMLWriter htmlWriter = new HTMLWriter(outputFile)) {
+
+            htmlWriter.beginClass("network-info");
+            htmlWriter.getTableWriter("Basic Information")
+                    .begin()
+                    .writeRow("Node count", String.valueOf(statsCollector.getNodeCount()))
+                    .writeRow("Link count", String.valueOf(statsCollector.getLinkCount()))
+                    .end();
+            htmlWriter.endClass();
+
+            // --- counts charts ---
+
+            Chart chart = new LineChart("Total Message Counts", Colors.RED);
+            chart.setData(statsCollector.getTotalMessageCounts());
+            htmlWriter.writeChart(chart);
+
+            chart = new LineChart("Detecting Nodes Counts", Colors.BLUE);
+            chart.setData(statsCollector.getDetectingNodesCounts());
+            htmlWriter.writeChart(chart);
+
+            chart = new LineChart("Cut-Off Link Counts", Colors.RED);
+            chart.setData(statsCollector.getCutOffLinksCounts());
+            htmlWriter.writeChart(chart);
+
+            chart = new LineChart("Message Counts After Deployment", Colors.BLUE);
+            chart.setData(statsCollector.getMessageCountsAfterDeployment());
+            htmlWriter.writeChart(chart);
+
+            // --- detections ---
+
+            htmlWriter.beginClass("detection");
+            for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
+                htmlWriter.writeTitleSeparator("Simulation " + (i + 1));
+
+                htmlWriter.beginClass("counts");
+                htmlWriter.getTableWriter("Counts")
+                        .begin()
+                        .writeRow("Total message count", String.valueOf(statsCollector.getTotalMessageCount(i)))
+                        .writeRow("Message count after deployment",
+                                String.valueOf(statsCollector.getMessageCountAfterDeployment(i)))
+                        .writeRow("Detecting nodes count", String.valueOf(statsCollector.getDetectingNodesCount(i)))
+                        .writeRow("Cut-off links count", String.valueOf(statsCollector.getCutOffLinksCount(i)))
+                        .writeRow("False positive count", String.valueOf(statsCollector.getFalsePositiveCount(i)))
+                        .end();
+                htmlWriter.endClass();
+
+                htmlWriter.beginClass("summary");
+                HTMLTableWriter summaryTable = htmlWriter.getTableWriter("Summary");
+                summaryTable.begin();
+                summaryTable.writeHeaders("Detection", "Detecting Node", "Cut-Off Link", "Cycle", "False Positive");
+
+                int detectionNumber = 1;
+                for (Detection detection : statsCollector.getDetections().get(i)) {
+                    summaryTable.writeRow(
+                            String.valueOf(detectionNumber),
+                            pretty(detection.getDetectingNode()),
+                            pretty(detection.getCutoffLink()),
+                            pretty(detection.getCycle()),
+                            detection.isFalsePositive() ? "Yes" : "No");
+
+                    detectionNumber++;
+                }
+                summaryTable.end();
 
                 htmlWriter.endClass();
             }
