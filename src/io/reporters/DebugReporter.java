@@ -3,6 +3,7 @@ package io.reporters;
 import simulators.statscollectors.BasicStatsCollector;
 import simulators.statscollectors.FullDeploymentStatsCollector;
 import simulators.statscollectors.SPPolicyBasicStatsCollector;
+import simulators.statscollectors.SPPolicyFullDeploymentStatsCollector;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,12 +45,19 @@ public class DebugReporter extends Reporter {
 
     /**
      * Generates report for a basic stats collector for the SP policy.
-     *
-     * @param statsCollector
      */
     @Override
     public void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException {
         generate((BasicStatsCollector) statsCollector);
+        System.out.println("false positive counts: " + statsCollector.getFalsePositiveCounts());
+    }
+
+    /**
+     * Generates report for a full deployment collector for the SP policy.
+     */
+    @Override
+    public void generate(SPPolicyFullDeploymentStatsCollector statsCollector) throws IOException {
+        generate((FullDeploymentStatsCollector) statsCollector);
         System.out.println("false positive counts: " + statsCollector.getFalsePositiveCounts());
     }
 }
