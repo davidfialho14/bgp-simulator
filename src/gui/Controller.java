@@ -56,6 +56,20 @@ public class Controller implements Initializable {
         NumberSpinner.setupNumberSpinner(minDelaySpinner, 0, Integer.MAX_VALUE, 0);
         NumberSpinner.setupNumberSpinner(maxDelaySpinner, 0, Integer.MAX_VALUE, 10);
 
+        // enforces the minimum delay is never higher than the maximum delay
+        minDelaySpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue > maxDelaySpinner.getValue()) {
+                maxDelaySpinner.getValueFactory().setValue(newValue);
+            }
+        });
+
+        // enforces the maximum delay is never lower than the minimum delay
+        maxDelaySpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue < minDelaySpinner.getValue()) {
+                minDelaySpinner.getValueFactory().setValue(newValue);
+            }
+        });
+
         // accept only *.gv file in the file chooser
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Network files (*.gv)", "*.gv"));
     }
