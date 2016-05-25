@@ -68,9 +68,7 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
     @Override
     public void simulate() {
         statsCollector.newSimulation();
-        state.reset();
-
-        engine.simulate(state);
+        super.simulate();
     }
 
     /**

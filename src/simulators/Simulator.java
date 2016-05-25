@@ -1,12 +1,16 @@
 package simulators;
 
+import addons.eventhandlers.DebugEventHandler;
 import io.reporters.Reporter;
 import network.Network;
 import simulation.Engine;
 import simulation.State;
 import simulation.schedulers.RandomScheduler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * This is the base class for all simulators.
@@ -18,6 +22,8 @@ public abstract class Simulator {
 
     protected Engine engine;    // engine used for simulation
     protected State state;      // state to be simulated
+    private boolean debugEnabled = false;
+    private DebugEventHandler debugEventHandler = null;
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -43,9 +49,34 @@ public abstract class Simulator {
     protected abstract State createInitialState(Network network, int destinationId);
 
     /**
-     * Executes one simulation. Stats are stored for each simulation, no stat is ever discarded.
+     * Enables the debug report for the simulator. Enabling/disabling the debug report will only take effect in the
+     * next call to simulate.
+     *
+     * @param enable true to debugEnabled and false to disable.
+     * @param debugFile file to output debug messages.
      */
-    public abstract void simulate();
+    public void enableDebugReport(boolean enable, File debugFile) throws FileNotFoundException {
+
+        if (!this.debugEnabled && enable) { // enabling
+            debugEventHandler = new DebugEventHandler(new PrintStream(debugFile), true);
+            debugEventHandler.register(engine.getEventGenerator());
+        } else if (this.debugEnabled && ! enable) { // disabling
+            debugEventHandler.unregister(engine.getEventGenerator());
+            debugEventHandler = null;
+        }
+
+        this.debugEnabled = enable;
+    }
+
+    /**
+     * Executes one simulation. Should be overridden by subclasses in order to add additional operations
+     * prior or after simulation. By default activates the debug report if enabled and calls the simulate() method
+     * of the engine.
+     */
+    public void simulate() {
+        state.reset();
+        engine.simulate(state);
+    }
 
     /**
      * Calls the reporter generate() method to generate a report with the collected stats.
