@@ -12,6 +12,7 @@ public class DebugEventHandler
 
     private PrintStream printStream;    // print stream to print debug messages
     private int simulationCount = 0;    // counts the simulations
+    private int detectCount = 0;        // counts detections for each simulation
 
     // listen to all events by default
     private boolean importEventsEnabled;
@@ -94,6 +95,7 @@ public class DebugEventHandler
      */
     @Override
     public void onStarted(StartEvent event) {
+        detectCount = 0;
         printStream.println("Started Simulation " + (simulationCount + 1));
     }
 
@@ -116,7 +118,8 @@ public class DebugEventHandler
     @Override
     public void onDetected(DetectEvent event) {
         if (detectEventsEnabled) {
-            printStream.println("Detect:\t" + event.getDetectingNode() + " detected with " +
+            detectCount++;
+            printStream.println("Detect " + detectCount + ":" + event.getDetectingNode() + " detected with " +
                                         pretty(event.getLearnedRoute()) + " learned from " +
                                         pretty(event.getOutLink()) + " other option was " +
                                         pretty(event.getExclRoute()));
