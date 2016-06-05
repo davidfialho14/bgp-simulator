@@ -11,7 +11,7 @@ import simulators.statscollectors.FullDeploymentStatsCollector;
 
 import java.io.IOException;
 
-public class FullDeploymentSimulator extends StandardSimulator {
+public class FullDeploymentSimulator extends InitialDeploymentSimulator {
 
     private final long deployTime;
 

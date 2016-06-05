@@ -7,7 +7,7 @@ import simulators.statscollectors.SPPolicyBasicStatsCollector;
 
 import java.io.IOException;
 
-public class SPPolicyStandardSimulator extends StandardSimulator {
+public class SPPolicyInitialDeploymentSimulator extends InitialDeploymentSimulator {
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -18,7 +18,7 @@ public class SPPolicyStandardSimulator extends StandardSimulator {
      * @param minDelay      minimum message delay.
      * @param maxDelay      maximum message delay.
      */
-    public SPPolicyStandardSimulator(Network network, int destinationId, int minDelay, int maxDelay) {
+    public SPPolicyInitialDeploymentSimulator(Network network, int destinationId, int minDelay, int maxDelay) {
         super(network, destinationId, minDelay, maxDelay);
     }
 

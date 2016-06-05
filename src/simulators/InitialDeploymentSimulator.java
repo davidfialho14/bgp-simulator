@@ -14,9 +14,10 @@ import simulators.statscollectors.BasicStatsCollector;
 import java.io.IOException;
 
 /**
- * The standard simulator simulate a network with all nodes detecting from start to end.
+ * The initial deployment simulator simulates a network with the detection already activated from the start
+ * for all nodes.
  */
-public class StandardSimulator extends Simulator implements ExportListener, DetectListener {
+public class InitialDeploymentSimulator extends Simulator implements ExportListener, DetectListener {
 
     protected BasicStatsCollector statsCollector;
 
@@ -29,7 +30,7 @@ public class StandardSimulator extends Simulator implements ExportListener, Dete
      * @param minDelay      minimum message delay.
      * @param maxDelay      maximum message delay.
      */
-    public StandardSimulator(Network network, int destinationId, int minDelay, int maxDelay) {
+    public InitialDeploymentSimulator(Network network, int destinationId, int minDelay, int maxDelay) {
         super(network, destinationId, minDelay, maxDelay);
         this.statsCollector = createStatsCollector(network.getNodeCount(), network.getLinkCount());
 

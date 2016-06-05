@@ -119,9 +119,9 @@ public class Controller implements Initializable {
             if (!partialDeploymentFormController.activateToggle.isSelected()) {
 
                 if (isShortestPath(parser.getNetwork().getPolicy())) {
-                    simulator = new SPPolicyStandardSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
+                    simulator = new SPPolicyInitialDeploymentSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
                 } else {
-                    simulator = new StandardSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
+                    simulator = new InitialDeploymentSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
                 }
 
             } else {
