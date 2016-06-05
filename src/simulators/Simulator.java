@@ -5,7 +5,6 @@ import io.reporters.Reporter;
 import network.Network;
 import simulation.Engine;
 import simulation.State;
-import simulation.schedulers.RandomScheduler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,13 +29,12 @@ public abstract class Simulator {
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
      * method createInitialState().
      *
-     * @param network network to simulate.
+     * @param engine        engine used for simulation.
+     * @param network       network to simulate.
      * @param destinationId id of the destination node.
-     * @param minDelay minimum message delay.
-     * @param maxDelay maximum message delay.
      */
-    public Simulator(Network network, int destinationId, int minDelay, int maxDelay) {
-        this.engine = new Engine(new RandomScheduler(minDelay, maxDelay));
+    public Simulator(Engine engine, Network network, int destinationId) {
+        this.engine = engine;
         this.state = createInitialState(network, destinationId);
     }
 
@@ -89,7 +87,5 @@ public abstract class Simulator {
      * @param destinationId id for the destination to simulate for.
      */
     protected abstract State createInitialState(Network network, int destinationId);
-
-
 
 }

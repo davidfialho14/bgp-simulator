@@ -16,6 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
+import simulation.Engine;
+import simulation.schedulers.RandomScheduler;
 import simulators.Simulator;
 
 import java.io.File;
@@ -110,6 +112,8 @@ public class Controller implements Initializable {
         try {
             NetworkParser parser = new NetworkParser();
             parser.parse(networkFile);
+
+            Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
 
             // simulator that will be used to simulate
             Simulator simulator = null; // FIXME include simulators
