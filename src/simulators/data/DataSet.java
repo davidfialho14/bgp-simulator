@@ -5,4 +5,10 @@ package simulators.data;
  * Data set hold all the data obtained during a simulation.
  */
 public interface DataSet {
+
+    /**
+     * Clears all data from the dataset.
+     */
+    void clear();
+
 }
