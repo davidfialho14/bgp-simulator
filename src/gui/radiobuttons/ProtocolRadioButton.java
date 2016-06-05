@@ -4,8 +4,9 @@ import javafx.scene.control.RadioButton;
 import protocols.Protocol;
 
 /**
- * Radio button used to select the protocol to be used. Allows obtaining the selected protocol without having to
- * check for the selected radio button in the toggle group using polymorphism.
+ * A protocol radio button associates a protocol with a radio button. This can be used to select the
+ * protocol to be used. Allows obtaining the selected protocol without having to check for the selected radio button
+ * in the toggle group using polymorphism.
  */
 public abstract class ProtocolRadioButton extends RadioButton {
 
