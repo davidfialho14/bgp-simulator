@@ -3,6 +3,7 @@ package simulators;
 import addons.eventhandlers.DebugEventHandler;
 import io.reporters.Reporter;
 import network.Network;
+import protocols.Protocol;
 import simulation.Engine;
 import simulation.State;
 
@@ -29,13 +30,14 @@ public abstract class Simulator {
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
      * method createInitialState().
      *
-     * @param engine        engine used for simulation.
-     * @param network       network to simulate.
-     * @param destinationId id of the destination node.
+     * @param engine            engine used for simulation.
+     * @param network           network to simulate.
+     * @param destinationId     id of the destination node.
+     * @param initialProtocol   initial protocol.
      */
-    public Simulator(Engine engine, Network network, int destinationId) {
+    public Simulator(Engine engine, Network network, int destinationId, Protocol initialProtocol) {
         this.engine = engine;
-        this.state = createInitialState(network, destinationId);
+        this.state = createInitialState(network, destinationId, initialProtocol);
     }
 
     // --- BEGIN PUBLIC INTERFACE ---
@@ -85,7 +87,8 @@ public abstract class Simulator {
      *
      * @param network       network to be simulated.
      * @param destinationId id for the destination to simulate for.
+     * @param protocol      initial protocol.
      */
-    protected abstract State createInitialState(Network network, int destinationId);
+    protected abstract State createInitialState(Network network, int destinationId, Protocol protocol);
 
 }
