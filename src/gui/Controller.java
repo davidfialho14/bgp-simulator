@@ -15,9 +15,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
+import protocols.D1R1Protocol;
 import simulation.Engine;
 import simulation.schedulers.RandomScheduler;
 import simulators.Simulator;
+import simulators.SimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,7 +117,8 @@ public class Controller implements Initializable {
             Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
 
             // simulator that will be used to simulate
-            Simulator simulator = null; // FIXME include simulators
+            Simulator simulator = SimulatorFactory.newSimulator(
+                    engine, parser.getNetwork(), destinationId, new D1R1Protocol());
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
             simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));

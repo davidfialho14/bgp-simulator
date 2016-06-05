@@ -37,7 +37,7 @@ public abstract class Simulator {
      */
     public Simulator(Engine engine, Network network, int destinationId, Protocol initialProtocol) {
         this.engine = engine;
-        this.state = createInitialState(network, destinationId, initialProtocol);
+        this.state = State.create(network, destinationId, initialProtocol);
     }
 
     // --- BEGIN PUBLIC INTERFACE ---
@@ -81,14 +81,5 @@ public abstract class Simulator {
     }
 
     // --- END PUBLIC INTERFACE ---
-
-    /**
-     * Creates the initial state to start the simulation with.
-     *
-     * @param network       network to be simulated.
-     * @param destinationId id for the destination to simulate for.
-     * @param protocol      initial protocol.
-     */
-    protected abstract State createInitialState(Network network, int destinationId, Protocol protocol);
 
 }
