@@ -1,4 +1,4 @@
-package simulators.datacollectors;
+package simulators.data;
 
 /**
  * Tag interface that all data collectors must implement.
