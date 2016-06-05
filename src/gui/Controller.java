@@ -112,36 +112,26 @@ public class Controller implements Initializable {
             parser.parse(networkFile);
 
             // simulator that will be used to simulate
-            Simulator simulator = null;
+            Simulator simulator = null; // FIXME include simulators
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
             simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
 
-            for (int i = 0; i < repetitionCount; i++) {
-                simulator.simulate();
+            Reporter reporter;
+
+            if (htmlRadioButton.isSelected()) {
+                String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".html");
+                File reportFile = new File(networkFile.getParent(), reportFileName);
+                reporter = new HTMLReporter(reportFile);
+            } else {
+                String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
+                File reportFile = new File(networkFile.getParent(), reportFileName);
+                reporter = new CSVReporter(reportFile);
             }
 
-            try {
-                // store the report file in the same directory as the network file and with the same name but with
-                // different extension
-
-                Reporter reporter;
-                if (htmlRadioButton.isSelected()) {
-                    String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".html");
-                    File reportFile = new File(networkFile.getParent(), reportFileName);
-                    reporter = new HTMLReporter(reportFile);
-                } else {
-                    String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
-                    File reportFile = new File(networkFile.getParent(), reportFileName);
-                    reporter = new CSVReporter(reportFile);
-                }
-
-                simulator.report(reporter);
-
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
-                alert.setHeaderText("Report File Error");
-                alert.showAndWait();
+            for (int i = 0; i < repetitionCount; i++) {
+                simulator.simulate();
+                reportData(simulator, reporter);
             }
 
         } catch (IOException e) {
@@ -152,6 +142,17 @@ public class Controller implements Initializable {
         } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
+            alert.showAndWait();
+        }
+    }
+
+    private void reportData(Simulator simulator, Reporter reporter) {
+        try {
+            simulator.report(reporter);
+
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
+            alert.setHeaderText("Report File Error");
             alert.showAndWait();
         }
     }
