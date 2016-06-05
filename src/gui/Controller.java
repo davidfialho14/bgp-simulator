@@ -6,8 +6,7 @@ import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
 import io.InvalidTagException;
 import io.NetworkParser;
-import io.reporters.CSVReporter;
-import io.reporters.HTMLReporter;
+import io.reporters.DebugReporter;
 import io.reporters.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -123,15 +122,9 @@ public class Controller implements Initializable {
 
             Reporter reporter;
 
-            if (htmlRadioButton.isSelected()) {
-                String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".html");
-                File reportFile = new File(networkFile.getParent(), reportFileName);
-                reporter = new HTMLReporter(reportFile);
-            } else {
-                String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
-                File reportFile = new File(networkFile.getParent(), reportFileName);
-                reporter = new CSVReporter(reportFile);
-            }
+            String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
+            File reportFile = new File(networkFile.getParent(), reportFileName);
+            reporter = new DebugReporter(reportFile);
 
             for (int i = 0; i < repetitionCount; i++) {
                 simulator.simulate();
