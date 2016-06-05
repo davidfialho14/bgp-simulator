@@ -42,11 +42,9 @@ public class FullDeploymentSimulator extends Simulator {
         new FixedTimeProtocolChanger(engine, state, deployTime) {
 
             @Override
-            public void onTimeChange(long newTime) {
-                if (isTimeToChange(newTime)) {
-                    changeAllProtocols(deployProtocol);
-                    fullDeploymentDataCollector.setDeployed(true);
-                }
+            public void onTimeToChange() {
+                changeAllProtocols(deployProtocol);
+                fullDeploymentDataCollector.setDeployed(true);
             }
         };
 

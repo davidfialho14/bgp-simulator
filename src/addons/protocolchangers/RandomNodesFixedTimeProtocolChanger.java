@@ -55,12 +55,12 @@ public class RandomNodesFixedTimeProtocolChanger extends FixedTimeProtocolChange
         }
     }
 
+    /**
+     * Invoked only once when the time to change is reached.
+     */
     @Override
-    public void onTimeChange(long newTime) {
-
-        if (isTimeToChange(newTime)) {
-            nodeSet.forEach(node -> changeProtocol(node, protocolToChangeTo));
-        }
+    public void onTimeToChange() {
+        nodeSet.forEach(node -> changeProtocol(node, protocolToChangeTo));
     }
 
     protected void buildNodeSet(int minNodes, int maxNodes) {
