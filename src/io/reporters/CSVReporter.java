@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import policies.Path;
 import simulators.data.BasicDataSet;
 import simulators.data.Detection;
+import simulators.data.FullDeploymentDataSet;
 import simulators.data.SPPolicyDataSet;
 
 import java.io.BufferedWriter;
@@ -35,14 +36,24 @@ public class CSVReporter extends Reporter {
         this.writer = new BufferedWriter(new FileWriter(outputFile));
     }
 
-    public void dumpMain(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
+    public void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                         SPPolicyDataSet spPolicyDataSet) throws IOException {
+
+        // write the counts
+
         writer.write("Total Message Count" + COMMA + basicDataSet.getTotalMessageCount());       writer.newLine();
         writer.write("Detecting Nodes Count" + COMMA + basicDataSet.getDetectingNodesCount());   writer.newLine();
         writer.write("Cut-Off Links Count" + COMMA + basicDataSet.getCutOffLinksCount());        writer.newLine();
+        if (fullDeploymentDataSet != null) {
+            writer.write("Messages After Deployment Count" + COMMA + fullDeploymentDataSet.getMessageCount());
+            writer.newLine();
+        }
         if (spPolicyDataSet != null) {
             writer.write("False Positive Count" + COMMA + spPolicyDataSet.getFalsePositiveCount()); writer.newLine();
         }
         writer.newLine();
+
+        // write the detections table headers
 
         writer.write("Detections" + COMMA +
                 "Detecting Nodes" + COMMA +
@@ -52,6 +63,8 @@ public class CSVReporter extends Reporter {
             writer.write(COMMA + "False Positive");
         }
         writer.newLine();
+
+        // write the detections table data
 
         int detectionNumber = 1;
         for (Detection detection : basicDataSet.getDetections()) {
@@ -76,12 +89,17 @@ public class CSVReporter extends Reporter {
      */
     @Override
     public void dump(BasicDataSet dataSet) throws IOException {
-        dumpMain(dataSet, null);
+        dumpMain(dataSet, null, null);
     }
 
     @Override
     public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, spPolicyDataSet);
+        dumpMain(basicDataSet, null, spPolicyDataSet);
+    }
+
+    @Override
+    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
+        dumpMain(basicDataSet, fullDeploymentDataSet, null);
     }
 
     @Override

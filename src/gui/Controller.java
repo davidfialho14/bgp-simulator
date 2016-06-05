@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import static simulators.SimulatorFactory.newSimulator;
+
 public class Controller implements Initializable {
 
     public GridPane pane;
@@ -116,8 +118,17 @@ public class Controller implements Initializable {
             Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
 
             // simulator that will be used to simulate
-            Simulator simulator = SimulatorFactory.newSimulator(
-                    engine, parser.getNetwork(), destinationId, new D1R1Protocol());
+            Simulator simulator;
+
+            if (!partialDeploymentFormController.activateToggle.isSelected()) {
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, new D1R1Protocol());
+            } else {
+                int deployTime = partialDeploymentFormController.detectingTimeSpinner.getValue();
+
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, new D1R1Protocol(), deployTime);
+            }
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
             simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
