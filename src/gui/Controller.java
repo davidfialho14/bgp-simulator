@@ -39,7 +39,6 @@ public class Controller implements Initializable {
     public Spinner<Integer> maxDelaySpinner;
     public PartialDeploymentController partialDeploymentFormController;
     public CheckBox debugCheckBox;
-    public RadioButton htmlRadioButton;
 
     private FileChooser fileChooser = new FileChooser();
 
