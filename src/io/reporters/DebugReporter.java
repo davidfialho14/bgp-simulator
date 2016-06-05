@@ -2,6 +2,7 @@ package io.reporters;
 
 import network.Network;
 import simulators.data.BasicDataSet;
+import simulators.data.SPPolicyDataSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,12 @@ public class DebugReporter extends Reporter {
         System.out.println("Detecting Nodes Count: " + dataSet.getDetectingNodesCount());
         System.out.println("Cut-Off Links Count: " + dataSet.getCutOffLinksCount());
         dataSet.getDetections().forEach(System.out::println);
+    }
+
+    @Override
+    public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) {
+        System.out.println("False Positive Count: " + spPolicyDataSet.getFalsePositiveCount());
+        dump(basicDataSet);
     }
 
     @Override

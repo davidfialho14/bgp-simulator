@@ -5,7 +5,6 @@ import network.Network;
 import protocols.Protocol;
 import simulation.Engine;
 import simulators.data.BasicDataCollector;
-import simulators.data.BasicDataSet;
 
 import java.io.IOException;
 
@@ -15,11 +14,13 @@ import java.io.IOException;
  */
 public class InitialDeploymentSimulator extends Simulator {
 
-    private BasicDataCollector dataCollector;
+    protected BasicDataCollector basicDataCollector;
 
-    public InitialDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol) {
+    InitialDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol,
+                               BasicDataCollector basicDataCollector) {
         super(engine, network, destinationId, deployProtocol);
-        this.dataCollector = new BasicDataCollector(engine, new BasicDataSet());
+        this.basicDataCollector = basicDataCollector;
+        basicDataCollector.register(engine);
     }
 
     /**
@@ -29,7 +30,7 @@ public class InitialDeploymentSimulator extends Simulator {
      */
     @Override
     public void simulate() {
-        dataCollector.getDataset().clear(); // clear the dataset for each simulation
+        basicDataCollector.clear();
         super.simulate();
     }
 
@@ -41,7 +42,7 @@ public class InitialDeploymentSimulator extends Simulator {
      */
     @Override
     public void report(Reporter reporter) throws IOException {
-        reporter.dump(dataCollector.getDataset());
+        basicDataCollector.dump(reporter);
     }
 
 }

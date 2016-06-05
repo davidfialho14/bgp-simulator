@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import policies.Path;
 import simulators.data.BasicDataSet;
 import simulators.data.Detection;
+import simulators.data.SPPolicyDataSet;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,6 +35,40 @@ public class CSVReporter extends Reporter {
         this.writer = new BufferedWriter(new FileWriter(outputFile));
     }
 
+    public void dumpMain(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
+        writer.write("Total Message Count" + COMMA + basicDataSet.getTotalMessageCount());       writer.newLine();
+        writer.write("Detecting Nodes Count" + COMMA + basicDataSet.getDetectingNodesCount());   writer.newLine();
+        writer.write("Cut-Off Links Count" + COMMA + basicDataSet.getCutOffLinksCount());        writer.newLine();
+        if (spPolicyDataSet != null) {
+            writer.write("False Positive Count" + COMMA + spPolicyDataSet.getFalsePositiveCount()); writer.newLine();
+        }
+        writer.newLine();
+
+        writer.write("Detections" + COMMA +
+                "Detecting Nodes" + COMMA +
+                "Cut-Off Links" + COMMA +
+                "Cycles");
+        if (spPolicyDataSet != null) {
+            writer.write(COMMA + "False Positive");
+        }
+        writer.newLine();
+
+        int detectionNumber = 1;
+        for (Detection detection : basicDataSet.getDetections()) {
+            writer.write(String.valueOf(detectionNumber++) + COMMA +
+                    pretty(detection.getDetectingNode()) + COMMA +
+                    pretty(detection.getCutOffLink()) + COMMA +
+                    pretty(detection.getCycle()));
+            if (spPolicyDataSet != null) {
+                writer.write(COMMA + (detection.isFalsePositive() ? "Yes" : "No"));
+            }
+            writer.newLine();
+        }
+
+        writer.newLine();
+        writer.newLine();
+    }
+
     /**
      * Dumps that data from the data set to the current output file.
      *
@@ -41,29 +76,12 @@ public class CSVReporter extends Reporter {
      */
     @Override
     public void dump(BasicDataSet dataSet) throws IOException {
-        writer.write("Total Message Count" + COMMA + dataSet.getTotalMessageCount());       writer.newLine();
-        writer.write("Detecting Nodes Count" + COMMA + dataSet.getDetectingNodesCount());   writer.newLine();
-        writer.write("Cut-Off Links Count" + COMMA + dataSet.getCutOffLinksCount());        writer.newLine();
-        writer.newLine();
+        dumpMain(dataSet, null);
+    }
 
-        writer.write("Detections" + COMMA +
-                "Detecting Nodes" + COMMA +
-                "Cut-Off Links" + COMMA +
-                "Cycles");
-        writer.newLine();
-
-        int detectionNumber = 1;
-        for (Detection detection : dataSet.getDetections()) {
-            writer.write(String.valueOf(detectionNumber++) + COMMA +
-                    pretty(detection.getDetectingNode()) + COMMA +
-                    pretty(detection.getCutOffLink()) + COMMA +
-                    pretty(detection.getCycle()));
-            writer.newLine();
-        }
-
-        writer.newLine();
-        writer.newLine();
-
+    @Override
+    public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
+        dumpMain(basicDataSet, spPolicyDataSet);
     }
 
     @Override

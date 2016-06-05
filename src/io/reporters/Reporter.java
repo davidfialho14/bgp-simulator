@@ -2,6 +2,7 @@ package io.reporters;
 
 import network.Network;
 import simulators.data.BasicDataSet;
+import simulators.data.SPPolicyDataSet;
 
 import java.io.Closeable;
 import java.io.File;
@@ -34,4 +35,5 @@ public abstract class Reporter implements Closeable, AutoCloseable {
      */
     public abstract void dump(BasicDataSet dataSet) throws IOException;
 
+    public abstract void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
 }

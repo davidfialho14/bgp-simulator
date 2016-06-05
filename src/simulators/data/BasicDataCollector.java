@@ -1,45 +1,48 @@
 package simulators.data;
 
-import policies.Path;
+import io.reporters.Reporter;
 import simulation.Engine;
 import simulation.events.DetectEvent;
 import simulation.events.DetectListener;
 import simulation.events.ExportEvent;
 import simulation.events.ExportListener;
 
+import java.io.IOException;
+
 /**
  * Collects the data for a basic data set.
  */
-public class BasicDataCollector implements ExportListener, DetectListener {
+public class BasicDataCollector implements DataCollector, ExportListener, DetectListener {
 
-    private BasicDataSet dataset;
+    protected BasicDataSet basicDataSet = new BasicDataSet();
 
     /**
-     * Associates the collector with a basic dataset to store the collected data and registers the
-     * collector with the engine that will simulate.
+     * Registers the collector with the engine used for simulating.
      *
-     * @param engine  engine used for simulation to collect that for.
-     * @param dataset dataset where to store data.
+     * @param engine engine used for simulating.
      */
-    public BasicDataCollector(Engine engine, BasicDataSet dataset) {
-        this.dataset = dataset;
-
+    @Override
+    public void register(Engine engine) {
         engine.getEventGenerator().addExportListener(this);
         engine.getEventGenerator().addDetectListener(this);
     }
 
-    public BasicDataSet getDataset() {
-        return dataset;
+    /**
+     * Dumps the current data to the reporter.
+     *
+     * @param reporter reporter to dump data to.
+     */
+    @Override
+    public void dump(Reporter reporter) throws IOException {
+        reporter.dump(basicDataSet);
     }
 
     /**
-     * Sets a new dataset where to store new collected data. After calling this method all new
-     * data will be added to the new data set.
-     *
-     * @param dataset new dataset where to store new collected data.
+     * Clears all data from a data collector.
      */
-    public void setDataset(BasicDataSet dataset) {
-        this.dataset = dataset;
+    @Override
+    public void clear() {
+        basicDataSet.clear();
     }
 
     /**
@@ -49,10 +52,7 @@ public class BasicDataCollector implements ExportListener, DetectListener {
      */
     @Override
     public void onDetected(DetectEvent event) {
-        Path cycle = event.getLearnedRoute().getPath().getSubPathBefore(event.getDetectingNode());
-        cycle.add(event.getDetectingNode());    // include the detecting node in the start and end of the cycle path
-
-        dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), cycle));
+        basicDataSet.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), DetectEvent.getCycle(event)));
     }
 
     /**
@@ -62,6 +62,6 @@ public class BasicDataCollector implements ExportListener, DetectListener {
      */
     @Override
     public void onExported(ExportEvent event) {
-        dataset.addMessage();
+        basicDataSet.addMessage();
     }
 }

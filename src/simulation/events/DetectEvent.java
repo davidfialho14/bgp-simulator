@@ -2,6 +2,7 @@ package simulation.events;
 
 import network.Link;
 import network.Node;
+import policies.Path;
 import simulation.Route;
 
 /**
@@ -12,6 +13,19 @@ public class DetectEvent implements SimulationEvent {
     private final Link outLink;         // out-link from which the route was learned
     private final Route learnedRoute;   // route learned
     private final Route exclRoute;      // alternative route
+
+    /**
+     * Gets the cycle that originated a detect event.
+     *
+     * @param event detect event to get cycle for.
+     * @return cycle that originated detect event.
+     */
+    public static Path getCycle(DetectEvent event) {
+        Path cycle = event.getLearnedRoute().getPath().getSubPathBefore(event.getDetectingNode());
+        cycle.add(event.getDetectingNode());    // include the detecting node in the start and end of the cycle path
+
+        return cycle;
+    }
 
     /**
      * Constructs a new detect event.
