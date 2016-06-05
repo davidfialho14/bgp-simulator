@@ -1,9 +1,6 @@
 package io.reporters;
 
-import simulators.statscollectors.*;
-
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Base class that all reports must extend.
@@ -22,23 +19,4 @@ public abstract class Reporter {
         this.outputFile = outputFile;
     }
 
-    /**
-     * Generates report for a basic stats collector.
-     */
-    public abstract void generate(BasicStatsCollection statsCollector) throws IOException;
-
-    /**
-     * Generates report for a full deployment stats collector.
-     */
-    public abstract void generate(FullDeploymentStatsCollection statsCollector) throws IOException;
-
-    /**
-     * Generates report for a basic stats collector for the SP policy.
-     */
-    public abstract void generate(SPPolicyBasicStatsCollection statsCollector) throws IOException;
-
-    /**
-     * Generates report for a full deployment collector for the SP policy.
-     */
-    public abstract void generate(SPPolicyFullDeploymentStatsCollection statsCollector) throws IOException;
 }

@@ -15,7 +15,7 @@ import java.io.PrintStream;
 /**
  * This is the base class for all simulators.
  * A simulator simulates a network according to a predefined configuration. This gives the possibility to have
- * different types of simulations. Each simulator implementation simulates specific things and for this reason it
+ * different types of data. Each simulator implementation simulates specific things and for this reason it
  * holds a specific stats collector.
  */
 public abstract class Simulator {

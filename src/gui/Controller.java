@@ -16,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulators.*;
+import simulators.Simulator;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +24,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
-import static policies.shortestpath.ShortestPathPolicy.isShortestPath;
 
 public class Controller implements Initializable {
 
@@ -114,28 +112,7 @@ public class Controller implements Initializable {
             parser.parse(networkFile);
 
             // simulator that will be used to simulate
-            Simulator simulator;
-
-            if (!partialDeploymentFormController.activateToggle.isSelected()) {
-
-                if (isShortestPath(parser.getNetwork().getPolicy())) {
-                    simulator = new SPPolicyInitialDeploymentSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
-                } else {
-                    simulator = new InitialDeploymentSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
-                }
-
-            } else {
-
-                int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
-
-                if (isShortestPath(parser.getNetwork().getPolicy())) {
-                    simulator = new SPPolicyFullDeploymentSimulator(parser.getNetwork(), destinationId,
-                            minDelay, maxDelay, timeToChange);
-                } else {
-                    simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId,
-                            minDelay, maxDelay, timeToChange);
-                }
-            }
+            Simulator simulator = null;
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
             simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));

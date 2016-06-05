@@ -4,12 +4,8 @@ import network.Link;
 import network.Node;
 import org.apache.commons.lang.StringUtils;
 import policies.Path;
-import simulators.statscollectors.*;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,138 +21,6 @@ public class CSVReporter extends Reporter {
      */
     public CSVReporter(File outputFile) {
         super(outputFile);
-    }
-
-    /**
-     * Generates report for a basic stats collector.
-     */
-    @Override
-    public void generate(BasicStatsCollection statsCollector) throws IOException {
-
-        try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
-            report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
-            report.write("number of links:; " + statsCollector.getLinkCount()); report.newLine();
-
-            for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
-                report.newLine();
-                report.write("Simulation " + i + ":"); report.newLine();
-                report.write("; Total message count:; " + statsCollector.getTotalMessageCount(i)); report.newLine();
-                report.write("; Detecting nodes count:; " + statsCollector.getDetectingNodesCount(i)); report.newLine();
-                report.write("; Cut-off links count:; " + statsCollector.getCutOffLinksCount(i)); report.newLine();
-
-                report.newLine();
-                report.write("; DETECTING NODE; CUT-OFF LINK; CYCLE"); report.newLine();
-
-                for (Detection detection : statsCollector.getDetections(i)) {
-                    report.write("; " +
-                            pretty(detection.getDetectingNode()) + "; " +
-                            pretty(detection.getCutoffLink()) + "; " +
-                            pretty(detection.getCycle()));
-                    report.newLine();
-                }
-            }
-        }
-    }
-
-    /**
-     * Generates report for a full deployment stats collector.
-     */
-    @Override
-    public void generate(FullDeploymentStatsCollection statsCollector) throws IOException {
-
-        try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
-            report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
-            report.write("number of links:; " + statsCollector.getLinkCount()); report.newLine();
-
-            for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
-                report.newLine();
-                report.write("Simulation " + i + ":"); report.newLine();
-                report.write("; Total message count:; " + statsCollector.getTotalMessageCount(i)); report.newLine();
-                report.write("; Detecting nodes count:; " + statsCollector.getDetectingNodesCount(i)); report.newLine();
-                report.write("; Cut-off links count:; " + statsCollector.getCutOffLinksCount(i)); report.newLine();
-                report.write("; Message Count After Deployment:; " + statsCollector.getMessageCountAfterDeployment(i));
-                report.newLine();
-
-                report.newLine();
-                report.write("; DETECTING NODE; CUT-OFF LINK; CYCLE"); report.newLine();
-
-                for (Detection detection : statsCollector.getDetections(i)) {
-                    report.write("; " +
-                            pretty(detection.getDetectingNode()) + "; " +
-                            pretty(detection.getCutoffLink()) + "; " +
-                            pretty(detection.getCycle()));
-                    report.newLine();
-                }
-            }
-        }
-    }
-
-    /**
-     * Generates report for a basic stats collector for the SP policy.
-     */
-    @Override
-    public void generate(SPPolicyBasicStatsCollection statsCollector) throws IOException {
-        try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
-            report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
-            report.write("number of links:; " + statsCollector.getLinkCount()); report.newLine();
-
-            for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
-                report.newLine();
-                report.write("Simulation " + i + ":"); report.newLine();
-                report.write("; Total message count:; " + statsCollector.getTotalMessageCount(i)); report.newLine();
-                report.write("; Detecting nodes count:; " + statsCollector.getDetectingNodesCount(i)); report.newLine();
-                report.write("; Cut-off links count:; " + statsCollector.getCutOffLinksCount(i)); report.newLine();
-                report.write("; False positive count:; " + statsCollector.getFalsePositiveCount(i)); report.newLine();
-                report.newLine();
-
-                report.newLine();
-                report.write("; DETECTING NODE; CUT-OFF LINK; CYCLE; FALSE POSITIVE"); report.newLine();
-
-                for (Detection detection : statsCollector.getDetections(i)) {
-                    report.write("; " +
-                            pretty(detection.getDetectingNode()) + "; " +
-                            pretty(detection.getCutoffLink()) + "; " +
-                            pretty(detection.getCycle()) + "; " +
-                            (detection.isFalsePositive() ? "Yes" : "No"));
-                    report.newLine();
-                }
-            }
-        }
-    }
-
-    /**
-     * Generates report for a full deployment collector for the SP policy.
-     */
-    @Override
-    public void generate(SPPolicyFullDeploymentStatsCollection statsCollector) throws IOException {
-        try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
-            report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
-            report.write("number of links:; " + statsCollector.getLinkCount()); report.newLine();
-
-            for (int i = 0; i < statsCollector.getSimulationCount(); i++) {
-                report.newLine();
-                report.write("Simulation " + i + ":"); report.newLine();
-                report.write("; Total message count:; " + statsCollector.getTotalMessageCount(i)); report.newLine();
-                report.write("; Detecting nodes count:; " + statsCollector.getDetectingNodesCount(i)); report.newLine();
-                report.write("; Cut-off links count:; " + statsCollector.getCutOffLinksCount(i)); report.newLine();
-                report.write("; Message Count After Deployment:; " + statsCollector.getMessageCountAfterDeployment(i));
-                report.newLine();
-                report.write("; False positive count:; " + statsCollector.getFalsePositiveCount(i)); report.newLine();
-                report.newLine();
-
-                report.newLine();
-                report.write("; DETECTING NODE; CUT-OFF LINK; CYCLE; FALSE POSITIVE"); report.newLine();
-
-                for (Detection detection : statsCollector.getDetections(i)) {
-                    report.write("; " +
-                            pretty(detection.getDetectingNode()) + "; " +
-                            pretty(detection.getCutoffLink()) + "; " +
-                            pretty(detection.getCycle()) + "; " +
-                            (detection.isFalsePositive() ? "Yes" : "No"));
-                    report.newLine();
-                }
-            }
-        }
     }
 
     /*

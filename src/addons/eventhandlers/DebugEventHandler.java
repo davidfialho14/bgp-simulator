@@ -11,7 +11,7 @@ public class DebugEventHandler
         DetectListener {
 
     private PrintStream printStream;    // print stream to print debug messages
-    private int simulationCount = 0;    // counts the simulations
+    private int simulationCount = 0;    // counts the data
     private int detectCount = 0;        // counts detections for each simulation
 
     // listen to all events by default
@@ -96,7 +96,7 @@ public class DebugEventHandler
     @Override
     public void onStarted(StartEvent event) {
         detectCount = 0;
-        printStream.println("Started Simulation " + (simulationCount + 1));
+        printStream.println("Started SimulationData " + (simulationCount + 1));
     }
 
     /**
@@ -106,7 +106,7 @@ public class DebugEventHandler
      */
     @Override
     public void onEnded(EndEvent event) {
-        printStream.println("Ended Simulation " + (simulationCount + 1));
+        printStream.println("Ended SimulationData " + (simulationCount + 1));
         simulationCount++;
     }
 
