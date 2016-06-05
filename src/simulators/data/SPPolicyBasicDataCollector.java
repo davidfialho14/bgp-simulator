@@ -58,7 +58,7 @@ public class SPPolicyBasicDataCollector extends BasicDataCollector {
      * @param cycle cycle to check for.
      * @return true if the cycle's length is negative and false otherwise.
      */
-    private static boolean isNegative(Path cycle) {
+    static boolean isNegative(Path cycle) {
         Iterator<Node> pathIterator = cycle.iterator();
 
         Node sourceNode = pathIterator.next();// node need to verify because a cycle must have always at least 3 nodes

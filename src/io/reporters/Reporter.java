@@ -39,4 +39,7 @@ public abstract class Reporter implements Closeable, AutoCloseable {
     public abstract void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
 
     public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException;
+
+    public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                              SPPolicyDataSet spPolicyDataSet) throws IOException;
 }

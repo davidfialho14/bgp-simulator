@@ -103,6 +103,12 @@ public class CSVReporter extends Reporter {
     }
 
     @Override
+    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                     SPPolicyDataSet spPolicyDataSet) throws IOException {
+        dumpMain(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
+    }
+
+    @Override
     public void close() throws IOException {
         if (this.writer != null) {
             this.writer.close();
