@@ -2,8 +2,8 @@ package simulators;
 
 import io.reporters.Reporter;
 import network.Network;
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.SPPolicyFullDeploymentStatsCollector;
+import simulators.statscollectors.BasicStatsCollection;
+import simulators.statscollectors.SPPolicyFullDeploymentStatsCollection;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class SPPolicyFullDeploymentSimulator extends FullDeploymentSimulator {
     }
 
     /**
-     * Called in the constructor to create the stats collector. By default it returns a BasicStatsCollector object.
+     * Called in the constructor to create the stats collector. By default it returns a BasicStatsCollection object.
      * Each subclass should override this method if this is not the intended behaviour.
      *
      * @param nodeCount number of nodes in the network.
@@ -31,8 +31,8 @@ public class SPPolicyFullDeploymentSimulator extends FullDeploymentSimulator {
      * @return new basic stats collector object.
      */
     @Override
-    protected BasicStatsCollector createStatsCollector(int nodeCount, int linkCount) {
-        return new SPPolicyFullDeploymentStatsCollector(nodeCount, linkCount);
+    protected BasicStatsCollection createStatsCollector(int nodeCount, int linkCount) {
+        return new SPPolicyFullDeploymentStatsCollection(nodeCount, linkCount);
     }
 
     /**
@@ -44,6 +44,6 @@ public class SPPolicyFullDeploymentSimulator extends FullDeploymentSimulator {
     @Override
     public void report(Reporter reporter) throws IOException {
         // must cast to call the correct generate method
-        reporter.generate((SPPolicyFullDeploymentStatsCollector) statsCollector);
+        reporter.generate((SPPolicyFullDeploymentStatsCollection) statsCollector);
     }
 }

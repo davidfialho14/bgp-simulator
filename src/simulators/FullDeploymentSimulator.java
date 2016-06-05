@@ -6,8 +6,8 @@ import network.Network;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import simulation.State;
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.FullDeploymentStatsCollector;
+import simulators.statscollectors.BasicStatsCollection;
+import simulators.statscollectors.FullDeploymentStatsCollection;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class FullDeploymentSimulator extends InitialDeploymentSimulator {
 
     // wrapper around the stats collector to avoid having to cast every time there is the need to access
     // full deployment stats collector features.
-    private FullDeploymentStatsCollector fullDeploymentStatsCollector;
+    private FullDeploymentStatsCollection fullDeploymentStatsCollector;
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -34,7 +34,7 @@ public class FullDeploymentSimulator extends InitialDeploymentSimulator {
         this.deployTime = deployTime;
 
         // create a cast of the basic stats collector
-        fullDeploymentStatsCollector = (FullDeploymentStatsCollector) statsCollector;
+        fullDeploymentStatsCollector = (FullDeploymentStatsCollection) statsCollector;
     }
 
     /**
@@ -69,13 +69,13 @@ public class FullDeploymentSimulator extends InitialDeploymentSimulator {
     }
 
     /**
-     * Returns a FullDeploymentStatsCollector.
+     * Returns a FullDeploymentStatsCollection.
      *
-     * @return new FullDeploymentStatsCollector object.
+     * @return new FullDeploymentStatsCollection object.
      */
     @Override
-    protected BasicStatsCollector createStatsCollector(int nodeCount, int linkCount) {
-        return new FullDeploymentStatsCollector(nodeCount, linkCount);
+    protected BasicStatsCollection createStatsCollector(int nodeCount, int linkCount) {
+        return new FullDeploymentStatsCollection(nodeCount, linkCount);
     }
 
     /**

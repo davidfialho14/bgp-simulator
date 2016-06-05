@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Adds the number of messages sent after deployment to the basic stats collector.
+ * Adds the number of messages sent after deployment to the basic stats collection.
  */
-public class FullDeploymentStatsCollector extends BasicStatsCollector {
+public class FullDeploymentStatsCollection extends BasicStatsCollection {
 
     private boolean deployed = false;   // indicates the deployment was already done.
 
@@ -14,17 +14,17 @@ public class FullDeploymentStatsCollector extends BasicStatsCollector {
     protected List<Integer> messageCountsAfterDeployment = new ArrayList<>();
 
     /**
-     * Constructs a basic stats collector. Initializes the node and link counts.
+     * Constructs a basic stats collection. Initializes the node and link counts.
      *
      * @param nodeCount number of nodes of the original network.
      * @param linkCount number of links of the original network.
      */
-    public FullDeploymentStatsCollector(int nodeCount, int linkCount) {
+    public FullDeploymentStatsCollection(int nodeCount, int linkCount) {
         super(nodeCount, linkCount);
     }
 
     /**
-     * Notifies the stats collector that the deployment was already done. Should be called right after the deployment.
+     * Notifies the stats collection that the deployment was already done. Should be called right after the deployment.
      * This marks the time after which it should start to count message after deployment.
      */
     public void notifyDeployment() {
@@ -50,8 +50,8 @@ public class FullDeploymentStatsCollector extends BasicStatsCollector {
     }
 
     /**
-     * Indicates the collector that a new simulation will start. This method must be called before every
-     * new simulation to tell the collector to start a new counter for the new simulation.
+     * Indicates the collection that a new simulation will start. This method must be called before every
+     * new simulation to tell the collection to start a new counter for the new simulation.
      */
     @Override
     public void newSimulation() {

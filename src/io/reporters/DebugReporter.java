@@ -1,9 +1,6 @@
 package io.reporters;
 
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.FullDeploymentStatsCollector;
-import simulators.statscollectors.SPPolicyBasicStatsCollector;
-import simulators.statscollectors.SPPolicyFullDeploymentStatsCollector;
+import simulators.statscollectors.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +20,7 @@ public class DebugReporter extends Reporter {
      * Generates report for a basic stats collector.
      */
     @Override
-    public void generate(BasicStatsCollector statsCollector) {
+    public void generate(BasicStatsCollection statsCollector) {
         System.out.println("node count: " + statsCollector.getNodeCount());
         System.out.println("link count: " + statsCollector.getLinkCount());
         System.out.println("message counts: " + statsCollector.getTotalMessageCounts());
@@ -38,8 +35,8 @@ public class DebugReporter extends Reporter {
      * Generates report for a full deployment stats collector.
      */
     @Override
-    public void generate(FullDeploymentStatsCollector statsCollector) throws IOException {
-        generate((BasicStatsCollector) statsCollector);
+    public void generate(FullDeploymentStatsCollection statsCollector) throws IOException {
+        generate((BasicStatsCollection) statsCollector);
         System.out.println("message counts after deployment: " + statsCollector.getMessageCountsAfterDeployment());
     }
 
@@ -47,8 +44,8 @@ public class DebugReporter extends Reporter {
      * Generates report for a basic stats collector for the SP policy.
      */
     @Override
-    public void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException {
-        generate((BasicStatsCollector) statsCollector);
+    public void generate(SPPolicyBasicStatsCollection statsCollector) throws IOException {
+        generate((BasicStatsCollection) statsCollector);
         System.out.println("false positive counts: " + statsCollector.getFalsePositiveCounts());
     }
 
@@ -56,8 +53,8 @@ public class DebugReporter extends Reporter {
      * Generates report for a full deployment collector for the SP policy.
      */
     @Override
-    public void generate(SPPolicyFullDeploymentStatsCollector statsCollector) throws IOException {
-        generate((FullDeploymentStatsCollector) statsCollector);
+    public void generate(SPPolicyFullDeploymentStatsCollection statsCollector) throws IOException {
+        generate((FullDeploymentStatsCollection) statsCollector);
         System.out.println("false positive counts: " + statsCollector.getFalsePositiveCounts());
     }
 }

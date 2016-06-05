@@ -9,18 +9,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SPPolicyFullDeploymentStatsCollector extends FullDeploymentStatsCollector {
+/**
+ * Stats collection for the shortest path policy. It introduces extra stats that only make sense for this policy.
+ *  - false positive count
+ */
+public class SPPolicyBasicStatsCollection extends BasicStatsCollection {
 
     // stores the false positive counts for each simulation
     protected List<Integer> falsePositiveCounts = new ArrayList<>();
 
     /**
-     * Constructs a basic stats collector. Initializes the node and link counts.
+     * Constructs a basic stats collection. Initializes the node and link counts.
      *
      * @param nodeCount number of nodes of the original network.
      * @param linkCount number of links of the original network.
      */
-    public SPPolicyFullDeploymentStatsCollector(int nodeCount, int linkCount) {
+    public SPPolicyBasicStatsCollection(int nodeCount, int linkCount) {
         super(nodeCount, linkCount);
     }
 
@@ -44,8 +48,8 @@ public class SPPolicyFullDeploymentStatsCollector extends FullDeploymentStatsCol
     }
 
     /**
-     * Indicates the collector that a new simulation will start. This method must be called before every
-     * new simulation to tell the collector to start a new counter for the new simulation.
+     * Indicates the collection that a new simulation will start. This method must be called before every
+     * new simulation to tell the collection to start a new counter for the new simulation.
      */
     @Override
     public void newSimulation() {
@@ -96,4 +100,5 @@ public class SPPolicyFullDeploymentStatsCollector extends FullDeploymentStatsCol
 
         return cycleLength >= 0;
     }
+
 }

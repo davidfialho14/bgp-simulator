@@ -9,7 +9,7 @@ import simulation.events.DetectEvent;
 import simulation.events.DetectListener;
 import simulation.events.ExportEvent;
 import simulation.events.ExportListener;
-import simulators.statscollectors.BasicStatsCollector;
+import simulators.statscollectors.BasicStatsCollection;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class InitialDeploymentSimulator extends Simulator implements ExportListener, DetectListener {
 
-    protected BasicStatsCollector statsCollector;
+    protected BasicStatsCollection statsCollector;
 
     /**
      * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
@@ -52,15 +52,15 @@ public class InitialDeploymentSimulator extends Simulator implements ExportListe
     }
 
     /**
-     * Called in the constructor to create the stats collector. By default it returns a BasicStatsCollector object.
+     * Called in the constructor to create the stats collector. By default it returns a BasicStatsCollection object.
      * Each subclass should override this method if this is not the intended behaviour.
      *
      * @param nodeCount number of nodes in the network.
      * @param linkCount number of links in the network.
      * @return new basic stats collector object.
      */
-    protected BasicStatsCollector createStatsCollector(int nodeCount, int linkCount) {
-        return new BasicStatsCollector(nodeCount, linkCount);
+    protected BasicStatsCollection createStatsCollector(int nodeCount, int linkCount) {
+        return new BasicStatsCollection(nodeCount, linkCount);
     }
 
     /**

@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * The basic stats collector collects some basic stats that most collectors have:
+ * Stats collection that holds the basic stats:
  * - network's node count
  * - network's link count
  * - total message count
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * - number of cut-off links
  * - links that were cut-off
  */
-public class BasicStatsCollector {
+public class BasicStatsCollection {
 
     protected final int nodeCount;
     protected final int linkCount;
@@ -34,12 +34,12 @@ public class BasicStatsCollector {
     protected List<List<Detection>> detections = new ArrayList<>();
 
     /**
-     * Constructs a basic stats collector. Initializes the node and link counts.
+     * Constructs a basic stats collection. Initializes the node and link counts.
      *
      * @param nodeCount number of nodes of the original network.
      * @param linkCount number of links of the original network.
      */
-    public BasicStatsCollector(int nodeCount, int linkCount) {
+    public BasicStatsCollection(int nodeCount, int linkCount) {
         this.nodeCount = nodeCount;
         this.linkCount = linkCount;
     }
@@ -184,8 +184,8 @@ public class BasicStatsCollector {
     }
 
     /**
-     * Indicates the collector that a new simulation will start. This method must be called before every
-     * new simulation to tell the collector to start a new counter for the new simulation.
+     * Indicates the collection that a new simulation will start. This method must be called before every
+     * new simulation to tell the collection to start a new counter for the new simulation.
      */
     public void newSimulation() {
         simulationCount++;

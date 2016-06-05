@@ -31,7 +31,7 @@ public class CSVReporter extends Reporter {
      * Generates report for a basic stats collector.
      */
     @Override
-    public void generate(BasicStatsCollector statsCollector) throws IOException {
+    public void generate(BasicStatsCollection statsCollector) throws IOException {
 
         try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
             report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
@@ -62,7 +62,7 @@ public class CSVReporter extends Reporter {
      * Generates report for a full deployment stats collector.
      */
     @Override
-    public void generate(FullDeploymentStatsCollector statsCollector) throws IOException {
+    public void generate(FullDeploymentStatsCollection statsCollector) throws IOException {
 
         try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
             report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
@@ -95,7 +95,7 @@ public class CSVReporter extends Reporter {
      * Generates report for a basic stats collector for the SP policy.
      */
     @Override
-    public void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException {
+    public void generate(SPPolicyBasicStatsCollection statsCollector) throws IOException {
         try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
             report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
             report.write("number of links:; " + statsCollector.getLinkCount()); report.newLine();
@@ -128,7 +128,7 @@ public class CSVReporter extends Reporter {
      * Generates report for a full deployment collector for the SP policy.
      */
     @Override
-    public void generate(SPPolicyFullDeploymentStatsCollector statsCollector) throws IOException {
+    public void generate(SPPolicyFullDeploymentStatsCollection statsCollector) throws IOException {
         try (BufferedWriter report = new BufferedWriter(new FileWriter(outputFile))) {
             report.write("number of nodes:; " + statsCollector.getNodeCount()); report.newLine();
             report.write("number of links:; " + statsCollector.getLinkCount()); report.newLine();

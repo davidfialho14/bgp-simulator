@@ -27,7 +27,7 @@ public class HTMLReporter extends Reporter {
      * Generates report for a basic stats collector.
      */
     @Override
-    public void generate(BasicStatsCollector statsCollector) throws IOException {
+    public void generate(BasicStatsCollection statsCollector) throws IOException {
         throw new UnsupportedEncodingException();
     }
 
@@ -35,7 +35,7 @@ public class HTMLReporter extends Reporter {
      * Generates report for a full deployment stats collector.
      */
     @Override
-    public void generate(FullDeploymentStatsCollector statsCollector) throws IOException {
+    public void generate(FullDeploymentStatsCollection statsCollector) throws IOException {
         throw new UnsupportedEncodingException();
     }
 
@@ -43,7 +43,7 @@ public class HTMLReporter extends Reporter {
      * Generates report for a basic stats collector for the SP policy.
      */
     @Override
-    public void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException {
+    public void generate(SPPolicyBasicStatsCollection statsCollector) throws IOException {
         try (HTMLWriter htmlWriter = new HTMLWriter(outputFile)) {
 
             htmlWriter.beginClass("network-info");
@@ -112,7 +112,7 @@ public class HTMLReporter extends Reporter {
      * Generates report for a full deployment collector for the SP policy.
      */
     @Override
-    public void generate(SPPolicyFullDeploymentStatsCollector statsCollector) throws IOException {
+    public void generate(SPPolicyFullDeploymentStatsCollection statsCollector) throws IOException {
         try (HTMLWriter htmlWriter = new HTMLWriter(outputFile)) {
 
             htmlWriter.beginClass("network-info");
