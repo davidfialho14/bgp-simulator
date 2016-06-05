@@ -120,15 +120,14 @@ public class Controller implements Initializable {
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
             simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
 
-            Reporter reporter;
-
             String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
             File reportFile = new File(networkFile.getParent(), reportFileName);
-            reporter = new DebugReporter(reportFile);
 
-            for (int i = 0; i < repetitionCount; i++) {
-                simulator.simulate();
-                reportData(simulator, reporter);
+            try (Reporter reporter = new DebugReporter(reportFile, parser.getNetwork())) {
+                for (int i = 0; i < repetitionCount; i++) {
+                    simulator.simulate();
+                    reportData(simulator, reporter);
+                }
             }
 
         } catch (IOException e) {
