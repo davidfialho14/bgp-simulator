@@ -5,6 +5,7 @@ import simulators.data.BasicDataSet;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Base class that all reports must extend.
@@ -13,7 +14,7 @@ import java.io.File;
 public abstract class Reporter implements Closeable, AutoCloseable {
 
     protected File outputFile;
-    private Network network;    // holds the network to dump network information
+    protected Network network;    // holds the network to dump network information
 
     /**
      * Constructs a reporter associating the output file.
@@ -31,6 +32,6 @@ public abstract class Reporter implements Closeable, AutoCloseable {
      *
      * @param dataSet data set to dump to the output file.
      */
-    public abstract void dump(BasicDataSet dataSet);
+    public abstract void dump(BasicDataSet dataSet) throws IOException;
 
 }
