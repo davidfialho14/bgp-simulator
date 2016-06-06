@@ -56,9 +56,10 @@ public class NetworkParser {
         // get the parsed graph, note that the DOT language allows more then one graph to be parsed
         // here we just want the first graph
         Graph graph = parser.getGraphs().get(0);
+        String networkName = graph.getId().getId();
 
         parsedPolicy = Policies.getPolicy(graph.getAttribute("policy"));
-        parsedNetwork = new Network(parsedPolicy);
+        parsedNetwork = new Network(parsedPolicy, networkName);
 
         // add all nodes to the parsedNetwork
         for (Node node : graph.getNodes(true)) {
