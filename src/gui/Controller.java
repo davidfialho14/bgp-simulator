@@ -141,6 +141,8 @@ public class Controller implements Initializable {
             File reportFile = new File(networkFile.getParent(), reportFileName);
 
             try (Reporter reporter = new CSVReporter(reportFile, parser.getNetwork())) {
+                reporter.dumpBasicInfo(parser.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
+
                 for (int i = 0; i < repetitionCount; i++) {
                     simulator.simulate();
                     reportData(simulator, reporter);

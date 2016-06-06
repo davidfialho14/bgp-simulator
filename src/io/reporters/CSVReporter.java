@@ -5,6 +5,12 @@ import network.Network;
 import network.Node;
 import org.apache.commons.lang.StringUtils;
 import policies.Path;
+import protocols.D1R1Protocol;
+import protocols.D2R1Protocol;
+import protocols.Protocol;
+import simulators.FullDeploymentSimulator;
+import simulators.InitialDeploymentSimulator;
+import simulators.Simulator;
 import simulators.data.BasicDataSet;
 import simulators.data.Detection;
 import simulators.data.FullDeploymentDataSet;
@@ -45,6 +51,40 @@ public class CSVReporter extends Reporter {
 
         File detectionsFile = getClassFile(outputFile, "detections");
         this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
+    }
+
+    /**
+     * Dumps all the basic information from the simulation.
+     */
+    public void dumpBasicInfo(Network network, int destinationId, int minDelay, int maxDelay, Protocol protocol,
+                              Simulator simulator) throws IOException {
+
+        File basicFile = getClassFile(outputFile, "basic");
+        try (BufferedWriter basicWriter = new BufferedWriter(new FileWriter(basicFile))) {
+            writeColumns(basicWriter, "Network Name", network.getName());       basicWriter.newLine();
+            writeColumns(basicWriter, "Node Count", network.getNodeCount());    basicWriter.newLine();
+            writeColumns(basicWriter, "Link Count", network.getLinkCount());    basicWriter.newLine();
+            writeColumns(basicWriter, "Destination", destinationId);            basicWriter.newLine();
+            writeColumns(basicWriter, "Message Delay", minDelay, maxDelay);     basicWriter.newLine();
+
+            String protocolName = "";
+            if (protocol instanceof D1R1Protocol)
+                protocolName = "D1";
+            else if(protocol instanceof D2R1Protocol) {
+                protocolName = "D2";
+            }
+            writeColumns(basicWriter, "Detection", protocolName); basicWriter.newLine();
+
+
+            String simulationType = "";
+            if (simulator instanceof InitialDeploymentSimulator)
+                simulationType = "Initial";
+            else if(simulator instanceof FullDeploymentSimulator) {
+                simulationType = "Full";
+            }
+            writeColumns(basicWriter, "Simulation Type", simulationType); basicWriter.newLine();
+
+        }
     }
 
     /**
