@@ -141,10 +141,10 @@ public class CSVReporter extends Reporter {
 
             writeColumns(countsWriter, "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count");
             if (fullDeploymentDataSet != null) {
-                writeColumns(countsWriter, "Messages After Deployment Count");
+                appendColumn(countsWriter, "Messages After Deployment Count");
             }
             if (spPolicyDataSet != null) {
-                writeColumns(countsWriter, "False Positive Count");
+                appendColumn(countsWriter, "False Positive Count");
             }
             countsWriter.newLine();
         }
@@ -158,10 +158,10 @@ public class CSVReporter extends Reporter {
         );
 
         if (fullDeploymentDataSet != null) {
-            writeColumns(countsWriter, fullDeploymentDataSet.getMessageCount());
+            appendColumn(countsWriter, fullDeploymentDataSet.getMessageCount());
         }
         if (spPolicyDataSet != null) {
-            writeColumns(countsWriter, spPolicyDataSet.getFalsePositiveCount());
+            appendColumn(countsWriter, spPolicyDataSet.getFalsePositiveCount());
         }
 
         countsWriter.newLine();
@@ -173,7 +173,7 @@ public class CSVReporter extends Reporter {
 
             writeColumns(detectionsWriter, "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles");
             if (spPolicyDataSet != null) {
-                writeColumns(detectionsWriter, "False Positive");
+                appendColumn(detectionsWriter, "False Positive");
             }
 
             detectionsWriter.newLine();
@@ -189,7 +189,7 @@ public class CSVReporter extends Reporter {
                     pretty(detection.getCutOffLink()),
                     pretty(detection.getCycle()));
             if (spPolicyDataSet != null) {
-                writeColumns(detectionsWriter, (detection.isFalsePositive() ? "Yes" : "No"));
+                appendColumn(detectionsWriter, (detection.isFalsePositive() ? "Yes" : "No"));
             }
             detectionsWriter.newLine();
         }
@@ -204,11 +204,15 @@ public class CSVReporter extends Reporter {
      * @throws IOException
      */
     private void writeColumns(BufferedWriter writer, Object firstColumn, Object... columns) throws IOException {
-        writer.write(firstColumn.toString() + COMMA);
+        writer.write(firstColumn.toString());
 
         for (Object column : columns) {
-            writer.write(column.toString() + COMMA);
+            appendColumn(writer, column);
         }
+    }
+
+    private void appendColumn(BufferedWriter writer, Object column) throws IOException {
+        writer.write(COMMA + column.toString());
     }
 
     /**
