@@ -23,7 +23,11 @@ import java.util.stream.Collectors;
 public class CSVReporter extends Reporter {
 
     private static final char COMMA = ';';
-    private BufferedWriter writer;
+    private BufferedWriter countsWriter;
+    private BufferedWriter detectionsWriter;
+
+    private boolean isCountsFileMissingHeaders = true;     // indicates if the counts file is missing the headers
+    private boolean isDetectionsFileMissingHeaders = true; // indicates if the detections file is missing the headers
 
     /**
      * Constructs a reporter associating the output file.
@@ -33,53 +37,85 @@ public class CSVReporter extends Reporter {
      */
     public CSVReporter(File outputFile, Network network) throws IOException {
         super(outputFile, network);
-        this.writer = new BufferedWriter(new FileWriter(outputFile));
+
+        File countsFile = getClassFile(outputFile, "counts");
+        this.countsWriter = new BufferedWriter(new FileWriter(countsFile));
+
+        File detectionsFile = getClassFile(outputFile, "detections");
+        this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
+    }
+
+    private static File getClassFile(File originalFile, String fileClass) {
+        return new File(originalFile.getParent(),
+                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
     }
 
     public void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                          SPPolicyDataSet spPolicyDataSet) throws IOException {
 
-        // write the counts
+        // write counts headers
 
-        writer.write("Total Message Count" + COMMA + basicDataSet.getTotalMessageCount());       writer.newLine();
-        writer.write("Detecting Nodes Count" + COMMA + basicDataSet.getDetectingNodesCount());   writer.newLine();
-        writer.write("Cut-Off Links Count" + COMMA + basicDataSet.getCutOffLinksCount());        writer.newLine();
+        if (isCountsFileMissingHeaders) {
+            isCountsFileMissingHeaders = false;
+
+            countsWriter.write("Total Message Count" +
+                    COMMA + "Detecting Nodes Count" +
+                    COMMA + "Cut-Off Links Count");
+            if (fullDeploymentDataSet != null) {
+                countsWriter.write(COMMA + "Messages After Deployment Count");
+            }
+            if (spPolicyDataSet != null) {
+                countsWriter.write(COMMA + "False Positive Count");
+            }
+            countsWriter.newLine();
+        }
+
+        // write counts data
+
+        countsWriter.write(String.valueOf(basicDataSet.getTotalMessageCount()) +
+                COMMA + String.valueOf(basicDataSet.getDetectingNodesCount()) +
+                COMMA + String.valueOf(basicDataSet.getCutOffLinksCount()));
         if (fullDeploymentDataSet != null) {
-            writer.write("Messages After Deployment Count" + COMMA + fullDeploymentDataSet.getMessageCount());
-            writer.newLine();
+            countsWriter.write(COMMA + String.valueOf(fullDeploymentDataSet.getMessageCount()));
         }
         if (spPolicyDataSet != null) {
-            writer.write("False Positive Count" + COMMA + spPolicyDataSet.getFalsePositiveCount()); writer.newLine();
+            countsWriter.write(COMMA + String.valueOf(spPolicyDataSet.getFalsePositiveCount()));
         }
-        writer.newLine();
+
+        countsWriter.newLine();
 
         // write the detections table headers
 
-        writer.write("Detections" + COMMA +
-                "Detecting Nodes" + COMMA +
-                "Cut-Off Links" + COMMA +
-                "Cycles");
-        if (spPolicyDataSet != null) {
-            writer.write(COMMA + "False Positive");
+        if (isDetectionsFileMissingHeaders) {
+            isDetectionsFileMissingHeaders = false;
+
+            detectionsWriter.write("Detections" +
+                    COMMA + "Detecting Nodes" +
+                    COMMA + "Cut-Off Links" +
+                    COMMA + "Cycles");
+
+            if (spPolicyDataSet != null) {
+                detectionsWriter.write(COMMA + "False Positive");
+            }
         }
-        writer.newLine();
+
+        detectionsWriter.newLine();
 
         // write the detections table data
 
         int detectionNumber = 1;
         for (Detection detection : basicDataSet.getDetections()) {
-            writer.write(String.valueOf(detectionNumber++) + COMMA +
+            detectionsWriter.write(String.valueOf(detectionNumber++) + COMMA +
                     pretty(detection.getDetectingNode()) + COMMA +
                     pretty(detection.getCutOffLink()) + COMMA +
                     pretty(detection.getCycle()));
             if (spPolicyDataSet != null) {
-                writer.write(COMMA + (detection.isFalsePositive() ? "Yes" : "No"));
+                detectionsWriter.write(COMMA + (detection.isFalsePositive() ? "Yes" : "No"));
             }
-            writer.newLine();
+            detectionsWriter.newLine();
         }
 
-        writer.newLine();
-        writer.newLine();
+        detectionsWriter.newLine();
     }
 
     /**
@@ -110,8 +146,12 @@ public class CSVReporter extends Reporter {
 
     @Override
     public void close() throws IOException {
-        if (this.writer != null) {
-            this.writer.close();
+        if (countsWriter != null) {
+            countsWriter.close();
+        }
+
+        if (detectionsWriter != null) {
+            detectionsWriter.close();
         }
     }
 
