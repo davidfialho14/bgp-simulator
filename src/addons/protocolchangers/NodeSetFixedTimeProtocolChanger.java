@@ -49,11 +49,12 @@ public class NodeSetFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
         Collections.addAll(nodesToChange, nodes);
     }
 
+    /**
+     * Invoked only once when the time to change is reached.
+     */
     @Override
-    public void onTimeChange(long newTime) {
-
-        if (isTimeToChange(newTime)) {
-            nodesToChange.forEach(node -> changeProtocol(node, protocolToChangeTo));
-        }
+    public void onTimeToChange() {
+        nodesToChange.forEach(node -> changeProtocol(node, protocolToChangeTo));
     }
+
 }
