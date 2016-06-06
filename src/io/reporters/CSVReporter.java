@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class CSVReporter extends Reporter {
 
     private static final char COMMA = ';';
+
     private BufferedWriter countsWriter;
     private BufferedWriter detectionsWriter;
 
@@ -46,13 +47,50 @@ public class CSVReporter extends Reporter {
         this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
     }
 
-    private static File getClassFile(File originalFile, String fileClass) {
-        return new File(originalFile.getParent(),
-                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
+    /**
+     * Dumps that data from the data set to the current output file.
+     *
+     * @param dataSet data set to dump to the output file.
+     */
+    @Override
+    public void dump(BasicDataSet dataSet) throws IOException {
+        dumpMain(dataSet, null, null);
     }
 
-    public void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                         SPPolicyDataSet spPolicyDataSet) throws IOException {
+    @Override
+    public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
+        dumpMain(basicDataSet, null, spPolicyDataSet);
+    }
+
+    @Override
+    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
+        dumpMain(basicDataSet, fullDeploymentDataSet, null);
+    }
+
+    @Override
+    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                     SPPolicyDataSet spPolicyDataSet) throws IOException {
+        dumpMain(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (countsWriter != null) {
+            countsWriter.close();
+        }
+
+        if (detectionsWriter != null) {
+            detectionsWriter.close();
+        }
+    }
+
+    // --- PRIVATE METHODS ---
+
+    /**
+     * Main dump method. All dump methods call this method underneath.
+     */
+    private void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                          SPPolicyDataSet spPolicyDataSet) throws IOException {
 
         simulationCounter++;    // every time dump is called it is for a new simulation
 
@@ -122,40 +160,15 @@ public class CSVReporter extends Reporter {
     }
 
     /**
-     * Dumps that data from the data set to the current output file.
+     * Returns a file with the class name associated to its name.
      *
-     * @param dataSet data set to dump to the output file.
+     * @param originalFile original file.
+     * @param fileClass    class name to associate with the file.
+     * @return file with the class name associated to its name.
      */
-    @Override
-    public void dump(BasicDataSet dataSet) throws IOException {
-        dumpMain(dataSet, null, null);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, null, spPolicyDataSet);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, null);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                     SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
-    }
-
-    @Override
-    public void close() throws IOException {
-        if (countsWriter != null) {
-            countsWriter.close();
-        }
-
-        if (detectionsWriter != null) {
-            detectionsWriter.close();
-        }
+    private static File getClassFile(File originalFile, String fileClass) {
+        return new File(originalFile.getParent(),
+                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
     }
 
     /*
