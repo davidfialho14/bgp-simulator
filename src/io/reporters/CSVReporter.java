@@ -26,6 +26,7 @@ public class CSVReporter extends Reporter {
     private BufferedWriter countsWriter;
     private BufferedWriter detectionsWriter;
 
+    private int simulationCounter = 0;                     // counts the simulations
     private boolean isCountsFileMissingHeaders = true;     // indicates if the counts file is missing the headers
     private boolean isDetectionsFileMissingHeaders = true; // indicates if the detections file is missing the headers
 
@@ -52,6 +53,8 @@ public class CSVReporter extends Reporter {
 
     public void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                          SPPolicyDataSet spPolicyDataSet) throws IOException {
+
+        simulationCounter++;    // every time dump is called it is for a new simulation
 
         // write counts headers
 
@@ -89,7 +92,8 @@ public class CSVReporter extends Reporter {
         if (isDetectionsFileMissingHeaders) {
             isDetectionsFileMissingHeaders = false;
 
-            detectionsWriter.write("Detections" +
+            detectionsWriter.write("Simulation" +
+                    COMMA + "Detections" +
                     COMMA + "Detecting Nodes" +
                     COMMA + "Cut-Off Links" +
                     COMMA + "Cycles");
@@ -97,25 +101,24 @@ public class CSVReporter extends Reporter {
             if (spPolicyDataSet != null) {
                 detectionsWriter.write(COMMA + "False Positive");
             }
-        }
 
-        detectionsWriter.newLine();
+            detectionsWriter.newLine();
+        }
 
         // write the detections table data
 
         int detectionNumber = 1;
         for (Detection detection : basicDataSet.getDetections()) {
-            detectionsWriter.write(String.valueOf(detectionNumber++) + COMMA +
-                    pretty(detection.getDetectingNode()) + COMMA +
-                    pretty(detection.getCutOffLink()) + COMMA +
-                    pretty(detection.getCycle()));
+            detectionsWriter.write(String.valueOf(simulationCounter) +
+                    COMMA + String.valueOf(detectionNumber++) +
+                    COMMA + pretty(detection.getDetectingNode()) +
+                    COMMA + pretty(detection.getCutOffLink()) +
+                    COMMA + pretty(detection.getCycle()));
             if (spPolicyDataSet != null) {
                 detectionsWriter.write(COMMA + (detection.isFalsePositive() ? "Yes" : "No"));
             }
             detectionsWriter.newLine();
         }
-
-        detectionsWriter.newLine();
     }
 
     /**
