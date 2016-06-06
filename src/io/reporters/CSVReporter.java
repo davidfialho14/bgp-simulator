@@ -99,28 +99,29 @@ public class CSVReporter extends Reporter {
         if (isCountsFileMissingHeaders) {
             isCountsFileMissingHeaders = false;
 
-            countsWriter.write("Total Message Count" +
-                    COMMA + "Detecting Nodes Count" +
-                    COMMA + "Cut-Off Links Count");
+            writeColumns(countsWriter, "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count");
             if (fullDeploymentDataSet != null) {
-                countsWriter.write(COMMA + "Messages After Deployment Count");
+                writeColumns(countsWriter, "Messages After Deployment Count");
             }
             if (spPolicyDataSet != null) {
-                countsWriter.write(COMMA + "False Positive Count");
+                writeColumns(countsWriter, "False Positive Count");
             }
             countsWriter.newLine();
         }
 
         // write counts data
 
-        countsWriter.write(String.valueOf(basicDataSet.getTotalMessageCount()) +
-                COMMA + String.valueOf(basicDataSet.getDetectingNodesCount()) +
-                COMMA + String.valueOf(basicDataSet.getCutOffLinksCount()));
+        writeColumns(countsWriter,
+                basicDataSet.getTotalMessageCount(),
+                basicDataSet.getDetectingNodesCount(),
+                basicDataSet.getCutOffLinksCount()
+        );
+
         if (fullDeploymentDataSet != null) {
-            countsWriter.write(COMMA + String.valueOf(fullDeploymentDataSet.getMessageCount()));
+            writeColumns(countsWriter, fullDeploymentDataSet.getMessageCount());
         }
         if (spPolicyDataSet != null) {
-            countsWriter.write(COMMA + String.valueOf(spPolicyDataSet.getFalsePositiveCount()));
+            writeColumns(countsWriter, spPolicyDataSet.getFalsePositiveCount());
         }
 
         countsWriter.newLine();
@@ -130,14 +131,9 @@ public class CSVReporter extends Reporter {
         if (isDetectionsFileMissingHeaders) {
             isDetectionsFileMissingHeaders = false;
 
-            detectionsWriter.write("Simulation" +
-                    COMMA + "Detections" +
-                    COMMA + "Detecting Nodes" +
-                    COMMA + "Cut-Off Links" +
-                    COMMA + "Cycles");
-
+            writeColumns(detectionsWriter, "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles");
             if (spPolicyDataSet != null) {
-                detectionsWriter.write(COMMA + "False Positive");
+                writeColumns(detectionsWriter, "False Positive");
             }
 
             detectionsWriter.newLine();
@@ -147,15 +143,31 @@ public class CSVReporter extends Reporter {
 
         int detectionNumber = 1;
         for (Detection detection : basicDataSet.getDetections()) {
-            detectionsWriter.write(String.valueOf(simulationCounter) +
-                    COMMA + String.valueOf(detectionNumber++) +
-                    COMMA + pretty(detection.getDetectingNode()) +
-                    COMMA + pretty(detection.getCutOffLink()) +
-                    COMMA + pretty(detection.getCycle()));
+            writeColumns(detectionsWriter, simulationCounter,
+                    detectionNumber++,
+                    pretty(detection.getDetectingNode()),
+                    pretty(detection.getCutOffLink()),
+                    pretty(detection.getCycle()));
             if (spPolicyDataSet != null) {
-                detectionsWriter.write(COMMA + (detection.isFalsePositive() ? "Yes" : "No"));
+                writeColumns(detectionsWriter, (detection.isFalsePositive() ? "Yes" : "No"));
             }
             detectionsWriter.newLine();
+        }
+    }
+
+    /**
+     * Writes a sequence of columns in the CSV format.
+     *
+     * @param writer      writer used to write columns.
+     * @param firstColumn first column to write.
+     * @param columns     following columns to write
+     * @throws IOException
+     */
+    private void writeColumns(BufferedWriter writer, Object firstColumn, Object... columns) throws IOException {
+        writer.write(firstColumn.toString() + COMMA);
+
+        for (Object column : columns) {
+            writer.write(column.toString() + COMMA);
         }
     }
 
