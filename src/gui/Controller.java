@@ -4,6 +4,7 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import gui.basics.NumberSpinner;
 import gui.partialdeployment.PartialDeploymentController;
+import gui.radiobuttons.ProtocolToggleGroup;
 import io.InvalidTagException;
 import io.NetworkParser;
 import io.reporters.CSVReporter;
@@ -15,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import protocols.D1R1Protocol;
+import protocols.Protocol;
 import simulation.Engine;
 import simulation.schedulers.RandomScheduler;
 import simulators.Simulator;
@@ -28,8 +29,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static simulators.SimulatorFactory.newSimulator;
-
 public class Controller implements Initializable {
 
     public GridPane pane;
@@ -41,6 +40,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> maxDelaySpinner;
     public PartialDeploymentController partialDeploymentFormController;
     public CheckBox debugCheckBox;
+    public ProtocolToggleGroup detectionGroup;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -110,6 +110,7 @@ public class Controller implements Initializable {
         int repetitionCount = repetitionsSpinner.getValue();
         int minDelay = minDelaySpinner.getValue();
         int maxDelay = maxDelaySpinner.getValue();
+        Protocol protocol = detectionGroup.getSelectedProtocol();
 
         try {
             NetworkParser parser = new NetworkParser();
@@ -122,12 +123,12 @@ public class Controller implements Initializable {
 
             if (!partialDeploymentFormController.activateToggle.isSelected()) {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, new D1R1Protocol());
+                        engine, parser.getNetwork(), destinationId, protocol);
             } else {
                 int deployTime = partialDeploymentFormController.detectingTimeSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, new D1R1Protocol(), deployTime);
+                        engine, parser.getNetwork(), destinationId, protocol, deployTime);
             }
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
