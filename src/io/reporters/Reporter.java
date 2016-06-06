@@ -1,10 +1,11 @@
 package io.reporters;
 
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.FullDeploymentStatsCollector;
-import simulators.statscollectors.SPPolicyBasicStatsCollector;
-import simulators.statscollectors.SPPolicyFullDeploymentStatsCollector;
+import network.Network;
+import simulators.data.BasicDataSet;
+import simulators.data.FullDeploymentDataSet;
+import simulators.data.SPPolicyDataSet;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,36 +13,33 @@ import java.io.IOException;
  * Base class that all reports must extend.
  * A reporter generates reports depending on the given stats collector.
  */
-public abstract class Reporter {
+public abstract class Reporter implements Closeable, AutoCloseable {
 
     protected File outputFile;
+    protected Network network;    // holds the network to dump network information
 
     /**
      * Constructs a reporter associating the output file.
      *
      * @param outputFile file to output report to.
+     * @param network    network being simulated.
      */
-    public Reporter(File outputFile) {
+    public Reporter(File outputFile, Network network) {
         this.outputFile = outputFile;
+        this.network = network;
     }
 
     /**
-     * Generates report for a basic stats collector.
+     * Dumps that data from the data set to the current output file.
+     *
+     * @param dataSet data set to dump to the output file.
      */
-    public abstract void generate(BasicStatsCollector statsCollector) throws IOException;
+    public abstract void dump(BasicDataSet dataSet) throws IOException;
 
-    /**
-     * Generates report for a full deployment stats collector.
-     */
-    public abstract void generate(FullDeploymentStatsCollector statsCollector) throws IOException;
+    public abstract void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
 
-    /**
-     * Generates report for a basic stats collector for the SP policy.
-     */
-    public abstract void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException;
+    public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException;
 
-    /**
-     * Generates report for a full deployment collector for the SP policy.
-     */
-    public abstract void generate(SPPolicyFullDeploymentStatsCollector statsCollector) throws IOException;
+    public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                              SPPolicyDataSet spPolicyDataSet) throws IOException;
 }

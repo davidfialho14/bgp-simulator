@@ -21,10 +21,12 @@ public class ChangeAllFixedTimeProtocolChanger extends FixedTimeProtocolChanger 
         this.protocol = protocol;
     }
 
+    /**
+     * Invoked only once when the time to change is reached.
+     */
     @Override
-    public void onTimeChange(long newTime) {
-        if (isTimeToChange(newTime)) {
-            changeAllProtocols(protocol);
-        }
+    public void onTimeToChange() {
+        changeAllProtocols(protocol);
     }
+
 }

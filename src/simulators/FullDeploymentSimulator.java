@@ -4,88 +4,63 @@ import addons.protocolchangers.FixedTimeProtocolChanger;
 import io.reporters.Reporter;
 import network.Network;
 import protocols.BGPProtocol;
-import protocols.D1R1Protocol;
-import simulation.State;
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.FullDeploymentStatsCollector;
+import protocols.Protocol;
+import simulation.Engine;
+import simulators.data.FullDeploymentDataCollector;
 
 import java.io.IOException;
 
-public class FullDeploymentSimulator extends StandardSimulator {
+/**
+ * The initial deployment simulator simulates a network with the detection already activated for all nodes from
+ * the start to the end of the simulation.
+ */
+public class FullDeploymentSimulator extends Simulator {
 
-    private final long deployTime;
+    protected long deployTime;
+    private Protocol deployProtocol;
+    protected FullDeploymentDataCollector fullDeploymentDataCollector;
 
-    // wrapper around the stats collector to avoid having to cast every time there is the need to access
-    // full deployment stats collector features.
-    private FullDeploymentStatsCollector fullDeploymentStatsCollector;
+    FullDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol,
+                            FullDeploymentDataCollector fullDeploymentDataCollector, int deployTime) {
 
-    /**
-     * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
-     * method createInitialState(). Initializes the stats collector.
-     *
-     * @param network       network to simulate.
-     * @param destinationId id of the destination node.
-     * @param minDelay      minimum message delay.
-     * @param maxDelay      maximum message delay.
-     * @param deployTime    time to start deployment.
-     */
-    public FullDeploymentSimulator(Network network, int destinationId, int minDelay, int maxDelay, long deployTime) {
-        super(network, destinationId, minDelay, maxDelay);
+        super(engine, network, destinationId, new BGPProtocol());
+        this.deployProtocol = deployProtocol;
+        this.fullDeploymentDataCollector = fullDeploymentDataCollector;
         this.deployTime = deployTime;
 
-        // create a cast of the basic stats collector
-        fullDeploymentStatsCollector = (FullDeploymentStatsCollector) statsCollector;
+        this.fullDeploymentDataCollector.register(engine);
     }
 
     /**
-     * Creates the initial state. Each subclass must implement this method according to its configurations.
-     *
-     * @param network       network to simulate.
-     * @param destinationId id of the destination node.
-     * @return created state.
-     */
-    @Override
-    protected State createInitialState(Network network, int destinationId) {
-        return State.create(network, destinationId, new BGPProtocol());
-    }
-
-    /**
-     * Executes one simulation. Stats are stored for each simulation, no stat is ever discarded.
+     * Executes one simulation. Should be overridden by subclasses in order to add additional operations
+     * prior or after simulation. By default activates the debug report if enabled and calls the simulate() method
+     * of the engine.
      */
     @Override
     public void simulate() {
         // setup protocol changer
         new FixedTimeProtocolChanger(engine, state, deployTime) {
+
             @Override
-            public void onTimeChange(long newTime) {
-                if (isTimeToChange(newTime)) {
-                    changeAllProtocols(new D1R1Protocol());
-                    fullDeploymentStatsCollector.notifyDeployment();
-                }
+            public void onTimeToChange() {
+                changeAllProtocols(deployProtocol);
+                fullDeploymentDataCollector.setDeployed(true);
             }
         };
 
+        fullDeploymentDataCollector.clear();
         super.simulate();
     }
 
     /**
-     * Returns a FullDeploymentStatsCollector.
-     *
-     * @return new FullDeploymentStatsCollector object.
-     */
-    @Override
-    protected BasicStatsCollector createStatsCollector(int nodeCount, int linkCount) {
-        return new FullDeploymentStatsCollector(nodeCount, linkCount);
-    }
-
-    /**
-     * Calls the reporter generate() method to generate a report with the collected stats.
+     * Calls the reporter's generate() method to generate a report with the collected stats.
      *
      * @param reporter reporter to generate report.
      * @throws IOException if an error with the output file occurs.
      */
     @Override
     public void report(Reporter reporter) throws IOException {
-        reporter.generate(fullDeploymentStatsCollector);
+        fullDeploymentDataCollector.dump(reporter);
     }
+
 }

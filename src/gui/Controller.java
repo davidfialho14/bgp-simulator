@@ -7,7 +7,6 @@ import gui.partialdeployment.PartialDeploymentController;
 import io.InvalidTagException;
 import io.NetworkParser;
 import io.reporters.CSVReporter;
-import io.reporters.HTMLReporter;
 import io.reporters.Reporter;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -16,7 +15,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import simulators.*;
+import protocols.D1R1Protocol;
+import simulation.Engine;
+import simulation.schedulers.RandomScheduler;
+import simulators.Simulator;
+import simulators.SimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +28,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static policies.shortestpath.ShortestPathPolicy.isShortestPath;
+import static simulators.SimulatorFactory.newSimulator;
 
 public class Controller implements Initializable {
 
@@ -38,7 +41,6 @@ public class Controller implements Initializable {
     public Spinner<Integer> maxDelaySpinner;
     public PartialDeploymentController partialDeploymentFormController;
     public CheckBox debugCheckBox;
-    public RadioButton htmlRadioButton;
 
     private FileChooser fileChooser = new FileChooser();
 
@@ -113,58 +115,32 @@ public class Controller implements Initializable {
             NetworkParser parser = new NetworkParser();
             parser.parse(networkFile);
 
+            Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
+
             // simulator that will be used to simulate
             Simulator simulator;
 
             if (!partialDeploymentFormController.activateToggle.isSelected()) {
-
-                if (isShortestPath(parser.getNetwork().getPolicy())) {
-                    simulator = new SPPolicyStandardSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
-                } else {
-                    simulator = new StandardSimulator(parser.getNetwork(), destinationId, minDelay, maxDelay);
-                }
-
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, new D1R1Protocol());
             } else {
+                int deployTime = partialDeploymentFormController.detectingTimeSpinner.getValue();
 
-                int timeToChange = partialDeploymentFormController.detectingTimeSpinner.getValue();
-
-                if (isShortestPath(parser.getNetwork().getPolicy())) {
-                    simulator = new SPPolicyFullDeploymentSimulator(parser.getNetwork(), destinationId,
-                            minDelay, maxDelay, timeToChange);
-                } else {
-                    simulator = new FullDeploymentSimulator(parser.getNetwork(), destinationId,
-                            minDelay, maxDelay, timeToChange);
-                }
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, new D1R1Protocol(), deployTime);
             }
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
             simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
 
-            for (int i = 0; i < repetitionCount; i++) {
-                simulator.simulate();
-            }
+            String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
+            File reportFile = new File(networkFile.getParent(), reportFileName);
 
-            try {
-                // store the report file in the same directory as the network file and with the same name but with
-                // different extension
-
-                Reporter reporter;
-                if (htmlRadioButton.isSelected()) {
-                    String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".html");
-                    File reportFile = new File(networkFile.getParent(), reportFileName);
-                    reporter = new HTMLReporter(reportFile);
-                } else {
-                    String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
-                    File reportFile = new File(networkFile.getParent(), reportFileName);
-                    reporter = new CSVReporter(reportFile);
+            try (Reporter reporter = new CSVReporter(reportFile, parser.getNetwork())) {
+                for (int i = 0; i < repetitionCount; i++) {
+                    simulator.simulate();
+                    reportData(simulator, reporter);
                 }
-
-                simulator.report(reporter);
-
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
-                alert.setHeaderText("Report File Error");
-                alert.showAndWait();
             }
 
         } catch (IOException e) {
@@ -175,6 +151,17 @@ public class Controller implements Initializable {
         } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
+            alert.showAndWait();
+        }
+    }
+
+    private void reportData(Simulator simulator, Reporter reporter) {
+        try {
+            simulator.report(reporter);
+
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
+            alert.setHeaderText("Report File Error");
             alert.showAndWait();
         }
     }
