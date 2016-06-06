@@ -92,6 +92,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Starts the simulation according to the current configuration inputted by the user.
+     */
     public void handleClickedStartButton(ActionEvent actionEvent) {
 
         for (String networkFilePath : networkTextField.getText().split(" ; ")) {
@@ -156,6 +159,13 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Reports the data collected from the last simulation performed by the simulator using the given reporter.
+     * It handles IO errors that may occur when writing the data.
+     *
+     * @param simulator simulator that holds the data to be reported.
+     * @param reporter  reporter used to report the data.
+     */
     private void reportData(Simulator simulator, Reporter reporter) {
         try {
             simulator.report(reporter);
