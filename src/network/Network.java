@@ -14,12 +14,24 @@ public class Network {
     private Map<Integer, Node> nodes;   // each node must be unique in the network
     private Policy policy;              // policy of the network
 
+    private String name;                // name for the network
+
     /**
 	 * Creates a new empty network associated with the given policy.
 	 */
 	public Network(Policy policy) {
         this.nodes = new HashMap<>();
         this.policy = policy;
+        this.name = "";
+    }
+
+    /**
+     * Creates a new empty network associated with the given policy and name.
+     */
+    public Network(Policy policy, String name) {
+        this.nodes = new HashMap<>();
+        this.policy = policy;
+        this.name = name;
     }
 
     /**
@@ -33,6 +45,7 @@ public class Network {
         network.nodes.forEach((integer, node) -> this.nodes.put(integer, new Node(node)));
 
         this.policy = network.policy;
+        this.name = network.name;
     }
 
     /**
@@ -42,6 +55,15 @@ public class Network {
      */
     public Policy getPolicy() {
         return policy;
+    }
+
+    /**
+     * Returns the name of the network.
+     *
+     * @return name of the network
+     */
+    public String getName() {
+        return name;
     }
 
     /**

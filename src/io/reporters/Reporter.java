@@ -1,6 +1,8 @@
 package io.reporters;
 
 import network.Network;
+import protocols.Protocol;
+import simulators.Simulator;
 import simulators.data.BasicDataSet;
 import simulators.data.FullDeploymentDataSet;
 import simulators.data.SPPolicyDataSet;
@@ -28,6 +30,12 @@ public abstract class Reporter implements Closeable, AutoCloseable {
         this.outputFile = outputFile;
         this.network = network;
     }
+
+    /**
+     * Dumps all the basic information from the simulation.
+     */
+    public abstract void dumpBasicInfo(Network network, int destinationId, int minDelay, int maxDelay,
+                                       Protocol protocol, Simulator simulator) throws IOException;
 
     /**
      * Dumps that data from the data set to the current output file.
