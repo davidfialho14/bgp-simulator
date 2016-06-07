@@ -43,6 +43,7 @@ public class FullDeploymentSimulator extends Simulator {
 
             @Override
             public void onTimeToChange() {
+                deployProtocol.reset();
                 changeAllProtocols(deployProtocol);
                 fullDeploymentDataCollector.setDeployed(true);
             }
