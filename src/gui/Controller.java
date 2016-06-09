@@ -76,6 +76,15 @@ public class Controller implements Initializable {
     }
 
     /**
+     * Updates the networkTextField with the default network file.
+     *
+     * @param networkFile default network file to set.
+     */
+    public void setDefaultNetworkFile(File networkFile) {
+        networkTextField.setText(networkFile.getAbsolutePath());
+    }
+
+    /**
      * Handles browsing for network files. Opens up a file chooser for the user to select the network files to
      * simulate.
      */

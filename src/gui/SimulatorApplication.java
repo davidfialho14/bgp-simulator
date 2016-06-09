@@ -6,15 +6,25 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class SimulatorApplication extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
+    private static File defaultNetworkFile = null;
+
+    public static void launch(String[] args, File networkFile) {
+        defaultNetworkFile = networkFile;
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("gui.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui.fxml"));
+        Parent root = fxmlLoader.load();
+
+        if (defaultNetworkFile != null) {
+            Controller controller = fxmlLoader.getController();
+            controller.setDefaultNetworkFile(defaultNetworkFile);
+        }
 
         primaryStage.setTitle("Routing Simulator");
         primaryStage.setScene(new Scene(root));
