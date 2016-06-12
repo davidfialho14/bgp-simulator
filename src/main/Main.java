@@ -59,8 +59,6 @@ public class Main {
                 simulate(networkFile, destinationId);
 
             } else {
-
-
                 // display the GUI
                 SimulatorApplication.launch(args, networkFile);
             }

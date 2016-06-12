@@ -14,6 +14,7 @@ public class SimulatorApplication extends Application {
 
     public static void launch(String[] args, File networkFile) {
         defaultNetworkFile = networkFile;
+        launch(args);
     }
 
     @Override
