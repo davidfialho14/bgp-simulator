@@ -14,6 +14,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import protocols.D1R1Protocol;
+import protocols.D2R1Protocol;
 import protocols.Protocol;
 import simulation.Engine;
 import simulation.schedulers.RandomScheduler;
@@ -32,6 +33,7 @@ public class Main {
         Options options = new Options();
         options.addOption("d", "destination", true, "simulate with the given destination id");
         options.addOption("n", "network", true, "network to be simulated");
+        options.addOption("d2", "use detection 2 instead of detection 1");
 
         // parse the command line arguments
         try {
@@ -56,7 +58,14 @@ public class Main {
                     System.exit(1);
                 }
 
-                simulate(networkFile, destinationId);
+                Protocol protocol;
+                if (cmd.hasOption("d2")) {
+                    protocol = new D2R1Protocol();
+                } else {
+                    protocol = new D1R1Protocol();
+                }
+
+                simulate(networkFile, destinationId, protocol);
 
             } else {
                 // display the GUI
@@ -70,12 +79,11 @@ public class Main {
 
     }
 
-    private static void simulate(File networkFile, int destinationId) {
+    private static void simulate(File networkFile, int destinationId, Protocol protocol) {
 
         int repetitionCount = 1000;
         int minDelay = 0;
         int maxDelay = 10;
-        Protocol protocol = new D1R1Protocol();
 
         try {
             NetworkParser parser = new NetworkParser();
