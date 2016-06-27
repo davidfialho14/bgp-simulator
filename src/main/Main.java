@@ -34,6 +34,7 @@ public class Main {
         options.addOption("d", "destination", true, "simulate with the given destination id");
         options.addOption("n", "network", true, "network to be simulated");
         options.addOption("d2", "use detection 2 instead of detection 1");
+        options.addOption("deploy", true, "time deploy detection");
 
         // parse the command line arguments
         try {
@@ -65,7 +66,12 @@ public class Main {
                     protocol = new D1R1Protocol();
                 }
 
-                simulate(networkFile, destinationId, protocol);
+                Integer deployTime = null;
+                if (cmd.hasOption("deploy")) {
+                    deployTime = Integer.parseInt(cmd.getOptionValue("deploy"));
+                }
+
+                simulate(networkFile, destinationId, protocol, deployTime);
 
             } else {
                 // display the GUI
@@ -79,7 +85,7 @@ public class Main {
 
     }
 
-    private static void simulate(File networkFile, int destinationId, Protocol protocol) {
+    private static void simulate(File networkFile, int destinationId, Protocol protocol, Integer deployTime) {
 
         int repetitionCount = 1000;
         int minDelay = 0;
@@ -90,8 +96,15 @@ public class Main {
             parser.parse(networkFile);
 
             Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
-            Simulator simulator = SimulatorFactory.newSimulator(
-                    engine, parser.getNetwork(), destinationId, protocol);
+
+            Simulator simulator;
+            if (deployTime == null) {
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, protocol);
+            } else {
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, protocol, deployTime);
+            }
 
             String reportFileName = networkFile.getName().replaceFirst("\\.gv",
                     String.format("-dest%02d.csv", destinationId));
