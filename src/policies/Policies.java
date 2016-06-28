@@ -1,6 +1,7 @@
 package policies;
 
 import io.InvalidTagException;
+import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;
 
 import java.util.HashMap;
@@ -18,11 +19,17 @@ public class Policies {
      */
     static {
         policy("ShortestPath", new ShortestPathPolicy());
+        policy("RoC", new RoCPolicy());
     }
 
     // --- Stop editing from now on ---------------------------------------------------------------------------------
 
     // --- PUBLIC INTERFACE -----------------------------------------------------------------------------------------
+
+    private Policies() {
+    }   // can not be instantiated
+
+    // --- PRIVATE METHODS ------------------------------------------------------------------------------------------
 
     /**
      * Parses the tag and returns the respective policy instance.
@@ -39,11 +46,7 @@ public class Policies {
         return policy;
     }
 
-    // --- PRIVATE METHODS ------------------------------------------------------------------------------------------
-
     private static void policy(String tag, Policy policy) {
         policies.put(tag, policy);
     }
-
-    private Policies() {}   // can not be instantiated
 }
