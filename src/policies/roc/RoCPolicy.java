@@ -19,7 +19,7 @@ public class RoCPolicy implements Policy {
     public Label createLabel(String tag) throws InvalidTagException {
         switch (tag) {
             case "R+":
-                return new CustomerLabel();
+                return new PeerPlusLabel();
             case "C":
                 return new CustomerLabel();
             case "R":
