@@ -6,7 +6,7 @@ import policies.Attribute;
 import policies.Label;
 import policies.Policy;
 
-import static policies.gaorexford.SelfAttribute.self;
+import static policies.roc.SelfAttribute.self;
 
 public class RoCPolicy implements Policy {
 
