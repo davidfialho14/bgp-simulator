@@ -3,6 +3,7 @@ package policies;
 import io.InvalidTagException;
 import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;
+import policies.siblings.SiblingsPolicy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class Policies {
     static {
         policy("ShortestPath", new ShortestPathPolicy());
         policy("RoC", new RoCPolicy());
+        policy("Siblings", new SiblingsPolicy());
     }
 
     // --- Stop editing from now on ---------------------------------------------------------------------------------
