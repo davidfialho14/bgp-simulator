@@ -1,4 +1,4 @@
-package gui.partialdeployment;
+package gui.gradualdeployment;
 
 import gui.basics.NumberSpinner;
 import javafx.event.ActionEvent;
@@ -10,25 +10,28 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PartialDeploymentController implements Initializable {
+public class GradualDeploymentController implements Initializable {
 
-    public GridPane statsPane;
+    public GridPane controlsPane;
     public ToggleButton activateToggle;
-    public Spinner<Integer> detectingTimeSpinner;
+    public Spinner<Integer> deployPeriodSpinner;
+    public Spinner<Integer> deployPercentageSpinner;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        NumberSpinner.setupNumberSpinner(detectingTimeSpinner, 0, Integer.MAX_VALUE, 0);
+        NumberSpinner.setupNumberSpinner(deployPeriodSpinner, 0, Integer.MAX_VALUE, 10);
+        NumberSpinner.setupNumberSpinner(deployPercentageSpinner, 0, 100, 10, 10);
     }
 
-    public void enablePartialDeployment(ActionEvent actionEvent) {
+    public void enableGradualDeployment(ActionEvent actionEvent) {
 
         if (activateToggle.isSelected()) {
             activateToggle.setText("On");
-            statsPane.setDisable(false);
+            controlsPane.setDisable(false);
         } else {
             activateToggle.setText("Off");
-            statsPane.setDisable(true);
+            controlsPane.setDisable(true);
         }
     }
 }

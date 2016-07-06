@@ -5,6 +5,7 @@ import protocols.Protocol;
 import simulators.Simulator;
 import simulators.data.BasicDataSet;
 import simulators.data.FullDeploymentDataSet;
+import simulators.data.GradualDeploymentDataSet;
 import simulators.data.SPPolicyDataSet;
 
 import java.io.Closeable;
@@ -50,4 +51,7 @@ public abstract class Reporter implements Closeable, AutoCloseable {
 
     public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                               SPPolicyDataSet spPolicyDataSet) throws IOException;
+
+    public abstract void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException;
+
 }

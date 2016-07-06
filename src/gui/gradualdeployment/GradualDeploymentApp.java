@@ -1,4 +1,4 @@
-package gui.partialdeployment;
+package gui.gradualdeployment;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,13 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Just for testing the partial deployment form!
+ * Just for testing the gradual deployment form!
  */
-public class PartialDeploymentApp extends Application{
+public class GradualDeploymentApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("partial_deployment.fxml"));
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("gradual_deployment.fxml"));
 
         primaryStage.setTitle("Routing Simulator");
         primaryStage.setScene(new Scene(root));
