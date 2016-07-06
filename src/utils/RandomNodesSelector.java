@@ -14,12 +14,13 @@ import java.util.Random;
  */
 public class RandomNodesSelector {
 
+    private Network network;
     private List<Node> availableNodes;
     private Random random = new Random();
 
     public RandomNodesSelector(Network network) {
-        // copy all nodes to an array list
-        availableNodes = new ArrayList<>(network.getNodes());
+        this.network = network;
+        reset();
     }
 
     public RandomNodesSelector(List<Node> nodes) {
@@ -45,6 +46,14 @@ public class RandomNodesSelector {
         }
 
         return selectedNodes;
+    }
+
+    /**
+     * Resets all the nodes available.
+     */
+    public void reset() {
+        // copy all nodes to an array list
+        availableNodes = new ArrayList<>(network.getNodes());
     }
 
 }

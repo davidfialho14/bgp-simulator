@@ -51,6 +51,7 @@ public class GradualDeploymentSimulator extends Simulator {
     public void simulate() {
         deployProtocol.reset();
         gradualDeploymentDataCollector.clear();
+        nodesSelector.reset();
 
         new PeriodicProtocolChanger(engine, state, deployPeriod) {
             @Override
