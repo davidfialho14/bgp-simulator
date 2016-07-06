@@ -4,6 +4,7 @@ import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import gui.basics.NumberSpinner;
 import gui.fulldeployment.FullDeploymentController;
+import gui.gradualdeployment.GradualDeploymentController;
 import gui.radiobuttons.ProtocolToggleGroup;
 import io.InvalidTagException;
 import io.NetworkParser;
@@ -39,6 +40,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> minDelaySpinner;
     public Spinner<Integer> maxDelaySpinner;
     public FullDeploymentController fullDeploymentFormController;
+    public GradualDeploymentController gradualDeploymentFormController;
     public CheckBox debugCheckBox;
     public ProtocolToggleGroup detectionGroup;
 
@@ -133,14 +135,22 @@ public class Controller implements Initializable {
             // simulator that will be used to simulate
             Simulator simulator;
 
-            if (!fullDeploymentFormController.activateToggle.isSelected()) {
-                simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol);
-            } else {
+            if (fullDeploymentFormController.activateToggle.isSelected()) {
                 int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
                         engine, parser.getNetwork(), destinationId, protocol, deployTime);
+
+            } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
+                int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
+                int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
+
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, protocol, deployPeriod, deployPercentage / 100);
+
+            } else {
+                simulator = SimulatorFactory.newSimulator(
+                        engine, parser.getNetwork(), destinationId, protocol);
             }
 
             String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
