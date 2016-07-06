@@ -69,5 +69,6 @@ public class BasicDataSet implements DataSet {
         detectingNodes.clear();
         cutOffLinksCount = 0;
         detections.clear();
+        simulationTime = 0;
     }
 }
