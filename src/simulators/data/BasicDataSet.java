@@ -20,6 +20,7 @@ public class BasicDataSet implements DataSet {
     private Set<Node> detectingNodes = new HashSet<>();    // stores all unique detecting nodes
     private int cutOffLinksCount = 0;
     private List<Detection> detections = new ArrayList<>();
+    private long simulationTime = 0;
 
     // --- Methods to access the data ---
 
@@ -39,7 +40,15 @@ public class BasicDataSet implements DataSet {
         return detections;
     }
 
+    public long getSimulationTime() {
+        return simulationTime;
+    }
+
     // --- Methods to update the data
+
+    public void setSimulationTime(long simulationTime) {
+        this.simulationTime = simulationTime;
+    }
 
     public void addMessage() {
         totalMessageCount++;

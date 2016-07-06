@@ -2,6 +2,7 @@ package simulators.data;
 
 import io.reporters.Reporter;
 import simulation.Engine;
+import simulation.TimeListener;
 import simulation.events.DetectEvent;
 import simulation.events.DetectListener;
 import simulation.events.ExportEvent;
@@ -12,7 +13,7 @@ import java.io.IOException;
 /**
  * Collects the data for a basic data set.
  */
-public class BasicDataCollector implements DataCollector, ExportListener, DetectListener {
+public class BasicDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener {
 
     protected BasicDataSet basicDataSet = new BasicDataSet();
 
@@ -25,6 +26,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     public void register(Engine engine) {
         engine.getEventGenerator().addExportListener(this);
         engine.getEventGenerator().addDetectListener(this);
+        engine.timeProperty().addListener(this);
     }
 
     /**
@@ -63,5 +65,10 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public void onExported(ExportEvent event) {
         basicDataSet.addMessage();
+    }
+
+    @Override
+    public void onTimeChange(long newTime) {
+        basicDataSet.setSimulationTime(newTime);
     }
 }
