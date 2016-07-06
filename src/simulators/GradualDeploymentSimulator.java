@@ -47,6 +47,7 @@ public class GradualDeploymentSimulator extends Simulator {
     @Override
     public void simulate() {
         deployProtocol.reset();
+        gradualDeploymentDataCollector.clear();
 
         new PeriodicProtocolChanger(engine, state, deployPeriod) {
             @Override
@@ -54,11 +55,11 @@ public class GradualDeploymentSimulator extends Simulator {
                 Collection<Node> selectedNodes = nodesSelector.selectNodes(deployedNodeCount);
                 for (Node selectedNode : selectedNodes) {
                     changeProtocol(selectedNode, deployProtocol);
+                    gradualDeploymentDataCollector.setNodeDeployed(selectedNode);
                 }
             }
         };
 
-        gradualDeploymentDataCollector.clear();
         super.simulate();
     }
 
@@ -70,7 +71,7 @@ public class GradualDeploymentSimulator extends Simulator {
      */
     @Override
     public void report(Reporter reporter) throws IOException {
-
+        gradualDeploymentDataCollector.dump(reporter);
     }
 
 }

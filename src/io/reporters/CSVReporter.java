@@ -11,10 +11,7 @@ import protocols.Protocol;
 import simulators.FullDeploymentSimulator;
 import simulators.InitialDeploymentSimulator;
 import simulators.Simulator;
-import simulators.data.BasicDataSet;
-import simulators.data.Detection;
-import simulators.data.FullDeploymentDataSet;
-import simulators.data.SPPolicyDataSet;
+import simulators.data.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -51,6 +48,34 @@ public class CSVReporter extends Reporter {
 
         File detectionsFile = getClassFile(outputFile, "detections");
         this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
+    }
+
+    /**
+     * Returns a file with the class name associated to its name.
+     *
+     * @param originalFile original file.
+     * @param fileClass    class name to associate with the file.
+     * @return file with the class name associated to its name.
+     */
+    private static File getClassFile(File originalFile, String fileClass) {
+        return new File(originalFile.getParent(),
+                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
+    }
+
+    private static String pretty(Node node) {
+        return String.valueOf(node.getId());
+    }
+
+    private static String pretty(Link link) {
+        return link.getSource().getId() + " → " + link.getDestination().getId();
+    }
+
+    private static String pretty(Path path) {
+        List<Integer> pathNodesIds = path.stream()
+                .map(Node::getId)
+                .collect(Collectors.toList());
+
+        return StringUtils.join(pathNodesIds.iterator(), " → ");
     }
 
     /**
@@ -102,6 +127,8 @@ public class CSVReporter extends Reporter {
         dumpMain(basicDataSet, null, spPolicyDataSet);
     }
 
+    // --- PRIVATE METHODS ---
+
     @Override
     public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
         dumpMain(basicDataSet, fullDeploymentDataSet, null);
@@ -111,6 +138,12 @@ public class CSVReporter extends Reporter {
     public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                      SPPolicyDataSet spPolicyDataSet) throws IOException {
         dumpMain(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
+    }
+
+    @Override
+    public void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) {
+        // TODO implement this
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -124,7 +157,10 @@ public class CSVReporter extends Reporter {
         }
     }
 
-    // --- PRIVATE METHODS ---
+    /*
+        Set of helper method that allow displaying any element like Nodes, Links, Paths, etc into a more prettier
+        format.
+     */
 
     /**
      * Main dump method. All dump methods call this method underneath.
@@ -213,39 +249,6 @@ public class CSVReporter extends Reporter {
 
     private void appendColumn(BufferedWriter writer, Object column) throws IOException {
         writer.write(COMMA + column.toString());
-    }
-
-    /**
-     * Returns a file with the class name associated to its name.
-     *
-     * @param originalFile original file.
-     * @param fileClass    class name to associate with the file.
-     * @return file with the class name associated to its name.
-     */
-    private static File getClassFile(File originalFile, String fileClass) {
-        return new File(originalFile.getParent(),
-                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
-    }
-
-    /*
-        Set of helper method that allow displaying any element like Nodes, Links, Paths, etc into a more prettier
-        format.
-     */
-
-    private static String pretty(Node node) {
-        return String.valueOf(node.getId());
-    }
-
-    private static String pretty(Link link) {
-        return link.getSource().getId() + " → " + link.getDestination().getId();
-    }
-
-    private static String pretty(Path path) {
-        List<Integer> pathNodesIds = path.stream()
-                .map(Node::getId)
-                .collect(Collectors.toList());
-
-        return StringUtils.join(pathNodesIds.iterator(), " → ");
     }
 
 }
