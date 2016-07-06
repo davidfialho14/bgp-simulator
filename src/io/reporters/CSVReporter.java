@@ -9,6 +9,7 @@ import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import protocols.Protocol;
 import simulators.FullDeploymentSimulator;
+import simulators.GradualDeploymentSimulator;
 import simulators.InitialDeploymentSimulator;
 import simulators.Simulator;
 import simulators.data.*;
@@ -27,12 +28,14 @@ public class CSVReporter extends Reporter {
 
     private static final char COMMA = ';';
 
-    private BufferedWriter countsWriter;
-    private BufferedWriter detectionsWriter;
+    private final BufferedWriter countsWriter;
+    private final BufferedWriter detectionsWriter;
+    private final BufferedWriter deploymentsWriter;
 
     private int simulationCounter = 0;                     // counts the simulations
     private boolean isCountsFileMissingHeaders = true;     // indicates if the counts file is missing the headers
     private boolean isDetectionsFileMissingHeaders = true; // indicates if the detections file is missing the headers
+    private boolean isDeploymentsFileMissingHeaders = true; // indicates if the deployments file is missing the headers
 
     /**
      * Constructs a reporter associating the output file.
@@ -48,6 +51,9 @@ public class CSVReporter extends Reporter {
 
         File detectionsFile = getClassFile(outputFile, "detections");
         this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
+
+        File deploymentsFile = getClassFile(outputFile, "deployments");
+        this.deploymentsWriter = new BufferedWriter(new FileWriter(deploymentsFile));
     }
 
     /**
@@ -106,6 +112,8 @@ public class CSVReporter extends Reporter {
                 simulationType = "Initial";
             else if(simulator instanceof FullDeploymentSimulator) {
                 simulationType = "Full";
+            } else if (simulator instanceof GradualDeploymentSimulator) {
+                simulationType = "Gradual";
             }
             writeColumns(basicWriter, "Simulation Type", simulationType); basicWriter.newLine();
 
@@ -119,31 +127,28 @@ public class CSVReporter extends Reporter {
      */
     @Override
     public void dump(BasicDataSet dataSet) throws IOException {
-        dumpMain(dataSet, null, null);
+        dumpMain(dataSet, null, null, null);
     }
 
     @Override
     public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, null, spPolicyDataSet);
+        dumpMain(basicDataSet, null, null, spPolicyDataSet);
     }
-
-    // --- PRIVATE METHODS ---
 
     @Override
     public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, null);
+        dumpMain(basicDataSet, fullDeploymentDataSet, null, null);
     }
 
     @Override
     public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                      SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
+        dumpMain(basicDataSet, fullDeploymentDataSet, null, spPolicyDataSet);
     }
 
     @Override
-    public void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) {
-        // TODO implement this
-        throw new UnsupportedOperationException();
+    public void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
+        dumpMain(basicDataSet, null, gradualDeploymentDataSet, null);
     }
 
     @Override
@@ -157,6 +162,8 @@ public class CSVReporter extends Reporter {
         }
     }
 
+    // --- PRIVATE METHODS ---
+
     /*
         Set of helper method that allow displaying any element like Nodes, Links, Paths, etc into a more prettier
         format.
@@ -166,7 +173,8 @@ public class CSVReporter extends Reporter {
      * Main dump method. All dump methods call this method underneath.
      */
     private void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                          SPPolicyDataSet spPolicyDataSet) throws IOException {
+                          GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
+            throws IOException {
 
         simulationCounter++;    // every time dump is called it is for a new simulation
 
@@ -178,6 +186,9 @@ public class CSVReporter extends Reporter {
             writeColumns(countsWriter, "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count");
             if (fullDeploymentDataSet != null) {
                 appendColumn(countsWriter, "Messages After Deployment Count");
+            }
+            if (gradualDeploymentDataSet != null) {
+                appendColumn(countsWriter, "Deployed Nodes Count");
             }
             if (spPolicyDataSet != null) {
                 appendColumn(countsWriter, "False Positive Count");
@@ -195,6 +206,9 @@ public class CSVReporter extends Reporter {
 
         if (fullDeploymentDataSet != null) {
             appendColumn(countsWriter, fullDeploymentDataSet.getMessageCount());
+        }
+        if (gradualDeploymentDataSet != null) {
+            appendColumn(countsWriter, gradualDeploymentDataSet.getDeployedNodesCount());
         }
         if (spPolicyDataSet != null) {
             appendColumn(countsWriter, spPolicyDataSet.getFalsePositiveCount());
@@ -229,6 +243,28 @@ public class CSVReporter extends Reporter {
             }
             detectionsWriter.newLine();
         }
+
+        if (gradualDeploymentDataSet != null) {
+
+            // write the deployments table headers
+
+            if (isDeploymentsFileMissingHeaders) {
+                isDeploymentsFileMissingHeaders = false;
+
+                writeColumns(deploymentsWriter, "Simulation", "Deployed Nodes");
+
+                deploymentsWriter.newLine();
+            }
+
+            // write the deployments table data
+
+            String deployedNodes = gradualDeploymentDataSet.getDeployedNodes().stream()
+                    .map(node -> node.toString())
+                    .collect(Collectors.joining(", "));
+
+            writeColumns(deploymentsWriter, simulationCounter, deployedNodes);
+        }
+
     }
 
     /**
