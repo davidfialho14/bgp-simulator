@@ -27,8 +27,7 @@ public abstract class Simulator {
     private DebugEventHandler debugEventHandler = null;
 
     /**
-     * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
-     * method createInitialState().
+     * Constructs a simulator by creating an initial state to be simulated.
      *
      * @param engine            engine used for simulation.
      * @param network           network to simulate.
