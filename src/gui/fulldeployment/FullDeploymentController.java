@@ -1,4 +1,4 @@
-package gui.partialdeployment;
+package gui.fulldeployment;
 
 import gui.basics.NumberSpinner;
 import javafx.event.ActionEvent;
@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PartialDeploymentController implements Initializable {
+public class FullDeploymentController implements Initializable {
 
     public GridPane statsPane;
     public ToggleButton activateToggle;
@@ -21,7 +21,7 @@ public class PartialDeploymentController implements Initializable {
         NumberSpinner.setupNumberSpinner(detectingTimeSpinner, 0, Integer.MAX_VALUE, 0);
     }
 
-    public void enablePartialDeployment(ActionEvent actionEvent) {
+    public void enableFullDeployment(ActionEvent actionEvent) {
 
         if (activateToggle.isSelected()) {
             activateToggle.setText("On");

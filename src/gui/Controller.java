@@ -3,7 +3,7 @@ package gui;
 import com.alexmerz.graphviz.ParseException;
 import com.alexmerz.graphviz.TokenMgrError;
 import gui.basics.NumberSpinner;
-import gui.partialdeployment.PartialDeploymentController;
+import gui.fulldeployment.FullDeploymentController;
 import gui.radiobuttons.ProtocolToggleGroup;
 import io.InvalidTagException;
 import io.NetworkParser;
@@ -38,7 +38,7 @@ public class Controller implements Initializable {
     public Spinner<Integer> repetitionsSpinner;
     public Spinner<Integer> minDelaySpinner;
     public Spinner<Integer> maxDelaySpinner;
-    public PartialDeploymentController partialDeploymentFormController;
+    public FullDeploymentController fullDeploymentFormController;
     public CheckBox debugCheckBox;
     public ProtocolToggleGroup detectionGroup;
 
@@ -133,11 +133,11 @@ public class Controller implements Initializable {
             // simulator that will be used to simulate
             Simulator simulator;
 
-            if (!partialDeploymentFormController.activateToggle.isSelected()) {
+            if (!fullDeploymentFormController.activateToggle.isSelected()) {
                 simulator = SimulatorFactory.newSimulator(
                         engine, parser.getNetwork(), destinationId, protocol);
             } else {
-                int deployTime = partialDeploymentFormController.detectingTimeSpinner.getValue();
+                int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
                         engine, parser.getNetwork(), destinationId, protocol, deployTime);

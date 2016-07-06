@@ -14,8 +14,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="pane" hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.65"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Controller">
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="pane" hgap="10.0" vgap="10.0"
+          xmlns="http://javafx.com/javafx/8.0.65" fx:controller="gui.Controller">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="105.0"/>
@@ -50,10 +50,10 @@
         <Button fx:id="startButton" defaultButton="true" disable="true" maxWidth="67.0" minWidth="67.0"
                 mnemonicParsing="false" onAction="#handleClickedStartButton" prefWidth="67.0" text="Start"
                 GridPane.columnIndex="7" GridPane.rowIndex="1"/>
-        <TitledPane animated="false" prefHeight="301.0" prefWidth="385.0" text="Partial Deployment"
+        <TitledPane animated="false" prefHeight="301.0" prefWidth="385.0" text="Full Deployment"
                     GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="6">
             <content>
-                <fx:include fx:id="partialDeploymentForm" source="partialdeployment/partial_deployment.fxml"/>
+                <fx:include fx:id="fullDeploymentForm" source="fulldeployment/full_deployment.fxml"/>
             </content>
         </TitledPane>
         <CheckBox fx:id="debugCheckBox" mnemonicParsing="false" text="Generate debug file (increases simulation time)"
