@@ -187,7 +187,9 @@ public class CSVReporter extends Reporter {
         if (isCountsFileMissingHeaders) {
             isCountsFileMissingHeaders = false;
 
-            writeColumns(countsWriter, "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count");
+            writeColumns(countsWriter, "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off " +
+                    "Links " +
+                    "Count");
             if (fullDeploymentDataSet != null) {
                 appendColumn(countsWriter, "Messages After Deployment Count");
             }
@@ -203,6 +205,7 @@ public class CSVReporter extends Reporter {
         // write counts data
 
         writeColumns(countsWriter,
+                basicDataSet.getSimulationTime(),
                 basicDataSet.getTotalMessageCount(),
                 basicDataSet.getDetectingNodesCount(),
                 basicDataSet.getCutOffLinksCount()

@@ -2,19 +2,18 @@ package simulators.data;
 
 import io.reporters.Reporter;
 import simulation.Engine;
-import simulation.events.DetectEvent;
-import simulation.events.DetectListener;
-import simulation.events.ExportEvent;
-import simulation.events.ExportListener;
+import simulation.TimeListener;
+import simulation.events.*;
 
 import java.io.IOException;
 
 /**
  * Collects the data for a basic data set.
  */
-public class BasicDataCollector implements DataCollector, ExportListener, DetectListener {
+public class BasicDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener, StartListener {
 
     protected BasicDataSet basicDataSet = new BasicDataSet();
+    private Engine engine;
 
     /**
      * Registers the collector with the engine used for simulating.
@@ -23,8 +22,10 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void register(Engine engine) {
-        engine.getEventGenerator().addExportListener(this);
-        engine.getEventGenerator().addDetectListener(this);
+        this.engine = engine;
+        this.engine.getEventGenerator().addExportListener(this);
+        this.engine.getEventGenerator().addDetectListener(this);
+        this.engine.getEventGenerator().addStartListener(this);
     }
 
     /**
@@ -63,5 +64,20 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public void onExported(ExportEvent event) {
         basicDataSet.addMessage();
+    }
+
+    @Override
+    public void onTimeChange(long newTime) {
+        basicDataSet.setSimulationTime(newTime);
+    }
+
+    /**
+     * Invoked when a start event occurs.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        engine.timeProperty().addListener(this);
     }
 }
