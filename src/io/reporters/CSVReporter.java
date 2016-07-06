@@ -160,6 +160,10 @@ public class CSVReporter extends Reporter {
         if (detectionsWriter != null) {
             detectionsWriter.close();
         }
+
+        if (deploymentsWriter != null) {
+            deploymentsWriter.close();
+        }
     }
 
     // --- PRIVATE METHODS ---
@@ -263,6 +267,7 @@ public class CSVReporter extends Reporter {
                     .collect(Collectors.joining(", "));
 
             writeColumns(deploymentsWriter, simulationCounter, deployedNodes);
+            deploymentsWriter.newLine();
         }
 
     }
