@@ -29,7 +29,9 @@ public class RandomNodesSelector {
 
     /**
      * Randomly selects nodeCount nodes from the set of nodes in the network associated with this selector.
-     * Once this method is called, the returned nodes are no longer available in the next call.
+     * Once this method is called, the returned nodes are no longer available in the next call. If the requested
+     * number of nodes is higher than the number of nodes available, only the number of nodes available will be
+     * returned.
      *
      * @param nodeCount number of nodes to select.
      * @return collection with the selected nodes
@@ -37,12 +39,11 @@ public class RandomNodesSelector {
     public Collection<Node> selectNodes(int nodeCount) {
         Collection<Node> selectedNodes = new ArrayList<>(nodeCount);
 
-        if (!availableNodes.isEmpty()) {
-            for (int i = 0; i < nodeCount; i++) {
-                int index = random.nextInt(availableNodes.size());
-                selectedNodes.add(availableNodes.get(index));
-                availableNodes.remove(index);
-            }
+        int maxSelectableNodes = Math.min(nodeCount, availableNodes.size());
+        for (int i = 0; i < maxSelectableNodes; i++) {
+            int index = random.nextInt(availableNodes.size());
+            selectedNodes.add(availableNodes.get(index));
+            availableNodes.remove(index);
         }
 
         return selectedNodes;

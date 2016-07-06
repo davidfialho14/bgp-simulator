@@ -3,8 +3,10 @@ package utils;
 import network.Node;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -31,7 +33,6 @@ public class RandomNodesSelectorTest {
 
         Collection<Node> selectedNodes = nodesSelector.selectNodes(2);
 
-        System.out.println(selectedNodes);
         assertThat(selectedNodes.size(), is(2));
     }
 
@@ -44,8 +45,27 @@ public class RandomNodesSelectorTest {
         nodesSelector.selectNodes(4);
         Collection<Node> selectedNodes = nodesSelector.selectNodes(1);
 
-        System.out.println(selectedNodes);
         assertThat(selectedNodes.size(), is(0));
+    }
+
+    @Test
+    public void select1Node_From0AvailableNodes_Selected0Nodes() throws Exception {
+
+        RandomNodesSelector nodesSelector = new RandomNodesSelector(new ArrayList<>());
+
+        Collection<Node> selectedNodes = nodesSelector.selectNodes(1);
+
+        assertThat(selectedNodes.size(), is(0));
+    }
+
+    @Test
+    public void select2Node_From1AvailableNode_Selected1Node() throws Exception {
+
+        RandomNodesSelector nodesSelector = new RandomNodesSelector(Collections.singletonList(new Node(0)));
+
+        Collection<Node> selectedNodes = nodesSelector.selectNodes(2);
+
+        assertThat(selectedNodes.size(), is(1));
     }
 
 }
