@@ -26,6 +26,19 @@ public abstract class PeriodicProtocolChanger extends ProtocolChanger implements
         this.timeToChange = changePeriod;
     }
 
+    /**
+     * Assigns the protocol changer to an engine and state and registers the protocol changer to the time
+     * property of the engine.
+     *
+     * @param engine engine to assign to.
+     * @param state  state to assign to.
+     */
+    @Override
+    public void assignTo(Engine engine, State state) {
+        super.assignTo(engine, state);
+        engine.timeProperty().addListener(this);
+    }
+
     @Override
     public void onTimeChange(long newTime) {
         if (newTime >= timeToChange) {
