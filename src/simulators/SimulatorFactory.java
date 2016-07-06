@@ -45,7 +45,7 @@ public abstract class SimulatorFactory {
      * Creates a gradual deployment simulator instance.
      */
     public static Simulator newSimulator(Engine engine, Network network, int destinationId, Protocol protocol,
-                                         int deployPeriod, int nodePercentage) {
+                                         int deployPeriod, double nodePercentage) {
         // TODO add shortest path special case
         return new GradualDeploymentSimulator(engine, network, destinationId, protocol, deployPeriod, nodePercentage);
     }

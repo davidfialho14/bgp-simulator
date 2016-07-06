@@ -146,7 +146,7 @@ public class Controller implements Initializable {
                 int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol, deployPeriod, deployPercentage / 100);
+                        engine, parser.getNetwork(), destinationId, protocol, deployPeriod, deployPercentage / 100.0);
 
             } else {
                 simulator = SimulatorFactory.newSimulator(

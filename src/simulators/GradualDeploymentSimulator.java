@@ -34,13 +34,14 @@ public class GradualDeploymentSimulator extends Simulator {
      * @param network        network to simulate.
      * @param destinationId  id of the destination node.
      * @param deployProtocol initial protocol.
+     * @param deployedNodePercentage
      */
     public GradualDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol,
-                                      long deployPeriod, float deployedNodePercentage) {
+                                      long deployPeriod, double deployedNodePercentage) {
         super(engine, network, destinationId, new BGPProtocol());
         this.deployProtocol = deployProtocol;
         this.deployPeriod = deployPeriod;
-        this.deployedNodeCount = (int) (deployedNodePercentage * network.getNodeCount());
+        this.deployedNodeCount = (int) Math.ceil(deployedNodePercentage * network.getNodeCount());
         this.nodesSelector = new RandomNodesSelector(network);
     }
 
