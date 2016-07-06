@@ -43,6 +43,8 @@ public class GradualDeploymentSimulator extends Simulator {
         this.deployPeriod = deployPeriod;
         this.deployedNodeCount = (int) Math.ceil(deployedNodePercentage * network.getNodeCount());
         this.nodesSelector = new RandomNodesSelector(network);
+
+        this.gradualDeploymentDataCollector.register(engine);
     }
 
     @Override
