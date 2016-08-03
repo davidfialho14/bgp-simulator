@@ -1,6 +1,7 @@
 package policies;
 
 import io.InvalidTagException;
+import policies.gaorexford.GaoRexfordPolicy;
 import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;
 
@@ -20,6 +21,7 @@ public class Policies {
     static {
         policy("ShortestPath", new ShortestPathPolicy());
         policy("RoC", new RoCPolicy());
+        policy("GaoRexford", new GaoRexfordPolicy());
     }
 
     // --- Stop editing from now on ---------------------------------------------------------------------------------
