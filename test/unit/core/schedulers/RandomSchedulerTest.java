@@ -19,7 +19,7 @@ public class RandomSchedulerTest {
     protected RandomDelayGenerator stubGenerator;
 
     @InjectMocks
-    protected RandomScheduler scheduler;
+    protected RandomScheduler scheduler = new RandomScheduler(0, 10);
 
     private void setDelay(int delay) {
         when(stubGenerator.nextDelay()).thenReturn(delay);
