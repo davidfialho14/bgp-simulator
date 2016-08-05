@@ -5,14 +5,14 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static wrappers.ShortestPathWrapper.sp;
 
 public class ShortestPathAttributeTest {
 
     @Test
     public void compareTo_AttributeWithLength0WithInvalidAttribute_Less() throws Exception {
-        assertThat(sp(0).compareTo(invalid()), lessThan(0));
+        assertThat(sp(0).compareTo(invalidAttr()), lessThan(0));
     }
 
     @Test

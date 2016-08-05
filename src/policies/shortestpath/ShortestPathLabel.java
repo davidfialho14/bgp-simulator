@@ -4,7 +4,7 @@ import network.Link;
 import core.Attribute;
 import core.Label;
 
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 
 public class ShortestPathLabel implements Label {
 
@@ -32,8 +32,8 @@ public class ShortestPathLabel implements Label {
      */
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute.isInvalid()) {
-            return invalid();
+        if (attribute == invalidAttr()) {
+            return invalidAttr();
         } else {
             ShortestPathAttribute shortestPathAttribute = (ShortestPathAttribute) attribute;
             return new ShortestPathAttribute(length + shortestPathAttribute.getLength());

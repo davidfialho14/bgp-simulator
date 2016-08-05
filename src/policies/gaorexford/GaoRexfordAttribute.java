@@ -2,13 +2,15 @@ package policies.gaorexford;
 
 import core.Attribute;
 
-public abstract class GaoRexfordAttribute extends Attribute {
+import static core.InvalidAttribute.invalidAttr;
+
+public abstract class GaoRexfordAttribute implements Attribute {
 
     abstract Type getType();
 
     @Override
     public int compareTo(Attribute attribute) {
-        if (attribute.isInvalid()) return -1;
+        if (attribute == invalidAttr()) return -1;
 
         GaoRexfordAttribute other = (GaoRexfordAttribute) attribute;
         return this.getType().compareTo(other.getType());

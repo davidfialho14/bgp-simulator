@@ -2,7 +2,8 @@ package core;
 
 import network.Node;
 
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
+import static core.Path.invalidPath;
 
 /**
  * Model the routes exchanged between the nodes during the protocol. Routes associate a destination node with
@@ -38,12 +39,12 @@ public class Route implements Comparable<Route> {
     }
 
     /**
-     * Creates a new invalid route.
+     * Creates a new invalidAttr route.
      * @param destination destination of the route.
-     * @return new invalid Route instance.
+     * @return new invalidAttr Route instance.
      */
     public static Route invalidRoute(Node destination) {
-        return new Route(destination, invalid(), Path.invalidPath());
+        return new Route(destination, invalidAttr(), invalidPath());
     }
 
     /**
@@ -106,11 +107,11 @@ public class Route implements Comparable<Route> {
     }
 
     /**
-     * Checks if the route is invalid. A route is considered invalid if the attribute or the path are invalid.
-     * @return true if the route is invalid and false otherwise.
+     * Checks if the route is invalidAttr. A route is considered invalidAttr if the attribute or the path are invalidAttr.
+     * @return true if the route is invalidAttr and false otherwise.
      */
     public boolean isInvalid() {
-        return attribute.isInvalid() || path.isInvalid();
+        return attribute == invalidAttr() || path == invalidPath();
     }
 
     @Override

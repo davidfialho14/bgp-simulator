@@ -2,13 +2,15 @@ package policies.roc;
 
 import core.Attribute;
 
-public abstract class RoCAttribute extends Attribute {
+import static core.InvalidAttribute.invalidAttr;
+
+public abstract class RoCAttribute implements Attribute {
 
     abstract Type getType();
 
     @Override
     public int compareTo(Attribute attribute) {
-        if (attribute.isInvalid()) return -1;
+        if (attribute == invalidAttr()) return -1;
 
         RoCAttribute other = (RoCAttribute) attribute;
         return this.getType().compareTo(other.getType());

@@ -18,7 +18,7 @@ public class PathTest {
 
     @Test
     public void invalidPath_ReturnsInvalidPathAttribute() throws Exception {
-        assertThat(invalidPath().isInvalid(), is(true));
+        assertThat(invalidPath(), is(invalidPath()));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class PathTest {
     public void copyConstructor_InvalidPath_ConstructsInvalidPath() throws Exception {
         Path pathCopy = new Path(invalidPath());
 
-        assertThat(pathCopy.isInvalid(), is(true));
+        assertThat(pathCopy, is(invalidPath()));
     }
 
     @Test

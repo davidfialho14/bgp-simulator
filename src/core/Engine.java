@@ -8,6 +8,7 @@ import network.Link;
 import network.Node;
 import network.SelfLink;
 
+import static core.InvalidAttribute.invalidAttr;
 import static core.Route.invalidRoute;
 
 /**
@@ -67,7 +68,7 @@ public class Engine {
 
     /**
      * Should be called when a link is broken to trigger the correct behaviour from the simulation when a link is
-     * broken. The source node updates the routes learned from the broken link to invalid routes. If the source node
+     * broken. The source node updates the routes learned from the broken link to invalidAttr routes. If the source node
      * ends up selecting a new route it exports it to all of its in-neighbours. It also discards all routes being
      * exported through the broken link.
      *
@@ -111,7 +112,7 @@ public class Engine {
         Attribute attribute = nodeState.getProtocol().extend(route.getDestination(), link, route.getAttribute());
 
         Path path;
-        if (!attribute.isInvalid()) {
+        if (attribute != invalidAttr()) {
             path = new Path(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {

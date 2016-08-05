@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
 import static wrappers.StubWrapper.*;
@@ -40,7 +40,7 @@ public class EngineLearnTest {
     @Test
     public void
     learn_InvalidRoute_InvalidRoute() throws Exception {
-        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(invalid());
+        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(invalidAttr());
 
         assertThat(engine.learn(stubNodeState, anyStubLink(), invalidRoute(destination)),
                 is(invalidRoute(destination)));
@@ -50,7 +50,7 @@ public class EngineLearnTest {
     public void
     learn_RouteWithAttributeThatExtendsToInvalid_InvalidRoute() throws Exception {
         Route exportedRoute = route(destination, stubAttr(0), path());
-        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(invalid());
+        when(stubProtocol.extend(eq(destination), any(), any())).thenReturn(invalidAttr());
 
         assertThat(engine.learn(stubNodeState, anyStubLink(), exportedRoute), is(invalidRoute(destination)));
     }

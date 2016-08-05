@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static core.Path.invalidPath;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.anyRoute;
@@ -48,7 +48,7 @@ public class EngineProcessTest {
     @Test
     public void
     process_PrevSelectedInvalidRouteAndSelectedInvalidRoute_DoesNotExport() throws Exception {
-        setPreviouslySelected(invalid(), invalidPath());
+        setPreviouslySelected(invalidAttr(), invalidPath());
         doReturn(invalidRoute).when(engine).select(any(), any(), any());
 
         engine.process(nodeState, link, invalidRoute);
@@ -59,7 +59,7 @@ public class EngineProcessTest {
     @Test
     public void
     process_PrevSelectedInvalidRouteAndSelectedValidRoute_ExportsSelectedRoute() throws Exception {
-        setPreviouslySelected(invalid(), invalidPath());
+        setPreviouslySelected(invalidAttr(), invalidPath());
         core.Route selectedRoute = route(destination, stubAttr(0), path());
         doReturn(selectedRoute).when(engine).select(any(), any(), any());
 

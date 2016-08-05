@@ -6,7 +6,7 @@ import core.Label;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.gaorexford.CustomerAttribute.customer;
 import static policies.gaorexford.PeerAttribute.peer;
 import static policies.gaorexford.ProviderAttribute.provider;
@@ -43,7 +43,7 @@ public class ProviderLabelTest {
 
     @Test
     public void extend_InvalidAttribute_ReturnsInvalidAttribute() throws Exception {
-        assertThat(label.extend(null, invalid()).isInvalid(), is(true));
+        assertThat(label.extend(null, invalidAttr()), is(invalidAttr()));
     }
 
 }

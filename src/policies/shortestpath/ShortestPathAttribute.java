@@ -2,10 +2,12 @@ package policies.shortestpath;
 
 import core.Attribute;
 
+import static core.InvalidAttribute.invalidAttr;
+
 /**
  * Implements any attribute of the shortest path policy.
  */
-public class ShortestPathAttribute extends Attribute {
+public class ShortestPathAttribute implements Attribute {
 
     private int length;
 
@@ -23,7 +25,7 @@ public class ShortestPathAttribute extends Attribute {
      */
     @Override
     public int compareTo(Attribute attribute) {
-        if (attribute.isInvalid()) return -1;
+        if (attribute == invalidAttr()) return -1;
 
         ShortestPathAttribute other = (ShortestPathAttribute) attribute;
         return this.length - other.length;

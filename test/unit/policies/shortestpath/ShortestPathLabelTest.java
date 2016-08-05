@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static wrappers.ShortestPathWrapper.anySPLabel;
 import static wrappers.ShortestPathWrapper.sp;
 import static wrappers.ShortestPathWrapper.splabel;
@@ -18,6 +18,6 @@ public class ShortestPathLabelTest {
 
     @Test
     public void extend_InvalidAttributeWithAnyLabel_InvalidAttribute() throws Exception {
-        assertThat(anySPLabel().extend(null, invalid()), is(invalid()));
+        assertThat(anySPLabel().extend(null, invalidAttr()), is(invalidAttr()));
     }
 }

@@ -24,7 +24,7 @@ class Reaction1 {
         if (cutLinks == null || !cutLinks.contains(link)) {
             return link.extend(attribute);
         } else {
-            return InvalidAttribute.invalid();
+            return InvalidAttribute.invalidAttr();
         }
     }
 

@@ -29,9 +29,9 @@ public class RouteElement implements RouteTableElement {
     }
 
     /**
-     * Wrapper around the route element constructor create invalid routes in a more readable way.
+     * Wrapper around the route element constructor create invalidAttr routes in a more readable way.
      *
-     * @return route element corresponding to an invalid route.
+     * @return route element corresponding to an invalidAttr route.
      */
     public static RouteElement invalidRoute() {
         // the route destination node does not need to be specified since it will be replaced

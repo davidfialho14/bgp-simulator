@@ -7,19 +7,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
-public class Path extends Attribute implements Iterable<Node> {
+public class Path implements Attribute, Iterable<Node> {
 
-    private static final Path INVALID;
+    // invalid path is a path with a null path field
+    private static final Path INVALID = new Path((Path) null);
 
-    /**
-     * Initializes the INVALID
-     */
-    static {
-        INVALID = new Path();
-        INVALID.path = null;
-    }
-
-    private LinkedList<Node> path;   // must be a LinkedList in order to preserve insertion order
+    private LinkedList<Node> path = null;   // must be a LinkedList in order to preserve insertion order
 
     /**
      * Constructs an empty path.
@@ -52,8 +45,9 @@ public class Path extends Attribute implements Iterable<Node> {
      * @param path path to be copied.
      */
     public Path(Path path) {
-        if (!path.isInvalid())
+        if (path != invalidPath()) {
             this.path = new LinkedList<>(path.path);
+        }
     }
 
     /**
@@ -64,8 +58,8 @@ public class Path extends Attribute implements Iterable<Node> {
     }
 
     /**
-     * Returns an invalid path instance.
-     * @return invalid path instance.
+     * Returns an invalidAttr path instance.
+     * @return invalidAttr path instance.
      */
     public static Path invalidPath() {
         return INVALID;
@@ -85,18 +79,18 @@ public class Path extends Attribute implements Iterable<Node> {
      * @return true if the path contains the node and false otherwise.
      */
     public boolean contains(Node node) {
-        return !isInvalid() && path.contains(node);
+        return this != invalidPath() && path.contains(node);
     }
 
     /**
      * Returns the path after the given node. If the node does not exist an empty path is returned.
-     * If the path is invalid an invalid path is returned as well.
+     * If the path is invalidAttr an invalidAttr path is returned as well.
      *
      * @param node node to get path after.
-     * @return path after the node or empty path if the node is not found or invalid if the path is invalid.
+     * @return path after the node or empty path if the node is not found or invalidAttr if the path is invalidAttr.
      */
     public Path getPathAfter(Node node) {
-        if (isInvalid()) return invalidPath();
+        if (this == invalidPath()) return invalidPath();
 
         // start with an empty path
         Path pathAfterNode = new Path();
@@ -138,11 +132,6 @@ public class Path extends Attribute implements Iterable<Node> {
         return null; // ending node was not found
     }
 
-    @Override
-    public boolean isInvalid() {
-        return path == null;
-    }
-
     /**
      * Compares the path to another path. The comparison only takes into account the number of nodes in the path
      * the nodes it contains are not taken into account.
@@ -176,7 +165,7 @@ public class Path extends Attribute implements Iterable<Node> {
 
     @Override
     public String toString() {
-        if (isInvalid()) {
+        if (this == invalidPath()) {
             return "Path[•]";
         } else {
             return "Path" + path;

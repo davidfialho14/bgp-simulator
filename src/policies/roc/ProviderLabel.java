@@ -7,7 +7,7 @@ import core.Label;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.roc.ProviderAttribute.provider;
 
 /**
@@ -31,7 +31,7 @@ public class ProviderLabel implements Label {
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute.isInvalid()) return invalid();
+        if (attribute == invalidAttr()) return invalidAttr();
 
         RoCAttribute rocAttribute = (RoCAttribute) attribute;
         return extendTable.get(rocAttribute.getType());

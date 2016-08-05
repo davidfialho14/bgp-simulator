@@ -11,7 +11,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static core.Path.invalidPath;
 import static wrappers.StubWrapper.stubAttr;
 import static wrappers.StubWrapper.stubLink;
@@ -170,7 +170,7 @@ public class EngineSelectTest {
 
         engine.select(stubNodeState, stubLink(1, 2), route(0, stubAttr(0), path(1)));
 
-        verify(stubNodeState, times(1)).updateRoute(stubLink(1, 2), invalid(), invalidPath());
+        verify(stubNodeState, times(1)).updateRoute(stubLink(1, 2), invalidAttr(), invalidPath());
     }
 
     @Test

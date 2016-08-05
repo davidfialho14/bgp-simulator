@@ -7,7 +7,7 @@ import core.Label;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.roc.PeerAttribute.peer;
 
 /**
@@ -25,13 +25,13 @@ public class PeerLabel implements Label {
         extendTable.put(RoCAttribute.Type.SELF, peer());
         extendTable.put(RoCAttribute.Type.PEER_PLUS, peer());
         extendTable.put(RoCAttribute.Type.CUSTOMER, peer());
-        extendTable.put(RoCAttribute.Type.PEER, invalid());
-        extendTable.put(RoCAttribute.Type.PROVIDER, invalid());
+        extendTable.put(RoCAttribute.Type.PEER, invalidAttr());
+        extendTable.put(RoCAttribute.Type.PROVIDER, invalidAttr());
     }
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute.isInvalid()) return invalid();
+        if (attribute == invalidAttr()) return invalidAttr();
 
         RoCAttribute rocAttribute = (RoCAttribute) attribute;
         return extendTable.get(rocAttribute.getType());

@@ -4,7 +4,7 @@ import network.Link;
 import core.Attribute;
 import core.Label;
 
-import static core.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.gaorexford.ProviderAttribute.provider;
 
 /**
@@ -21,7 +21,7 @@ public class ProviderLabel implements Label {
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute.isInvalid()) return invalid();
+        if (attribute == invalidAttr()) return invalidAttr();
 
         GaoRexfordAttribute gaoRexfordAttribute = (GaoRexfordAttribute) attribute;
         return extendTable[gaoRexfordAttribute.getType().ordinal()];
