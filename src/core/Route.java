@@ -35,11 +35,7 @@ public class Route implements Comparable<Route> {
     public Route(Route route) {
         this.destination = route.destination;
         this.attribute = route.attribute;
-
-        if (route.path == invalidPath())
-            this.path = invalidPath();
-        else
-            this.path = new Path(route.path);
+        this.path = Path.copy(route.path);
     }
 
     /**

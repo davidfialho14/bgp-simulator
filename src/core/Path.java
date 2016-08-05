@@ -43,22 +43,24 @@ public class Path implements Comparable<Path>, Iterable<Node> {
     }
 
     /**
-     * Copy constructor.
-     * @param path path to be copied (can not be an invalid path).
-     */
-    public Path(Path path) {
-        if (path == invalidPath()) {
-            throw new IllegalArgumentException("It is not possible to copy an invalid path.");
-        }
-
-        this.path = new LinkedList<>(path.path);
-    }
-
-    /**
      * Only to be used to create path internally.
      */
     private Path(LinkedList<Node> path) {
         this.path = path;
+    }
+
+    /**
+     * Creates a copy of the given path. If the given path is the invalid path it returns the invalid path.
+     *
+     * @param path path to be copied (may be an invalid path).
+     * @return new copy of the given path or the invalid path if the given path is the invalid path.
+     */
+    public static Path copy(Path path) {
+        if (path == invalidPath()) {
+            return invalidPath();
+        } else {
+            return new Path(new LinkedList<>(path.path));
+        }
     }
 
     /**

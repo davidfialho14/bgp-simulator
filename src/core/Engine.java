@@ -114,7 +114,7 @@ public class Engine {
 
         Path path;
         if (attribute != invalidAttr()) {
-            path = new Path(route.getPath());
+            path = Path.copy(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
             path = invalidPath();

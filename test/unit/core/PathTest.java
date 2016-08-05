@@ -62,12 +62,6 @@ public class PathTest {
     }
 
     @Test
-    public void copyConstructor_WithInvalidPath_ThrowsIllegalArgumentException() throws Exception {
-        thrown.expect(IllegalArgumentException.class);
-        new Path(invalidPath());
-    }
-
-    @Test
     public void getPathAfter_Node1WithEmptyPath_EmptyPath() throws Exception {
         assertThat(path().getPathAfter(new Node(1)), is(path()));
     }
@@ -92,4 +86,8 @@ public class PathTest {
         assertThat(path(2, 1, 4, 0).getPathAfter(new Node(1)), is(path(4, 0)));
     }
 
+    @Test
+    public void copy_WithInvalidPath_ThrowsIllegalArgumentException() throws Exception {
+        assertThat(Path.copy(invalidPath()), is(invalidPath()));
+    }
 }
