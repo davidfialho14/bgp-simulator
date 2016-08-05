@@ -2,8 +2,6 @@ package core;
 
 import network.Link;
 import network.Node;
-import policies.Attribute;
-import policies.Path;
 
 import static core.Route.invalidRoute;
 

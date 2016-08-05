@@ -1,7 +1,7 @@
 package wrappers;
 
 import network.Node;
-import policies.Path;
+import core.Path;
 
 /**
  * Implements wrapper methods to create paths in a more readable way.

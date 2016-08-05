@@ -1,4 +1,4 @@
-package policies;
+package core;
 
 import network.Node;
 

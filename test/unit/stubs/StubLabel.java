@@ -1,7 +1,7 @@
 package stubs;
 
 import network.Link;
-import policies.Attribute;
+import core.Attribute;
 import core.Label;
 
 public class StubLabel implements Label {

@@ -4,7 +4,7 @@ import network.Link;
 import network.Network;
 import network.Node;
 import org.apache.commons.lang.StringUtils;
-import policies.Path;
+import core.Path;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import core.Protocol;

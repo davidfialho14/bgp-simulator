@@ -1,6 +1,6 @@
 package protocols;
 
-import policies.Attribute;
+import core.Attribute;
 import core.Route;
 
 /**

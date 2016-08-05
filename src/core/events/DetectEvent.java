@@ -2,7 +2,7 @@ package core.events;
 
 import network.Link;
 import network.Node;
-import policies.Path;
+import core.Path;
 import core.Route;
 
 /**

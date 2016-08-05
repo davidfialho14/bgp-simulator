@@ -1,6 +1,6 @@
 package stubs;
 
-import policies.Attribute;
+import core.Attribute;
 
 public class StubAttribute extends Attribute {
 

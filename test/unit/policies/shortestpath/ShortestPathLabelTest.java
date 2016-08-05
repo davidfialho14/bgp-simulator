@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 import static wrappers.ShortestPathWrapper.anySPLabel;
 import static wrappers.ShortestPathWrapper.sp;
 import static wrappers.ShortestPathWrapper.splabel;

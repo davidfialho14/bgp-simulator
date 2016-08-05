@@ -2,7 +2,7 @@ package policies.roc;
 
 import io.InvalidTagException;
 import network.Node;
-import policies.Attribute;
+import core.Attribute;
 import core.Label;
 import core.Policy;
 

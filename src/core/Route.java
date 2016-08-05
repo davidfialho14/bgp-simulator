@@ -1,10 +1,8 @@
 package core;
 
 import network.Node;
-import policies.Attribute;
-import policies.Path;
 
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 
 /**
  * Model the routes exchanged between the nodes during the protocol. Routes associate a destination node with

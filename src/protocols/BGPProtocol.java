@@ -3,7 +3,7 @@ package protocols;
 import core.Protocol;
 import network.Link;
 import network.Node;
-import policies.Attribute;
+import core.Attribute;
 import core.Route;
 
 public class BGPProtocol implements Protocol {

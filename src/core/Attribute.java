@@ -1,4 +1,4 @@
-package policies;
+package core;
 
 public abstract class Attribute implements Comparable<Attribute> {
 

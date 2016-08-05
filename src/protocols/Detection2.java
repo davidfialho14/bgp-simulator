@@ -1,8 +1,8 @@
 package protocols;
 
 import network.Node;
-import policies.Attribute;
-import policies.Path;
+import core.Attribute;
+import core.Path;
 import core.Route;
 
 /**

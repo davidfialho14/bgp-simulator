@@ -1,6 +1,6 @@
 package policies.roc;
 
-import policies.Attribute;
+import core.Attribute;
 
 public abstract class RoCAttribute extends Attribute {
 

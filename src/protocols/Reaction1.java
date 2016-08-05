@@ -2,8 +2,8 @@ package protocols;
 
 import network.Link;
 import network.Node;
-import policies.Attribute;
-import policies.InvalidAttribute;
+import core.Attribute;
+import core.InvalidAttribute;
 import core.Route;
 
 import java.util.HashMap;

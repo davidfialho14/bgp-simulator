@@ -7,13 +7,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import policies.Attribute;
-import policies.Path;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static policies.InvalidAttribute.invalid;
-import static policies.Path.invalidPath;
+import static core.InvalidAttribute.invalid;
+import static core.Path.invalidPath;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.anyRoute;
 import static wrappers.RouteWrapper.route;

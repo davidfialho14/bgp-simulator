@@ -1,10 +1,10 @@
 package policies.gaorexford;
 
 import network.Link;
-import policies.Attribute;
+import core.Attribute;
 import core.Label;
 
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 import static policies.gaorexford.CustomerAttribute.customer;
 
 /**

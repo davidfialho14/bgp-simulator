@@ -1,13 +1,13 @@
 package policies.roc;
 
 import network.Link;
-import policies.Attribute;
+import core.Attribute;
 import core.Label;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 import static policies.roc.PeerAttribute.peer;
 
 /**

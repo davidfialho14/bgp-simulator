@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 import static wrappers.ShortestPathWrapper.sp;
 
 public class ShortestPathAttributeTest {

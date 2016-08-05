@@ -1,6 +1,6 @@
 package policies.shortestpath;
 
-import policies.Attribute;
+import core.Attribute;
 
 /**
  * Implements any attribute of the shortest path policy.

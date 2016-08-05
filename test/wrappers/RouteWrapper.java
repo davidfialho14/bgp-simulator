@@ -2,8 +2,8 @@ package wrappers;
 
 import stubs.StubAttribute;
 import network.Node;
-import policies.Attribute;
-import policies.Path;
+import core.Attribute;
+import core.Path;
 import core.Route;
 
 import static wrappers.PathWrapper.path;

@@ -6,7 +6,7 @@ import core.Label;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 import static policies.roc.CustomerAttribute.customer;
 import static policies.roc.PeerAttribute.peer;
 import static policies.roc.ProviderAttribute.provider;

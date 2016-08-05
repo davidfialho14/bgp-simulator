@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 import static policies.roc.CustomerAttribute.customer;
 import static policies.roc.PeerAttribute.peer;
 import static policies.roc.PeerPlusAttribute.peerplus;

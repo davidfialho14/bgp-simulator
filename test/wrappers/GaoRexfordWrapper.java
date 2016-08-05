@@ -4,7 +4,7 @@ import core.Label;
 import policies.gaorexford.CustomerLabel;
 import policies.gaorexford.PeerLabel;
 import policies.gaorexford.ProviderLabel;
-import policies.Path;
+import core.Path;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 

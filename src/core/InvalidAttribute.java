@@ -1,4 +1,4 @@
-package policies;
+package core;
 
 /**
  * Implements an invalid attribute. This attribute can be used with any class of attributes to represent invalid
@@ -12,6 +12,9 @@ public class InvalidAttribute extends Attribute {
      */
     private static final InvalidAttribute invalid = new InvalidAttribute();
 
+    private InvalidAttribute() {
+    }   // not be instantiated directly
+
     /**
      * Returns always the same instance of an invalid attribute. Its the only way to get an invalid attribute
      * instance.
@@ -20,8 +23,6 @@ public class InvalidAttribute extends Attribute {
     public static InvalidAttribute invalid() {
         return invalid;
     }
-
-    private InvalidAttribute() {}   // not be instantiated directly
 
     /**
      * Returns always true.

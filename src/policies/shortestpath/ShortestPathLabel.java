@@ -1,10 +1,10 @@
 package policies.shortestpath;
 
 import network.Link;
-import policies.Attribute;
+import core.Attribute;
 import core.Label;
 
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 
 public class ShortestPathLabel implements Label {
 

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalid;
 
 public class InvalidAttributeTest {
 
