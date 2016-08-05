@@ -2,7 +2,7 @@ package policies.gaorexford;
 
 import network.Link;
 import policies.Attribute;
-import policies.Label;
+import core.Label;
 
 import static policies.InvalidAttribute.invalid;
 import static policies.gaorexford.PeerAttribute.peer;

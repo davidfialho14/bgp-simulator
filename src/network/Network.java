@@ -1,8 +1,8 @@
 package network;
 
 import network.exceptions.NodeNotFoundException;
-import policies.Label;
-import policies.Policy;
+import core.Label;
+import core.Policy;
 
 import java.util.Collection;
 import java.util.HashMap;

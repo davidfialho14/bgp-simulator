@@ -3,8 +3,8 @@ package stubs;
 import io.InvalidTagException;
 import network.Node;
 import policies.Attribute;
-import policies.Label;
-import policies.Policy;
+import core.Label;
+import core.Policy;
 
 public class StubPolicy implements Policy {
     /**

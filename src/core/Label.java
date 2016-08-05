@@ -1,6 +1,7 @@
-package policies;
+package core;
 
 import network.Link;
+import policies.Attribute;
 
 /**
  * Represents an abstraction of the labels associated with links.

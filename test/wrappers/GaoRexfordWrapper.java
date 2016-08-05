@@ -1,6 +1,6 @@
 package wrappers;
 
-import policies.Label;
+import core.Label;
 import policies.gaorexford.CustomerLabel;
 import policies.gaorexford.PeerLabel;
 import policies.gaorexford.ProviderLabel;

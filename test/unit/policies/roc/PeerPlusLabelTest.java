@@ -2,7 +2,7 @@ package policies.roc;
 
 import org.junit.Before;
 import org.junit.Test;
-import policies.Label;
+import core.Label;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

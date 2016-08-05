@@ -2,7 +2,7 @@ package policies.roc;
 
 import network.Link;
 import policies.Attribute;
-import policies.Label;
+import core.Label;
 
 import java.util.EnumMap;
 import java.util.Map;

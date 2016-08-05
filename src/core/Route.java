@@ -3,10 +3,13 @@ package core;
 import network.Node;
 import policies.Attribute;
 import policies.Path;
-import policies.Policy;
 
 import static policies.InvalidAttribute.invalid;
 
+/**
+ * Model the routes exchanged between the nodes during the protocol. Routes associate a destination node with
+ * a policy attribute and a path to that same destination.
+ */
 public class Route implements Comparable<Route> {
 
     private Node destination;
