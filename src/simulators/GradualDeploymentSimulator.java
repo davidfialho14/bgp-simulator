@@ -5,7 +5,7 @@ import io.reporters.Reporter;
 import network.Network;
 import network.Node;
 import protocols.BGPProtocol;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import simulators.data.GradualDeploymentDataCollector;
 import utils.RandomNodesSelector;

@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import protocols.Protocol;
 
 import static core.Route.invalidRoute;
 import static org.hamcrest.MatcherAssert.assertThat;

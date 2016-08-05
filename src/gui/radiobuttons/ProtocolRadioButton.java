@@ -1,7 +1,7 @@
 package gui.radiobuttons;
 
 import javafx.scene.control.RadioButton;
-import protocols.Protocol;
+import core.Protocol;
 
 /**
  * A protocol radio button associates a protocol with a radio button. This can be used to select the

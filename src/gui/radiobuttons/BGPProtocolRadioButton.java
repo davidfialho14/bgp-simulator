@@ -1,7 +1,7 @@
 package gui.radiobuttons;
 
 import protocols.BGPProtocol;
-import protocols.Protocol;
+import core.Protocol;
 
 /**
  * A BGP protocol radio button associates the BGP protocol with a radio button.

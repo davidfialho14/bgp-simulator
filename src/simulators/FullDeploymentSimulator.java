@@ -4,7 +4,7 @@ import addons.protocolchangers.FixedTimeProtocolChanger;
 import io.reporters.Reporter;
 import network.Network;
 import protocols.BGPProtocol;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import simulators.data.FullDeploymentDataCollector;
 

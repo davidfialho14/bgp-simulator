@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import policies.Path;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import protocols.Protocol;
+import core.Protocol;
 import simulators.FullDeploymentSimulator;
 import simulators.GradualDeploymentSimulator;
 import simulators.InitialDeploymentSimulator;

@@ -15,7 +15,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import core.schedulers.RandomScheduler;
 import simulators.Simulator;

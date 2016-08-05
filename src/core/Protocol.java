@@ -1,10 +1,13 @@
-package protocols;
+package core;
 
 import network.Link;
 import network.Node;
 import policies.Attribute;
-import core.Route;
 
+
+/**
+ * Base interface for any protocol implementation. All protocol implementations must implement this interface.
+ */
 public interface Protocol {
 
     /**

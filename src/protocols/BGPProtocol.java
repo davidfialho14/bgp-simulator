@@ -1,5 +1,6 @@
 package protocols;
 
+import core.Protocol;
 import network.Link;
 import network.Node;
 import policies.Attribute;

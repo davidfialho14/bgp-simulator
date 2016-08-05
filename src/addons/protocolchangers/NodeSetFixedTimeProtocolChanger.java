@@ -1,7 +1,7 @@
 package addons.protocolchangers;
 
 import network.Node;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import core.State;
 

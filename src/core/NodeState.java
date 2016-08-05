@@ -4,7 +4,6 @@ import network.Link;
 import network.Node;
 import policies.Attribute;
 import policies.Path;
-import protocols.Protocol;
 
 import static core.Route.invalidRoute;
 

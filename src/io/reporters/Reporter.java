@@ -1,7 +1,7 @@
 package io.reporters;
 
 import network.Network;
-import protocols.Protocol;
+import core.Protocol;
 import simulators.Simulator;
 import simulators.data.BasicDataSet;
 import simulators.data.FullDeploymentDataSet;

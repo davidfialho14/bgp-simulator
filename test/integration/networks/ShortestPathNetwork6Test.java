@@ -13,7 +13,7 @@ import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import core.RouteTable;
 import core.State;

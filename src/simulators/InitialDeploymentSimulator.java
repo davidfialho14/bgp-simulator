@@ -2,7 +2,7 @@ package simulators;
 
 import io.reporters.Reporter;
 import network.Network;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import simulators.data.BasicDataCollector;
 

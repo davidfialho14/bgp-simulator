@@ -3,7 +3,7 @@ package simulators;
 import addons.eventhandlers.DebugEventHandler;
 import io.reporters.Reporter;
 import network.Network;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import core.State;
 

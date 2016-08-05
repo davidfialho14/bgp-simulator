@@ -1,7 +1,7 @@
 package gui.radiobuttons;
 
 import javafx.scene.control.ToggleGroup;
-import protocols.Protocol;
+import core.Protocol;
 
 /**
  * Toggle group for protocol radio buttons.

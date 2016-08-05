@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import core.State;
 import core.schedulers.FIFOScheduler;

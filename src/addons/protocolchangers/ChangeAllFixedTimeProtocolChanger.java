@@ -1,6 +1,6 @@
 package addons.protocolchangers;
 
-import protocols.Protocol;
+import core.Protocol;
 import core.Engine;
 import core.State;
 
