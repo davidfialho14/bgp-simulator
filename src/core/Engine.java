@@ -9,6 +9,7 @@ import network.Node;
 import network.SelfLink;
 
 import static core.InvalidAttribute.invalidAttr;
+import static core.InvalidPath.invalidPath;
 import static core.Route.invalidRoute;
 
 /**
@@ -116,7 +117,7 @@ public class Engine {
             path = new Path(route.getPath());
             path.add(link.getDestination());    // add exporter to the path
         } else {
-            path = Path.invalidPath();
+            path = invalidPath();
         }
 
         Route learnedRoute = new Route(route.getDestination(), attribute, path);

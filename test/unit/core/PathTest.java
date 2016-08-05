@@ -1,15 +1,20 @@
 package core;
 
 import network.Node;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static core.Path.invalidPath;
+import static core.InvalidPath.invalidPath;
 import static wrappers.PathWrapper.path;
 import static wrappers.network.NetworkWrapper.anyNode;
 
 public class PathTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void invalidPath_AlwaysReturnsTheSameInstance() throws Exception {
@@ -57,15 +62,9 @@ public class PathTest {
     }
 
     @Test
-    public void copyConstructor_InvalidPath_ConstructsInvalidPath() throws Exception {
-        Path pathCopy = new Path(invalidPath());
-
-        assertThat(pathCopy, is(invalidPath()));
-    }
-
-    @Test
-    public void getPathAfter_Node1WithInvalidPath_InvalidPath() throws Exception {
-        assertThat(invalidPath().getPathAfter(new Node(1)), is(invalidPath()));
+    public void copyConstructor_WithInvalidPath_ThrowsIllegalArgumentException() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        new Path(invalidPath());
     }
 
     @Test

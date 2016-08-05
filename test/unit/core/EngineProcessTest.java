@@ -11,7 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static core.InvalidAttribute.invalidAttr;
-import static core.Path.invalidPath;
+import static core.InvalidPath.invalidPath;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.anyRoute;
 import static wrappers.RouteWrapper.route;

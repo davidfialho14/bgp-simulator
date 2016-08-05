@@ -3,7 +3,7 @@ package core;
 import network.Node;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.Path.invalidPath;
+import static core.InvalidPath.invalidPath;
 
 /**
  * Model the routes exchanged between the nodes during the protocol. Routes associate a destination node with
@@ -35,7 +35,11 @@ public class Route implements Comparable<Route> {
     public Route(Route route) {
         this.destination = route.destination;
         this.attribute = route.attribute;
-        this.path = new Path(route.path);
+
+        if (route.path == invalidPath())
+            this.path = invalidPath();
+        else
+            this.path = new Path(route.path);
     }
 
     /**

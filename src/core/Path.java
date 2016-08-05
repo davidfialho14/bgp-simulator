@@ -7,10 +7,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
-public class Path implements Comparable<Path>, Iterable<Node> {
+import static core.InvalidPath.invalidPath;
 
-    // invalid path is a path with a null path field
-    private static final Path INVALID = new Path((Path) null);
+/**
+ * Represents a path to a destination
+ */
+public class Path implements Comparable<Path>, Iterable<Node> {
 
     private LinkedList<Node> path = null;   // must be a LinkedList in order to preserve insertion order
 
@@ -42,12 +44,14 @@ public class Path implements Comparable<Path>, Iterable<Node> {
 
     /**
      * Copy constructor.
-     * @param path path to be copied.
+     * @param path path to be copied (can not be an invalid path).
      */
     public Path(Path path) {
-        if (path != invalidPath()) {
-            this.path = new LinkedList<>(path.path);
+        if (path == invalidPath()) {
+            throw new IllegalArgumentException("It is not possible to copy an invalid path.");
         }
+
+        this.path = new LinkedList<>(path.path);
     }
 
     /**
@@ -55,14 +59,6 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      */
     private Path(LinkedList<Node> path) {
         this.path = path;
-    }
-
-    /**
-     * Returns an invalid path instance.
-     * @return invalid path instance.
-     */
-    public static Path invalidPath() {
-        return INVALID;
     }
 
     /**
@@ -165,11 +161,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
 
     @Override
     public String toString() {
-        if (this == invalidPath()) {
-            return "Path[•]";
-        } else {
-            return "Path" + path;
-        }
+        return "Path" + path;
     }
 
     /**
