@@ -11,9 +11,9 @@ import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
-import simulation.schedulers.FIFOScheduler;
+import core.Engine;
+import core.State;
+import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -23,11 +23,10 @@ import static wrappers.ShortestPathWrapper.sp;
 
 public class NodeSetFixedTimeProtocolChangerTest {
 
-    private NetworkFactory factory = new ShortestPathNetworkFactory();
-    private Engine engine;
-
     @Rule
     public ErrorCollector collector = new ErrorCollector();
+    private NetworkFactory factory = new ShortestPathNetworkFactory();
+    private Engine engine;
 
     @Before
     public void setUp() throws Exception {

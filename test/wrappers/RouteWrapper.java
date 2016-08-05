@@ -4,7 +4,7 @@ import stubs.StubAttribute;
 import network.Node;
 import policies.Attribute;
 import policies.Path;
-import simulation.Route;
+import core.Route;
 
 import static wrappers.PathWrapper.path;
 

@@ -1,14 +1,14 @@
 package simulators.data;
 
 import io.reporters.Reporter;
-import simulation.events.ExportEvent;
+import core.events.ExportEvent;
 
 import java.io.IOException;
 
 public class FullDeploymentDataCollector extends BasicDataCollector {
 
-    private boolean deployed = false;
     protected FullDeploymentDataSet fullDeploymentDataSet = new FullDeploymentDataSet();
+    private boolean deployed = false;
 
     /**
      * Dumps the current data to the reporter.

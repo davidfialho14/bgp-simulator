@@ -1,8 +1,8 @@
 package addons.protocolchangers;
 
-import simulation.Engine;
-import simulation.State;
-import simulation.TimeListener;
+import core.Engine;
+import core.State;
+import core.TimeListener;
 
 
 /**

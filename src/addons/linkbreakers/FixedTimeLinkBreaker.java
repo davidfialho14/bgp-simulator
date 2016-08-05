@@ -1,9 +1,9 @@
 package addons.linkbreakers;
 
 import network.Link;
-import simulation.Engine;
-import simulation.State;
-import simulation.TimeListener;
+import core.Engine;
+import core.State;
+import core.TimeListener;
 
 /**
  * A fixed breaker will break a given link in a fixed instant of time T.

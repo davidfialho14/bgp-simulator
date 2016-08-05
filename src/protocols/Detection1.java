@@ -1,7 +1,7 @@
 package protocols;
 
 import policies.Attribute;
-import simulation.Route;
+import core.Route;
 
 /**
  * Implements the detection D1. D1 considers an oscillation when the learned route is preferred

@@ -1,8 +1,8 @@
 package addons.protocolchangers;
 
 import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Engine;
+import core.State;
 
 public class ChangeAllFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
     private Protocol protocol;

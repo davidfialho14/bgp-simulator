@@ -4,8 +4,8 @@ import addons.eventhandlers.DebugEventHandler;
 import io.reporters.Reporter;
 import network.Network;
 import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Engine;
+import core.State;
 
 import java.io.File;
 import java.io.FileNotFoundException;

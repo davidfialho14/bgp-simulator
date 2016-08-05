@@ -4,7 +4,7 @@ import network.Link;
 import network.Node;
 import policies.Attribute;
 import policies.InvalidAttribute;
-import simulation.Route;
+import core.Route;
 
 import java.util.HashMap;
 import java.util.HashSet;

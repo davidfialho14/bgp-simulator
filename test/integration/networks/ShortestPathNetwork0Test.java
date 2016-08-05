@@ -6,9 +6,9 @@ import network.Node;
 import org.junit.Before;
 import org.junit.Test;
 import protocols.BGPProtocol;
-import simulation.Engine;
-import simulation.State;
-import simulation.schedulers.FIFOScheduler;
+import core.Engine;
+import core.State;
+import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

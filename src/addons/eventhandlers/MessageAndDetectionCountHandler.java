@@ -1,8 +1,6 @@
 package addons.eventhandlers;
 
-import simulation.events.*;
-
-public class MessageAndDetectionCountHandler implements ExportListener, DetectListener {
+public class MessageAndDetectionCountHandler implements core.events.ExportListener, core.events.DetectListener {
 
     private int messageCount = 0;
     private int detectionCount = 0;
@@ -30,7 +28,7 @@ public class MessageAndDetectionCountHandler implements ExportListener, DetectLi
      *
      * @param eventGenerator event generator to register on.
      */
-    public void register(SimulationEventGenerator eventGenerator) {
+    public void register(core.events.SimulationEventGenerator eventGenerator) {
         eventGenerator.addExportListener(this);
         eventGenerator.addDetectListener(this);
     }
@@ -38,12 +36,12 @@ public class MessageAndDetectionCountHandler implements ExportListener, DetectLi
     // --- EVENTS ---------------------------------------------------------------------------------------------------
 
     @Override
-    public void onExported(ExportEvent event) {
+    public void onExported(core.events.ExportEvent event) {
         messageCount++;
     }
 
     @Override
-    public void onDetected(DetectEvent event) {
+    public void onDetected(core.events.DetectEvent event) {
         detectionCount++;
     }
 }

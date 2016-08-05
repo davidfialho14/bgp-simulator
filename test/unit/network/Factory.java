@@ -3,13 +3,16 @@ package network;
 import stubs.StubAttribute;
 import stubs.StubLabel;
 import policies.Path;
-import simulation.Route;
+import core.Route;
 
 /**
  * Factory class to create instances necessary for abstract and interface classes necessary to build a network.
  * The created elements are guaranteed to be able to work together.
  */
 public class Factory {
+
+    // used to create random nodes with different ids
+    private static int nodeId = 0;
 
     /**
      * Creates n node instances with different ids. The returned nodes are ordered by id from the smaller id to the
@@ -24,9 +27,6 @@ public class Factory {
 
         return nodes;
     }
-
-    // used to create random nodes with different ids
-    private static int nodeId = 0;
 
     /**
      * Creates a node with random id. The ids will never repeat between calls. All the other node attributes will be

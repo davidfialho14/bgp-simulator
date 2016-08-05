@@ -5,7 +5,7 @@ import io.reporters.Reporter;
 import network.Network;
 import protocols.BGPProtocol;
 import protocols.Protocol;
-import simulation.Engine;
+import core.Engine;
 import simulators.data.FullDeploymentDataCollector;
 
 import java.io.IOException;
@@ -17,8 +17,8 @@ import java.io.IOException;
 public class FullDeploymentSimulator extends Simulator {
 
     protected long deployTime;
-    private Protocol deployProtocol;
     protected FullDeploymentDataCollector fullDeploymentDataCollector;
+    private Protocol deployProtocol;
 
     FullDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol,
                             FullDeploymentDataCollector fullDeploymentDataCollector, int deployTime) {

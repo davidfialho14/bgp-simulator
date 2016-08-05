@@ -16,8 +16,8 @@ import org.apache.commons.cli.Options;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import protocols.Protocol;
-import simulation.Engine;
-import simulation.schedulers.RandomScheduler;
+import core.Engine;
+import core.schedulers.RandomScheduler;
 import simulators.Simulator;
 import simulators.SimulatorFactory;
 
@@ -116,7 +116,7 @@ public class Main {
 
                 for (int i = 0; i < repetitionCount; i++) {
                     long startTime = System.currentTimeMillis();
-                    System.out.println("Started simulation " + i);
+                    System.out.println("Started core " + i);
 
                     simulator.simulate();
 
@@ -127,7 +127,7 @@ public class Main {
                     }
 
                     long estimatedTime = System.currentTimeMillis() - startTime;
-                    System.out.println(String.format("Finished simulation " + i + " in %.2f", estimatedTime / 1000.0));
+                    System.out.println(String.format("Finished core " + i + " in %.2f", estimatedTime / 1000.0));
                 }
             }
 

@@ -1,8 +1,8 @@
 package addons.eventhandlers;
 
+import core.Route;
+import core.events.*;
 import network.Link;
-import simulation.Route;
-import simulation.events.*;
 
 import java.io.PrintStream;
 
@@ -38,6 +38,14 @@ public class DebugEventHandler
     public DebugEventHandler(PrintStream printStream, boolean enabled) {
         this.printStream = printStream;
         setAllEnabled(enabled);
+    }
+
+    private static String pretty(Route route) {
+        return String.format("route (%s, %s)", route.getAttribute(), route.getPath());
+    }
+
+    private static String pretty(Link link) {
+        return String.format("link (%s->%s, %s)", link.getSource(), link.getDestination(), link.getLabel());
     }
 
     public void setAllEnabled(boolean enabled) {
@@ -152,6 +160,10 @@ public class DebugEventHandler
         }
     }
 
+    /*
+        Set of methods to print components in a prettier way.
+     */
+
     /**
      * Invoked when a learn event occurs.
      *
@@ -182,17 +194,5 @@ public class DebugEventHandler
                                             pretty(event.getPreviousRoute()));
             }
         }
-    }
-
-    /*
-        Set of methods to print components in a prettier way.
-     */
-
-    private static String pretty(Route route) {
-        return String.format("route (%s, %s)", route.getAttribute(), route.getPath());
-    }
-
-    private static String pretty(Link link) {
-        return String.format("link (%s->%s, %s)", link.getSource(), link.getDestination(), link.getLabel());
     }
 }
