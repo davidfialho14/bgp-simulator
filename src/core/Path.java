@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
-public class Path implements Attribute, Iterable<Node> {
+public class Path implements Comparable<Path>, Iterable<Node> {
 
     // invalid path is a path with a null path field
     private static final Path INVALID = new Path((Path) null);
@@ -58,7 +58,7 @@ public class Path implements Attribute, Iterable<Node> {
     }
 
     /**
-     * Returns an invalidAttr path instance.
+     * Returns an invalid path instance.
      * @return invalidAttr path instance.
      */
     public static Path invalidPath() {
@@ -134,14 +134,14 @@ public class Path implements Attribute, Iterable<Node> {
 
     /**
      * Compares the path to another path. The comparison only takes into account the number of nodes in the path
-     * the nodes it contains are not taken into account.
-     * @param attribute path attribute to be compared with.
+     * the specific nodes it contains are not taken into account.
+     *
+     * @param other path to be compared with.
      * @return a negative integer, zero, or a positive integer as this path is less than, equal to or greater than
      * the specified object.
      */
     @Override
-    public int compareTo(Attribute attribute) {
-        Path other = (Path) attribute;
+    public int compareTo(Path other) {
         return this.path.size() - other.path.size();
     }
 
