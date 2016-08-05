@@ -1,8 +1,8 @@
 package addons.protocolchangers;
 
-import simulation.Engine;
-import simulation.State;
-import simulation.TimeListener;
+import core.Engine;
+import core.State;
+import core.TimeListener;
 
 /**
  * Base class that all protocol changers based on a fixed time must extend. It implements a condition method

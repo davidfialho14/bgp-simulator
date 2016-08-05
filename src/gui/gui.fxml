@@ -57,7 +57,7 @@
                 <fx:include fx:id="fullDeploymentForm" source="fulldeployment/full_deployment.fxml"/>
             </content>
         </TitledPane>
-        <CheckBox fx:id="debugCheckBox" mnemonicParsing="false" text="Generate debug file (increases simulation time)"
+        <CheckBox fx:id="debugCheckBox" mnemonicParsing="false" text="Generate debug file (increases core time)"
                   GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="5"/>
         <Label text="Message Delay" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
         <Label text="min:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>

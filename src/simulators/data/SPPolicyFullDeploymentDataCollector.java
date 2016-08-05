@@ -1,8 +1,8 @@
 package simulators.data;
 
 import io.reporters.Reporter;
-import policies.Path;
-import simulation.events.DetectEvent;
+import core.Path;
+import core.events.DetectEvent;
 
 import java.io.IOException;
 

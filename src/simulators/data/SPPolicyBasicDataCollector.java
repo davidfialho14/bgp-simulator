@@ -2,9 +2,9 @@ package simulators.data;
 
 import io.reporters.Reporter;
 import network.Node;
-import policies.Path;
+import core.Path;
 import policies.shortestpath.ShortestPathLabel;
-import simulation.events.DetectEvent;
+import core.events.DetectEvent;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -15,6 +15,31 @@ import java.util.Iterator;
 public class SPPolicyBasicDataCollector extends BasicDataCollector {
 
     protected SPPolicyDataSet spPolicyDataSet = new SPPolicyDataSet();
+
+    /**
+     * Checks if a cycle's length is negative. Can only be used with the Shortest Path Policy.
+     *
+     * @param cycle cycle to check for.
+     * @return true if the cycle's length is negative and false otherwise.
+     */
+    static boolean isNegative(Path cycle) {
+        Iterator<Node> pathIterator = cycle.iterator();
+
+        Node sourceNode = pathIterator.next();// node need to verify because a cycle must have always at least 3 nodes
+        int cycleLength = 0;
+
+        while (pathIterator.hasNext()) {
+            Node destinationNode = pathIterator.next();
+
+            // must be a shortest path label!!!
+            ShortestPathLabel label = (ShortestPathLabel) sourceNode.getOutLink(destinationNode).getLabel();
+            cycleLength += label.getLength();
+
+            sourceNode = destinationNode;
+        }
+
+        return cycleLength >= 0;
+    }
 
     /**
      * Dumps the current data to the reporter.
@@ -50,31 +75,6 @@ public class SPPolicyBasicDataCollector extends BasicDataCollector {
         }
 
         basicDataSet.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), cycle, isFalsePositive));
-    }
-
-    /**
-     * Checks if a cycle's length is negative. Can only be used with the Shortest Path Policy.
-     *
-     * @param cycle cycle to check for.
-     * @return true if the cycle's length is negative and false otherwise.
-     */
-    static boolean isNegative(Path cycle) {
-        Iterator<Node> pathIterator = cycle.iterator();
-
-        Node sourceNode = pathIterator.next();// node need to verify because a cycle must have always at least 3 nodes
-        int cycleLength = 0;
-
-        while (pathIterator.hasNext()) {
-            Node destinationNode = pathIterator.next();
-
-            // must be a shortest path label!!!
-            ShortestPathLabel label = (ShortestPathLabel) sourceNode.getOutLink(destinationNode).getLabel();
-            cycleLength += label.getLength();
-
-            sourceNode = destinationNode;
-        }
-
-        return cycleLength >= 0;
     }
 
 }

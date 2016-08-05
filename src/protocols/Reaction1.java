@@ -2,9 +2,9 @@ package protocols;
 
 import network.Link;
 import network.Node;
-import policies.Attribute;
-import policies.InvalidAttribute;
-import simulation.Route;
+import core.Attribute;
+import core.InvalidAttribute;
+import core.Route;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ class Reaction1 {
         if (cutLinks == null || !cutLinks.contains(link)) {
             return link.extend(attribute);
         } else {
-            return InvalidAttribute.invalid();
+            return InvalidAttribute.invalidAttr();
         }
     }
 

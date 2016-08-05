@@ -2,11 +2,11 @@ package policies.gaorexford;
 
 import org.junit.Before;
 import org.junit.Test;
-import policies.Label;
+import core.Label;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.gaorexford.CustomerAttribute.customer;
 import static policies.gaorexford.PeerAttribute.peer;
 import static policies.gaorexford.ProviderAttribute.provider;
@@ -33,17 +33,17 @@ public class CustomerLabelTest {
 
     @Test
     public void extend_PeerAttribute_ReturnsInvalidAttribute() throws Exception {
-        assertThat(label.extend(null, peer()).isInvalid(), is(true));
+        assertThat(label.extend(null, peer()), is(invalidAttr()));
     }
 
     @Test
     public void extend_ProviderAttribute_ReturnsInvalidAttribute() throws Exception {
-        assertThat(label.extend(null, provider()).isInvalid(), is(true));
+        assertThat(label.extend(null, provider()), is(invalidAttr()));
     }
 
     @Test
     public void extend_InvalidAttribute_ReturnsInvalidAttribute() throws Exception {
-        assertThat(label.extend(null, invalid()).isInvalid(), is(true));
+        assertThat(label.extend(null, invalidAttr()), is(invalidAttr()));
     }
 
 }

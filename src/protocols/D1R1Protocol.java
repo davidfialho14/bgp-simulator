@@ -1,7 +1,8 @@
 package protocols;
 
+import core.Protocol;
 import network.Link;
-import simulation.Route;
+import core.Route;
 
 /**
  * Implements the detection D1 and the reaction R1.

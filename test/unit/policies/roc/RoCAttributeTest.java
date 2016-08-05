@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.roc.CustomerAttribute.customer;
 import static policies.roc.PeerAttribute.peer;
 import static policies.roc.PeerPlusAttribute.peerplus;
@@ -55,17 +55,17 @@ public class RoCAttributeTest {
 
     @Test
     public void compareTo_CustomerToInvalid_Less() throws Exception {
-        assertThat(customer().compareTo(invalid()), is(lessThan(0)));
+        assertThat(customer().compareTo(invalidAttr()), is(lessThan(0)));
     }
 
     @Test
     public void compareTo_PeerToInvalid_Less() throws Exception {
-        assertThat(peer().compareTo(invalid()), is(lessThan(0)));
+        assertThat(peer().compareTo(invalidAttr()), is(lessThan(0)));
     }
 
     @Test
     public void compareTo_ProviderToInvalid_Less() throws Exception {
-        assertThat(provider().compareTo(invalid()), is(lessThan(0)));
+        assertThat(provider().compareTo(invalidAttr()), is(lessThan(0)));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class RoCAttributeTest {
 
     @Test
     public void compareTo_SelfToInvalid_Less() throws Exception {
-        assertThat(self().compareTo(invalid()), is(lessThan(0)));
+        assertThat(self().compareTo(invalidAttr()), is(lessThan(0)));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class RoCAttributeTest {
 
     @Test
     public void compareTo_PeerPlusToInvalid_Less() throws Exception {
-        assertThat(peerplus().compareTo(invalid()), is(lessThan(0)));
+        assertThat(peerplus().compareTo(invalidAttr()), is(lessThan(0)));
     }
 
 }

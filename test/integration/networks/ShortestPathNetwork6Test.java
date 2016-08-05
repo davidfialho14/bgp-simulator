@@ -13,11 +13,11 @@ import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.RouteTable;
-import simulation.State;
-import simulation.schedulers.FIFOScheduler;
+import core.Protocol;
+import core.Engine;
+import core.RouteTable;
+import core.State;
+import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -30,19 +30,6 @@ import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
-
-    private Engine engine;
-    private Network network;
-    private int destinationId = 0;
-
-    @Rule
-    public ErrorCollector collector = new ErrorCollector();
-
-    @Before
-    public void setUp() throws Exception {
-        engine = new Engine(new FIFOScheduler());
-        network = new ShortestPathNetworkFactory().network(6);
-    }
 
     /**
      * Route tables for each node when using the BGP protocol and there is no change in the network.
@@ -73,7 +60,6 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
                     destination(0), invalidRoute(), sproute(2, path(3, 1, 0))
             )
     };
-
     /**
      * Route tables for each node when using the BGP protocol and the link 3->1 is broken
      */
@@ -103,6 +89,17 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
                     destination(0), invalidRoute(), sproute(11, path(3, 2, 0))
             )
     };
+    @Rule
+    public ErrorCollector collector = new ErrorCollector();
+    private Engine engine;
+    private Network network;
+    private int destinationId = 0;
+
+    @Before
+    public void setUp() throws Exception {
+        engine = new Engine(new FIFOScheduler());
+        network = new ShortestPathNetworkFactory().network(6);
+    }
 
     /**
      * Simulates with the given protocol.

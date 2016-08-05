@@ -1,7 +1,7 @@
 package gui.radiobuttons;
 
 import protocols.D2R1Protocol;
-import protocols.Protocol;
+import core.Protocol;
 
 /**
  * A D2R1 protocol radio button associates the D2R1 protocol with a radio button.

@@ -3,8 +3,8 @@ package wrappers;
 import network.Node;
 import policies.shortestpath.ShortestPathAttribute;
 import policies.shortestpath.ShortestPathLabel;
-import policies.Path;
-import simulation.Route;
+import core.Path;
+import core.Route;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 

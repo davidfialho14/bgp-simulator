@@ -1,7 +1,7 @@
 package simulators.data;
 
 import io.reporters.Reporter;
-import simulation.Engine;
+import core.Engine;
 
 import java.io.IOException;
 

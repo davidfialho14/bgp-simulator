@@ -2,7 +2,7 @@ package simulators.data;
 
 import network.Link;
 import network.Node;
-import policies.Path;
+import core.Path;
 
 
 /**

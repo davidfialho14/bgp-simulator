@@ -1,8 +1,8 @@
 package simulators;
 
 import network.Network;
-import protocols.Protocol;
-import simulation.Engine;
+import core.Protocol;
+import core.Engine;
 import simulators.data.BasicDataCollector;
 import simulators.data.FullDeploymentDataCollector;
 import simulators.data.SPPolicyBasicDataCollector;

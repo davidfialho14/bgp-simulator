@@ -1,23 +1,16 @@
 package policies.gaorexford;
 
-import policies.Attribute;
+import core.Attribute;
 
-public abstract class GaoRexfordAttribute extends Attribute {
+import static core.InvalidAttribute.invalidAttr;
 
-    /**
-     * This enum models the type of the attributes.
-     * Customer is the lowest which means the most preferred attribute, followed by the peer attribute, which
-     * is followed by the provider attribute.
-     */
-    protected enum Type {
-        SELF, CUSTOMER, PEER, PROVIDER
-    }
+public abstract class GaoRexfordAttribute implements Attribute {
 
     abstract Type getType();
 
     @Override
     public int compareTo(Attribute attribute) {
-        if (attribute.isInvalid()) return -1;
+        if (attribute == invalidAttr()) return -1;
 
         GaoRexfordAttribute other = (GaoRexfordAttribute) attribute;
         return this.getType().compareTo(other.getType());
@@ -37,6 +30,15 @@ public abstract class GaoRexfordAttribute extends Attribute {
     @Override
     public int hashCode() {
         return getType() != null ? getType().hashCode() : 0;
+    }
+
+    /**
+     * This enum models the type of the attributes.
+     * Customer is the lowest which means the most preferred attribute, followed by the peer attribute, which
+     * is followed by the provider attribute.
+     */
+    protected enum Type {
+        SELF, CUSTOMER, PEER, PROVIDER
     }
 
 }

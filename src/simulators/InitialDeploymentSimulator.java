@@ -2,8 +2,8 @@ package simulators;
 
 import io.reporters.Reporter;
 import network.Network;
-import protocols.Protocol;
-import simulation.Engine;
+import core.Protocol;
+import core.Engine;
 import simulators.data.BasicDataCollector;
 
 import java.io.IOException;

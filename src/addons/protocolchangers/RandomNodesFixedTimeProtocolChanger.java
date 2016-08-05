@@ -1,9 +1,9 @@
 package addons.protocolchangers;
 
 import network.Node;
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Protocol;
+import core.Engine;
+import core.State;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -21,6 +21,29 @@ public class RandomNodesFixedTimeProtocolChanger extends FixedTimeProtocolChange
         super(builder.engine, builder.state, builder.changeTime);
         this.protocolToChangeTo = builder.protocol;
         buildNodeSet(builder.minNodes, builder.maxNodes);
+    }
+
+    /**
+     * Invoked only once when the time to change is reached.
+     */
+    @Override
+    public void onTimeToChange() {
+        nodeSet.forEach(node -> changeProtocol(node, protocolToChangeTo));
+    }
+
+    protected void buildNodeSet(int minNodes, int maxNodes) {
+        Random random = new Random();
+        int maxNodeId = state.getNetwork().getNodeCount();
+        int nodeCount = Math.min(maxNodes - minNodes + minNodes, maxNodeId);
+
+        while (nodeCount > 0) {
+            int nodeId = random.nextInt(maxNodeId);
+
+            // ensure nodes are not repeated
+            if (nodeSet.add(state.getNetwork().getNode(nodeId))) {
+                nodeCount--;
+            }
+        }
     }
 
     public static class Builder {
@@ -52,29 +75,6 @@ public class RandomNodesFixedTimeProtocolChanger extends FixedTimeProtocolChange
 
         public RandomNodesFixedTimeProtocolChanger build() {
             return new RandomNodesFixedTimeProtocolChanger(this);
-        }
-    }
-
-    /**
-     * Invoked only once when the time to change is reached.
-     */
-    @Override
-    public void onTimeToChange() {
-        nodeSet.forEach(node -> changeProtocol(node, protocolToChangeTo));
-    }
-
-    protected void buildNodeSet(int minNodes, int maxNodes) {
-        Random random = new Random();
-        int maxNodeId = state.getNetwork().getNodeCount();
-        int nodeCount = Math.min(maxNodes - minNodes + minNodes, maxNodeId);
-
-        while (nodeCount > 0) {
-            int nodeId = random.nextInt(maxNodeId);
-
-            // ensure nodes are not repeated
-            if (nodeSet.add(state.getNetwork().getNode(nodeId))) {
-                nodeCount--;
-            }
         }
     }
 }

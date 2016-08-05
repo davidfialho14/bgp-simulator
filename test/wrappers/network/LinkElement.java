@@ -3,7 +3,7 @@ package wrappers.network;
 import network.Link;
 import network.Network;
 import network.exceptions.NodeNotFoundException;
-import policies.Label;
+import core.Label;
 
 /**
  * Represents a node element.
@@ -17,6 +17,13 @@ public class LinkElement {
     }
 
     /**
+     * Wrapper around the link element constructor to improve readability.
+     */
+    public static LinkElement link(FromNodeElement from, ToNodeElement to, Label label) {
+        return new LinkElement(new Link(from.getNode(), to.getNode(), label));
+    }
+
+    /**
      * Adds the link to the network.
      *
      * @param network network to add link to.
@@ -25,12 +32,5 @@ public class LinkElement {
         network.addNode(link.getSource());
         network.addNode(link.getDestination());
         network.addLink(link);
-    }
-
-    /**
-     * Wrapper around the link element constructor to improve readability.
-     */
-    public static LinkElement link(FromNodeElement from, ToNodeElement to, Label label) {
-        return new LinkElement(new Link(from.getNode(), to.getNode(), label));
     }
 }

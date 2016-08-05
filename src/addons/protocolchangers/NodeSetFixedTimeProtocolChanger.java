@@ -1,9 +1,9 @@
 package addons.protocolchangers;
 
 import network.Node;
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Protocol;
+import core.Engine;
+import core.State;
 
 import java.util.Collections;
 import java.util.HashSet;

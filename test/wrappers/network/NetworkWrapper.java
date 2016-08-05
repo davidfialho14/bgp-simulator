@@ -3,7 +3,7 @@ package wrappers.network;
 import network.Network;
 import network.Node;
 import network.exceptions.NodeNotFoundException;
-import policies.Policy;
+import core.Policy;
 
 /**
  * Implements a set of static method wrappers to improve generating a network statically in a more

@@ -17,9 +17,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.schedulers.RandomScheduler;
+import core.Protocol;
+import core.Engine;
+import core.schedulers.RandomScheduler;
 import simulators.Simulator;
 import simulators.SimulatorFactory;
 

@@ -1,8 +1,8 @@
 package addons.linkbreakers;
 
 import network.Link;
-import simulation.Engine;
-import simulation.State;
+import core.Engine;
+import core.State;
 
 /**
  * A link breaker is assigned to a an engine and a state and will break links of the state's network depending on the

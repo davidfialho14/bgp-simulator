@@ -1,5 +1,6 @@
 package policies;
 
+import core.Policy;
 import io.InvalidTagException;
 import policies.gaorexford.GaoRexfordPolicy;
 import policies.roc.RoCPolicy;

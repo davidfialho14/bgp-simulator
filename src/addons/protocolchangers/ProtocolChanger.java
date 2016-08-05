@@ -1,9 +1,9 @@
 package addons.protocolchangers;
 
 import network.Node;
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Protocol;
+import core.Engine;
+import core.State;
 
 /**
  * Base class that all protocol changers must extend. It implements methods to change a protocol

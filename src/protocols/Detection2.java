@@ -1,9 +1,9 @@
 package protocols;
 
 import network.Node;
-import policies.Attribute;
-import policies.Path;
-import simulation.Route;
+import core.Attribute;
+import core.Path;
+import core.Route;
 
 /**
  * Implements the detection D1. D1 considers an oscillation when the learned route is preferred

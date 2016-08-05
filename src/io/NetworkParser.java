@@ -9,9 +9,9 @@ import com.alexmerz.graphviz.objects.PortNode;
 import network.Network;
 import network.exceptions.NodeExistsException;
 import network.exceptions.NodeNotFoundException;
-import policies.Label;
+import core.Label;
 import policies.Policies;
-import policies.Policy;
+import core.Policy;
 
 import java.io.File;
 import java.io.FileReader;

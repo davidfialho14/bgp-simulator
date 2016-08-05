@@ -1,8 +1,10 @@
 package stubs;
 
-import policies.Attribute;
+import core.Attribute;
 
-public class StubAttribute extends Attribute {
+import static core.InvalidAttribute.invalidAttr;
+
+public class StubAttribute implements Attribute {
 
     Integer value = null;
 
@@ -28,12 +30,10 @@ public class StubAttribute extends Attribute {
      */
     @Override
     public int compareTo(Attribute attribute) {
-        StubAttribute other = (StubAttribute) attribute;
+        if (attribute == invalidAttr()) return -1;
 
-        if (this.isInvalid() && other.isInvalid()) return 0;
-        else if (this.isInvalid() && !other.isInvalid()) return 1;
-        else if (!this.isInvalid() && other.isInvalid()) return -1;
-        else return other.value - this.value;
+        StubAttribute other = (StubAttribute) attribute;
+        return other.value - this.value;
     }
 
     @Override
