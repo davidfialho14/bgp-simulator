@@ -33,6 +33,7 @@ public class Main {
         Options options = new Options();
         options.addOption("d", "destination", true, "simulate with the given destination id");
         options.addOption("n", "network", true, "network to be simulated");
+        options.addOption("c", "repetition_count", true, "number of repetitions");
         options.addOption("d2", "use detection 2 instead of detection 1");
         options.addOption("deploy", true, "time deploy detection");
 
@@ -53,6 +54,7 @@ public class Main {
             if (cmd.hasOption("destination")) {
                 // execute directly
                 int destinationId = Integer.parseInt(cmd.getOptionValue("destination"));
+                int repetitionCount = Integer.parseInt(cmd.getOptionValue("repetition_count"));
 
                 if (networkFile == null) {
                     System.err.println("It is missing the network file");
@@ -71,7 +73,7 @@ public class Main {
                     deployTime = Integer.parseInt(cmd.getOptionValue("deploy"));
                 }
 
-                simulate(networkFile, destinationId, protocol, deployTime);
+                simulate(networkFile, destinationId, repetitionCount, protocol, deployTime);
 
             } else {
                 // display the GUI
@@ -85,9 +87,8 @@ public class Main {
 
     }
 
-    private static void simulate(File networkFile, int destinationId, Protocol protocol, Integer deployTime) {
-
-        int repetitionCount = 1000;
+    private static void simulate(File networkFile, int destinationId, int repetitionCount, Protocol protocol,
+                                 Integer deployTime) {
         int minDelay = 0;
         int maxDelay = 10;
 
@@ -114,6 +115,9 @@ public class Main {
                 reporter.dumpBasicInfo(parser.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
+                    long startTime = System.currentTimeMillis();
+                    System.out.println("Started simulation " + i);
+
                     simulator.simulate();
 
                     try {
@@ -121,6 +125,9 @@ public class Main {
                     } catch (IOException e) {
                         System.err.println("could not generate report");
                     }
+
+                    long estimatedTime = System.currentTimeMillis() - startTime;
+                    System.out.println(String.format("Finished simulation " + i + " in %.2f", estimatedTime / 1000.0));
                 }
             }
 
