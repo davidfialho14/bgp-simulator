@@ -1,7 +1,7 @@
 package core;
 
 /**
- * Represents an invalidAttr attribute. This attribute can be used with any policy implementation and must always be the
+ * Represents an invalid attribute. This attribute can be used with any policy implementation and must always be the
  * least preferable attribute. It is implemented as a singleton meaning it has only one instance every time.
  */
 public class InvalidAttribute implements Attribute {
@@ -14,20 +14,20 @@ public class InvalidAttribute implements Attribute {
     } // not be instantiated directly
 
     /**
-     * Returns always the same instance of an invalidAttr attribute. Its the only way to get an invalidAttr attribute
+     * Returns always the same instance of an invalid attribute. Its the only way to get an invalid attribute
      * instance.
      *
-     * @return invalidAttr attribute instance.
+     * @return invalid attribute instance.
      */
     public static InvalidAttribute invalidAttr() {
         return invalid;
     }
 
     /**
-     * The invalidAttr attribute is equal to other invalidAttr attributes and greater than any other attribute.
+     * The invalid attribute is equal to other invalid attributes and greater than any other attribute.
      *
      * @param attribute attribute to be compared.
-     * @return 0 if attribute is invalidAttr or greater than 0 if is not an invalidAttr attribute.
+     * @return 0 if attribute is invalid or greater than 0 if is not an invalid attribute.
      */
     @Override
     public int compareTo(Attribute attribute) {

@@ -24,7 +24,7 @@ public class StubAttribute implements Attribute {
 
     /**
      * Dummy attributes are preferred (<) depending on its value. A higher value means the attribute has
-     * higher preference. An invalidAttr stub has always the lowest preference.
+     * higher preference. An invalid stub has always the lowest preference.
      * @param attribute stub attribute to be compared.
      * @return
      */

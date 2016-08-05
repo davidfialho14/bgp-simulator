@@ -59,7 +59,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
 
     /**
      * Returns an invalid path instance.
-     * @return invalidAttr path instance.
+     * @return invalid path instance.
      */
     public static Path invalidPath() {
         return INVALID;
@@ -84,10 +84,10 @@ public class Path implements Comparable<Path>, Iterable<Node> {
 
     /**
      * Returns the path after the given node. If the node does not exist an empty path is returned.
-     * If the path is invalidAttr an invalidAttr path is returned as well.
+     * If the path is invalid an invalid path is returned as well.
      *
      * @param node node to get path after.
-     * @return path after the node or empty path if the node is not found or invalidAttr if the path is invalidAttr.
+     * @return path after the node or empty path if the node is not found or invalid if the path is invalid.
      */
     public Path getPathAfter(Node node) {
         if (this == invalidPath()) return invalidPath();

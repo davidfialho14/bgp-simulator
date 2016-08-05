@@ -68,7 +68,7 @@ public class Engine {
 
     /**
      * Should be called when a link is broken to trigger the correct behaviour from the simulation when a link is
-     * broken. The source node updates the routes learned from the broken link to invalidAttr routes. If the source node
+     * broken. The source node updates the routes learned from the broken link to invalid routes. If the source node
      * ends up selecting a new route it exports it to all of its in-neighbours. It also discards all routes being
      * exported through the broken link.
      *

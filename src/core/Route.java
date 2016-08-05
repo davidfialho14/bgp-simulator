@@ -39,9 +39,9 @@ public class Route implements Comparable<Route> {
     }
 
     /**
-     * Creates a new invalidAttr route.
+     * Creates a new invalid route.
      * @param destination destination of the route.
-     * @return new invalidAttr Route instance.
+     * @return new invalid Route instance.
      */
     public static Route invalidRoute(Node destination) {
         return new Route(destination, invalidAttr(), invalidPath());
@@ -107,8 +107,8 @@ public class Route implements Comparable<Route> {
     }
 
     /**
-     * Checks if the route is invalidAttr. A route is considered invalidAttr if the attribute or the path are invalidAttr.
-     * @return true if the route is invalidAttr and false otherwise.
+     * Checks if the route is invalid. A route is considered invalid if the attribute or the path are invalid.
+     * @return true if the route is invalid and false otherwise.
      */
     public boolean isInvalid() {
         return attribute == invalidAttr() || path == invalidPath();
