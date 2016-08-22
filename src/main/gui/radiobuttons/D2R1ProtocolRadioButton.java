@@ -1,4 +1,4 @@
-package gui.radiobuttons;
+package main.gui.radiobuttons;
 
 import protocols.D2R1Protocol;
 import core.Protocol;

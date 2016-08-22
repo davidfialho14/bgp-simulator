@@ -1,13 +1,13 @@
-package gui;
+package main.gui;
 
 import core.Engine;
 import core.Protocol;
 import core.network.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
-import gui.basics.NumberSpinner;
-import gui.fulldeployment.FullDeploymentController;
-import gui.gradualdeployment.GradualDeploymentController;
-import gui.radiobuttons.ProtocolToggleGroup;
+import main.gui.basics.NumberSpinner;
+import main.gui.fulldeployment.FullDeploymentController;
+import main.gui.gradualdeployment.GradualDeploymentController;
+import main.gui.radiobuttons.ProtocolToggleGroup;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;

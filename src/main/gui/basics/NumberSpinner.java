@@ -1,4 +1,4 @@
-package gui.basics;
+package main.gui.basics;
 
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;

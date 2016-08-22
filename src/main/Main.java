@@ -4,7 +4,7 @@ import core.Engine;
 import core.Protocol;
 import core.network.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
-import gui.SimulatorApplication;
+import main.gui.SimulatorApplication;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;

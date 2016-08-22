@@ -1,6 +1,6 @@
-package gui.gradualdeployment;
+package main.gui.gradualdeployment;
 
-import gui.basics.NumberSpinner;
+import main.gui.basics.NumberSpinner;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Spinner;

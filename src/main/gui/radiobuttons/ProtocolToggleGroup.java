@@ -1,4 +1,4 @@
-package gui.radiobuttons;
+package main.gui.radiobuttons;
 
 import javafx.scene.control.ToggleGroup;
 import core.Protocol;

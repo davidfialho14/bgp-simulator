@@ -1,4 +1,4 @@
-package gui.radiobuttons;
+package main.gui.radiobuttons;
 
 import protocols.BGPProtocol;
 import core.Protocol;

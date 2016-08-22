@@ -12,7 +12,7 @@
 <GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity"
           minHeight="-Infinity"
           minWidth="-Infinity" prefWidth="371.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.65"
-          fx:controller="gui.gradualdeployment.GradualDeploymentController">
+          fx:controller="main.gui.gradualdeployment.GradualDeploymentController">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="165.0" minWidth="-Infinity" prefWidth="165.0"/>
         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity"
