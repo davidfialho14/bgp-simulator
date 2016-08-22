@@ -1,6 +1,6 @@
 package core.schedulers;
 
-import network.Link;
+import core.network.Link;
 
 public interface Scheduler {
 

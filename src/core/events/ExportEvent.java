@@ -1,8 +1,8 @@
 package core.events;
 
 import core.Route;
-import network.Link;
-import network.Node;
+import core.network.Link;
+import core.network.Node;
 
 /**
  * Events generated when a node exports a new route.

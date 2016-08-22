@@ -1,7 +1,7 @@
 package core;
 
-import io.InvalidTagException;
-import network.Node;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
+import core.network.Node;
 
 /**
  * The policy interface provides the necessary methods to define a routing policy.
@@ -20,5 +20,5 @@ public interface Policy {
      * @param tag tag that defines the label to be created.
      * @return label instance according to the string tag.
      */
-    Label createLabel(String tag) throws InvalidTagException;
+    Label createLabel(String tag) throws InvalidPolicyTagException;
 }

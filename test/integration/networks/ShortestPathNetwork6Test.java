@@ -4,8 +4,8 @@ import addons.eventhandlers.MessageAndDetectionCountHandler;
 import addons.linkbreakers.FixedTimeLinkBreaker;
 import addons.linkbreakers.LinkBreaker;
 import factories.ShortestPathNetworkFactory;
-import network.Link;
-import network.Network;
+import core.network.Link;
+import core.network.Network;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import static wrappers.routetable.RouteTableWrapper.table;
 public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
 
     /**
-     * Route tables for each node when using the BGP protocol and there is no change in the network.
+     * Route tables for each node when using the BGP protocol and there is no change in the core.network.
      */
     private static RouteTable[] BGPProtocolExpectedTables = {
             table(

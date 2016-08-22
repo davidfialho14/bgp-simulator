@@ -1,7 +1,7 @@
 package core.events;
 
-import network.Link;
-import network.Node;
+import core.network.Link;
+import core.network.Node;
 import core.Path;
 import core.Route;
 

@@ -1,6 +1,6 @@
 package core.schedulers;
 
-import network.Link;
+import core.network.Link;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;

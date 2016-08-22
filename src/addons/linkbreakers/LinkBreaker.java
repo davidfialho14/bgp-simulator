@@ -1,11 +1,11 @@
 package addons.linkbreakers;
 
-import network.Link;
+import core.network.Link;
 import core.Engine;
 import core.State;
 
 /**
- * A link breaker is assigned to a an engine and a state and will break links of the state's network depending on the
+ * A link breaker is assigned to a an engine and a state and will break links of the state's core.network depending on the
  * information provided by the engine and the state.
  */
 public abstract class LinkBreaker {

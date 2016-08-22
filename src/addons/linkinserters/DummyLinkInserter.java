@@ -1,7 +1,7 @@
 package addons.linkinserters;
 
-import network.Link;
-import network.Network;
+import core.network.Link;
+import core.network.Network;
 
 /**
  * Dummy implementation of a link inserter. It does not insert any link ever.

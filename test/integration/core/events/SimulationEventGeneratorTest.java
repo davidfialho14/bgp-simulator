@@ -1,8 +1,8 @@
 package core.events;
 
-import network.Link;
-import network.Network;
-import network.Node;
+import core.network.Link;
+import core.network.Network;
+import core.network.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

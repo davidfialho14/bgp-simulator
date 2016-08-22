@@ -2,7 +2,7 @@ package simulators;
 
 import addons.protocolchangers.FixedTimeProtocolChanger;
 import io.reporters.Reporter;
-import network.Network;
+import core.network.Network;
 import protocols.BGPProtocol;
 import core.Protocol;
 import core.Engine;
@@ -11,7 +11,7 @@ import simulators.data.FullDeploymentDataCollector;
 import java.io.IOException;
 
 /**
- * The initial deployment simulator simulates a network with the detection already activated for all nodes from
+ * The initial deployment simulator simulates a core.network with the detection already activated for all nodes from
  * the start to the end of the simulation.
  */
 public class FullDeploymentSimulator extends Simulator {

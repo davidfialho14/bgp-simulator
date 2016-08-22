@@ -1,7 +1,7 @@
 package simulators.data;
 
-import network.Link;
-import network.Node;
+import core.network.Link;
+import core.network.Node;
 import core.Path;
 
 

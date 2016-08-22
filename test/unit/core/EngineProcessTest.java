@@ -1,7 +1,7 @@
 package core;
 
-import network.Link;
-import network.Node;
+import core.network.Link;
+import core.network.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

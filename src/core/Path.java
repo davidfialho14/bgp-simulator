@@ -1,6 +1,6 @@
 package core;
 
-import network.Node;
+import core.network.Node;
 
 import java.util.Collections;
 import java.util.Iterator;

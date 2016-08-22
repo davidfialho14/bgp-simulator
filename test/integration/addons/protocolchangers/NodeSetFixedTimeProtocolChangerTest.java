@@ -3,7 +3,7 @@ package addons.protocolchangers;
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import factories.NetworkFactory;
 import factories.ShortestPathNetworkFactory;
-import network.Node;
+import core.network.Node;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
     /**
      *
-     * @param networkId ID of the network to simulate.
+     * @param networkId ID of the core.network to simulate.
      * @param destId ID of the destination.
      * @param protocol protocol to change to.
      * @param nodeId ID of the node to change the protocol.

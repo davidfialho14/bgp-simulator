@@ -1,20 +1,20 @@
 package addons.linkinserters;
 
-import network.Link;
-import network.Network;
-import network.exceptions.NodeNotFoundException;
+import core.network.Link;
+import core.network.Network;
+import core.network.exceptions.NodeNotFoundException;
 
 /**
- * Implements the insertion of one link in the network.
+ * Implements the insertion of one link in the core.network.
  */
 public abstract class AbstractLinkInserter implements LinkInserter {
 
     /**
-     * Inserts one link into the given network. If one of the nodes of the link does not exist in the network
+     * Inserts one link into the given core.network. If one of the nodes of the link does not exist in the core.network
      * the node is added and the link as well.
      *
      * @param link link to be inserted.
-     * @param network network to insert link on.
+     * @param network core.network to insert link on.
      */
     protected void insert(Link link, Network network) {
         try {

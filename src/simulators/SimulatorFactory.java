@@ -1,6 +1,6 @@
 package simulators;
 
-import network.Network;
+import core.network.Network;
 import core.Protocol;
 import core.Engine;
 import simulators.data.BasicDataCollector;

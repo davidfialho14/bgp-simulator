@@ -1,6 +1,6 @@
 package wrappers;
 
-import network.Node;
+import core.network.Node;
 import policies.shortestpath.ShortestPathAttribute;
 import policies.shortestpath.ShortestPathLabel;
 import core.Path;

@@ -1,6 +1,6 @@
 package stubs;
 
-import network.Link;
+import core.network.Link;
 import core.Attribute;
 import core.Label;
 

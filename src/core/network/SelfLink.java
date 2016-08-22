@@ -1,4 +1,4 @@
-package network;
+package core.network;
 
 /**
  * Implements a self link. A self link is a special link that represents the imaginary connection between

@@ -1,8 +1,8 @@
 package io.reporters;
 
-import network.Link;
-import network.Network;
-import network.Node;
+import core.network.Link;
+import core.network.Network;
+import core.network.Node;
 import org.apache.commons.lang.StringUtils;
 import core.Path;
 import protocols.D1R1Protocol;
@@ -41,7 +41,7 @@ public class CSVReporter extends Reporter {
      * Constructs a reporter associating the output file.
      *
      * @param outputFile file to output report to.
-     * @param network    network being simulated.
+     * @param network    core.network being simulated.
      */
     public CSVReporter(File outputFile, Network network) throws IOException {
         super(outputFile, network);

@@ -1,7 +1,7 @@
 package policies;
 
 import core.Policy;
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import policies.gaorexford.GaoRexfordPolicy;
 import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;
@@ -39,11 +39,11 @@ public class Policies {
      * @param tag tag to be parsed.
      * @return policy instance corresponding to the given tag.
      */
-    public static Policy getPolicy(String tag) throws InvalidTagException {
+    public static Policy getPolicy(String tag) throws InvalidPolicyTagException {
         Policy policy = policies.get(tag);
 
         if (policy == null) {
-            throw new InvalidTagException(tag, "the policy tag is not valid");
+            throw new InvalidPolicyTagException(tag, "the policy tag is not valid");
         }
 
         return policy;

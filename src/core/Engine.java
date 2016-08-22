@@ -4,9 +4,9 @@ package core;
 import core.events.*;
 import core.schedulers.ScheduledRoute;
 import core.schedulers.Scheduler;
-import network.Link;
-import network.Node;
-import network.SelfLink;
+import core.network.Link;
+import core.network.Node;
+import core.network.SelfLink;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
@@ -182,7 +182,7 @@ public class Engine {
     }
 
     /**
-     * Exports a route through the given link. The route is put in the network's scheduler.
+     * Exports a route through the given link. The route is put in the core.network's scheduler.
      *
      * @param link link to export the route to.
      * @param route route to be exported.

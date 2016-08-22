@@ -2,8 +2,8 @@ package simulators;
 
 import addons.protocolchangers.PeriodicProtocolChanger;
 import io.reporters.Reporter;
-import network.Network;
-import network.Node;
+import core.network.Network;
+import core.network.Node;
 import protocols.BGPProtocol;
 import core.Protocol;
 import core.Engine;
@@ -31,7 +31,7 @@ public class GradualDeploymentSimulator extends Simulator {
      * Constructs a simulator by creating an initial state to be simulated.
      *
      * @param engine         engine used for simulation.
-     * @param network        network to simulate.
+     * @param network        core.network to simulate.
      * @param destinationId  id of the destination node.
      * @param deployProtocol initial protocol.
      * @param deployedNodePercentage

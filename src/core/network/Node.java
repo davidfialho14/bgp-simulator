@@ -1,11 +1,11 @@
-package network;
+package core.network;
 
 
 import java.util.*;
 
 public class Node {
 
-    private int id;   // id must be unique in each network
+    private int id;   // id must be unique in each core.network
 
     // can only have one for link for each neighbour
     private Map<Node, Link> outLinks = new HashMap<>();
