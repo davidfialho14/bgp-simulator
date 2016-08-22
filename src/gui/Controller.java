@@ -1,13 +1,18 @@
 package gui;
 
-import com.alexmerz.graphviz.ParseException;
-import com.alexmerz.graphviz.TokenMgrError;
+import core.Engine;
+import core.Protocol;
+import core.network.exceptions.NodeNotFoundException;
+import core.schedulers.RandomScheduler;
 import gui.basics.NumberSpinner;
 import gui.fulldeployment.FullDeploymentController;
 import gui.gradualdeployment.GradualDeploymentController;
 import gui.radiobuttons.ProtocolToggleGroup;
 import io.InvalidTagException;
-import io.NetworkParser;
+import io.networkreaders.GraphvizReader;
+import io.networkreaders.Topology;
+import io.networkreaders.TopologyReader;
+import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
 import io.reporters.Reporter;
 import javafx.event.ActionEvent;
@@ -15,15 +20,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import core.network.exceptions.NodeExistsException;
-import core.network.exceptions.NodeNotFoundException;
-import core.Protocol;
-import core.Engine;
-import core.schedulers.RandomScheduler;
 import simulators.Simulator;
 import simulators.SimulatorFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -120,17 +121,34 @@ public class Controller implements Initializable {
      * @param networkFile core.network file to be simulated.
      */
     private void simulate(File networkFile) {
-        int destinationId = destinationIdSpinner.getValue();
-        int repetitionCount = repetitionsSpinner.getValue();
-        int minDelay = minDelaySpinner.getValue();
-        int maxDelay = maxDelaySpinner.getValue();
-        Protocol protocol = detectionGroup.getSelectedProtocol();
 
-        try {
-            NetworkParser parser = new NetworkParser();
-            parser.parse(networkFile);
+        // read the topology and handle possible errors
+        Topology topology = null;   // stores the read topology
+        try (TopologyReader topologyReader = new GraphvizReader(networkFile)) {
+            topology = topologyReader.read();
 
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
+            alert.setHeaderText("Network File Error");
+            alert.showAndWait();
+
+        } catch (ParseException | NodeNotFoundException | InvalidTagException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
+            alert.setHeaderText("Invalid File Error");
+            alert.showAndWait();
+        }
+
+        if (topology != null) {
+
+            Integer minDelay = minDelaySpinner.getValue();
+            Integer maxDelay = maxDelaySpinner.getValue();
+            // load the engine
             Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
+
+            // read the user input from the controls
+            int destinationId = destinationIdSpinner.getValue();
+            int repetitionCount = repetitionsSpinner.getValue();
+            Protocol protocol = detectionGroup.getSelectedProtocol();
 
             // simulator that will be used to simulate
             Simulator simulator;
@@ -139,45 +157,48 @@ public class Controller implements Initializable {
                 int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol, deployTime);
+                        engine, topology.getNetwork(), destinationId, protocol, deployTime);
 
             } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
                 int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
                 int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol, deployPeriod, deployPercentage / 100.0);
+                        engine, topology.getNetwork(), destinationId, protocol, deployPeriod, deployPercentage / 100.0);
 
             } else {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol);
+                        engine, topology.getNetwork(), destinationId, protocol);
             }
 
-            String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
-            simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
+            try {
+                String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
+                simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
+            } catch (FileNotFoundException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open debug report file", ButtonType.OK);
+                alert.setHeaderText("IO Error");
+                alert.showAndWait();
+            }
 
             String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
             File reportFile = new File(networkFile.getParent(), reportFileName);
 
-            try (Reporter reporter = new CSVReporter(reportFile, parser.getNetwork())) {
-                reporter.dumpBasicInfo(parser.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
+            try (Reporter reporter = new CSVReporter(reportFile, topology.getNetwork())) {
+                reporter.dumpBasicInfo(topology.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
                     simulator.simulate();
                     reportData(simulator, reporter);
                 }
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file", ButtonType
+                        .OK);
+                alert.setHeaderText("IO Error");
+                alert.showAndWait();
             }
 
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
-            alert.setHeaderText("Network File Error");
-            alert.showAndWait();
-
-        } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "core.network file is corrupted", ButtonType.OK);
-            alert.setHeaderText("Invalid File Error");
-            alert.showAndWait();
         }
+
     }
 
     /**

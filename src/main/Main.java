@@ -1,23 +1,23 @@
 package main;
 
-import com.alexmerz.graphviz.ParseException;
-import com.alexmerz.graphviz.TokenMgrError;
+import core.Engine;
+import core.Protocol;
+import core.network.exceptions.NodeNotFoundException;
+import core.schedulers.RandomScheduler;
 import gui.SimulatorApplication;
 import io.InvalidTagException;
-import io.NetworkParser;
+import io.networkreaders.GraphvizReader;
+import io.networkreaders.Topology;
+import io.networkreaders.TopologyReader;
+import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
 import io.reporters.Reporter;
-import core.network.exceptions.NodeExistsException;
-import core.network.exceptions.NodeNotFoundException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import core.Protocol;
-import core.Engine;
-import core.schedulers.RandomScheduler;
 import simulators.Simulator;
 import simulators.SimulatorFactory;
 
@@ -92,27 +92,35 @@ public class Main {
         int minDelay = 0;
         int maxDelay = 10;
 
-        try {
-            NetworkParser parser = new NetworkParser();
-            parser.parse(networkFile);
+        // read the topology and handle possible errors
+        Topology topology = null;   // stores the read topology
+        try (TopologyReader topologyReader = new GraphvizReader(networkFile)) {
+            topology = topologyReader.read();
 
+        } catch (IOException e) {
+            System.err.println("can not open the file");
+        } catch (ParseException | NodeNotFoundException | InvalidTagException e) {
+            System.err.println("network file is corrupted");
+        }
+
+        if (topology != null) {
             Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
 
             Simulator simulator;
             if (deployTime == null) {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol);
+                        engine, topology.getNetwork(), destinationId, protocol);
             } else {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, parser.getNetwork(), destinationId, protocol, deployTime);
+                        engine, topology.getNetwork(), destinationId, protocol, deployTime);
             }
 
             String reportFileName = networkFile.getName().replaceFirst("\\.gv",
                     String.format("-dest%02d.csv", destinationId));
             File reportFile = new File(networkFile.getParent(), reportFileName);
 
-            try (Reporter reporter = new CSVReporter(reportFile, parser.getNetwork())) {
-                reporter.dumpBasicInfo(parser.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
+            try (Reporter reporter = new CSVReporter(reportFile, topology.getNetwork())) {
+                reporter.dumpBasicInfo(topology.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
                     long startTime = System.currentTimeMillis();
@@ -129,14 +137,10 @@ public class Main {
                     long estimatedTime = System.currentTimeMillis() - startTime;
                     System.out.println(String.format("Finished core " + i + " in %.2f", estimatedTime / 1000.0));
                 }
+            } catch (IOException e) {
+                System.err.println("failed to open/create/write report file");
             }
-
-        } catch (IOException e) {
-            System.err.println("can not open the file");
-        } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
-            System.err.println("core.network file is corrupted");
         }
-
     }
 
 }

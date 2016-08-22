@@ -13,7 +13,7 @@ import java.io.IOException;
  * a given file format, returning a topology object associating the two. Each topology reader
  * implements a specific topology file format.
  */
-public interface TopologyReader extends AutoCloseable, Closeable {
+public interface TopologyReader extends Closeable {
 
     /**
      * Reads a single topology. Subclasses must implement this method according to their supported
