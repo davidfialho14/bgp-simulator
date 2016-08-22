@@ -1,11 +1,16 @@
-package networks;
+package topologies;
 
 import addons.eventhandlers.MessageAndDetectionCountHandler;
 import addons.linkbreakers.FixedTimeLinkBreaker;
 import addons.linkbreakers.LinkBreaker;
-import factories.ShortestPathNetworkFactory;
-import core.network.Link;
-import core.network.Network;
+import core.Engine;
+import core.Protocol;
+import core.RouteTable;
+import core.State;
+import core.schedulers.FIFOScheduler;
+import core.topology.Link;
+import core.topology.Topology;
+import factories.ShortestPathTopologyFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,11 +18,6 @@ import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import core.Protocol;
-import core.Engine;
-import core.RouteTable;
-import core.State;
-import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -29,10 +29,10 @@ import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
-public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
+public class ShortestPathTopology6Test {
 
     /**
-     * Route tables for each node when using the BGP protocol and there is no change in the core.network.
+     * Route tables for each node when using the BGP protocol and there is no change in the topology.
      */
     private static RouteTable[] BGPProtocolExpectedTables = {
             table(
@@ -92,13 +92,13 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     @Rule
     public ErrorCollector collector = new ErrorCollector();
     private Engine engine;
-    private Network network;
+    private Topology topology;
     private int destinationId = 0;
 
     @Before
     public void setUp() throws Exception {
         engine = new Engine(new FIFOScheduler());
-        network = new ShortestPathNetworkFactory().network(6);
+        topology = new ShortestPathTopologyFactory().topology(6);
     }
 
     /**
@@ -108,7 +108,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
      * @return state after simulation.
      */
     private State simulateWith(Protocol protocol) {
-        State state = State.create(network, destinationId, protocol);
+        State state = State.create(topology, destinationId, protocol);
 
         engine.simulate(state);
 
@@ -207,7 +207,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     public void simulate_D2R1ProtocolAndFIFOScheduler_NeverDetects() throws Exception {
         MessageAndDetectionCountHandler eventHandler = new MessageAndDetectionCountHandler();
         eventHandler.register(engine.getEventGenerator());
-        State state = State.create(network, destinationId, new D2R1Protocol());
+        State state = State.create(topology, destinationId, new D2R1Protocol());
 
         engine.simulate(state);
 
@@ -217,7 +217,7 @@ public class ShortestPathNetwork6Test extends ShortestPathNetworkTest {
     // ----- LINK BREAKERS -----
 
     private State simulateBreak(Protocol protocol, Link linkToBreak, long timeToBreak) {
-        State state = State.create(network, destinationId, protocol);
+        State state = State.create(topology, destinationId, protocol);
 
         LinkBreaker linkBreaker = new FixedTimeLinkBreaker(linkToBreak, timeToBreak);
         linkBreaker.assignTo(engine, state);

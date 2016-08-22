@@ -1,26 +1,26 @@
 package core.events;
 
-import core.network.Link;
-import core.network.Network;
-import core.network.Node;
+import core.Engine;
+import core.State;
+import core.schedulers.FIFOScheduler;
+import core.topology.Link;
+import core.topology.Node;
+import core.topology.Topology;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
-import core.Engine;
-import core.State;
-import core.schedulers.FIFOScheduler;
 
-import static org.mockito.Mockito.*;
 import static core.Route.invalidRoute;
+import static org.mockito.Mockito.*;
 import static wrappers.PathWrapper.path;
 import static wrappers.ShortestPathWrapper.*;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.NetworkWrapper.network;
-import static wrappers.network.ToNodeElement.to;
+import static wrappers.topology.FromNodeElement.from;
+import static wrappers.topology.LinkElement.link;
+import static wrappers.topology.ToNodeElement.to;
+import static wrappers.topology.TopologyWrapper.topology;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimulationEventGeneratorTest {
@@ -33,13 +33,13 @@ public class SimulationEventGeneratorTest {
     }
 
     @Test
-    public void onLearned_NetworkWithOnlyLinkFrom0To1_CalledOnceWithLink0To1AndRoute1WithPathWithNode1() throws Exception {
+    public void onLearned_TopologyWithOnlyLinkFrom0To1_CalledOnceWithLink0To1AndRoute1WithPathWithNode1() throws Exception {
         LearnListener listener = mock(LearnListener.class);
 
-        Network network0 = network(new ShortestPathPolicy(),
+        Topology topology0 = topology(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
         int destinationId = 1;
-        State state = State.create(network0, destinationId, new BGPProtocol());
+        State state = State.create(topology0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addLearnListener(listener);
 
         engine.simulate(state);
@@ -48,13 +48,13 @@ public class SimulationEventGeneratorTest {
     }
 
     @Test
-    public void onImported_NetworkWithOnlyLinkFrom0To1_CalledOnceWithLink0To1AndRoute0EmptyPath() throws Exception {
+    public void onImported_TopologyWithOnlyLinkFrom0To1_CalledOnceWithLink0To1AndRoute0EmptyPath() throws Exception {
         ImportListener listener = mock(ImportListener.class);
 
-        Network network0 = network(new ShortestPathPolicy(),
+        Topology topology0 = topology(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
         int destinationId = 1;
-        State state = State.create(network0, destinationId, new BGPProtocol());
+        State state = State.create(topology0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addImportListener(listener);
 
         engine.simulate(state);
@@ -63,14 +63,14 @@ public class SimulationEventGeneratorTest {
     }
 
     @Test
-    public void onSelected_NetworkWithOnlyLinkFrom0To1_CalledOnceWithPreviousInvalidRouteAndRoute1WithPathWithNode1()
+    public void onSelected_TopologyWithOnlyLinkFrom0To1_CalledOnceWithPreviousInvalidRouteAndRoute1WithPathWithNode1()
             throws Exception {
         SelectListener listener = mock(SelectListener.class);
 
-        Network network0 = network(new ShortestPathPolicy(),
+        Topology topology0 = topology(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
         int destinationId = 1;
-        State state = State.create(network0, destinationId, new BGPProtocol());
+        State state = State.create(topology0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addSelectListener(listener);
 
         engine.simulate(state);
@@ -80,14 +80,14 @@ public class SimulationEventGeneratorTest {
     }
 
     @Test
-    public void onExported_NetworkWithOnlyLinkFrom0To1_CalledOnceWithLink0To1AndRoute0AndEmptyPath()
+    public void onExported_TopologyWithOnlyLinkFrom0To1_CalledOnceWithLink0To1AndRoute0AndEmptyPath()
             throws Exception {
         ExportListener listener = mock(ExportListener.class);
 
-        Network network0 = network(new ShortestPathPolicy(),
+        Topology topology0 = topology(new ShortestPathPolicy(),
                 link(from(0), to(1), label(1)));
         int destinationId = 1;
-        State state = State.create(network0, destinationId, new BGPProtocol());
+        State state = State.create(topology0, destinationId, new BGPProtocol());
         engine.getEventGenerator().addExportListener(listener);
 
         engine.simulate(state);

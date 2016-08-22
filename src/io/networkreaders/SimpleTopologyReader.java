@@ -1,16 +1,16 @@
 package io.networkreaders;
 
-import core.Policy;
-import core.network.Network;
-import core.network.exceptions.NodeNotFoundException;
+import core.topology.Network;
+import core.topology.Policy;
+import core.topology.Topology;
+import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.exceptions.ParseException;
-import policies.Policies;
 
 import java.io.*;
 
 /**
  * Topology reader implementation for the simple topology file format.
- * The simple topology format stores the network link by link. Each line contains a link given in the
+ * The simple topology format stores the topology link by link. Each line contains a link given in the
  * format: <source>|<destination>|<relationship>
  * source: id of the source node
  * destination: id of the destination node
@@ -35,14 +35,14 @@ public class SimpleTopologyReader implements TopologyReader {
     /**
      * Reads a single topology from a simple topology file format.
      *
-     * @return topology associating the network and policy read
+     * @return topology associating the topology and policy read
      */
     @Override
     public Topology read() throws IOException, ParseException, NodeNotFoundException {
 
         // policy is specified in the first line
-        Policy policy = Policies.getPolicy(fileReader.readLine());
-        Network network = new Network(policy);
+        Policy policy = PolicyTagger.getPolicy(fileReader.readLine());
+        Network network = new Network();
 
         // the next lines, each defines a link
         String line;

@@ -1,19 +1,19 @@
 package addons.protocolchangers;
 
 import addons.eventhandlers.MessageAndDetectionCountHandler;
-import factories.NetworkFactory;
-import factories.ShortestPathNetworkFactory;
-import core.network.Node;
+import core.Engine;
+import core.Protocol;
+import core.State;
+import core.schedulers.FIFOScheduler;
+import core.topology.Node;
+import factories.ShortestPathTopologyFactory;
+import factories.TopologyFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
-import core.Protocol;
-import core.Engine;
-import core.State;
-import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,7 +25,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
     @Rule
     public ErrorCollector collector = new ErrorCollector();
-    private NetworkFactory factory = new ShortestPathNetworkFactory();
+    private TopologyFactory factory = new ShortestPathTopologyFactory();
     private Engine engine;
 
     @Before
@@ -35,7 +35,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
 
     /**
      *
-     * @param networkId ID of the core.network to simulate.
+     * @param networkId ID of the topology to simulate.
      * @param destId ID of the destination.
      * @param protocol protocol to change to.
      * @param nodeId ID of the node to change the protocol.
@@ -43,7 +43,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
      * @return final state.
      */
     private State simulate(int networkId, int destId, Protocol protocol, int nodeId, long time) {
-        State state = State.create(factory.network(networkId), destId, new BGPProtocol());
+        State state = State.create(factory.topology(networkId), destId, new BGPProtocol());
         new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new Node(nodeId));
 
         engine.simulate(state);

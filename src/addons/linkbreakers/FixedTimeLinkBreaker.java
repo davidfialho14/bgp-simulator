@@ -1,6 +1,6 @@
 package addons.linkbreakers;
 
-import core.network.Link;
+import core.topology.Link;
 import core.Engine;
 import core.State;
 import core.TimeListener;

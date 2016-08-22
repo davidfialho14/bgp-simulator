@@ -1,19 +1,19 @@
 package addons.linkinserters;
 
-import core.network.Link;
-import core.network.Network;
+import core.topology.Link;
+import core.topology.Network;
 
 /**
- * A link inserter inserts new links into a core.network.
+ * A link inserter inserts new links into a topology.
  */
 public interface LinkInserter {
 
     /**
-     * Inserts any link into the given core.network. The insertion of the link may depend on the current time depending on
+     * Inserts any link into the given topology. The insertion of the link may depend on the current time depending on
      * the implementation. If a link is inserted the inserted link is returned and if a link is not inserted null
      * is returned.
      *
-     * @param network core.network to insert link on.
+     * @param network topology to insert link on.
      * @param currentTime current time of simulation.
      * @return link inserted or null is no link was inserted.
      */

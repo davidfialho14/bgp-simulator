@@ -1,23 +1,23 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static core.InvalidAttribute.invalidAttr;
 import static core.Route.invalidRoute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static core.InvalidAttribute.invalidAttr;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
 import static wrappers.StubWrapper.*;
-import static wrappers.network.NetworkWrapper.anyNode;
+import static wrappers.topology.TopologyWrapper.anyNode;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EngineLearnTest {

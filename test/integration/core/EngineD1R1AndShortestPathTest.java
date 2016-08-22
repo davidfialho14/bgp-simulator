@@ -1,9 +1,9 @@
 package core;
 
 import core.schedulers.FIFOScheduler;
-import factories.NetworkFactory;
-import factories.ShortestPathNetworkFactory;
-import core.network.Node;
+import core.topology.Node;
+import factories.ShortestPathTopologyFactory;
+import factories.TopologyFactory;
 import org.junit.Before;
 import org.junit.Test;
 import protocols.D1R1Protocol;
@@ -19,13 +19,13 @@ import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
-    Allow duplicates in order to make the tests easier to understand without having to look for the core.network or
+    Allow duplicates in order to make the tests easier to understand without having to look for the topology or
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
 public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
 
-    private NetworkFactory factory = new ShortestPathNetworkFactory();
+    private TopologyFactory factory = new ShortestPathTopologyFactory();
     
     @Before
     public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Topology3_Converges() throws Exception {
         int destinationId = 0;
-        State state = State.create(factory.network(3), destinationId, protocol);
+        State state = State.create(factory.topology(3), destinationId, protocol);
 
         engine.simulate(state);
 

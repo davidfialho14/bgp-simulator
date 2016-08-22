@@ -1,27 +1,27 @@
 package core.implementations.handlers;
 
-import core.network.Network;
+import addons.eventhandlers.MessageAndDetectionCountHandler;
+import core.Engine;
+import core.State;
+import core.schedulers.FIFOScheduler;
+import core.topology.Topology;
 import org.junit.Before;
 import org.junit.Test;
 import policies.shortestpath.ShortestPathPolicy;
 import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
-import core.Engine;
-import core.State;
-import addons.eventhandlers.MessageAndDetectionCountHandler;
-import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static wrappers.ShortestPathWrapper.label;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.ToNodeElement.to;
-import static wrappers.network.NetworkWrapper.network;
+import static wrappers.topology.FromNodeElement.from;
+import static wrappers.topology.LinkElement.link;
+import static wrappers.topology.ToNodeElement.to;
+import static wrappers.topology.TopologyWrapper.topology;
 
 public class MessageAndDetectionCountHandlerTest {
 
-    private static Network network3 = network(new ShortestPathPolicy(),
+    private static Topology topology3 = topology(new ShortestPathPolicy(),
             link(from(1), to(0), label(0)),
             link(from(2), to(0), label(0)),
             link(from(3), to(0), label(0)),
@@ -39,10 +39,10 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void messageCount_ForNetwork0AndDestination1WithBGP_Is1() throws Exception {
+    public void messageCount_ForTopology0AndDestination1WithBGP_Is1() throws Exception {
         int destinationId = 1;
         State state = State.create(
-                network(new ShortestPathPolicy(),
+                topology(new ShortestPathPolicy(),
                         link(from(0), to(1), label(1))),
                 destinationId,
                 new BGPProtocol());
@@ -53,10 +53,10 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void messageCount_ForNetwork1AndDestination2_Is3() throws Exception {
+    public void messageCount_ForTopology1AndDestination2_Is3() throws Exception {
         int destinationId = 2;
         State state = State.create(
-                network(new ShortestPathPolicy(),
+                topology(new ShortestPathPolicy(),
                         link(from(0), to(1), label(1)),
                         link(from(1), to(2), label(1)),
                         link(from(0), to(2), label(0))),
@@ -69,9 +69,9 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void messageCount_ForNetwork3WithD1R1_Is13() throws Exception {
+    public void messageCount_ForTopology3WithD1R1_Is13() throws Exception {
         int destinationId = 0;
-        State state = State.create(network3, destinationId, new D1R1Protocol());
+        State state = State.create(topology3, destinationId, new D1R1Protocol());
 
         engine.simulate(state);
 
@@ -79,9 +79,9 @@ public class MessageAndDetectionCountHandlerTest {
     }
 
     @Test
-    public void detectionCount_ForNetwork3WithD1R1_Is2() throws Exception {
+    public void detectionCount_ForTopology3WithD1R1_Is2() throws Exception {
         int destinationId = 0;
-        State state = State.create(network3, destinationId, new D1R1Protocol());
+        State state = State.create(topology3, destinationId, new D1R1Protocol());
 
         engine.simulate(state);
 

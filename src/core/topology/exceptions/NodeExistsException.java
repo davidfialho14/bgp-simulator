@@ -1,7 +1,7 @@
-package core.network.exceptions;
+package core.topology.exceptions;
 
 /**
- * Thrown to indicate that a node already exists in the core.network.
+ * Thrown to indicate that a node already exists in the topology.
  */
 public class NodeExistsException extends Exception {
 

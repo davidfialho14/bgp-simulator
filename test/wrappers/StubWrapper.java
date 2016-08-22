@@ -2,8 +2,8 @@ package wrappers;
 
 import stubs.StubAttribute;
 import stubs.StubLabel;
-import core.network.Link;
-import core.network.Node;
+import core.topology.Link;
+import core.topology.Node;
 import core.Path;
 import core.Route;
 import wrappers.routetable.OutLinkElement;

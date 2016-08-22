@@ -1,7 +1,7 @@
 package core.events;
 
 import core.Route;
-import core.network.Node;
+import core.topology.Node;
 
 /**
  * Events generated when a node selects a route.

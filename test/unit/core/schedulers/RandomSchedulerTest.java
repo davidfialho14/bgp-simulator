@@ -1,6 +1,6 @@
 package core.schedulers;
 
-import core.network.Link;
+import core.topology.Link;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

@@ -2,19 +2,23 @@ package main;
 
 import core.Engine;
 import core.Protocol;
-import core.network.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
-import main.gui.SimulatorApplication;
+import core.topology.Topology;
+import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
-import io.networkreaders.Topology;
+import io.networkreaders.PolicyTagger;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
 import io.reporters.Reporter;
+import main.gui.SimulatorApplication;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import policies.gaorexford.GaoRexfordPolicy;
+import policies.roc.RoCPolicy;
+import policies.shortestpath.ShortestPathPolicy;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import simulators.Simulator;
@@ -27,11 +31,15 @@ public class Main {
 
     public static void main(String[] args) {
 
+        PolicyTagger.register(new ShortestPathPolicy(), "ShortestPath");
+        PolicyTagger.register(new RoCPolicy(), "RoC");
+        PolicyTagger.register(new GaoRexfordPolicy(), "GaoRexford");
+
         CommandLineParser parser = new DefaultParser();
 
         Options options = new Options();
         options.addOption("d", "destination", true, "simulate with the given destination id");
-        options.addOption("n", "network", true, "core.network to be simulated");
+        options.addOption("n", "topology", true, "core.topology to be simulated");
         options.addOption("c", "repetition_count", true, "number of repetitions");
         options.addOption("d2", "use detection 2 instead of detection 1");
         options.addOption("deploy", true, "time deploy detection");
@@ -41,8 +49,8 @@ public class Main {
             CommandLine cmd = parser.parse(options, args);
 
             File networkFile = null;
-            if (cmd.hasOption("network")) {
-                networkFile = new File(cmd.getOptionValue("network"));
+            if (cmd.hasOption("topology")) {
+                networkFile = new File(cmd.getOptionValue("topology"));
 
                 if (!networkFile.exists()) {
                     System.err.println("Network file does not exist");
@@ -56,7 +64,7 @@ public class Main {
                 int repetitionCount = Integer.parseInt(cmd.getOptionValue("repetition_count"));
 
                 if (networkFile == null) {
-                    System.err.println("It is missing the core.network file");
+                    System.err.println("It is missing the core.topology file");
                     System.exit(1);
                 }
 
@@ -99,7 +107,7 @@ public class Main {
         } catch (IOException e) {
             System.err.println("can not open the file");
         } catch (ParseException | NodeNotFoundException e) {
-            System.err.println("network file is corrupted");
+            System.err.println("topology file is corrupted");
         }
 
         if (topology != null) {
@@ -108,18 +116,18 @@ public class Main {
             Simulator simulator;
             if (deployTime == null) {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol);
+                        engine, topology, destinationId, protocol);
             } else {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol, deployTime);
+                        engine, topology, destinationId, protocol, deployTime);
             }
 
             String reportFileName = networkFile.getName().replaceFirst("\\.gv",
                     String.format("-dest%02d.csv", destinationId));
             File reportFile = new File(networkFile.getParent(), reportFileName);
 
-            try (Reporter reporter = new CSVReporter(reportFile, topology.getNetwork())) {
-                reporter.dumpBasicInfo(topology.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
+            try (Reporter reporter = new CSVReporter(reportFile, topology)) {
+                reporter.dumpBasicInfo(topology, destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
                     long startTime = System.currentTimeMillis();

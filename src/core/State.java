@@ -1,75 +1,84 @@
 package core;
 
-import core.network.Network;
-import core.network.Node;
+import core.topology.Network;
+import core.topology.Node;
+import core.topology.Topology;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Responsible to hold all the current state of the simulation. This includes the current currentNetwork state, the current
- * state of the routing tables, and the protocols being used by the nodes.
+ * The state class stores the state information of a simulation. The simulation state is defined by the topology
+ * being simulated and its destination, the nodes' routing tables and selected routes, and the protocols being
+ * applied by each node.
  */
 public class State {
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private final Topology originalTopology;    // stores the topology
     private final Node destination;
-    private Network originalNetwork;
-    private Network currentNetwork;
-    private Protocol defaultProtocol;
-    private Map<Node, NodeState> nodesStates;   // state of each node
+    private final Protocol defaultProtocol;
+    private final Map<Node, NodeState> nodesStates;   // state of each nodeX
+
+    // stores the current
+    private Topology currentTopology;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * This constructor is PRIVATE: use the static create methods
      */
-    private State(Network network, Node destination, Protocol defaultProtocol,
+    private State(Topology topology, Node destination, Protocol defaultProtocol,
                   Map<Node, NodeState> nodesStates) {
-        this.originalNetwork = network;
-        this.currentNetwork = new Network(network); // ensure the current core.network is a copy of the original
+        this.originalTopology = topology;
+        this.currentTopology = new Topology(topology); // ensure the current topology is a copy of the original
         this.destination = destination;
         this.defaultProtocol = defaultProtocol;
         this.nodesStates = nodesStates;
     }
 
     /**
-     * Creates an empty state for the given core.network. It initializes all nodes with the given protocol.
-     * @param network currentNetwork to create state for.
+     * Creates an empty state for the given topology. It initializes all nodes with the given protocol.
+     *
+     * @param topology current topology to create state for.
      * @param destId id of the destination node to simulate for.
      * @param protocol protocol to be used by all nodes by default.
      */
-    public static State create(Network network, int destId, Protocol protocol) {
+    public static State create(Topology topology, int destId, Protocol protocol) {
+        Network network = topology.getNetwork();
+
         // associate each node with an empty state
         Map<Node, NodeState> nodesStates = new HashMap<>(network.getNodeCount());
+
         Node destination = network.getNode(destId);
-        network.getNodes().forEach(node -> {
-            nodesStates.put(node, new NodeState(node, destination, protocol));
-        });
+        network.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, destination, protocol)));
 
-
-        return new State(network, destination, protocol, nodesStates);
+        return new State(topology, destination, protocol, nodesStates);
     }
 
-    /**
-     * Resets all the state. This clears all the routing tables, reverts all nodes to the default protocol and
-     * returns the core.network to its original state.
-     */
-    public void reset() {
-        this.nodesStates.clear();
-        this.defaultProtocol.reset();
-        originalNetwork.getNodes()
-                .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
-
-        // ensure the current core.network must be a copy of the original
-        this.currentNetwork = new Network(originalNetwork);
-    }
-
-    /**
-     * Returns the current core.network state.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @return current core.network state.
+     *  Public Interface - Getters
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Returns the current topology state.
+     *
+     * @return current topology state.
      */
-    public Network getNetwork() {
-        return currentNetwork;
+    public Topology getTopology() {
+        return currentTopology;
     }
 
     /**
@@ -127,8 +136,14 @@ public class State {
                 ));
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface - Modifier Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
-     * Adds a new link the current core.network. This alters the networks state.
+     * Adds a new link the current topology. This alters the topologies state.
      */
     public void addLink() {
         // TODO implement
@@ -136,7 +151,7 @@ public class State {
     }
 
     /**
-     * Removes a link the current core.network. This alters the networks state.
+     * Removes a link the current topology. This alters the topologies state.
      */
     public void removeLink() {
         // TODO implement
@@ -152,4 +167,19 @@ public class State {
     public void updateProtocol(Node node, Protocol protocol) {
         get(node).setProtocol(protocol);
     }
+
+    /**
+     * Resets all the state. This clears all the routing tables, reverts all nodes to the default protocol and
+     * returns the topology to its original state.
+     */
+    public void reset() {
+        this.nodesStates.clear();
+        this.defaultProtocol.reset();
+        originalTopology.getNetwork().getNodes()
+                .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
+
+        // ensure the current topology is equal to the original
+        this.currentTopology = new Topology(originalTopology);
+    }
+
 }

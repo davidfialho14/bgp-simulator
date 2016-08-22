@@ -1,13 +1,30 @@
-package core.network;
+package core.topology;
 
 import core.Attribute;
-import core.Label;
 
+
+/**
+ * A link is one of the two fundamental elements of a topology. Links are directed and connect a source and a
+ * destination node. Each link is associated with a label modelling the relationship between the two nodes.
+ * Link objects are immutable.
+ */
 public class Link {
 
-	private Node source;
-	private Node destination;
-    private Label label;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private final Node source;
+    private final Node destination;
+    private final Label label;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	/**
 	 * Creates a link connecting the source to the destination.
@@ -32,6 +49,12 @@ public class Link {
         this.destination = new Node(destId);
         this.label = label;
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	/**
 	 * Returns the source node of the link.

@@ -5,12 +5,12 @@ import com.alexmerz.graphviz.objects.Edge;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 import com.alexmerz.graphviz.objects.PortNode;
-import core.Label;
-import core.Policy;
-import core.network.Network;
-import core.network.exceptions.NodeNotFoundException;
+import core.topology.Label;
+import core.topology.Network;
+import core.topology.Policy;
+import core.topology.Topology;
+import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.exceptions.ParseException;
-import policies.Policies;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,7 +39,7 @@ public class GraphvizReader implements TopologyReader {
     /**
      * Reads a single topology from a Graphviz file format.
      *
-     * @return topology associating the network and policy read
+     * @return topology associating the topology and policy read
      */
     @Override
     public Topology read() throws IOException, ParseException, NodeNotFoundException {
@@ -53,10 +53,9 @@ public class GraphvizReader implements TopologyReader {
         // get the parsed graph, note that the DOT language allows more then one graph to be parsed
         // here we just want the first graph
         Graph graph = parser.getGraphs().get(0);
-        String networkName = graph.getId().getId();
 
-        Policy policy = Policies.getPolicy(graph.getAttribute("policy"));
-        Network network = new Network(policy, networkName);
+        Policy policy = PolicyTagger.getPolicy(graph.getAttribute("policy"));
+        Network network = new Network();
 
         // add all nodes to the parsedNetwork
         for (Node node : graph.getNodes(true)) {

@@ -1,4 +1,4 @@
-package core.network;
+package core.topology;
 
 import org.junit.Test;
 

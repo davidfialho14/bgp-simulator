@@ -1,12 +1,12 @@
 package simulators;
 
 import addons.protocolchangers.PeriodicProtocolChanger;
-import io.reporters.Reporter;
-import core.network.Network;
-import core.network.Node;
-import protocols.BGPProtocol;
-import core.Protocol;
 import core.Engine;
+import core.Protocol;
+import core.topology.Node;
+import core.topology.Topology;
+import io.reporters.Reporter;
+import protocols.BGPProtocol;
 import simulators.data.GradualDeploymentDataCollector;
 import utils.RandomNodesSelector;
 
@@ -30,19 +30,19 @@ public class GradualDeploymentSimulator extends Simulator {
     /**
      * Constructs a simulator by creating an initial state to be simulated.
      *
-     * @param engine         engine used for simulation.
-     * @param network        core.network to simulate.
-     * @param destinationId  id of the destination node.
-     * @param deployProtocol initial protocol.
-     * @param deployedNodePercentage
+     * @param engine                    engine used for simulation.
+     * @param topology                  topology to simulate.
+     * @param destinationId             id of the destination node.
+     * @param deployProtocol            initial protocol.
+     * @param deployedNodePercentage    percentage of nodes to deploy in each period
      */
-    public GradualDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol,
+    public GradualDeploymentSimulator(Engine engine, Topology topology, int destinationId, Protocol deployProtocol,
                                       long deployPeriod, double deployedNodePercentage) {
-        super(engine, network, destinationId, new BGPProtocol());
+        super(engine, topology, destinationId, new BGPProtocol());
         this.deployProtocol = deployProtocol;
         this.deployPeriod = deployPeriod;
-        this.deployedNodeCount = (int) Math.ceil(deployedNodePercentage * network.getNodeCount());
-        this.nodesSelector = new RandomNodesSelector(network);
+        this.deployedNodeCount = (int) Math.ceil(deployedNodePercentage * topology.getNetwork().getNodeCount());
+        this.nodesSelector = new RandomNodesSelector(topology.getNetwork());
 
         this.gradualDeploymentDataCollector.register(engine);
     }

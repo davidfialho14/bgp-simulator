@@ -1,7 +1,7 @@
-package core.network.exceptions;
+package core.topology.exceptions;
 
 /**
- * Thrown to indicate that a node does not exist in a given core.network.
+ * Thrown to indicate that a node does not exist in a given topology.
  */
 public class NodeNotFoundException extends Exception {
 

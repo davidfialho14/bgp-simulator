@@ -1,8 +1,8 @@
 package simulators;
 
-import core.network.Network;
-import core.Protocol;
 import core.Engine;
+import core.Protocol;
+import core.topology.Topology;
 import simulators.data.BasicDataCollector;
 import simulators.data.FullDeploymentDataCollector;
 import simulators.data.SPPolicyBasicDataCollector;
@@ -15,13 +15,13 @@ public abstract class SimulatorFactory {
     /**
      * Creates an initial deployment simulator
      */
-    public static Simulator newSimulator(Engine engine, Network network, int destinationId, Protocol protocol) {
+    public static Simulator newSimulator(Engine engine, Topology topology, int destinationId, Protocol protocol) {
 
-        if (isShortestPath(network.getPolicy())) {
-            return new InitialDeploymentSimulator(engine, network, destinationId, protocol,
+        if (isShortestPath(topology.getPolicy())) {
+            return new InitialDeploymentSimulator(engine, topology, destinationId, protocol,
                     new SPPolicyBasicDataCollector());
         } else {
-            return new InitialDeploymentSimulator(engine, network, destinationId, protocol,
+            return new InitialDeploymentSimulator(engine, topology, destinationId, protocol,
                     new BasicDataCollector());
         }
 
@@ -30,13 +30,13 @@ public abstract class SimulatorFactory {
     /**
      * Creates a full deployment simulator instance.
      */
-    public static Simulator newSimulator(Engine engine, Network network, int destinationId, Protocol protocol,
+    public static Simulator newSimulator(Engine engine, Topology topology, int destinationId, Protocol protocol,
                                          int deployTime) {
-        if (isShortestPath(network.getPolicy())) {
-            return new FullDeploymentSimulator(engine, network, destinationId, protocol,
+        if (isShortestPath(topology.getPolicy())) {
+            return new FullDeploymentSimulator(engine, topology, destinationId, protocol,
                     new SPPolicyFullDeploymentDataCollector(), deployTime);
         } else {
-            return new FullDeploymentSimulator(engine, network, destinationId, protocol,
+            return new FullDeploymentSimulator(engine, topology, destinationId, protocol,
                     new FullDeploymentDataCollector(), deployTime);
         }
     }
@@ -44,9 +44,9 @@ public abstract class SimulatorFactory {
     /**
      * Creates a gradual deployment simulator instance.
      */
-    public static Simulator newSimulator(Engine engine, Network network, int destinationId, Protocol protocol,
+    public static Simulator newSimulator(Engine engine, Topology topology, int destinationId, Protocol protocol,
                                          int deployPeriod, double nodePercentage) {
         // TODO add shortest path special case
-        return new GradualDeploymentSimulator(engine, network, destinationId, protocol, deployPeriod, nodePercentage);
+        return new GradualDeploymentSimulator(engine, topology, destinationId, protocol, deployPeriod, nodePercentage);
     }
 }

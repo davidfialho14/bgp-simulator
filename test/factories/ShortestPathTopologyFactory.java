@@ -1,33 +1,33 @@
 package factories;
 
-import core.network.Network;
+import core.topology.Topology;
 import policies.shortestpath.ShortestPathPolicy;
-import wrappers.network.NetworkWrapper;
+import wrappers.topology.TopologyWrapper;
 
 import static wrappers.ShortestPathWrapper.label;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.ToNodeElement.to;
+import static wrappers.topology.FromNodeElement.from;
+import static wrappers.topology.LinkElement.link;
+import static wrappers.topology.ToNodeElement.to;
 
-public class ShortestPathNetworkFactory implements NetworkFactory {
+public class ShortestPathTopologyFactory implements TopologyFactory {
 
     private final static ShortestPathPolicy SHORTEST_PATH_POLICY = new ShortestPathPolicy();
 
-    private final static Network[] networks = {
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+    private final static Topology[] topologies = {
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(1), to(0), label(1))
             ),
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(0), to(1), label(1)),
                     link(from(1), to(2), label(1)),
                     link(from(0), to(2), label(0))
             ),
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(0), to(1), label(1)),
                     link(from(1), to(2), label(1)),
                     link(from(2), to(0), label(1))
             ),
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(1), to(0), label(0)),
                     link(from(2), to(0), label(0)),
                     link(from(3), to(0), label(0)),
@@ -35,17 +35,17 @@ public class ShortestPathNetworkFactory implements NetworkFactory {
                     link(from(2), to(3), label(1)),
                     link(from(3), to(1), label(-2))
             ),
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(1), to(0), label(0)),
                     link(from(1), to(2), label(1)),
                     link(from(2), to(3), label(1)),
                     link(from(3), to(1), label(1))
             ),
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(2), to(1), label(1)),
                     link(from(1), to(0), label(1))
             ),
-            NetworkWrapper.network(SHORTEST_PATH_POLICY,
+            TopologyWrapper.topology(SHORTEST_PATH_POLICY,
                     link(from(1), to(0), label(0)),
                     link(from(2), to(0), label(5)),
                     link(from(3), to(1), label(1)),
@@ -57,14 +57,14 @@ public class ShortestPathNetworkFactory implements NetworkFactory {
     };
 
     /**
-     * Creates a core.network instance initialized according to the core.network ID given.
+     * Creates a topology instance initialized according to the topology ID given.
      *
-     * @param networkId id of the core.network to create
-     * @return core.network created.
+     * @param id id of the topology to create
+     * @return topology created.
      */
     @Override
-    public Network network(int networkId) {
-        return new Network(networks[networkId]);
+    public Topology topology(int id) {
+        return new Topology(topologies[id]);
     }
 
 }

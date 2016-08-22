@@ -1,6 +1,6 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 
 import java.util.Iterator;
 import java.util.stream.Stream;

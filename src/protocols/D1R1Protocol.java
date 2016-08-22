@@ -1,7 +1,7 @@
 package protocols;
 
 import core.Protocol;
-import core.network.Link;
+import core.topology.Link;
 import core.Route;
 
 /**

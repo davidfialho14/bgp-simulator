@@ -1,4 +1,4 @@
-package core.network;
+package core.topology;
 
 /**
  * Implements a self link. A self link is a special link that represents the imaginary connection between

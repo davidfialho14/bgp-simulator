@@ -1,8 +1,8 @@
 package core;
 
 import dnl.utils.text.table.TextTable;
-import core.network.Link;
-import core.network.Node;
+import core.topology.Link;
+import core.topology.Node;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

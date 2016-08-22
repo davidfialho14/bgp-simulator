@@ -1,9 +1,9 @@
 package addons.protocolchangers;
 
-import core.network.Node;
-import core.Protocol;
 import core.Engine;
+import core.Protocol;
 import core.State;
+import core.topology.Node;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -33,14 +33,14 @@ public class RandomNodesFixedTimeProtocolChanger extends FixedTimeProtocolChange
 
     protected void buildNodeSet(int minNodes, int maxNodes) {
         Random random = new Random();
-        int maxNodeId = state.getNetwork().getNodeCount();
+        int maxNodeId = state.getTopology().getNetwork().getNodeCount();
         int nodeCount = Math.min(maxNodes - minNodes + minNodes, maxNodeId);
 
         while (nodeCount > 0) {
             int nodeId = random.nextInt(maxNodeId);
 
             // ensure nodes are not repeated
-            if (nodeSet.add(state.getNetwork().getNode(nodeId))) {
+            if (nodeSet.add(state.getTopology().getNetwork().getNode(nodeId))) {
                 nodeCount--;
             }
         }

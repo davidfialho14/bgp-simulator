@@ -1,11 +1,11 @@
 package simulators;
 
 import addons.eventhandlers.DebugEventHandler;
-import io.reporters.Reporter;
-import core.network.Network;
-import core.Protocol;
 import core.Engine;
+import core.Protocol;
 import core.State;
+import core.topology.Topology;
+import io.reporters.Reporter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ import java.io.PrintStream;
 /**
  * Simulator is the base class that all simulators must extend.
  * This class should be subclasses to implement the different types of simulations.
- * A simulator is responsible for executing simulations for a core.network and be able to report the data collected
+ * A simulator is responsible for executing simulations for a topology and be able to report the data collected
  * during that simulation.
  */
 public abstract class Simulator {
@@ -28,15 +28,14 @@ public abstract class Simulator {
 
     /**
      * Constructs a simulator by creating an initial state to be simulated.
-     *
-     * @param engine            engine used for simulation.
-     * @param network           core.network to simulate.
+     *  @param engine            engine used for simulation.
+     * @param topology           topology to simulate.
      * @param destinationId     id of the destination node.
      * @param initialProtocol   initial protocol.
      */
-    public Simulator(Engine engine, Network network, int destinationId, Protocol initialProtocol) {
+    public Simulator(Engine engine, Topology topology, int destinationId, Protocol initialProtocol) {
         this.engine = engine;
-        this.state = State.create(network, destinationId, initialProtocol);
+        this.state = State.create(topology, destinationId, initialProtocol);
     }
 
     // --- BEGIN PUBLIC INTERFACE ---

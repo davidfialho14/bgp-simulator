@@ -4,9 +4,9 @@ package core;
 import core.events.*;
 import core.schedulers.ScheduledRoute;
 import core.schedulers.Scheduler;
-import core.network.Link;
-import core.network.Node;
-import core.network.SelfLink;
+import core.topology.Link;
+import core.topology.Node;
+import core.topology.SelfLink;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
@@ -182,7 +182,7 @@ public class Engine {
     }
 
     /**
-     * Exports a route through the given link. The route is put in the core.network's scheduler.
+     * Exports a route through the given link. The route is put in the topology's scheduler.
      *
      * @param link link to export the route to.
      * @param route route to be exported.
@@ -247,7 +247,7 @@ public class Engine {
      */
     private void exportSelfRoute(Node node, State state) {
         NodeState nodeState = state.get(node);
-        Route selfRoute = Route.createSelf(node, state.getNetwork().getPolicy());
+        Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
 
         // add the self route to the node's route table
         nodeState.updateRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());

@@ -1,6 +1,6 @@
 package wrappers.routetable;
 
-import core.network.Node;
+import core.topology.Node;
 
 /**
  * Represents a node element.

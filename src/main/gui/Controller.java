@@ -2,14 +2,10 @@ package main.gui;
 
 import core.Engine;
 import core.Protocol;
-import core.network.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
-import main.gui.basics.NumberSpinner;
-import main.gui.fulldeployment.FullDeploymentController;
-import main.gui.gradualdeployment.GradualDeploymentController;
-import main.gui.radiobuttons.ProtocolToggleGroup;
+import core.topology.Topology;
+import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
-import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
@@ -19,6 +15,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import main.gui.basics.NumberSpinner;
+import main.gui.fulldeployment.FullDeploymentController;
+import main.gui.gradualdeployment.GradualDeploymentController;
+import main.gui.radiobuttons.ProtocolToggleGroup;
 import simulators.Simulator;
 import simulators.SimulatorFactory;
 
@@ -78,16 +78,16 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Updates the networkTextField with the default core.network file.
+     * Updates the networkTextField with the default topology file.
      *
-     * @param networkFile default core.network file to set.
+     * @param networkFile default topology file to set.
      */
     public void setDefaultNetworkFile(File networkFile) {
         networkTextField.setText(networkFile.getAbsolutePath());
     }
 
     /**
-     * Handles browsing for core.network files. Opens up a file chooser for the user to select the core.network files to
+     * Handles browsing for topology files. Opens up a file chooser for the user to select the topology files to
      * simulate.
      */
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
@@ -115,9 +115,9 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Simulates each core.network file.
+     * Simulates each topology file.
      *
-     * @param networkFile core.network file to be simulated.
+     * @param networkFile topology file to be simulated.
      */
     private void simulate(File networkFile) {
 
@@ -132,7 +132,7 @@ public class Controller implements Initializable {
             alert.showAndWait();
 
         } catch (ParseException | NodeNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "topology file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();
         }
@@ -156,18 +156,18 @@ public class Controller implements Initializable {
                 int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol, deployTime);
+                        engine, topology, destinationId, protocol, deployTime);
 
             } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
                 int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
                 int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
 
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol, deployPeriod, deployPercentage / 100.0);
+                        engine, topology, destinationId, protocol, deployPeriod, deployPercentage / 100.0);
 
             } else {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol);
+                        engine, topology, destinationId, protocol);
             }
 
             try {
@@ -182,8 +182,8 @@ public class Controller implements Initializable {
             String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
             File reportFile = new File(networkFile.getParent(), reportFileName);
 
-            try (Reporter reporter = new CSVReporter(reportFile, topology.getNetwork())) {
-                reporter.dumpBasicInfo(topology.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
+            try (Reporter reporter = new CSVReporter(reportFile, topology)) {
+                reporter.dumpBasicInfo(topology, destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
                     simulator.simulate();

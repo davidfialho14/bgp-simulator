@@ -1,8 +1,8 @@
 package core.events;
 
 import core.Route;
-import core.network.Link;
-import core.network.Node;
+import core.topology.Link;
+import core.topology.Node;
 
 /**
  * Events generated when a node learns a new route.

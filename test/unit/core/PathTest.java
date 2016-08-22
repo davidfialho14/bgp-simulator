@@ -1,15 +1,15 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static core.InvalidPath.invalidPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static core.InvalidPath.invalidPath;
 import static wrappers.PathWrapper.path;
-import static wrappers.network.NetworkWrapper.anyNode;
+import static wrappers.topology.TopologyWrapper.anyNode;
 
 public class PathTest {
 

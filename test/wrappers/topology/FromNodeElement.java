@@ -1,6 +1,6 @@
-package wrappers.network;
+package wrappers.topology;
 
-import core.network.Node;
+import core.topology.Node;
 
 /**
  * Represents a source node of a link.

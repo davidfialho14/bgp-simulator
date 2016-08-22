@@ -2,7 +2,7 @@ package addons.eventhandlers;
 
 import core.Route;
 import core.events.*;
-import core.network.Link;
+import core.topology.Link;
 
 import java.io.PrintStream;
 

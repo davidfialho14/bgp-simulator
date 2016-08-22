@@ -1,12 +1,12 @@
 package policies.gaorexford;
 
+import core.topology.Label;
 import org.junit.Before;
 import org.junit.Test;
-import core.Label;
 
+import static core.InvalidAttribute.invalidAttr;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static core.InvalidAttribute.invalidAttr;
 import static policies.gaorexford.CustomerAttribute.customer;
 import static policies.gaorexford.PeerAttribute.peer;
 import static policies.gaorexford.ProviderAttribute.provider;
