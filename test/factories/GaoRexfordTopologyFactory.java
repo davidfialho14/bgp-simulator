@@ -1,31 +1,31 @@
 package factories;
 
-import core.topology.Network;
+import core.topology.Topology;
 import policies.gaorexford.GaoRexfordPolicy;
-import wrappers.network.NetworkWrapper;
+import wrappers.topology.TopologyWrapper;
 
 import static wrappers.GaoRexfordWrapper.customerLabel;
 import static wrappers.GaoRexfordWrapper.providerLabel;
-import static wrappers.network.FromNodeElement.from;
-import static wrappers.network.LinkElement.link;
-import static wrappers.network.ToNodeElement.to;
+import static wrappers.topology.FromNodeElement.from;
+import static wrappers.topology.LinkElement.link;
+import static wrappers.topology.ToNodeElement.to;
 
-public class GaoRexfordNetworkFactory implements NetworkFactory {
+public class GaoRexfordTopologyFactory implements TopologyFactory {
 
     private final static GaoRexfordPolicy GAO_REXFORD_POLICY = new GaoRexfordPolicy();
 
-    private final static Network[] networks = {
-            NetworkWrapper.network(GAO_REXFORD_POLICY,
+    private final static Topology[] topologies = {
+            TopologyWrapper.topology(GAO_REXFORD_POLICY,
                     link(from(0), to(1), customerLabel()),
                     link(from(1), to(0), providerLabel())
             ),
-            NetworkWrapper.network(GAO_REXFORD_POLICY,
+            TopologyWrapper.topology(GAO_REXFORD_POLICY,
                     link(from(0), to(1), customerLabel()),
                     link(from(1), to(0), providerLabel()),
                     link(from(2), to(1), customerLabel()),
                     link(from(1), to(2), providerLabel())
             ),
-            NetworkWrapper.network(GAO_REXFORD_POLICY,
+            TopologyWrapper.topology(GAO_REXFORD_POLICY,
                     link(from(0), to(1), customerLabel()),
                     link(from(1), to(2), customerLabel()),
                     link(from(2), to(0), customerLabel())
@@ -33,14 +33,14 @@ public class GaoRexfordNetworkFactory implements NetworkFactory {
     };
 
     /**
-     * Creates a core.topology instance initialized according to the core.topology ID given.
+     * Creates a topology instance initialized according to the topology ID given.
      *
-     * @param networkId id of the core.topology to create
-     * @return core.topology created.
+     * @param id id of the topology to create
+     * @return topology created.
      */
     @Override
-    public Network network(int networkId) {
-        return new Network(networks[networkId]);
+    public Topology topology(int id) {
+        return new Topology(topologies[id]);
     }
 
 }

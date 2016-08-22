@@ -1,14 +1,14 @@
-package networks;
+package topologies;
 
-import factories.ShortestPathNetworkFactory;
-import core.topology.Network;
-import core.topology.Node;
-import org.junit.Before;
-import org.junit.Test;
-import protocols.BGPProtocol;
 import core.Engine;
 import core.State;
 import core.schedulers.FIFOScheduler;
+import core.topology.Node;
+import core.topology.Topology;
+import factories.ShortestPathTopologyFactory;
+import org.junit.Before;
+import org.junit.Test;
+import protocols.BGPProtocol;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -20,21 +20,21 @@ import static wrappers.routetable.OutLinkElement.selfLink;
 import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
-public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
+public class ShortestPathTopology0Test {
 
     private Engine engine;
-    private Network network;
+    private Topology topology;
 
     @Before
     public void setUp() throws Exception {
-        network = new ShortestPathNetworkFactory().network(0);
+        topology = new ShortestPathTopologyFactory().topology(0);
     }
 
     @Test(timeout = 2000)
     public void simulate_BGPProtocolAndFIFOScheduler_Converges() throws Exception {
         engine = new Engine(new FIFOScheduler());
         int destinationId = 0;
-        State state = State.create(network, destinationId, new BGPProtocol());
+        State state = State.create(topology, destinationId, new BGPProtocol());
 
         engine.simulate(state);
 
@@ -55,7 +55,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
             throws Exception {
         engine = new Engine(new FIFOScheduler());
         int destinationId = 0;
-        State state = State.create(network, destinationId, new BGPProtocol());
+        State state = State.create(topology, destinationId, new BGPProtocol());
 
         engine.simulate(state);
 
@@ -71,7 +71,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 //                .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
 //                .build();
 //
-//        engine.simulate(core.topology, new BGPProtocol(), 0);
+//        engine.simulate(topology, new BGPProtocol(), 0);
 //
 //        assertThat(state.get(new Node(0)).getTable(), is( table(
 //                                selfLink(0),
@@ -92,7 +92,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 //                .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
 //                .build();
 //
-//        engine.simulate(core.topology, new BGPProtocol(), 0);
+//        engine.simulate(topology, new BGPProtocol(), 0);
 //
 //        assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 0, path(0))));
     }

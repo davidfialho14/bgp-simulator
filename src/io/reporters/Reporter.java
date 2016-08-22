@@ -1,7 +1,7 @@
 package io.reporters;
 
-import core.topology.Network;
 import core.Protocol;
+import core.topology.Topology;
 import simulators.Simulator;
 import simulators.data.BasicDataSet;
 import simulators.data.FullDeploymentDataSet;
@@ -19,23 +19,23 @@ import java.io.IOException;
 public abstract class Reporter implements Closeable, AutoCloseable {
 
     protected File outputFile;
-    protected Network network;    // holds the core.topology to dump core.topology information
+    protected Topology topology;    // holds the topology to dump topology information
 
     /**
      * Constructs a reporter associating the output file.
      *
      * @param outputFile file to output report to.
-     * @param network    core.topology being simulated.
+     * @param topology   topology being simulated.
      */
-    public Reporter(File outputFile, Network network) {
+    public Reporter(File outputFile, Topology topology) {
         this.outputFile = outputFile;
-        this.network = network;
+        this.topology = topology;
     }
 
     /**
      * Dumps all the basic information from the simulation.
      */
-    public abstract void dumpBasicInfo(Network network, int destinationId, int minDelay, int maxDelay,
+    public abstract void dumpBasicInfo(Topology topology, int destinationId, int minDelay, int maxDelay,
                                        Protocol protocol, Simulator simulator) throws IOException;
 
     /**
@@ -47,11 +47,13 @@ public abstract class Reporter implements Closeable, AutoCloseable {
 
     public abstract void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
 
-    public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException;
+    public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet)
+            throws IOException;
 
     public abstract void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                               SPPolicyDataSet spPolicyDataSet) throws IOException;
 
-    public abstract void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException;
+    public abstract void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet)
+            throws IOException;
 
 }

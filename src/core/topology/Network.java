@@ -1,6 +1,5 @@
 package core.topology;
 
-import core.Label;
 import core.topology.exceptions.NodeNotFoundException;
 
 import java.util.Collection;
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Data structure to represent the network topology. Stores the nodes and the existing links between
+ * Data structure to represent the topology topology. Stores the nodes and the existing links between
  * the nodes. Does not take into account any routing policies, it only models the structure of the
  * topology. However, each link is associated with a label specifying the relationship between the
  * two nodes connected by the link. Each node must be unique in the graph. There may be multiple links
@@ -18,31 +17,29 @@ import java.util.stream.Collectors;
  */
 public class Network {
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     private Map<Integer, Node> nodes;   // mapping between
-    private Policy policy;              // policy of the topology
 
-    private String name;                // name for the topology
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Creates a new empty topology associated with the given policy.
+     * Creates a new empty topology.
      */
-    public Network(Policy policy) {
+    public Network() {
         this.nodes = new HashMap<>();
-        this.policy = policy;
-        this.name = "";
     }
 
     /**
-     * Creates a new empty topology associated with the given policy and name.
-     */
-    public Network(Policy policy, String name) {
-        this.nodes = new HashMap<>();
-        this.policy = policy;
-        this.name = name;
-    }
-
-    /**
-     * Copy constructor.
+     * Copy constructor. Creates a new copy of the given topology. Performs a deep copy of each node
      *
      * @param network topology to construct from.
      */
@@ -50,28 +47,78 @@ public class Network {
         this.nodes = new HashMap<>(network.nodes.size());
         // store a copy of each node
         network.nodes.forEach((integer, node) -> this.nodes.put(integer, new Node(node)));
+    }
 
-        this.policy = network.policy;
-        this.name = network.name;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface - Getters
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Return a collection with the ids of all the nodes in the topology.
+     *
+     * @return collection with the ids of all the nodes in the topology.
+     */
+    public Collection<Integer> getIds() {
+        return nodes.keySet();
     }
 
     /**
-     * Returns the topology policy.
+     * Returns all the nodes in the topology.
      *
-     * @return topology policy.
+     * @return all the nodes in the topology.
      */
-    public Policy getPolicy() {
-        return policy;
+    public Collection<Node> getNodes() {
+        return nodes.values();
     }
 
     /**
-     * Returns the name of the topology.
+     * Returns the node with the given id.
      *
-     * @return name of the topology
+     * @param id id of the node to get.
+     * @return node with the given id.
      */
-    public String getName() {
-        return name;
+    public Node getNode(int id) {
+        return nodes.get(id);
     }
+
+    /**
+     * Returns the number of nodes in the topology.
+     *
+     * @return number of nodes in the topology.
+     */
+    public int getNodeCount() {
+        return nodes.size();
+    }
+
+    /**
+     * Returns a list with all the links in the topology.
+     *
+     * @return list with the links in the topology.
+     */
+    public Collection<Link> getLinks() {
+        return nodes.values().stream()
+                .flatMap(node -> node.getInLinks().stream())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the number of links in the topology.
+     *
+     * @return number of links in the topology.
+     */
+    public int getLinkCount() {
+        return (int) nodes.values().stream()
+                .flatMap(node -> node.getInLinks().stream())
+                .count();
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface - Modifiers
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Adds a node with the given ID to the topology.
@@ -106,43 +153,6 @@ public class Network {
         node.addOutLink(new SelfLink(node));
 
         return true; // indicate the node was added
-    }
-
-    /**
-     * Return a collection with the ids of all the nodes in the topology.
-     *
-     * @return collection with the ids of all the nodes in the topology.
-     */
-	public Collection<Integer> getIds() {
-		return nodes.keySet();
-	}
-
-    /**
-     * Returns all the nodes in the topology.
-     *
-     * @return all the nodes in the topology.
-     */
-    public Collection<Node> getNodes() {
-        return nodes.values();
-    }
-
-    /**
-     * Returns the node with the given id.
-     *
-     * @param id id of the node to get.
-     * @return node with the given id.
-     */
-    public Node getNode(int id) {
-        return nodes.get(id);
-    }
-
-    /**
-     * Returns the number of nodes in the topology.
-     *
-     * @return number of nodes in the topology.
-     */
-    public int getNodeCount() {
-        return nodes.size();
     }
 
     /**
@@ -196,27 +206,11 @@ public class Network {
         return source.removeOutLink(link) && destination.removeInLink(link);
     }
 
-    /**
-     * Returns a list with all the links in the topology.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @return list with the links in the topology.
-     */
-    public Collection<Link> getLinks() {
-        return nodes.values().stream()
-                .flatMap(node -> node.getInLinks().stream())
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns the number of links in the topology.
+     *  Public Interface - Operator Methods
      *
-     * @return number of links in the topology.
-     */
-    public int getLinkCount() {
-        return (int) nodes.values().stream()
-                         .flatMap(node -> node.getInLinks().stream())
-                         .count();
-    }
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     @Override
     public String toString() {
@@ -231,7 +225,11 @@ public class Network {
         return networkStr + "\n}";
     }
 
-    // ----- PRIVATE -----
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Helper Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Returns the node in the topology corresponding to the source node of the given link.

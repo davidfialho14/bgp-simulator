@@ -1,12 +1,12 @@
 package core;
 
+import core.schedulers.FIFOScheduler;
 import core.topology.Node;
-import factories.GaoRexfordNetworkFactory;
-import factories.NetworkFactory;
+import factories.GaoRexfordTopologyFactory;
+import factories.TopologyFactory;
 import org.junit.Before;
 import org.junit.Test;
 import protocols.BGPProtocol;
-import core.schedulers.FIFOScheduler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -18,13 +18,13 @@ import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
-    Allow duplicates in order to make the tests easier to understand without having to look for the core.topology or
+    Allow duplicates in order to make the tests easier to understand without having to look for the topology or
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
 public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
 
-    private NetworkFactory factory = new GaoRexfordNetworkFactory();
+    private TopologyFactory factory = new GaoRexfordTopologyFactory();
 
     @Before
     public void setUp() throws Exception {
@@ -35,7 +35,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        core.State state = core.State.create(factory.network(0), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(0), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -53,7 +53,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network0ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        core.State state = core.State.create(factory.network(0), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(0), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -71,7 +71,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        core.State state = core.State.create(factory.network(1), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(1), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -94,7 +94,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        core.State state = core.State.create(factory.network(1), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(1), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -117,7 +117,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network1ForDestination2_Converges() throws Exception {
         int destinationId = 2;
-        core.State state = core.State.create(factory.network(1), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(1), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -140,7 +140,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination0_Converges() throws Exception {
         int destinationId = 0;
-        core.State state = core.State.create(factory.network(2), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(2), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -163,7 +163,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination1_Converges() throws Exception {
         int destinationId = 1;
-        core.State state = core.State.create(factory.network(2), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(2), destinationId, protocol);
 
         engine.simulate(state);
 
@@ -186,7 +186,7 @@ public class EngineBGPAndGaoRexfordTest extends SimulateEngineTest {
     @Test(timeout = 2000)
     public void simulate_Network2ForDestination2_Converges() throws Exception {
         int destinationId = 2;
-        core.State state = core.State.create(factory.network(2), destinationId, protocol);
+        core.State state = core.State.create(factory.topology(2), destinationId, protocol);
 
         engine.simulate(state);
 

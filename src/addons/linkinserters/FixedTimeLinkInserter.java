@@ -20,7 +20,7 @@ public class FixedTimeLinkInserter extends AbstractLinkInserter {
     /**
      * Inserts the configured link at the configured fixed instant of time.
      *
-     * @param network     core.topology to insert link on.
+     * @param network     topology to insert link on.
      * @param currentTime current time of simulation.
      * @return link inserted or null is no link was inserted.
      */

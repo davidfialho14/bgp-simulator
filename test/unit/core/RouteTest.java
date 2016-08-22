@@ -3,13 +3,13 @@ package core;
 import core.topology.Node;
 import org.junit.Test;
 
+import static core.Route.invalidRoute;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static core.Route.invalidRoute;
-import static wrappers.StubWrapper.stubAttr;
 import static wrappers.PathWrapper.path;
 import static wrappers.RouteWrapper.route;
-import static wrappers.network.NetworkWrapper.anyNode;
+import static wrappers.StubWrapper.stubAttr;
+import static wrappers.topology.TopologyWrapper.anyNode;
 
 public class RouteTest {
     

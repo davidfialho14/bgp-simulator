@@ -6,7 +6,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import stubs.StubLabel;
-import stubs.StubPolicy;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -21,7 +20,7 @@ public class NetworkTest {
 
     @Before
     public void setUp() throws Exception {
-        net = new Network(new StubPolicy());
+        net = new Network();
     }
 
     @Test

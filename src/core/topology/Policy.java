@@ -1,11 +1,11 @@
 package core.topology;
 
 import core.Attribute;
-import core.Label;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 
 /**
- * The policy interface provides the necessary methods to define a routing policy.
+ * The policy interface provides the necessary methods to define a routing policy. Policies must be immutable classes
+ * otherwise there might be some unexpected behaviour.
  */
 public interface Policy {
 

@@ -1,13 +1,14 @@
 package io.reporters;
 
+import core.Path;
+import core.Protocol;
 import core.topology.Link;
 import core.topology.Network;
 import core.topology.Node;
+import core.topology.Topology;
 import org.apache.commons.lang.StringUtils;
-import core.Path;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import core.Protocol;
 import simulators.FullDeploymentSimulator;
 import simulators.GradualDeploymentSimulator;
 import simulators.InitialDeploymentSimulator;
@@ -39,12 +40,11 @@ public class CSVReporter extends Reporter {
 
     /**
      * Constructs a reporter associating the output file.
-     *
-     * @param outputFile file to output report to.
-     * @param network    core.topology being simulated.
+     *  @param outputFile file to output report to.
+     * @param topology    topology being simulated.
      */
-    public CSVReporter(File outputFile, Network network) throws IOException {
-        super(outputFile, network);
+    public CSVReporter(File outputFile, Topology topology) throws IOException {
+        super(outputFile, topology);
 
         File countsFile = getClassFile(outputFile, "counts");
         this.countsWriter = new BufferedWriter(new FileWriter(countsFile));
@@ -87,12 +87,13 @@ public class CSVReporter extends Reporter {
     /**
      * Dumps all the basic information from the simulation.
      */
-    public void dumpBasicInfo(Network network, int destinationId, int minDelay, int maxDelay, Protocol protocol,
+    public void dumpBasicInfo(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
                               Simulator simulator) throws IOException {
+
+        Network network = topology.getNetwork();
 
         File basicFile = getClassFile(outputFile, "basic");
         try (BufferedWriter basicWriter = new BufferedWriter(new FileWriter(basicFile))) {
-            writeColumns(basicWriter, "Network Name", network.getName());       basicWriter.newLine();
             writeColumns(basicWriter, "Node Count", network.getNodeCount());    basicWriter.newLine();
             writeColumns(basicWriter, "Link Count", network.getLinkCount());    basicWriter.newLine();
             writeColumns(basicWriter, "Destination", destinationId);            basicWriter.newLine();
@@ -266,7 +267,7 @@ public class CSVReporter extends Reporter {
             // write the deployments table data
 
             String deployedNodes = gradualDeploymentDataSet.getDeployedNodes().stream()
-                    .map(node -> node.toString())
+                    .map(Node::toString)
                     .collect(Collectors.joining(", "));
 
             writeColumns(deploymentsWriter, simulationCounter, deployedNodes);

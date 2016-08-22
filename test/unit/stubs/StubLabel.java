@@ -1,8 +1,8 @@
 package stubs;
 
-import core.topology.Link;
 import core.Attribute;
-import core.Label;
+import core.topology.Label;
+import core.topology.Link;
 
 public class StubLabel implements Label {
 

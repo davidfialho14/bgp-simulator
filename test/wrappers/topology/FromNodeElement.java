@@ -1,4 +1,4 @@
-package wrappers.network;
+package wrappers.topology;
 
 import core.topology.Node;
 

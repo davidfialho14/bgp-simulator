@@ -1,9 +1,9 @@
 package wrappers.routetable;
 
+import core.topology.Label;
 import core.topology.Link;
 import core.topology.Node;
 import core.topology.SelfLink;
-import core.Label;
 
 /**
  * Represents a node element.

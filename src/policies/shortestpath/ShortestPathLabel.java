@@ -1,8 +1,8 @@
 package policies.shortestpath;
 
-import core.topology.Link;
 import core.Attribute;
-import core.Label;
+import core.topology.Label;
+import core.topology.Link;
 
 import static core.InvalidAttribute.invalidAttr;
 

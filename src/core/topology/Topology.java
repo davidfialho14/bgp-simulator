@@ -1,7 +1,7 @@
 package core.topology;
 
 /**
- * A topology is a read only class that associates a network representation with a routing policy.
+ * A topology is a read only class that associates a topology representation with a routing policy.
  */
 public final class Topology {
 
@@ -17,6 +17,16 @@ public final class Topology {
     public Topology(Network network, Policy policy) {
         this.network = network;
         this.policy = policy;
+    }
+
+    /**
+     * Copy constructor. Creates a new copy of the given topology.
+     *
+     * @param topology topology to copy.
+     */
+    public Topology(Topology topology) {
+        this.network = new Network(topology.getNetwork());
+        this.policy = topology.getPolicy(); // policy classes are immutable
     }
 
     /**

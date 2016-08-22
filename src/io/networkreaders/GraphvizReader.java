@@ -5,7 +5,7 @@ import com.alexmerz.graphviz.objects.Edge;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 import com.alexmerz.graphviz.objects.PortNode;
-import core.Label;
+import core.topology.Label;
 import core.topology.Network;
 import core.topology.Policy;
 import core.topology.Topology;
@@ -54,10 +54,9 @@ public class GraphvizReader implements TopologyReader {
         // get the parsed graph, note that the DOT language allows more then one graph to be parsed
         // here we just want the first graph
         Graph graph = parser.getGraphs().get(0);
-        String networkName = graph.getId().getId();
 
         Policy policy = Policies.getPolicy(graph.getAttribute("policy"));
-        Network network = new Network(policy, networkName);
+        Network network = new Network();
 
         // add all nodes to the parsedNetwork
         for (Node node : graph.getNodes(true)) {

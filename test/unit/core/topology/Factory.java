@@ -1,12 +1,12 @@
 package core.topology;
 
-import stubs.StubAttribute;
-import stubs.StubLabel;
 import core.Path;
 import core.Route;
+import stubs.StubAttribute;
+import stubs.StubLabel;
 
 /**
- * Factory class to create instances necessary for abstract and interface classes necessary to build a core.topology.
+ * Factory class to create instances necessary for abstract and interface classes necessary to build a topology.
  * The created elements are guaranteed to be able to work together.
  */
 public class Factory {

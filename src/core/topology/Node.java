@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 /**
- * A node is one of the two fundamental elements of a network. Nodes are identified by an ID which must be unique for
+ * A node is one of the two fundamental elements of a topology. Nodes are identified by an ID which must be unique for
  * each node. Nodes with the same ID represent the same node (are equal). Nodes may be connected with other nodes
  * through links. A node stores both in and out-link with other nodes. When node U is the source of link L, L is an
  * out-link of U. If node U is the destination of L, then L is an in-link of U.

@@ -43,7 +43,7 @@ public class SimpleTopologyReader implements TopologyReader {
 
         // policy is specified in the first line
         Policy policy = Policies.getPolicy(fileReader.readLine());
-        Network network = new Network(policy);
+        Network network = new Network();
 
         // the next lines, each defines a link
         String line;

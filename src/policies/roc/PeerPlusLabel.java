@@ -1,8 +1,8 @@
 package policies.roc;
 
-import core.topology.Link;
 import core.Attribute;
-import core.Label;
+import core.topology.Label;
+import core.topology.Link;
 
 import java.util.EnumMap;
 import java.util.Map;

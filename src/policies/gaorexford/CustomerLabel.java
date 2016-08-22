@@ -1,8 +1,8 @@
 package policies.gaorexford;
 
-import core.topology.Link;
 import core.Attribute;
-import core.Label;
+import core.topology.Label;
+import core.topology.Link;
 
 import static core.InvalidAttribute.invalidAttr;
 import static policies.gaorexford.CustomerAttribute.customer;

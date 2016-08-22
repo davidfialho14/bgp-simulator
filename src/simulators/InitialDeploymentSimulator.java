@@ -1,24 +1,24 @@
 package simulators;
 
-import io.reporters.Reporter;
-import core.topology.Network;
-import core.Protocol;
 import core.Engine;
+import core.Protocol;
+import core.topology.Topology;
+import io.reporters.Reporter;
 import simulators.data.BasicDataCollector;
 
 import java.io.IOException;
 
 /**
- * The initial deployment simulator simulates a core.topology with the detection already activated for all nodes from
+ * The initial deployment simulator simulates a topology with the detection already activated for all nodes from
  * the start to the end of the simulation.
  */
 public class InitialDeploymentSimulator extends Simulator {
 
     protected BasicDataCollector basicDataCollector;
 
-    InitialDeploymentSimulator(Engine engine, Network network, int destinationId, Protocol deployProtocol,
+    InitialDeploymentSimulator(Engine engine, Topology topology, int destinationId, Protocol deployProtocol,
                                BasicDataCollector basicDataCollector) {
-        super(engine, network, destinationId, deployProtocol);
+        super(engine, topology, destinationId, deployProtocol);
         this.basicDataCollector = basicDataCollector;
         basicDataCollector.register(engine);
     }

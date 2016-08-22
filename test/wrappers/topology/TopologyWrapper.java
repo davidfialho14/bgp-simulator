@@ -1,29 +1,31 @@
-package wrappers.network;
+package wrappers.topology;
 
 import core.topology.Network;
 import core.topology.Node;
 import core.topology.Policy;
+import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
 
 /**
- * Implements a set of static method wrappers to improve generating a core.topology statically in a more
+ * Implements a set of static method wrappers to improve generating a topology statically in a more
  * readable way.
  */
-public class NetworkWrapper {
+public class TopologyWrapper {
 
-    private NetworkWrapper() {}  // can not be instantiated outside of the class
+    private TopologyWrapper() {
+    }  // can not be instantiated outside of the class
 
     // ----- PUBLIC INTERFACE -----------------------------------------------------------------------------------------
 
     /**
-     * Creates a core.topology from the link elements.
+     * Creates a topology from the link elements.
      *
-     * @param policy policy of the core.topology.
-     * @param links links of the core.topology.
-     * @return core.topology instance initialized.
+     * @param policy policy of the topology.
+     * @param links links of the topology.
+     * @return topology instance initialized.
      */
-    public static Network network(Policy policy, LinkElement... links) {
-        Network network = new Network(policy);
+    public static Topology topology(Policy policy, LinkElement... links) {
+        Network network = new Network();
         try {
             for (LinkElement link : links)
                 link.addTo(network);
@@ -32,7 +34,7 @@ public class NetworkWrapper {
             e.printStackTrace();
         }
 
-        return network;
+        return new Topology(network, policy);
     }
 
     /**

@@ -108,18 +108,18 @@ public class Main {
             Simulator simulator;
             if (deployTime == null) {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol);
+                        engine, topology, destinationId, protocol);
             } else {
                 simulator = SimulatorFactory.newSimulator(
-                        engine, topology.getNetwork(), destinationId, protocol, deployTime);
+                        engine, topology, destinationId, protocol, deployTime);
             }
 
             String reportFileName = networkFile.getName().replaceFirst("\\.gv",
                     String.format("-dest%02d.csv", destinationId));
             File reportFile = new File(networkFile.getParent(), reportFileName);
 
-            try (Reporter reporter = new CSVReporter(reportFile, topology.getNetwork())) {
-                reporter.dumpBasicInfo(topology.getNetwork(), destinationId, minDelay, maxDelay, protocol, simulator);
+            try (Reporter reporter = new CSVReporter(reportFile, topology)) {
+                reporter.dumpBasicInfo(topology, destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
                     long startTime = System.currentTimeMillis();

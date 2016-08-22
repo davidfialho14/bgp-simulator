@@ -182,7 +182,7 @@ public class Engine {
     }
 
     /**
-     * Exports a route through the given link. The route is put in the core.topology's scheduler.
+     * Exports a route through the given link. The route is put in the topology's scheduler.
      *
      * @param link link to export the route to.
      * @param route route to be exported.
@@ -247,7 +247,7 @@ public class Engine {
      */
     private void exportSelfRoute(Node node, State state) {
         NodeState nodeState = state.get(node);
-        Route selfRoute = Route.createSelf(node, state.getNetwork().getPolicy());
+        Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
 
         // add the self route to the node's route table
         nodeState.updateRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
