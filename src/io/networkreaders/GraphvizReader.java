@@ -42,7 +42,7 @@ public class GraphvizReader implements TopologyReader {
      * @return topology associating the topology and policy read
      */
     @Override
-    public Topology read() throws IOException, ParseException, NodeNotFoundException {
+    public Topology read() throws IOException, ParseException {
 
         try {
             parser.parse(fileReader);
@@ -68,7 +68,12 @@ public class GraphvizReader implements TopologyReader {
             int destId = getId(edge.getTarget());
             Label label = policy.createLabel(edge.getAttribute("label"));
 
-            network.addLink(sourceId, destId, label);
+            try {
+                network.addLink(sourceId, destId, label);
+            } catch (NodeNotFoundException e) {
+                // does not happen because the nodes are added right before adding the link
+                // the Graphviz parser would throw a ParseException if there was a problem with a missing node
+            }
         }
 
         return new Topology(network, policy);

@@ -38,7 +38,7 @@ public class SimpleTopologyReader implements TopologyReader {
      * @return topology associating the topology and policy read
      */
     @Override
-    public Topology read() throws IOException, ParseException, NodeNotFoundException {
+    public Topology read() throws IOException, ParseException {
 
         // policy is specified in the first line
         Policy policy = PolicyTagger.getPolicy(fileReader.readLine());
@@ -61,7 +61,12 @@ public class SimpleTopologyReader implements TopologyReader {
 
             network.addNode(sourceId);
             network.addNode(destinationId);
-            network.addLink(sourceId, destinationId, policy.createLabel(label));
+
+            try {
+                network.addLink(sourceId, destinationId, policy.createLabel(label));
+            } catch (NodeNotFoundException e) {
+                // does not happen because the nodes are added right before adding the link
+            }
 
             lineCount++;
         }

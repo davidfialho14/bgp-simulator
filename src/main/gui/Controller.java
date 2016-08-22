@@ -4,7 +4,6 @@ import core.Engine;
 import core.Protocol;
 import core.schedulers.RandomScheduler;
 import core.topology.Topology;
-import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
@@ -131,7 +130,7 @@ public class Controller implements Initializable {
             alert.setHeaderText("Network File Error");
             alert.showAndWait();
 
-        } catch (ParseException | NodeNotFoundException e) {
+        } catch (ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "topology file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();

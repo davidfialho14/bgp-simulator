@@ -4,7 +4,6 @@ import core.Engine;
 import core.Protocol;
 import core.schedulers.RandomScheduler;
 import core.topology.Topology;
-import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.PolicyTagger;
 import io.networkreaders.TopologyReader;
@@ -106,7 +105,7 @@ public class Main {
 
         } catch (IOException e) {
             System.err.println("can not open the file");
-        } catch (ParseException | NodeNotFoundException e) {
+        } catch (ParseException e) {
             System.err.println("topology file is corrupted");
         }
 
