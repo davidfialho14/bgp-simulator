@@ -11,7 +11,6 @@ import core.topology.Policy;
 import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.exceptions.ParseException;
-import policies.Policies;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,7 +54,7 @@ public class GraphvizReader implements TopologyReader {
         // here we just want the first graph
         Graph graph = parser.getGraphs().get(0);
 
-        Policy policy = Policies.getPolicy(graph.getAttribute("policy"));
+        Policy policy = PolicyTagger.getPolicy(graph.getAttribute("policy"));
         Network network = new Network();
 
         // add all nodes to the parsedNetwork

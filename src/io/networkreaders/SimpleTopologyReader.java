@@ -5,7 +5,6 @@ import core.topology.Policy;
 import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.exceptions.ParseException;
-import policies.Policies;
 
 import java.io.*;
 
@@ -42,7 +41,7 @@ public class SimpleTopologyReader implements TopologyReader {
     public Topology read() throws IOException, ParseException, NodeNotFoundException {
 
         // policy is specified in the first line
-        Policy policy = Policies.getPolicy(fileReader.readLine());
+        Policy policy = PolicyTagger.getPolicy(fileReader.readLine());
         Network network = new Network();
 
         // the next lines, each defines a link

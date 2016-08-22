@@ -4,7 +4,7 @@ import core.Attribute;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 
 /**
- * The policy interface provides the necessary methods to define a routing policy. Policies must be immutable classes
+ * The policy interface provides the necessary methods to define a routing policy. Policy must be immutable classes
  * otherwise there might be some unexpected behaviour.
  */
 public interface Policy {

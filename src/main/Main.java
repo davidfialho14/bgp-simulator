@@ -6,6 +6,7 @@ import core.schedulers.RandomScheduler;
 import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
+import io.networkreaders.PolicyTagger;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
@@ -15,6 +16,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import policies.gaorexford.GaoRexfordPolicy;
+import policies.roc.RoCPolicy;
+import policies.shortestpath.ShortestPathPolicy;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import simulators.Simulator;
@@ -26,6 +30,10 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
+
+        PolicyTagger.register(new ShortestPathPolicy(), "ShortestPath");
+        PolicyTagger.register(new RoCPolicy(), "RoC");
+        PolicyTagger.register(new GaoRexfordPolicy(), "GaoRexford");
 
         CommandLineParser parser = new DefaultParser();
 
