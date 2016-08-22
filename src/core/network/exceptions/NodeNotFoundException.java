@@ -1,7 +1,7 @@
-package network.exceptions;
+package core.network.exceptions;
 
 /**
- * Thrown to indicate that a node does not exist in a given network.
+ * Thrown to indicate that a node does not exist in a given core.network.
  */
 public class NodeNotFoundException extends Exception {
 

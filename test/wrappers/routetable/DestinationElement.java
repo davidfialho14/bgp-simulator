@@ -1,6 +1,6 @@
 package wrappers.routetable;
 
-import network.Node;
+import core.network.Node;
 
 /**
  * Represents a node element.
@@ -14,16 +14,6 @@ public class DestinationElement implements RouteTableElement {
     }
 
     /**
-     * Adds the node as a destination to the route table.
-     *
-     * @param tableWrapper table to insert element in.
-     */
-    @Override
-    public void insert(RouteTableWrapper tableWrapper) {
-        tableWrapper.setDestination(node);
-    }
-
-    /**
      * Wrapper around the node element constructor to improve readability.
      *
      * @param id id of the node.
@@ -31,5 +21,15 @@ public class DestinationElement implements RouteTableElement {
      */
     public static DestinationElement destination(int id) {
         return new DestinationElement(new Node(id));
+    }
+
+    /**
+     * Adds the node as a destination to the route table.
+     *
+     * @param tableWrapper table to insert element in.
+     */
+    @Override
+    public void insert(RouteTableWrapper tableWrapper) {
+        tableWrapper.setDestination(node);
     }
 }

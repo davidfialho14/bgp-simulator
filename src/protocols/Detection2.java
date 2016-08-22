@@ -1,6 +1,6 @@
 package protocols;
 
-import network.Node;
+import core.network.Node;
 import core.Attribute;
 import core.Path;
 import core.Route;

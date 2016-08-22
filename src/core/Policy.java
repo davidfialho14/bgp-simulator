@@ -1,7 +1,7 @@
 package core;
 
 import io.InvalidTagException;
-import network.Node;
+import core.network.Node;
 
 /**
  * The policy interface provides the necessary methods to define a routing policy.

@@ -1,7 +1,7 @@
 package wrappers.routetable;
 
-import network.Link;
-import network.Node;
+import core.network.Link;
+import core.network.Node;
 import core.Route;
 import core.RouteTable;
 

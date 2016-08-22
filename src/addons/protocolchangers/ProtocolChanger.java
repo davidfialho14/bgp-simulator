@@ -1,13 +1,13 @@
 package addons.protocolchangers;
 
-import network.Node;
+import core.network.Node;
 import core.Protocol;
 import core.Engine;
 import core.State;
 
 /**
  * Base class that all protocol changers must extend. It implements methods to change a protocol
- * for a node and for all nodes of the network. This method can and should be used by subclasses.
+ * for a node and for all nodes of the core.network. This method can and should be used by subclasses.
  */
 public abstract class ProtocolChanger {
 
@@ -52,7 +52,7 @@ public abstract class ProtocolChanger {
     }
 
     /**
-     * Changes the protocol of all the nodes in the network of the state assigned to the changer.
+     * Changes the protocol of all the nodes in the core.network of the state assigned to the changer.
      *
      * @param protocol protocol to change to.
      */

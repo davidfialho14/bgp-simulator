@@ -1,4 +1,4 @@
-package network;
+package core.network;
 
 import org.junit.Test;
 

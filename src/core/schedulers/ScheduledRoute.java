@@ -1,7 +1,7 @@
 package core.schedulers;
 
 import core.Route;
-import network.Link;
+import core.network.Link;
 
 /**
  * Implements the representation of a route that has been scheduled. It associates the exportation link and a

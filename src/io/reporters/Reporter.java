@@ -1,6 +1,6 @@
 package io.reporters;
 
-import network.Network;
+import core.network.Network;
 import core.Protocol;
 import simulators.Simulator;
 import simulators.data.BasicDataSet;
@@ -19,13 +19,13 @@ import java.io.IOException;
 public abstract class Reporter implements Closeable, AutoCloseable {
 
     protected File outputFile;
-    protected Network network;    // holds the network to dump network information
+    protected Network network;    // holds the core.network to dump core.network information
 
     /**
      * Constructs a reporter associating the output file.
      *
      * @param outputFile file to output report to.
-     * @param network    network being simulated.
+     * @param network    core.network being simulated.
      */
     public Reporter(File outputFile, Network network) {
         this.outputFile = outputFile;

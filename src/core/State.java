@@ -1,7 +1,7 @@
 package core;
 
-import network.Network;
-import network.Node;
+import core.network.Network;
+import core.network.Node;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +25,14 @@ public class State {
     private State(Network network, Node destination, Protocol defaultProtocol,
                   Map<Node, NodeState> nodesStates) {
         this.originalNetwork = network;
-        this.currentNetwork = new Network(network); // ensure the current network is a copy of the original
+        this.currentNetwork = new Network(network); // ensure the current core.network is a copy of the original
         this.destination = destination;
         this.defaultProtocol = defaultProtocol;
         this.nodesStates = nodesStates;
     }
 
     /**
-     * Creates an empty state for the given network. It initializes all nodes with the given protocol.
+     * Creates an empty state for the given core.network. It initializes all nodes with the given protocol.
      * @param network currentNetwork to create state for.
      * @param destId id of the destination node to simulate for.
      * @param protocol protocol to be used by all nodes by default.
@@ -51,7 +51,7 @@ public class State {
 
     /**
      * Resets all the state. This clears all the routing tables, reverts all nodes to the default protocol and
-     * returns the network to its original state.
+     * returns the core.network to its original state.
      */
     public void reset() {
         this.nodesStates.clear();
@@ -59,14 +59,14 @@ public class State {
         originalNetwork.getNodes()
                 .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
 
-        // ensure the current network must be a copy of the original
+        // ensure the current core.network must be a copy of the original
         this.currentNetwork = new Network(originalNetwork);
     }
 
     /**
-     * Returns the current network state.
+     * Returns the current core.network state.
      *
-     * @return current network state.
+     * @return current core.network state.
      */
     public Network getNetwork() {
         return currentNetwork;
@@ -128,7 +128,7 @@ public class State {
     }
 
     /**
-     * Adds a new link the current network. This alters the networks state.
+     * Adds a new link the current core.network. This alters the networks state.
      */
     public void addLink() {
         // TODO implement
@@ -136,7 +136,7 @@ public class State {
     }
 
     /**
-     * Removes a link the current network. This alters the networks state.
+     * Removes a link the current core.network. This alters the networks state.
      */
     public void removeLink() {
         // TODO implement

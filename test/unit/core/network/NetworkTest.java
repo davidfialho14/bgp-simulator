@@ -1,6 +1,6 @@
-package network;
+package core.network;
 
-import network.exceptions.NodeNotFoundException;
+import core.network.exceptions.NodeNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

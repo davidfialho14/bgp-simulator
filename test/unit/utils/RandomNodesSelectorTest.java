@@ -1,6 +1,6 @@
 package utils;
 
-import network.Node;
+import core.network.Node;
 import org.junit.Test;
 
 import java.util.ArrayList;

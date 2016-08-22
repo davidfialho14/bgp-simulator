@@ -1,4 +1,4 @@
-package network;
+package core.network;
 
 import core.Attribute;
 import core.Label;

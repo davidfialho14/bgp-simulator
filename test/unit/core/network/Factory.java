@@ -1,4 +1,4 @@
-package network;
+package core.network;
 
 import stubs.StubAttribute;
 import stubs.StubLabel;
@@ -6,7 +6,7 @@ import core.Path;
 import core.Route;
 
 /**
- * Factory class to create instances necessary for abstract and interface classes necessary to build a network.
+ * Factory class to create instances necessary for abstract and interface classes necessary to build a core.network.
  * The created elements are guaranteed to be able to work together.
  */
 public class Factory {

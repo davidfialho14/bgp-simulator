@@ -1,17 +1,17 @@
 package factories;
 
-import network.Network;
+import core.network.Network;
 
 /**
- * Interface that all network factories should implement.
+ * Interface that all core.network factories should implement.
  */
 public interface NetworkFactory {
 
     /**
-     * Creates a network instance initialized according to the network ID given.
+     * Creates a core.network instance initialized according to the core.network ID given.
      *
-     * @param networkId id of the network to create
-     * @return network created.
+     * @param networkId id of the core.network to create
+     * @return core.network created.
      */
     Network network(int networkId);
 

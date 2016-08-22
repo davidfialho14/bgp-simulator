@@ -1,6 +1,6 @@
 package wrappers.network;
 
-import network.Node;
+import core.network.Node;
 
 /**
  * Represents a source node of a link.

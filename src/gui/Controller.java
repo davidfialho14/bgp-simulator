@@ -15,8 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import network.exceptions.NodeExistsException;
-import network.exceptions.NodeNotFoundException;
+import core.network.exceptions.NodeExistsException;
+import core.network.exceptions.NodeNotFoundException;
 import core.Protocol;
 import core.Engine;
 import core.schedulers.RandomScheduler;
@@ -78,16 +78,16 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Updates the networkTextField with the default network file.
+     * Updates the networkTextField with the default core.network file.
      *
-     * @param networkFile default network file to set.
+     * @param networkFile default core.network file to set.
      */
     public void setDefaultNetworkFile(File networkFile) {
         networkTextField.setText(networkFile.getAbsolutePath());
     }
 
     /**
-     * Handles browsing for network files. Opens up a file chooser for the user to select the network files to
+     * Handles browsing for core.network files. Opens up a file chooser for the user to select the core.network files to
      * simulate.
      */
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
@@ -115,9 +115,9 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Simulates each network file.
+     * Simulates each core.network file.
      *
-     * @param networkFile network file to be simulated.
+     * @param networkFile core.network file to be simulated.
      */
     private void simulate(File networkFile) {
         int destinationId = destinationIdSpinner.getValue();
@@ -174,7 +174,7 @@ public class Controller implements Initializable {
             alert.showAndWait();
 
         } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "core.network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();
         }

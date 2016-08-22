@@ -1,7 +1,7 @@
 package policies.gaorexford;
 
 import io.InvalidTagException;
-import network.Node;
+import core.network.Node;
 import core.Attribute;
 import core.Label;
 import core.Policy;

@@ -1,8 +1,8 @@
 package wrappers.network;
 
-import network.Link;
-import network.Network;
-import network.exceptions.NodeNotFoundException;
+import core.network.Link;
+import core.network.Network;
+import core.network.exceptions.NodeNotFoundException;
 import core.Label;
 
 /**
@@ -24,9 +24,9 @@ public class LinkElement {
     }
 
     /**
-     * Adds the link to the network.
+     * Adds the link to the core.network.
      *
-     * @param network network to add link to.
+     * @param network core.network to add link to.
      */
     void addTo(Network network) throws NodeNotFoundException {
         network.addNode(link.getSource());

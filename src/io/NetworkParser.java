@@ -6,9 +6,9 @@ import com.alexmerz.graphviz.objects.Edge;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 import com.alexmerz.graphviz.objects.PortNode;
-import network.Network;
-import network.exceptions.NodeExistsException;
-import network.exceptions.NodeNotFoundException;
+import core.network.Network;
+import core.network.exceptions.NodeExistsException;
+import core.network.exceptions.NodeNotFoundException;
 import core.Label;
 import policies.Policies;
 import core.Policy;
@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 
 /**
- * Network Parser is responsible for parsing a network file a constructing the respective network.
+ * Network Parser is responsible for parsing a core.network file a constructing the respective core.network.
  */
 public class NetworkParser {
 
@@ -90,7 +90,7 @@ public class NetworkParser {
     }
 
     /**
-     * Returns the network parsed after the last call to the parse() method. If the parse() method has never been
+     * Returns the core.network parsed after the last call to the parse() method. If the parse() method has never been
      * called then null is returned.
      * @return the last parsedNetwork parse or null if the parse() method has never been called.
      */

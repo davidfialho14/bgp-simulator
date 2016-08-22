@@ -1,8 +1,8 @@
 package protocols;
 
 import core.Protocol;
-import network.Link;
-import network.Node;
+import core.network.Link;
+import core.network.Node;
 import core.Attribute;
 import core.Route;
 

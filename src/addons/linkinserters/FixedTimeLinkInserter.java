@@ -1,7 +1,7 @@
 package addons.linkinserters;
 
-import network.Link;
-import network.Network;
+import core.network.Link;
+import core.network.Network;
 
 /**
  * Inserts one link at a fixed instant of time.
@@ -20,7 +20,7 @@ public class FixedTimeLinkInserter extends AbstractLinkInserter {
     /**
      * Inserts the configured link at the configured fixed instant of time.
      *
-     * @param network     network to insert link on.
+     * @param network     core.network to insert link on.
      * @param currentTime current time of simulation.
      * @return link inserted or null is no link was inserted.
      */

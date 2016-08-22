@@ -1,6 +1,6 @@
 package core;
 
-import network.Link;
+import core.network.Link;
 
 /**
  * Represents an abstraction of the labels associated with links.

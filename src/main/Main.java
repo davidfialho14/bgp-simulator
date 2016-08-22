@@ -7,8 +7,8 @@ import io.InvalidTagException;
 import io.NetworkParser;
 import io.reporters.CSVReporter;
 import io.reporters.Reporter;
-import network.exceptions.NodeExistsException;
-import network.exceptions.NodeNotFoundException;
+import core.network.exceptions.NodeExistsException;
+import core.network.exceptions.NodeNotFoundException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -32,7 +32,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("d", "destination", true, "simulate with the given destination id");
-        options.addOption("n", "network", true, "network to be simulated");
+        options.addOption("n", "network", true, "core.network to be simulated");
         options.addOption("c", "repetition_count", true, "number of repetitions");
         options.addOption("d2", "use detection 2 instead of detection 1");
         options.addOption("deploy", true, "time deploy detection");
@@ -57,7 +57,7 @@ public class Main {
                 int repetitionCount = Integer.parseInt(cmd.getOptionValue("repetition_count"));
 
                 if (networkFile == null) {
-                    System.err.println("It is missing the network file");
+                    System.err.println("It is missing the core.network file");
                     System.exit(1);
                 }
 
@@ -134,7 +134,7 @@ public class Main {
         } catch (IOException e) {
             System.err.println("can not open the file");
         } catch (TokenMgrError | ParseException | NodeExistsException | NodeNotFoundException | InvalidTagException e) {
-            System.err.println("network file is corrupted");
+            System.err.println("core.network file is corrupted");
         }
 
     }
