@@ -3,7 +3,7 @@ package core;
 import core.schedulers.FIFOScheduler;
 import factories.NetworkFactory;
 import factories.ShortestPathNetworkFactory;
-import core.network.Node;
+import core.topology.Node;
 import org.junit.Before;
 import org.junit.Test;
 import protocols.D1R1Protocol;
@@ -19,7 +19,7 @@ import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
-    Allow duplicates in order to make the tests easier to understand without having to look for the core.network or
+    Allow duplicates in order to make the tests easier to understand without having to look for the core.topology or
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")

@@ -1,6 +1,6 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 import factories.GaoRexfordNetworkFactory;
 import factories.NetworkFactory;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
-    Allow duplicates in order to make the tests easier to understand without having to look for the core.network or
+    Allow duplicates in order to make the tests easier to understand without having to look for the core.topology or
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")

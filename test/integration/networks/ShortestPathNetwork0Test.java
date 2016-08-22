@@ -1,8 +1,8 @@
 package networks;
 
 import factories.ShortestPathNetworkFactory;
-import core.network.Network;
-import core.network.Node;
+import core.topology.Network;
+import core.topology.Node;
 import org.junit.Before;
 import org.junit.Test;
 import protocols.BGPProtocol;
@@ -71,7 +71,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 //                .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
 //                .build();
 //
-//        engine.simulate(core.network, new BGPProtocol(), 0);
+//        engine.simulate(core.topology, new BGPProtocol(), 0);
 //
 //        assertThat(state.get(new Node(0)).getTable(), is( table(
 //                                selfLink(0),
@@ -92,7 +92,7 @@ public class ShortestPathNetwork0Test extends ShortestPathNetworkTest {
 //                .linkInserter(new FixedTimeLinkInserter(new Link(1, 0, splabel(0)), 1L))
 //                .build();
 //
-//        engine.simulate(core.network, new BGPProtocol(), 0);
+//        engine.simulate(core.topology, new BGPProtocol(), 0);
 //
 //        assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 0, path(0))));
     }

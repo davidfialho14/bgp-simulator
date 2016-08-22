@@ -2,7 +2,7 @@ package main.gui;
 
 import core.Engine;
 import core.Protocol;
-import core.network.exceptions.NodeNotFoundException;
+import core.topology.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
 import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
@@ -78,16 +78,16 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Updates the networkTextField with the default core.network file.
+     * Updates the networkTextField with the default core.topology file.
      *
-     * @param networkFile default core.network file to set.
+     * @param networkFile default core.topology file to set.
      */
     public void setDefaultNetworkFile(File networkFile) {
         networkTextField.setText(networkFile.getAbsolutePath());
     }
 
     /**
-     * Handles browsing for core.network files. Opens up a file chooser for the user to select the core.network files to
+     * Handles browsing for core.topology files. Opens up a file chooser for the user to select the core.topology files to
      * simulate.
      */
     public void handleClickedBrowseButton(ActionEvent actionEvent) {
@@ -115,9 +115,9 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Simulates each core.network file.
+     * Simulates each core.topology file.
      *
-     * @param networkFile core.network file to be simulated.
+     * @param networkFile core.topology file to be simulated.
      */
     private void simulate(File networkFile) {
 
@@ -132,7 +132,7 @@ public class Controller implements Initializable {
             alert.showAndWait();
 
         } catch (ParseException | NodeNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "topology file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();
         }

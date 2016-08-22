@@ -1,17 +1,17 @@
 package factories;
 
-import core.network.Network;
+import core.topology.Network;
 
 /**
- * Interface that all core.network factories should implement.
+ * Interface that all core.topology factories should implement.
  */
 public interface NetworkFactory {
 
     /**
-     * Creates a core.network instance initialized according to the core.network ID given.
+     * Creates a core.topology instance initialized according to the core.topology ID given.
      *
-     * @param networkId id of the core.network to create
-     * @return core.network created.
+     * @param networkId id of the core.topology to create
+     * @return core.topology created.
      */
     Network network(int networkId);
 

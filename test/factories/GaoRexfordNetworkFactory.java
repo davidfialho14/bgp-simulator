@@ -1,6 +1,6 @@
 package factories;
 
-import core.network.Network;
+import core.topology.Network;
 import policies.gaorexford.GaoRexfordPolicy;
 import wrappers.network.NetworkWrapper;
 
@@ -33,10 +33,10 @@ public class GaoRexfordNetworkFactory implements NetworkFactory {
     };
 
     /**
-     * Creates a core.network instance initialized according to the core.network ID given.
+     * Creates a core.topology instance initialized according to the core.topology ID given.
      *
-     * @param networkId id of the core.network to create
-     * @return core.network created.
+     * @param networkId id of the core.topology to create
+     * @return core.topology created.
      */
     @Override
     public Network network(int networkId) {

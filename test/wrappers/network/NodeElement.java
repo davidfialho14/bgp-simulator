@@ -1,6 +1,6 @@
 package wrappers.network;
 
-import core.network.Node;
+import core.topology.Node;
 
 /**
  * Represents a any node of a link.

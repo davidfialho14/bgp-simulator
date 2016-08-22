@@ -1,12 +1,12 @@
 package wrappers.network;
 
-import core.network.Network;
-import core.network.Node;
-import core.network.exceptions.NodeNotFoundException;
+import core.topology.Network;
+import core.topology.Node;
+import core.topology.exceptions.NodeNotFoundException;
 import core.Policy;
 
 /**
- * Implements a set of static method wrappers to improve generating a core.network statically in a more
+ * Implements a set of static method wrappers to improve generating a core.topology statically in a more
  * readable way.
  */
 public class NetworkWrapper {
@@ -16,11 +16,11 @@ public class NetworkWrapper {
     // ----- PUBLIC INTERFACE -----------------------------------------------------------------------------------------
 
     /**
-     * Creates a core.network from the link elements.
+     * Creates a core.topology from the link elements.
      *
-     * @param policy policy of the core.network.
-     * @param links links of the core.network.
-     * @return core.network instance initialized.
+     * @param policy policy of the core.topology.
+     * @param links links of the core.topology.
+     * @return core.topology instance initialized.
      */
     public static Network network(Policy policy, LinkElement... links) {
         Network network = new Network(policy);

@@ -1,6 +1,6 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

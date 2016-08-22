@@ -1,7 +1,7 @@
 package simulators.data;
 
 import io.reporters.Reporter;
-import core.network.Node;
+import core.topology.Node;
 import core.Path;
 import policies.shortestpath.ShortestPathLabel;
 import core.events.DetectEvent;

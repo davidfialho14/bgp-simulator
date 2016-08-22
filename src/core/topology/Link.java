@@ -1,4 +1,4 @@
-package core.network;
+package core.topology;
 
 import core.Attribute;
 import core.Label;

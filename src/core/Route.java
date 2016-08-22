@@ -1,6 +1,6 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;

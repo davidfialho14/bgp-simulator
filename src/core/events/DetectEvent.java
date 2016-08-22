@@ -1,7 +1,7 @@
 package core.events;
 
-import core.network.Link;
-import core.network.Node;
+import core.topology.Link;
+import core.topology.Node;
 import core.Path;
 import core.Route;
 

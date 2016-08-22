@@ -2,7 +2,7 @@ package main;
 
 import core.Engine;
 import core.Protocol;
-import core.network.exceptions.NodeNotFoundException;
+import core.topology.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
 import main.gui.SimulatorApplication;
 import io.networkreaders.GraphvizReader;
@@ -31,7 +31,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("d", "destination", true, "simulate with the given destination id");
-        options.addOption("n", "network", true, "core.network to be simulated");
+        options.addOption("n", "topology", true, "core.topology to be simulated");
         options.addOption("c", "repetition_count", true, "number of repetitions");
         options.addOption("d2", "use detection 2 instead of detection 1");
         options.addOption("deploy", true, "time deploy detection");
@@ -41,8 +41,8 @@ public class Main {
             CommandLine cmd = parser.parse(options, args);
 
             File networkFile = null;
-            if (cmd.hasOption("network")) {
-                networkFile = new File(cmd.getOptionValue("network"));
+            if (cmd.hasOption("topology")) {
+                networkFile = new File(cmd.getOptionValue("topology"));
 
                 if (!networkFile.exists()) {
                     System.err.println("Network file does not exist");
@@ -56,7 +56,7 @@ public class Main {
                 int repetitionCount = Integer.parseInt(cmd.getOptionValue("repetition_count"));
 
                 if (networkFile == null) {
-                    System.err.println("It is missing the core.network file");
+                    System.err.println("It is missing the core.topology file");
                     System.exit(1);
                 }
 
@@ -99,7 +99,7 @@ public class Main {
         } catch (IOException e) {
             System.err.println("can not open the file");
         } catch (ParseException | NodeNotFoundException e) {
-            System.err.println("network file is corrupted");
+            System.err.println("topology file is corrupted");
         }
 
         if (topology != null) {

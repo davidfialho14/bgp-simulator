@@ -1,6 +1,6 @@
-package core.network;
+package core.topology;
 
-import core.network.exceptions.NodeNotFoundException;
+import core.topology.exceptions.NodeNotFoundException;
 import core.Label;
 import core.Policy;
 
@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 
 public class Network {
 
-    private Map<Integer, Node> nodes;   // each node must be unique in the core.network
-    private Policy policy;              // policy of the core.network
+    private Map<Integer, Node> nodes;   // each node must be unique in the topology
+    private Policy policy;              // policy of the topology
 
-    private String name;                // name for the core.network
+    private String name;                // name for the topology
 
     /**
-     * Creates a new empty core.network associated with the given policy.
+     * Creates a new empty topology associated with the given policy.
      */
     public Network(Policy policy) {
         this.nodes = new HashMap<>();
@@ -26,7 +26,7 @@ public class Network {
     }
 
     /**
-     * Creates a new empty core.network associated with the given policy and name.
+     * Creates a new empty topology associated with the given policy and name.
      */
     public Network(Policy policy, String name) {
         this.nodes = new HashMap<>();
@@ -37,7 +37,7 @@ public class Network {
     /**
      * Copy constructor.
      *
-     * @param network core.network to construct from.
+     * @param network topology to construct from.
      */
     public Network(Network network) {
         this.nodes = new HashMap<>(network.nodes.size());
@@ -49,27 +49,27 @@ public class Network {
     }
 
     /**
-     * Returns the core.network policy.
+     * Returns the topology policy.
      *
-     * @return core.network policy.
+     * @return topology policy.
      */
     public Policy getPolicy() {
         return policy;
     }
 
     /**
-     * Returns the name of the core.network.
+     * Returns the name of the topology.
      *
-     * @return name of the core.network
+     * @return name of the topology
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Adds a node with the given ID to the core.network.
+     * Adds a node with the given ID to the topology.
      *
-     * @param id id of the node to be added to the core.network.
+     * @param id id of the node to be added to the topology.
      * @return true if the node was added or false if there was already a node with the same ID.
      */
 	public boolean addNode(int id) {
@@ -85,9 +85,9 @@ public class Network {
 	}
 
     /**
-     * Adds a node to the core.network.
+     * Adds a node to the topology.
      *
-     * @param node node to be added to the core.network.
+     * @param node node to be added to the topology.
      * @return true if the node was added or false if the node already existed.
      */
     public boolean addNode(Node node) {
@@ -102,18 +102,18 @@ public class Network {
     }
 
     /**
-     * Return a collection with the ids of all the nodes in the core.network.
+     * Return a collection with the ids of all the nodes in the topology.
      *
-     * @return collection with the ids of all the nodes in the core.network.
+     * @return collection with the ids of all the nodes in the topology.
      */
 	public Collection<Integer> getIds() {
 		return nodes.keySet();
 	}
 
     /**
-     * Returns all the nodes in the core.network.
+     * Returns all the nodes in the topology.
      *
-     * @return all the nodes in the core.network.
+     * @return all the nodes in the topology.
      */
     public Collection<Node> getNodes() {
         return nodes.values();
@@ -130,9 +130,9 @@ public class Network {
     }
 
     /**
-     * Returns the number of nodes in the core.network.
+     * Returns the number of nodes in the topology.
      *
-     * @return number of nodes in the core.network.
+     * @return number of nodes in the topology.
      */
     public int getNodeCount() {
         return nodes.size();
@@ -140,7 +140,7 @@ public class Network {
 
     /**
      * Creates a new link between the node with srcId and the node with destId associated with the label and adds
-     * the created link to the core.network.
+     * the created link to the topology.
      * The link is also associated with the given label.
      *
      * @param srcId id of the source node.
@@ -163,16 +163,16 @@ public class Network {
     }
 
     /**
-     * Adds a link to the core.network.
+     * Adds a link to the topology.
      *
-     * @param link link to be added to the core.network.
+     * @param link link to be added to the topology.
      */
     public void addLink(Link link) throws NodeNotFoundException {
         this.addLink(link.getSource().getId(), link.getDestination().getId(), link.getLabel());
     }
 
     /**
-     * Removes the given link from the core.network. If the link does not exist it returns false.
+     * Removes the given link from the topology. If the link does not exist it returns false.
      *
      * @param link link to be removed
      * @return true if link was removed and false otherwise.
@@ -190,9 +190,9 @@ public class Network {
     }
 
     /**
-     * Returns a list with all the links in the core.network.
+     * Returns a list with all the links in the topology.
      *
-     * @return list with the links in the core.network.
+     * @return list with the links in the topology.
      */
     public Collection<Link> getLinks() {
         return nodes.values().stream()
@@ -201,9 +201,9 @@ public class Network {
     }
 
     /**
-     * Returns the number of links in the core.network.
+     * Returns the number of links in the topology.
      *
-     * @return number of links in the core.network.
+     * @return number of links in the topology.
      */
     public int getLinkCount() {
         return (int) nodes.values().stream()
@@ -227,20 +227,20 @@ public class Network {
     // ----- PRIVATE -----
 
     /**
-     * Returns the node in the core.network corresponding to the source node of the given link.
+     * Returns the node in the topology corresponding to the source node of the given link.
      *
      * @param link link to get source node from.
-     * @return node in the core.network corresponding to the source node of the given link.
+     * @return node in the topology corresponding to the source node of the given link.
      */
     private Node getSource(Link link) {
         return nodes.get(link.getSource().getId());
     }
 
     /**
-     * Returns the node in the core.network corresponding to the destination node of the given link.
+     * Returns the node in the topology corresponding to the destination node of the given link.
      *
      * @param link link to get destination node from.
-     * @return node in the core.network corresponding to the destination node of the given link.
+     * @return node in the topology corresponding to the destination node of the given link.
      */
     private Node getDestination(Link link) {
         return nodes.get(link.getDestination().getId());

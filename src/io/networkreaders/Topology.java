@@ -1,10 +1,10 @@
 package io.networkreaders;
 
 import core.Policy;
-import core.network.Network;
+import core.topology.Network;
 
 /**
- * A topology associates a network with a routing policy. It is read only.
+ * A topology associates a topology with a routing policy. It is read only.
  */
 public final class Topology {
 
@@ -12,9 +12,9 @@ public final class Topology {
     private final Policy policy;
 
     /**
-     * Constructs a new topology associating the two given network and policy.
+     * Constructs a new topology associating the two given topology and policy.
      *
-     * @param network topology network
+     * @param network topology topology
      * @param policy  topology routing policy
      */
     public Topology(Network network, Policy policy) {
@@ -23,9 +23,9 @@ public final class Topology {
     }
 
     /**
-     * Returns the topology's network.
+     * Returns the topology's topology.
      *
-     * @return the topology's network
+     * @return the topology's topology
      */
     public Network getNetwork() {
         return network;

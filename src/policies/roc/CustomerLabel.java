@@ -1,6 +1,6 @@
 package policies.roc;
 
-import core.network.Link;
+import core.topology.Link;
 import core.Attribute;
 import core.Label;
 

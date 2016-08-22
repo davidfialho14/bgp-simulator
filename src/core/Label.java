@@ -1,6 +1,6 @@
 package core;
 
-import core.network.Link;
+import core.topology.Link;
 
 /**
  * Represents an abstraction of the labels associated with links.

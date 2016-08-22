@@ -2,7 +2,7 @@ package core;
 
 import factories.NetworkFactory;
 import factories.ShortestPathNetworkFactory;
-import core.network.Node;
+import core.topology.Node;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static wrappers.routetable.RouteElement.invalidRoute;
 import static wrappers.routetable.RouteTableWrapper.table;
 
 /*
-    Allow duplicates in order to make the tests easier to understand without having to look for the core.network or
+    Allow duplicates in order to make the tests easier to understand without having to look for the core.topology or
     the expected tables elsewhere.
  */
 @SuppressWarnings("Duplicates")
@@ -209,11 +209,11 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         // TODO Link Breaker
 //        engine.setLinkBreaker(new FixedLinkBreaker(new Link(2, 1, new ShortestPathLabel(1)), 1L));
 //
-//        Network factory.core.network(0) = core.network(new ShortestPathPolicy(),
+//        Network factory.core.topology(0) = core.topology(new ShortestPathPolicy(),
 //                link(from(2), to(1), label(1)),
 //                link(from(1), to(0), label(1)));
 //
-//        engine.simulate(factory.core.network(0), protocol, 0);
+//        engine.simulate(factory.core.topology(0), protocol, 0);
 //
 //        assertThat(state.get(new Node(0)).getTable(), is( table(
 //                                selfLink(0),

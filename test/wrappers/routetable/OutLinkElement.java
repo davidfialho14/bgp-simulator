@@ -1,8 +1,8 @@
 package wrappers.routetable;
 
-import core.network.Link;
-import core.network.Node;
-import core.network.SelfLink;
+import core.topology.Link;
+import core.topology.Node;
+import core.topology.SelfLink;
 import core.Label;
 
 /**

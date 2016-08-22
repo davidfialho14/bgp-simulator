@@ -1,7 +1,7 @@
 package protocols;
 
-import core.network.Link;
-import core.network.Node;
+import core.topology.Link;
+import core.topology.Node;
 import core.Attribute;
 import core.InvalidAttribute;
 import core.Route;

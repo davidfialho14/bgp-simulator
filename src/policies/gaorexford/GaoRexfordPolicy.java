@@ -1,7 +1,7 @@
 package policies.gaorexford;
 
 import io.networkreaders.exceptions.InvalidPolicyTagException;
-import core.network.Node;
+import core.topology.Node;
 import core.Attribute;
 import core.Label;
 import core.Policy;

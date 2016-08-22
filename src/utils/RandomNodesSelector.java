@@ -1,7 +1,7 @@
 package utils;
 
-import core.network.Network;
-import core.network.Node;
+import core.topology.Network;
+import core.topology.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Randomly selects a subset of nodes from a core.network. Once a node is selected, in the next selection it can not be
+ * Randomly selects a subset of nodes from a core.topology. Once a node is selected, in the next selection it can not be
  * selected again.
  */
 public class RandomNodesSelector {
@@ -28,7 +28,7 @@ public class RandomNodesSelector {
     }
 
     /**
-     * Randomly selects nodeCount nodes from the set of nodes in the core.network associated with this selector.
+     * Randomly selects nodeCount nodes from the set of nodes in the core.topology associated with this selector.
      * Once this method is called, the returned nodes are no longer available in the next call. If the requested
      * number of nodes is higher than the number of nodes available, only the number of nodes available will be
      * returned.

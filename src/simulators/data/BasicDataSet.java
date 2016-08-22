@@ -1,6 +1,6 @@
 package simulators.data;
 
-import core.network.Node;
+import core.topology.Node;
 
 import java.util.ArrayList;
 import java.util.HashSet;

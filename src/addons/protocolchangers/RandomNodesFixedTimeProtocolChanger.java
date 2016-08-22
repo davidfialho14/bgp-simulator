@@ -1,6 +1,6 @@
 package addons.protocolchangers;
 
-import core.network.Node;
+import core.topology.Node;
 import core.Protocol;
 import core.Engine;
 import core.State;

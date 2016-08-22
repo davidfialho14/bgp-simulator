@@ -1,6 +1,6 @@
 package core;
 
-import core.network.Node;
+import core.topology.Node;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

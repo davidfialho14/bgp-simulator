@@ -1,6 +1,6 @@
 package core.implementations.handlers;
 
-import core.network.Network;
+import core.topology.Network;
 import org.junit.Before;
 import org.junit.Test;
 import policies.shortestpath.ShortestPathPolicy;
