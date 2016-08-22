@@ -30,4 +30,24 @@ public class ParseException extends Exception {
         super(message);
         this.lineNumber = lineNumber;
     }
+
+    /**
+     * Returns the line number of the error.
+     *
+     * @return the line number of the error
+     */
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Returns the detail message string of this throwable.
+     *
+     * @return the detail message string of this {@code Throwable} instance
+     * (which may be {@code null}).
+     */
+    @Override
+    public String getMessage() {
+        return super.getMessage().concat(" (in line " + lineNumber + ")");
+    }
 }
