@@ -1,6 +1,9 @@
 package io.networkreaders;
 
+import io.networkreaders.exceptions.ParseException;
+
 import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * Base interface for a topology reader. A topology associates a network with a routing policy.
@@ -15,7 +18,9 @@ public interface TopologyReader extends AutoCloseable, Closeable {
      * topology file format.
      *
      * @return topology associating the network and policy read
+     * @throws IOException      if an IO error occurs when reading the file
+     * @throws ParseException   if there is an error in the file format
      */
-    Topology read();
+    Topology read() throws IOException, ParseException;
 
 }
