@@ -9,7 +9,6 @@ import core.Label;
 import core.Policy;
 import core.network.Network;
 import core.network.exceptions.NodeNotFoundException;
-import io.networkreaders.exceptions.InvalidPolicyTagException;
 import io.networkreaders.exceptions.ParseException;
 import policies.Policies;
 
@@ -43,7 +42,7 @@ public class GraphvizReader implements TopologyReader {
      * @return topology associating the network and policy read
      */
     @Override
-    public Topology read() throws IOException, ParseException, InvalidPolicyTagException, NodeNotFoundException {
+    public Topology read() throws IOException, ParseException, NodeNotFoundException {
 
         try {
             parser.parse(fileReader);

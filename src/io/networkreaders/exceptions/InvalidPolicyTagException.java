@@ -4,7 +4,7 @@ package io.networkreaders.exceptions;
  * Thrown when trying to parse an invalid policy tag. Stores a detailed message of the error and the
  * invalid tag.
  */
-public class InvalidPolicyTagException extends Exception {
+public class InvalidPolicyTagException extends ParseException {
 
     private String tag;
 
