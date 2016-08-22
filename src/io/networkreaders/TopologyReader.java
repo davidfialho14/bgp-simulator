@@ -1,5 +1,7 @@
 package io.networkreaders;
 
+import core.network.exceptions.NodeNotFoundException;
+import io.InvalidTagException;
 import io.networkreaders.exceptions.ParseException;
 
 import java.io.Closeable;
@@ -21,6 +23,6 @@ public interface TopologyReader extends AutoCloseable, Closeable {
      * @throws IOException      if an IO error occurs when reading the file
      * @throws ParseException   if there is an error in the file format
      */
-    Topology read() throws IOException, ParseException;
+    Topology read() throws IOException, ParseException, InvalidTagException, NodeNotFoundException;
 
 }
