@@ -1,6 +1,6 @@
 package policies.roc;
 
-import io.networkreaders.exceptions.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import core.network.Node;
 import core.Attribute;
 import core.Label;
@@ -16,7 +16,7 @@ public class RoCPolicy implements Policy {
     }
 
     @Override
-    public Label createLabel(String tag) throws InvalidTagException {
+    public Label createLabel(String tag) throws InvalidPolicyTagException {
         switch (tag) {
             case "R+":
                 return new PeerPlusLabel();
@@ -27,7 +27,7 @@ public class RoCPolicy implements Policy {
             case "P":
                 return new ProviderLabel();
             default:
-                throw new InvalidTagException(tag, "not a valid tag for a Gao Rexford label");
+                throw new InvalidPolicyTagException(tag, "not a valid tag for a Gao Rexford label");
         }
     }
 }

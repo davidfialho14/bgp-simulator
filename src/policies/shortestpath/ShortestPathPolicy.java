@@ -1,6 +1,6 @@
 package policies.shortestpath;
 
-import io.networkreaders.exceptions.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import core.network.Node;
 import core.Attribute;
 import core.Label;
@@ -24,12 +24,12 @@ public class ShortestPathPolicy implements Policy {
     }
 
     @Override
-    public Label createLabel(String tag) throws InvalidTagException {
+    public Label createLabel(String tag) throws InvalidPolicyTagException {
         try {
             return new ShortestPathLabel(Integer.parseInt(tag));
         } catch (NumberFormatException e) {
             // tag is not an integer
-            throw new InvalidTagException(tag, "the ShortestPath policy's label tags must be integers");
+            throw new InvalidPolicyTagException(tag, "the ShortestPath policy's label tags must be integers");
         }
     }
 

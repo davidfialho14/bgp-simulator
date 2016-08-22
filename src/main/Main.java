@@ -5,7 +5,7 @@ import core.Protocol;
 import core.network.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
 import gui.SimulatorApplication;
-import io.networkreaders.exceptions.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;
@@ -99,7 +99,7 @@ public class Main {
 
         } catch (IOException e) {
             System.err.println("can not open the file");
-        } catch (ParseException | NodeNotFoundException | InvalidTagException e) {
+        } catch (ParseException | NodeNotFoundException | InvalidPolicyTagException e) {
             System.err.println("network file is corrupted");
         }
 

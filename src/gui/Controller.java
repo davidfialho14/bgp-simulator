@@ -8,7 +8,7 @@ import gui.basics.NumberSpinner;
 import gui.fulldeployment.FullDeploymentController;
 import gui.gradualdeployment.GradualDeploymentController;
 import gui.radiobuttons.ProtocolToggleGroup;
-import io.networkreaders.exceptions.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;
@@ -132,7 +132,7 @@ public class Controller implements Initializable {
             alert.setHeaderText("Network File Error");
             alert.showAndWait();
 
-        } catch (ParseException | NodeNotFoundException | InvalidTagException e) {
+        } catch (ParseException | NodeNotFoundException | InvalidPolicyTagException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "network file is corrupted", ButtonType.OK);
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();

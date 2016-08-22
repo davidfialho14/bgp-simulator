@@ -1,6 +1,6 @@
 package core;
 
-import io.networkreaders.exceptions.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import core.network.Node;
 
 /**
@@ -20,5 +20,5 @@ public interface Policy {
      * @param tag tag that defines the label to be created.
      * @return label instance according to the string tag.
      */
-    Label createLabel(String tag) throws InvalidTagException;
+    Label createLabel(String tag) throws InvalidPolicyTagException;
 }

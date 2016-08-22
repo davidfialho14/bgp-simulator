@@ -1,6 +1,6 @@
 package stubs;
 
-import io.networkreaders.exceptions.InvalidTagException;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 import core.network.Node;
 import core.Attribute;
 import core.Label;
@@ -25,7 +25,7 @@ public class StubPolicy implements Policy {
      * @return label instance according to the string tag.
      */
     @Override
-    public Label createLabel(String tag) throws InvalidTagException {
+    public Label createLabel(String tag) throws InvalidPolicyTagException {
         return new StubLabel();
     }
 }
