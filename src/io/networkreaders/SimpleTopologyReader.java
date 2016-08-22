@@ -1,7 +1,8 @@
 package io.networkreaders;
 
-import core.Policy;
 import core.topology.Network;
+import core.topology.Policy;
+import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.exceptions.ParseException;
 import policies.Policies;

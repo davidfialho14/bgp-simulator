@@ -1,6 +1,6 @@
 package policies;
 
-import core.Policy;
+import core.topology.Policy;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 import policies.gaorexford.GaoRexfordPolicy;
 import policies.roc.RoCPolicy;

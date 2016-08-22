@@ -2,15 +2,15 @@ package main;
 
 import core.Engine;
 import core.Protocol;
-import core.topology.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
-import main.gui.SimulatorApplication;
+import core.topology.Topology;
+import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
-import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
 import io.reporters.Reporter;
+import main.gui.SimulatorApplication;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;

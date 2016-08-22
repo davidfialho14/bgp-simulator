@@ -1,6 +1,7 @@
 package core;
 
 import core.topology.Node;
+import core.topology.Policy;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;

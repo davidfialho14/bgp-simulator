@@ -1,10 +1,7 @@
-package io.networkreaders;
-
-import core.Policy;
-import core.topology.Network;
+package core.topology;
 
 /**
- * A topology associates a topology with a routing policy. It is read only.
+ * A topology is a read only class that associates a network representation with a routing policy.
  */
 public final class Topology {
 

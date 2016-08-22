@@ -1,10 +1,10 @@
 package policies.roc;
 
-import io.networkreaders.exceptions.InvalidPolicyTagException;
-import core.topology.Node;
 import core.Attribute;
 import core.Label;
-import core.Policy;
+import core.topology.Node;
+import core.topology.Policy;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 
 import static policies.roc.SelfAttribute.self;
 

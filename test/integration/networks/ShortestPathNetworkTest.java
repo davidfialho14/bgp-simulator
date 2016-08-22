@@ -1,6 +1,6 @@
 package networks;
 
-import core.Policy;
+import core.topology.Policy;
 import policies.shortestpath.ShortestPathPolicy;
 
 public class ShortestPathNetworkTest {

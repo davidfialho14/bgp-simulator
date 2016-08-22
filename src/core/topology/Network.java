@@ -1,17 +1,24 @@
 package core.topology;
 
-import core.topology.exceptions.NodeNotFoundException;
 import core.Label;
-import core.Policy;
+import core.topology.exceptions.NodeNotFoundException;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+/**
+ * Data structure to represent the network topology. Stores the nodes and the existing links between
+ * the nodes. Does not take into account any routing policies, it only models the structure of the
+ * topology. However, each link is associated with a label specifying the relationship between the
+ * two nodes connected by the link. Each node must be unique in the graph. There may be multiple links
+ * between any two nodes.
+ */
 public class Network {
 
-    private Map<Integer, Node> nodes;   // each node must be unique in the topology
+    private Map<Integer, Node> nodes;   // mapping between
     private Policy policy;              // policy of the topology
 
     private String name;                // name for the topology

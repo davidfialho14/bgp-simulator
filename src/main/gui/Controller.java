@@ -2,14 +2,10 @@ package main.gui;
 
 import core.Engine;
 import core.Protocol;
-import core.topology.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
-import main.gui.basics.NumberSpinner;
-import main.gui.fulldeployment.FullDeploymentController;
-import main.gui.gradualdeployment.GradualDeploymentController;
-import main.gui.radiobuttons.ProtocolToggleGroup;
+import core.topology.Topology;
+import core.topology.exceptions.NodeNotFoundException;
 import io.networkreaders.GraphvizReader;
-import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
@@ -19,6 +15,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import main.gui.basics.NumberSpinner;
+import main.gui.fulldeployment.FullDeploymentController;
+import main.gui.gradualdeployment.GradualDeploymentController;
+import main.gui.radiobuttons.ProtocolToggleGroup;
 import simulators.Simulator;
 import simulators.SimulatorFactory;
 

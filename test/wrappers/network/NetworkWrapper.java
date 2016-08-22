@@ -2,8 +2,8 @@ package wrappers.network;
 
 import core.topology.Network;
 import core.topology.Node;
+import core.topology.Policy;
 import core.topology.exceptions.NodeNotFoundException;
-import core.Policy;
 
 /**
  * Implements a set of static method wrappers to improve generating a core.topology statically in a more
