@@ -1,6 +1,6 @@
 package policies.roc;
 
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import core.network.Node;
 import core.Attribute;
 import core.Label;

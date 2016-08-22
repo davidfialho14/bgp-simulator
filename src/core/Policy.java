@@ -1,6 +1,6 @@
 package core;
 
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import core.network.Node;
 
 /**

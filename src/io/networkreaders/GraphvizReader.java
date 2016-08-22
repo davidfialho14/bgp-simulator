@@ -9,7 +9,7 @@ import core.Label;
 import core.Policy;
 import core.network.Network;
 import core.network.exceptions.NodeNotFoundException;
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import io.networkreaders.exceptions.ParseException;
 import policies.Policies;
 

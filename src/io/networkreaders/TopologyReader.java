@@ -1,7 +1,7 @@
 package io.networkreaders;
 
 import core.network.exceptions.NodeNotFoundException;
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import io.networkreaders.exceptions.ParseException;
 
 import java.io.Closeable;

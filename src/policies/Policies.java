@@ -1,7 +1,7 @@
 package policies;
 
 import core.Policy;
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import policies.gaorexford.GaoRexfordPolicy;
 import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;

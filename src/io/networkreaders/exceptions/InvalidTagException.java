@@ -1,4 +1,4 @@
-package io;
+package io.networkreaders.exceptions;
 
 public class InvalidTagException extends Exception {
 

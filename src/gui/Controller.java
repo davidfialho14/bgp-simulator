@@ -8,7 +8,7 @@ import gui.basics.NumberSpinner;
 import gui.fulldeployment.FullDeploymentController;
 import gui.gradualdeployment.GradualDeploymentController;
 import gui.radiobuttons.ProtocolToggleGroup;
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;

@@ -5,7 +5,7 @@ import core.Protocol;
 import core.network.exceptions.NodeNotFoundException;
 import core.schedulers.RandomScheduler;
 import gui.SimulatorApplication;
-import io.InvalidTagException;
+import io.networkreaders.exceptions.InvalidTagException;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.Topology;
 import io.networkreaders.TopologyReader;
