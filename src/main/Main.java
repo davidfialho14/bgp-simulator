@@ -1,12 +1,10 @@
 package main;
 
 import core.Protocol;
-import io.networkreaders.GraphvizReader;
+import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.PolicyTagger;
-import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
-import io.reporters.CSVReporter;
-import io.reporters.Reporter;
+import io.reporters.CSVReporterFactory;
 import javafx.scene.control.Alert;
 import main.gui.SimulatorApplication;
 import org.apache.commons.cli.CommandLine;
@@ -89,7 +87,7 @@ public class Main {
 
     }
 
-    private static void simulate(File networkFile, int destinationId, int repetitionCount, Protocol protocol,
+    private static void simulate(File topologyFile, int destinationId, int repetitionCount, Protocol protocol,
                                  Integer deployTime) {
         int minDelay = 0;
         int maxDelay = 10;
@@ -115,27 +113,21 @@ public class Main {
 
         SimulatorLauncher simulatorLauncher = new SimulatorLauncher.Builder(
                 errorHandler,
+                new GraphvizReaderFactory(),
                 minDelay, maxDelay,
                 destinationId,
                 repetitionCount,
-                protocol)
+                protocol,
+                new CSVReporterFactory())
                 .fullDeployment(deployTime != null,
                         deployTime == null ? 0 : deployTime)
                 .build();
 
-        String reportFileName = networkFile.getName().replaceFirst("\\.gv",
+        String reportFileName = topologyFile.getName().replaceFirst("\\.gv",
                 String.format("-dest%02d.csv", destinationId));
-        File reportFile = new File(networkFile.getParent(), reportFileName);
+        File reportFile = new File(topologyFile.getParent(), reportFileName);
 
-        try (
-                TopologyReader topologyReader = new GraphvizReader(networkFile);
-                Reporter reporter = new CSVReporter(reportFile)
-        ) {
-            simulatorLauncher.launch(topologyReader, reporter);
-
-        } catch (IOException e) {
-            System.err.println("failed to open report file");
-        }
+        simulatorLauncher.launch(topologyFile, reportFile);
 
     }
 

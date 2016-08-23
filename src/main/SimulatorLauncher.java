@@ -5,44 +5,51 @@ import core.Protocol;
 import core.schedulers.RandomScheduler;
 import core.topology.Topology;
 import io.networkreaders.TopologyReader;
+import io.networkreaders.TopologyReaderFactory;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.Reporter;
+import io.reporters.ReporterFactory;
 import simulators.*;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SimulatorLauncher {
+
+    private final ErrorHandler errorHandler;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Private Configuration Fields - Not Optional
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    private final ErrorHandler errorHandler;
-
+    private final TopologyReaderFactory readerFactory;
     private final int minDelay;
     private final int maxDelay;
     private final int destinationId;
     private final int repetitionCount;
     private final Protocol protocol;
     private final SimulatorFactory simulatorFactory;
+    private final ReporterFactory reporterFactory;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Constructors
+     *  Constructors - Simulator Launcher is created with a Builder
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private SimulatorLauncher(ErrorHandler errorHandler, int minDelay, int maxDelay, int destinationId,
-                              int repetitionCount, Protocol protocol, SimulatorFactory simulatorFactory) {
+    private SimulatorLauncher(ErrorHandler errorHandler, TopologyReaderFactory readerFactory,
+                              int minDelay, int maxDelay, int destinationId, int repetitionCount, Protocol protocol,
+                              SimulatorFactory simulatorFactory, ReporterFactory reporterFactory) {
         this.errorHandler = errorHandler;
+        this.readerFactory = readerFactory;
         this.minDelay = minDelay;
         this.maxDelay = maxDelay;
         this.destinationId = destinationId;
         this.repetitionCount = repetitionCount;
         this.protocol = protocol;
         this.simulatorFactory = simulatorFactory;
+        this.reporterFactory = reporterFactory;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -51,24 +58,17 @@ public class SimulatorLauncher {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    // IMPORTANT: the launch() method takes the topology reader and the reporter as an arguments instead of using the
-    //            set methods (or the constructor) to configure the proper reader and reporter. This allows to use a
-    //            try block to ensure the topology reader/reporter are closed properly.
-
     /**
      * Starting point of any simulation. This method should be called after configuring the simulation. After calling
      * this method the simulation will load the topology from the topology file, simulate according to the predefined
      * configurations, and dump a proper report.
-     *
-     * @param topologyReader topology reader used to load the topology
-     * @param reporter       a reporter implementation to report data
      */
-    public void launch(TopologyReader topologyReader, Reporter reporter) {
+    public void launch(File topologyFile, File reportFile) {
 
         // Load the topology
 
         Topology topology = null;
-        try {
+        try (TopologyReader topologyReader = readerFactory.getTopologyReader(topologyFile)) {
             topology = topologyReader.read();
 
         } catch (IOException e) {
@@ -86,7 +86,7 @@ public class SimulatorLauncher {
             // use the simulator factory to get a properly configured simulator
             Simulator simulator = simulatorFactory.getSimulator(engine, topology, destinationId);
 
-            try {
+            try (Reporter reporter = reporterFactory.getReporter(reportFile)) {
                 reporter.dumpBasicInfo(topology, destinationId, minDelay, maxDelay, protocol, simulator);
 
                 for (int i = 0; i < repetitionCount; i++) {
@@ -115,6 +115,8 @@ public class SimulatorLauncher {
         private final int destinationId;
         private final int repetitionCount;
         private final Protocol protocol;
+        private final TopologyReaderFactory readerFactory;
+        private final ReporterFactory reporterFactory;
 
         // optional configurations
         private boolean fullDeploymentEnabled = false;
@@ -123,14 +125,16 @@ public class SimulatorLauncher {
         private Integer deployPeriod = null;
         private Integer deployPercentage = null;
 
-        public Builder(ErrorHandler errorHandler, int minDelay, int maxDelay, int destinationId, int repetitionCount,
-                       Protocol protocol) {
+        public Builder(ErrorHandler errorHandler, TopologyReaderFactory readerFactory, int minDelay, int maxDelay,
+                       int destinationId, int repetitionCount, Protocol protocol, ReporterFactory reporterFactory) {
             this.errorHandler = errorHandler;
+            this.readerFactory = readerFactory;
             this.minDelay = minDelay;
             this.maxDelay = maxDelay;
             this.destinationId = destinationId;
             this.repetitionCount = repetitionCount;
             this.protocol = protocol;
+            this.reporterFactory = reporterFactory;
         }
 
         public Builder fullDeployment(boolean enable, int deployTime) {
@@ -161,8 +165,8 @@ public class SimulatorLauncher {
                 simulatorFactory = new InitialDeploymentSimulatorFactory(protocol);
             }
 
-            return new SimulatorLauncher(errorHandler, minDelay, maxDelay, destinationId,
-                    repetitionCount, protocol, simulatorFactory);
+            return new SimulatorLauncher(errorHandler, readerFactory, minDelay, maxDelay, destinationId,
+                    repetitionCount, protocol, simulatorFactory, reporterFactory);
         }
 
     }

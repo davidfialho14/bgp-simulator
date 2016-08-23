@@ -1,10 +1,8 @@
 package main.gui;
 
-import io.networkreaders.GraphvizReader;
-import io.networkreaders.TopologyReader;
+import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.exceptions.ParseException;
-import io.reporters.CSVReporter;
-import io.reporters.Reporter;
+import io.reporters.CSVReporterFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -16,7 +14,6 @@ import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import simulators.Simulator;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,9 +109,9 @@ public class Controller implements Initializable {
     /**
      * Simulates each topology file.
      *
-     * @param networkFile topology file to be simulated.
+     * @param topologyFile topology file to be simulated.
      */
-    private void simulate(File networkFile) {
+    private void simulate(File topologyFile) {
 
         ErrorHandler errorHandler = new ErrorHandler() {
             @Override
@@ -141,10 +138,12 @@ public class Controller implements Initializable {
 
         SimulatorLauncher simulatorLauncher = new SimulatorLauncher.Builder(
                 errorHandler,
+                new GraphvizReaderFactory(),
                 minDelaySpinner.getValue(), maxDelaySpinner.getValue(),
                 destinationIdSpinner.getValue(),
                 repetitionsSpinner.getValue(),
-                detectionGroup.getSelectedProtocol())
+                detectionGroup.getSelectedProtocol(),
+                new CSVReporterFactory())
                 .fullDeployment(fullDeploymentFormController.activateToggle.isSelected(),
                         fullDeploymentFormController.detectingTimeSpinner.getValue())
                 .gradualDeployment(gradualDeploymentFormController.activateToggle.isSelected(),
@@ -152,39 +151,11 @@ public class Controller implements Initializable {
                         gradualDeploymentFormController.deployPercentageSpinner.getValue())
                 .build();
 
-        String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
-        File reportFile = new File(networkFile.getParent(), reportFileName);
+        String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");
+        File reportFile = new File(topologyFile.getParent(), reportFileName);
 
-        try (
-                TopologyReader topologyReader = new GraphvizReader(networkFile);
-                Reporter reporter = new CSVReporter(reportFile)
-        ) {
-            simulatorLauncher.launch(topologyReader, reporter);
+        simulatorLauncher.launch(topologyFile, reportFile);
 
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open report file");
-            alert.setHeaderText("IO Error");
-            alert.showAndWait();
-        }
-
-    }
-
-    /**
-     * Reports the data collected from the last simulation performed by the simulator using the given reporter.
-     * It handles IO errors that may occur when writing the data.
-     *
-     * @param simulator simulator that holds the data to be reported.
-     * @param reporter  reporter used to report the data.
-     */
-    private void reportData(Simulator simulator, Reporter reporter) {
-        try {
-            simulator.report(reporter);
-
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
-            alert.setHeaderText("Report File Error");
-            alert.showAndWait();
-        }
     }
 
 }
