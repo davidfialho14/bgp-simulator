@@ -1,5 +1,6 @@
 package main.gui;
 
+import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.CSVReporterFactory;
@@ -10,10 +11,15 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import main.ErrorHandler;
 import main.SimulatorLauncher;
+import main.SimulatorParameters;
 import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
+import simulators.FullDeploymentSimulatorFactory;
+import simulators.GradualDeploymentSimulatorFactory;
+import simulators.InitialDeploymentSimulatorFactory;
+import simulators.SimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +29,14 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Simulator launcher with the error handler implemented for the GUI interface
+     *  Note the error handler takes advantage of the GUI interface to display graphical alerts
+     *  to the user
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new ErrorHandler() {
         @Override
@@ -46,6 +60,13 @@ public class Controller implements Initializable {
             alert.showAndWait();
         }
     });
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Controls
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     public GridPane pane;
     public TextField networkTextField;
     public Button startButton;
@@ -58,6 +79,12 @@ public class Controller implements Initializable {
     public CheckBox debugCheckBox;
     public ProtocolToggleGroup detectionGroup;
     private FileChooser fileChooser = new FileChooser();
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Initializer
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,14 +117,11 @@ public class Controller implements Initializable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Network files (*.gv)", "*.gv"));
     }
 
-    /**
-     * Updates the networkTextField with the default topology file.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @param networkFile default topology file to set.
-     */
-    public void setDefaultNetworkFile(File networkFile) {
-        networkTextField.setText(networkFile.getAbsolutePath());
-    }
+     *  Action methods - Invoked when the user interacts with the interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Handles browsing for topology files. Opens up a file chooser for the user to select the topology files to
@@ -127,6 +151,12 @@ public class Controller implements Initializable {
 
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private helper methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
      * Simulates each topology file.
      *
@@ -134,25 +164,42 @@ public class Controller implements Initializable {
      */
     private void simulate(File topologyFile) {
 
-        simulatorLauncher.configure()
+        Protocol protocol = detectionGroup.getSelectedProtocol();
+
+        //
+        // Choose the correct simulator factory based on the user input
+        //
+        SimulatorFactory simulatorFactory;
+        if (fullDeploymentFormController.activateToggle.isSelected()) {
+            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
+            simulatorFactory = new FullDeploymentSimulatorFactory(protocol, deployTime);
+
+        } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
+            int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
+            int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
+
+            simulatorFactory = new GradualDeploymentSimulatorFactory(protocol, deployPeriod, deployPercentage);
+
+        } else {
+            simulatorFactory = new InitialDeploymentSimulatorFactory(protocol);
+        }
+
+        // generate the report file name from topology filename
+        String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");
+        File reportFile = new File(topologyFile.getParent(), reportFileName);
+
+        simulatorLauncher.setParameters(new SimulatorParameters.Builder(topologyFile, reportFile)
                 .readerFactory(new GraphvizReaderFactory())
                 .minDelay(minDelaySpinner.getValue())
                 .maxDelay(maxDelaySpinner.getValue())
                 .destinationId(destinationIdSpinner.getValue())
                 .repetitionCount(repetitionsSpinner.getValue())
-                .protocol(detectionGroup.getSelectedProtocol())
+                .protocol(protocol)
+                .simulatorFactory(simulatorFactory)
                 .reporterFactory(new CSVReporterFactory())
-                .enableFullDeployment(fullDeploymentFormController.activateToggle.isSelected())
-                    .deployTime(fullDeploymentFormController.detectingTimeSpinner.getValue())
-                .enableGradualDeployment(gradualDeploymentFormController.activateToggle.isSelected())
-                    .deployPeriod(gradualDeploymentFormController.deployPeriodSpinner.getValue())
-                    .deployPercentage(gradualDeploymentFormController.deployPercentageSpinner.getValue())
-                .commit();
+                .build());
 
-        String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");
-        File reportFile = new File(topologyFile.getParent(), reportFileName);
-
-        simulatorLauncher.launch(topologyFile, reportFile);
+        simulatorLauncher.launch();
 
     }
 
