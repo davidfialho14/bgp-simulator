@@ -63,7 +63,7 @@ public class CSVReporter implements Reporter {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Public interface - Write methods from teh Reporter Interface
+     *  Public interface - Write methods from the Reporter Interface
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -84,14 +84,10 @@ public class CSVReporter implements Reporter {
             csvPrinter.printRecord("Message Delay", minDelay, maxDelay);
             csvPrinter.printRecord("Protocol", protocol);
             csvPrinter.printRecord("Simulation Type", simulator);
+            csvPrinter.printRecord("Simulation Count", simulationCounter);
         }
     }
 
-    /**
-     * Writes that data from the data set to the current output file.
-     *
-     * @param dataSet data set to write to the output file.
-     */
     @Override
     public void write(BasicDataSet dataSet) throws IOException {
         mainWrite(dataSet, null, null, null);
