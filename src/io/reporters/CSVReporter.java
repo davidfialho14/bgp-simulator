@@ -13,7 +13,6 @@ import org.apache.commons.lang.StringUtils;
 import simulators.Simulator;
 import simulators.data.*;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -130,95 +129,69 @@ public class CSVReporter implements Reporter {
 
         simulationCounter++;    // every time write is called it is for a new simulation
 
-        // write counts headers
+        //
+        // Write counts data
+        //
 
-        if (isCountsFileMissingHeaders) {
-            isCountsFileMissingHeaders = false;
+        try (CSVPrinter printer = getCountsFilePrinter()) {
 
-            writeColumns(countsWriter, "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off " +
-                    "Links " +
-                    "Count");
+            printer.print(basicDataSet.getSimulationTime());
+            printer.print(basicDataSet.getTotalMessageCount());
+            printer.print(basicDataSet.getDetectingNodesCount());
+            printer.print(basicDataSet.getCutOffLinksCount());
+
             if (fullDeploymentDataSet != null) {
-                appendColumn(countsWriter, "Messages After Deployment Count");
+                printer.print(fullDeploymentDataSet.getMessageCount());
             }
+
             if (gradualDeploymentDataSet != null) {
-                appendColumn(countsWriter, "Deployed Nodes Count");
+                printer.print(gradualDeploymentDataSet.getDeployedNodesCount());
             }
+
             if (spPolicyDataSet != null) {
-                appendColumn(countsWriter, "False Positive Count");
-            }
-            countsWriter.newLine();
-        }
-
-        // write counts data
-
-        writeColumns(countsWriter,
-                basicDataSet.getSimulationTime(),
-                basicDataSet.getTotalMessageCount(),
-                basicDataSet.getDetectingNodesCount(),
-                basicDataSet.getCutOffLinksCount()
-        );
-
-        if (fullDeploymentDataSet != null) {
-            appendColumn(countsWriter, fullDeploymentDataSet.getMessageCount());
-        }
-        if (gradualDeploymentDataSet != null) {
-            appendColumn(countsWriter, gradualDeploymentDataSet.getDeployedNodesCount());
-        }
-        if (spPolicyDataSet != null) {
-            appendColumn(countsWriter, spPolicyDataSet.getFalsePositiveCount());
-        }
-
-        countsWriter.newLine();
-
-        // write the detections table headers
-
-        if (isDetectionsFileMissingHeaders) {
-            isDetectionsFileMissingHeaders = false;
-
-            writeColumns(detectionsWriter, "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles");
-            if (spPolicyDataSet != null) {
-                appendColumn(detectionsWriter, "False Positive");
+                printer.print(spPolicyDataSet.getFalsePositiveCount());
             }
 
-            detectionsWriter.newLine();
+            printer.println();
         }
 
-        // write the detections table data
+        //
+        // Write the detections table data
+        //
 
-        int detectionNumber = 1;
-        for (Detection detection : basicDataSet.getDetections()) {
-            writeColumns(detectionsWriter, simulationCounter,
-                    detectionNumber++,
-                    pretty(detection.getDetectingNode()),
-                    pretty(detection.getCutOffLink()),
-                    pretty(detection.getCycle()));
-            if (spPolicyDataSet != null) {
-                appendColumn(detectionsWriter, (detection.isFalsePositive() ? "Yes" : "No"));
+        try (CSVPrinter printer = getDetectionsFilePrinter()) {
+
+            int detectionNumber = 1;
+            for (Detection detection : basicDataSet.getDetections()) {
+                printer.print(simulationCounter);
+                printer.print(detectionNumber++);
+                printer.print(pretty(detection.getDetectingNode()));
+                printer.print(pretty(detection.getCutOffLink()));
+                printer.print(pretty(detection.getCycle()));
+
+                if (spPolicyDataSet != null) {
+                    printer.print(detection.isFalsePositive() ? "Yes" : "No");
+                }
+
+                printer.println();
             }
-            detectionsWriter.newLine();
         }
 
         if (gradualDeploymentDataSet != null) {
 
-            // write the deployments table headers
+            //
+            // Write the deployments table data
+            //
 
-            if (isDeploymentsFileMissingHeaders) {
-                isDeploymentsFileMissingHeaders = false;
+            try (CSVPrinter printer = getDeploymentsFilePrinter()) {
+                printer.print(simulationCounter);
 
-                writeColumns(deploymentsWriter, "Simulation", "Deployed Nodes");
+                for (Node node : gradualDeploymentDataSet.getDeployedNodes()) {
+                    printer.print(node);
+                }
 
-                deploymentsWriter.newLine();
+                printer.println();
             }
-
-            // write the deployments table data
-
-            String deployedNodes = gradualDeploymentDataSet.getDeployedNodes().stream()
-                    .map(Node::toString)
-                    .collect(Collectors.joining(", "));
-
-            writeColumns(deploymentsWriter, simulationCounter, deployedNodes);
-            deploymentsWriter.newLine();
         }
 
     }
@@ -296,32 +269,6 @@ public class CSVReporter implements Reporter {
                 .collect(Collectors.toList());
 
         return StringUtils.join(pathNodesIds.iterator(), " → ");
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Private Helper Methods
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Writes a sequence of columns in the CSV format.
-     *
-     * @param writer      writer used to write columns.
-     * @param firstColumn first column to write.
-     * @param columns     following columns to write
-     * @throws IOException
-     */
-    private void writeColumns(BufferedWriter writer, Object firstColumn, Object... columns) throws IOException {
-        writer.write(firstColumn.toString());
-
-        for (Object column : columns) {
-            appendColumn(writer, column);
-        }
-    }
-
-    private void appendColumn(BufferedWriter writer, Object column) throws IOException {
-        writer.write(COMMA + column.toString());
     }
 
 }
