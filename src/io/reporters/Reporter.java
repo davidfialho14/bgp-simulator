@@ -18,17 +18,17 @@ import java.io.IOException;
 public interface Reporter {
 
     /**
-     * Writes a summary of the simulation. Containing basic information about the topology and the simulation
-     * parameters.
+     * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
+     * simulation parameters.
      */
-    void writeSummary(Topology topology, int destinationId, int minDelay, int maxDelay,
-                      Protocol protocol, Simulator simulator) throws IOException;
+    void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay,
+                            Protocol protocol, Simulator simulator) throws IOException;
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Date write methods
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /**
+     * Writes a summary of the simulation after it finishes. Writes basic information abouts the total results of
+     * the simulation.
+     */
+    void writeAfterSummary() throws IOException;
 
     void write(BasicDataSet dataSet) throws IOException;
 

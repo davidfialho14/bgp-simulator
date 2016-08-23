@@ -60,12 +60,12 @@ public class CSVReporter implements Reporter {
      * Writes a summary of the simulation. Containing basic information about the topology and the simulation
      * parameters.
      */
-    public void writeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
-                             Simulator simulator) throws IOException {
+    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
+                                   Simulator simulator) throws IOException {
 
         Network network = topology.getNetwork();
 
-        try (CSVPrinter csvPrinter = getSummaryFilePrinter()) {
+        try (CSVPrinter csvPrinter = getBeforeSummaryFilePrinter()) {
             csvPrinter.printRecord("Policy", topology.getPolicy());
             csvPrinter.printRecord("Node Count", network.getNodeCount());
             csvPrinter.printRecord("Link Count", network.getLinkCount());
@@ -74,6 +74,27 @@ public class CSVReporter implements Reporter {
             csvPrinter.printRecord("Protocol", protocol);
             csvPrinter.printRecord("Simulation Type", simulator);
         }
+    }
+
+    /**
+     * Writes a summary of the simulation after it finishes. Writes basic information abouts the total results of
+     * the simulation.
+     */
+    @Override
+    public void writeAfterSummary() throws IOException {
+
+        // be careful to avoid division by zero
+        float detectionAvg = state.getDetectionCount() != 0 ?
+                (float) state.getDetectionCount() / (float) state.getSimulationCount() : 0;
+        float deploymentsAvg = state.getDeploymentsCount() != 0 ?
+                (float) state.getDeploymentsCount() / (float) state.getSimulationCount() : 0;
+
+        try (CSVPrinter csvPrinter = getAfterSummaryFilePrinter()) {
+            csvPrinter.printRecord("Simulation Count", state.getSimulationCount());
+            csvPrinter.printRecord("Avg. Detection Count", String.format("%.2f", detectionAvg));
+            csvPrinter.printRecord("Avg. Deployments Count", String.format("%.2f", deploymentsAvg));
+        }
+
     }
 
     @Override
@@ -197,8 +218,12 @@ public class CSVReporter implements Reporter {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private CSVPrinter getSummaryFilePrinter() throws IOException {
-        return getFilePrinter(getFile("summary"), false);
+    private CSVPrinter getBeforeSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("beforesummary"), false);
+    }
+
+    private CSVPrinter getAfterSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("aftersummary"), false);
     }
 
     private CSVPrinter getCountsFilePrinter() throws IOException {

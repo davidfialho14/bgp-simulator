@@ -83,14 +83,15 @@ public class SimulatorLauncher {
             try  {
                 Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile());
 
+                reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
+                        parameters.getMaxDelay(), parameters.getProtocol(), simulator);
+
                 for (int i = 0; i < parameters.getRepetitionCount(); i++) {
                     simulator.simulate();
                     simulator.report(reporter);
                 }
 
-                reporter.writeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
-                        parameters.getMaxDelay(), parameters.getProtocol(), simulator);
-
+                reporter.writeAfterSummary();
 
             } catch (IOException e) {
                 errorHandler.onReportingIOException(e);
