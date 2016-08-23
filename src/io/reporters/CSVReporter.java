@@ -6,6 +6,7 @@ import core.topology.Link;
 import core.topology.Network;
 import core.topology.Node;
 import core.topology.Topology;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang.StringUtils;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
@@ -27,64 +28,60 @@ import java.util.stream.Collectors;
  */
 public class CSVReporter implements Reporter {
 
-    private static final char COMMA = ';';
+    private static final char DELIMITER = ';';
 
-    private final File outputFile;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final BufferedWriter countsWriter;
-    private final BufferedWriter detectionsWriter;
-    private final BufferedWriter deploymentsWriter;
+    private final File baseOutputFile;  // path with the base file name for the output
+
+    private final CSVPrinter countsWriter;
+    private final CSVPrinter detectionsWriter;
+    private final CSVPrinter deploymentsWriter;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private int simulationCounter = 0;                     // counts the simulations
     private boolean isCountsFileMissingHeaders = true;     // indicates if the counts file is missing the headers
     private boolean isDetectionsFileMissingHeaders = true; // indicates if the detections file is missing the headers
     private boolean isDeploymentsFileMissingHeaders = true; // indicates if the deployments file is missing the headers
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
      * Constructs a reporter associating the output file.
      *
-     * @param outputFile file to output report to.
+     * @param baseOutputFile file to output report to.
      */
-    public CSVReporter(File outputFile) throws IOException {
-        this.outputFile = outputFile;
+    public CSVReporter(File baseOutputFile) throws IOException {
+        this.baseOutputFile = baseOutputFile;
 
-        File countsFile = getClassFile(outputFile, "counts");
+        File countsFile = getClassFile(baseOutputFile, "counts");
         this.countsWriter = new BufferedWriter(new FileWriter(countsFile));
 
-        File detectionsFile = getClassFile(outputFile, "detections");
+        File detectionsFile = getClassFile(baseOutputFile, "detections");
         this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
 
-        File deploymentsFile = getClassFile(outputFile, "deployments");
+        File deploymentsFile = getClassFile(baseOutputFile, "deployments");
         this.deploymentsWriter = new BufferedWriter(new FileWriter(deploymentsFile));
     }
 
-    /**
-     * Returns a file with the class name associated to its name.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @param originalFile original file.
-     * @param fileClass    class name to associate with the file.
-     * @return file with the class name associated to its name.
-     */
-    private static File getClassFile(File originalFile, String fileClass) {
-        return new File(originalFile.getParent(),
-                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
-    }
-
-    private static String pretty(Node node) {
-        return String.valueOf(node.getId());
-    }
-
-    private static String pretty(Link link) {
-        return link.getSource().getId() + " → " + link.getDestination().getId();
-    }
-
-    private static String pretty(Path path) {
-        List<Integer> pathNodesIds = path.stream()
-                .map(Node::getId)
-                .collect(Collectors.toList());
-
-        return StringUtils.join(pathNodesIds.iterator(), " → ");
-    }
+     *  Public interface - Write methods from teh Reporter Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Dumps all the basic information from the simulation.
@@ -94,7 +91,7 @@ public class CSVReporter implements Reporter {
 
         Network network = topology.getNetwork();
 
-        File basicFile = getClassFile(outputFile, "basic");
+        File basicFile = getClassFile(baseOutputFile, "basic");
         try (BufferedWriter basicWriter = new BufferedWriter(new FileWriter(basicFile))) {
             writeColumns(basicWriter, "Node Count", network.getNodeCount());    basicWriter.newLine();
             writeColumns(basicWriter, "Link Count", network.getLinkCount());    basicWriter.newLine();
@@ -130,42 +127,42 @@ public class CSVReporter implements Reporter {
      */
     @Override
     public void write(BasicDataSet dataSet) throws IOException {
-        dumpMain(dataSet, null, null, null);
+        mainWrite(dataSet, null, null, null);
     }
 
     @Override
     public void write(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, null, null, spPolicyDataSet);
+        mainWrite(basicDataSet, null, null, spPolicyDataSet);
     }
 
     @Override
     public void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, null, null);
+        mainWrite(basicDataSet, fullDeploymentDataSet, null, null);
     }
 
     @Override
     public void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                       SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, null, spPolicyDataSet);
+        mainWrite(basicDataSet, fullDeploymentDataSet, null, spPolicyDataSet);
     }
 
     @Override
     public void write(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
-        dumpMain(basicDataSet, null, gradualDeploymentDataSet, null);
+        mainWrite(basicDataSet, null, gradualDeploymentDataSet, null);
     }
 
-    // --- PRIVATE METHODS ---
-
-    /*
-        Set of helper method that allow displaying any element like Nodes, Links, Paths, etc into a more prettier
-        format.
-     */
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Main write called by all other write methods
+     *  Centralized way to write reports
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Main write method. All write methods call this method underneath.
      */
-    private void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                          GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
+    private void mainWrite(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                           GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
             throws IOException {
 
         simulationCounter++;    // every time write is called it is for a new simulation
@@ -263,6 +260,24 @@ public class CSVReporter implements Reporter {
 
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Helper Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Returns a file with the class name associated to its name.
+     *
+     * @param originalFile original file.
+     * @param fileClass    class name to associate with the file.
+     * @return file with the class name associated to its name.
+     */
+    private static File getClassFile(File originalFile, String fileClass) {
+        return new File(originalFile.getParent(),
+                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
+    }
+
     /**
      * Writes a sequence of columns in the CSV format.
      *
@@ -281,6 +296,29 @@ public class CSVReporter implements Reporter {
 
     private void appendColumn(BufferedWriter writer, Object column) throws IOException {
         writer.write(COMMA + column.toString());
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Set of helper methods to display any element like Nodes, Links, Paths, etc in a prettier
+     *  format then its standard toString() result.
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private static String pretty(Node node) {
+        return String.valueOf(node.getId());
+    }
+
+    private static String pretty(Link link) {
+        return link.getSource().getId() + " → " + link.getDestination().getId();
+    }
+
+    private static String pretty(Path path) {
+        List<Integer> pathNodesIds = path.stream()
+                .map(Node::getId)
+                .collect(Collectors.toList());
+
+        return StringUtils.join(pathNodesIds.iterator(), " → ");
     }
 
 }
