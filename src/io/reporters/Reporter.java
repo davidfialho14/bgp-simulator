@@ -18,27 +18,27 @@ import java.io.IOException;
 public interface Reporter {
 
     /**
-     * Dumps all the basic information from the simulation.
+     * Writes a summary of the simulation. Containing basic information about the topology and the simulation
+     * parameters.
      */
     void writeSummary(Topology topology, int destinationId, int minDelay, int maxDelay,
                       Protocol protocol, Simulator simulator) throws IOException;
 
-    /**
-     * Dumps that data from the data set to the current output file.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @param dataSet data set to write to the output file.
-     */
+     *  Date write methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     void write(BasicDataSet dataSet) throws IOException;
 
     void write(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
 
-    void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet)
+    void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException;
+
+    void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
             throws IOException;
 
-    void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-               SPPolicyDataSet spPolicyDataSet) throws IOException;
-
-    void write(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet)
-            throws IOException;
+    void write(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException;
 
 }
