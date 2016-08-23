@@ -62,4 +62,14 @@ public class FullDeploymentSimulator extends Simulator {
         fullDeploymentDataCollector.dump(reporter);
     }
 
+    /**
+     * Returns a string identifying the type of simulator.
+     *
+     * @return string "Full".
+     */
+    @Override
+    public String toString() {
+        return "Full";
+    }
+
 }

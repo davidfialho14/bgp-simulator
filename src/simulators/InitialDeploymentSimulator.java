@@ -44,4 +44,14 @@ public class InitialDeploymentSimulator extends Simulator {
         basicDataCollector.dump(reporter);
     }
 
+    /**
+     * Returns a string identifying the type of simulator.
+     *
+     * @return string "Initial".
+     */
+    @Override
+    public String toString() {
+        return "Initial";
+    }
+
 }

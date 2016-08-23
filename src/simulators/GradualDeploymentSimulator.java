@@ -77,4 +77,14 @@ public class GradualDeploymentSimulator extends Simulator {
         gradualDeploymentDataCollector.dump(reporter);
     }
 
+    /**
+     * Returns a string identifying the type of simulator.
+     *
+     * @return string "Gradual".
+     */
+    @Override
+    public String toString() {
+        return "Gradual";
+    }
+
 }
