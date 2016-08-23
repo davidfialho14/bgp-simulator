@@ -89,10 +89,8 @@ public class Main {
 
     private static void simulate(File topologyFile, int destinationId, int repetitionCount, Protocol protocol,
                                  Integer deployTime) {
-        int minDelay = 0;
-        int maxDelay = 10;
 
-        ErrorHandler errorHandler = new ErrorHandler() {
+        SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new ErrorHandler() {
             @Override
             public void onTopologyLoadIOException(IOException exception) {
                 System.err.println("can not open the file");
@@ -109,19 +107,17 @@ public class Main {
                 alert.setHeaderText("IO Error");
                 alert.showAndWait();
             }
-        };
+        });
 
-        SimulatorLauncher simulatorLauncher = new SimulatorLauncher.Builder(
-                errorHandler,
-                new GraphvizReaderFactory(),
-                minDelay, maxDelay,
-                destinationId,
-                repetitionCount,
-                protocol,
-                new CSVReporterFactory())
-                .fullDeployment(deployTime != null,
-                        deployTime == null ? 0 : deployTime)
-                .build();
+        simulatorLauncher.configure()
+                .readerFactory(new GraphvizReaderFactory())
+                .destinationId(destinationId)
+                .repetitionCount(repetitionCount)
+                .protocol(protocol)
+                .reporterFactory(new CSVReporterFactory())
+                .enableFullDeployment(deployTime != null)
+                .deployTime(deployTime == null ? 0 : deployTime)
+                .commit();
 
         String reportFileName = topologyFile.getName().replaceFirst("\\.gv",
                 String.format("-dest%02d.csv", destinationId));

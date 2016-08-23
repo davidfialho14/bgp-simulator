@@ -24,6 +24,28 @@ import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
 
+    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new ErrorHandler() {
+        @Override
+        public void onTopologyLoadIOException(IOException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file");
+            alert.setHeaderText("Network File Error");
+            alert.showAndWait();
+        }
+
+        @Override
+        public void onTopologyLoadParseException(ParseException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "initialTopology file is corrupted");
+            alert.setHeaderText("Invalid File Error");
+            alert.showAndWait();
+        }
+
+        @Override
+        public void onReportingIOException(IOException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file");
+            alert.setHeaderText("IO Error");
+            alert.showAndWait();
+        }
+    });
     public GridPane pane;
     public TextField networkTextField;
     public Button startButton;
@@ -35,7 +57,6 @@ public class Controller implements Initializable {
     public GradualDeploymentController gradualDeploymentFormController;
     public CheckBox debugCheckBox;
     public ProtocolToggleGroup detectionGroup;
-
     private FileChooser fileChooser = new FileChooser();
 
     @Override
@@ -113,43 +134,20 @@ public class Controller implements Initializable {
      */
     private void simulate(File topologyFile) {
 
-        ErrorHandler errorHandler = new ErrorHandler() {
-            @Override
-            public void onTopologyLoadIOException(IOException exception) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file");
-                alert.setHeaderText("Network File Error");
-                alert.showAndWait();
-            }
-
-            @Override
-            public void onTopologyLoadParseException(ParseException exception) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "initialTopology file is corrupted");
-                alert.setHeaderText("Invalid File Error");
-                alert.showAndWait();
-            }
-
-            @Override
-            public void onReportingIOException(IOException exception) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file");
-                alert.setHeaderText("IO Error");
-                alert.showAndWait();
-            }
-        };
-
-        SimulatorLauncher simulatorLauncher = new SimulatorLauncher.Builder(
-                errorHandler,
-                new GraphvizReaderFactory(),
-                minDelaySpinner.getValue(), maxDelaySpinner.getValue(),
-                destinationIdSpinner.getValue(),
-                repetitionsSpinner.getValue(),
-                detectionGroup.getSelectedProtocol(),
-                new CSVReporterFactory())
-                .fullDeployment(fullDeploymentFormController.activateToggle.isSelected(),
-                        fullDeploymentFormController.detectingTimeSpinner.getValue())
-                .gradualDeployment(gradualDeploymentFormController.activateToggle.isSelected(),
-                        gradualDeploymentFormController.deployPeriodSpinner.getValue(),
-                        gradualDeploymentFormController.deployPercentageSpinner.getValue())
-                .build();
+        simulatorLauncher.configure()
+                .readerFactory(new GraphvizReaderFactory())
+                .minDelay(minDelaySpinner.getValue())
+                .maxDelay(maxDelaySpinner.getValue())
+                .destinationId(destinationIdSpinner.getValue())
+                .repetitionCount(repetitionsSpinner.getValue())
+                .protocol(detectionGroup.getSelectedProtocol())
+                .reporterFactory(new CSVReporterFactory())
+                .enableFullDeployment(fullDeploymentFormController.activateToggle.isSelected())
+                .deployTime(fullDeploymentFormController.detectingTimeSpinner.getValue())
+                .enableGradualDeployment(gradualDeploymentFormController.activateToggle.isSelected())
+                .deployPeriod(gradualDeploymentFormController.deployPeriodSpinner.getValue())
+                .deployPercentage(gradualDeploymentFormController.deployPercentageSpinner.getValue())
+                .commit();
 
         String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");
         File reportFile = new File(topologyFile.getParent(), reportFileName);
