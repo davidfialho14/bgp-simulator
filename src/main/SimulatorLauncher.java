@@ -7,7 +7,7 @@ import core.topology.Topology;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.TopologyReaderFactory;
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.CSVReporterFactory;
 import io.reporters.Reporter;
 import io.reporters.ReporterFactory;
@@ -89,7 +89,7 @@ public class SimulatorLauncher {
         } catch (IOException e) {
             errorHandler.onTopologyLoadIOException(e);
 
-        } catch (ParseException e) {
+        } catch (TopologyParseException e) {
             errorHandler.onTopologyLoadParseException(e);
         }
 

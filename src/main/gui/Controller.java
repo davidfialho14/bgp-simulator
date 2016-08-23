@@ -1,7 +1,7 @@
 package main.gui;
 
 import io.networkreaders.GraphvizReaderFactory;
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.CSVReporterFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -33,7 +33,7 @@ public class Controller implements Initializable {
         }
 
         @Override
-        public void onTopologyLoadParseException(ParseException exception) {
+        public void onTopologyLoadParseException(TopologyParseException exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "initialTopology file is corrupted");
             alert.setHeaderText("Invalid File Error");
             alert.showAndWait();

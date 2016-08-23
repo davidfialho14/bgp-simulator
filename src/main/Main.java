@@ -3,14 +3,11 @@ package main;
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.PolicyTagger;
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.CSVReporterFactory;
 import javafx.scene.control.Alert;
 import main.gui.SimulatorApplication;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import policies.gaorexford.GaoRexfordPolicy;
 import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;
@@ -81,7 +78,7 @@ public class Main {
             }
 
 
-        } catch (org.apache.commons.cli.ParseException e) {
+        } catch (ParseException e) {
             System.out.println("Unexpected exception:" + e.getMessage());
         }
 
@@ -97,7 +94,7 @@ public class Main {
             }
 
             @Override
-            public void onTopologyLoadParseException(ParseException exception) {
+            public void onTopologyLoadParseException(TopologyParseException exception) {
                 System.err.println("initialTopology file is corrupted");
             }
 

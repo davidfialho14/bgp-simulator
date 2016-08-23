@@ -4,7 +4,7 @@ import core.topology.Network;
 import core.topology.Policy;
 import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 
 import java.io.*;
 
@@ -38,7 +38,7 @@ public class SimpleTopologyReader implements TopologyReader {
      * @return topology associating the topology and policy read
      */
     @Override
-    public Topology read() throws IOException, ParseException {
+    public Topology read() throws IOException, TopologyParseException {
 
         // policy is specified in the first line
         Policy policy = PolicyTagger.getPolicy(fileReader.readLine());
@@ -52,7 +52,7 @@ public class SimpleTopologyReader implements TopologyReader {
             String[] lineArgs = line.split("\\|");
 
             if (lineArgs.length != 3) {
-                throw new ParseException("invalid link format", lineCount);
+                throw new TopologyParseException("invalid link format", lineCount);
             }
 
             int sourceId = Integer.parseInt(lineArgs[0]);

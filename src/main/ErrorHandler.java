@@ -1,6 +1,6 @@
 package main;
 
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ public interface ErrorHandler {
      *
      * @param exception thrown parse exception.
      */
-    default void onTopologyLoadParseException(ParseException exception) {
+    default void onTopologyLoadParseException(TopologyParseException exception) {
         exception.printStackTrace();
     }
 

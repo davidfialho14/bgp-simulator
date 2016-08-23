@@ -1,7 +1,7 @@
 package io.networkreaders;
 
 import core.topology.Topology;
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -20,8 +20,8 @@ public interface TopologyReader extends Closeable {
      *
      * @return topology associating the topology and policy read
      * @throws IOException      if an IO error occurs when reading the file
-     * @throws ParseException   if there is an error in the file format
+     * @throws TopologyParseException   if there is an error in the file format
      */
-    Topology read() throws IOException, ParseException;
+    Topology read() throws IOException, TopologyParseException;
 
 }
