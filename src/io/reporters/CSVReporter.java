@@ -68,14 +68,16 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Dumps all the basic information from the simulation.
+     * Writes a summary of the simulation. Containing basic information about the topology and the simulation
+     * parameters.
      */
-    public void writeSimulationInfo(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
-                                    Simulator simulator) throws IOException {
+    public void writeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
+                             Simulator simulator) throws IOException {
 
         Network network = topology.getNetwork();
 
         try (CSVPrinter csvPrinter = getSummaryFilePrinter()) {
+            csvPrinter.printRecord("Policy", topology.getPolicy());
             csvPrinter.printRecord("Node Count", network.getNodeCount());
             csvPrinter.printRecord("Link Count", network.getLinkCount());
             csvPrinter.printRecord("Destination", destinationId);
@@ -86,7 +88,7 @@ public class CSVReporter implements Reporter {
     }
 
     /**
-     * Dumps that data from the data set to the current output file.
+     * Writes that data from the data set to the current output file.
      *
      * @param dataSet data set to write to the output file.
      */

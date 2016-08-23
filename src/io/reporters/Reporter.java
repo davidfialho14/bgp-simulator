@@ -20,8 +20,8 @@ public interface Reporter {
     /**
      * Dumps all the basic information from the simulation.
      */
-    void writeSimulationInfo(Topology topology, int destinationId, int minDelay, int maxDelay,
-                             Protocol protocol, Simulator simulator) throws IOException;
+    void writeSummary(Topology topology, int destinationId, int minDelay, int maxDelay,
+                      Protocol protocol, Simulator simulator) throws IOException;
 
     /**
      * Dumps that data from the data set to the current output file.

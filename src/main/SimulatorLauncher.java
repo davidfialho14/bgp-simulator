@@ -82,7 +82,7 @@ public class SimulatorLauncher {
 
             try  {
                 Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile());
-                reporter.writeSimulationInfo(topology, parameters.getDestinationId(), parameters.getMinDelay(),
+                reporter.writeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
                         parameters.getMaxDelay(), parameters.getProtocol(), simulator);
 
                 for (int i = 0; i < parameters.getRepetitionCount(); i++) {
