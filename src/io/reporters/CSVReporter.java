@@ -40,11 +40,11 @@ public class CSVReporter extends Reporter {
 
     /**
      * Constructs a reporter associating the output file.
-     *  @param outputFile file to output report to.
-     * @param topology    topology being simulated.
+     *
+     * @param outputFile file to output report to.
      */
-    public CSVReporter(File outputFile, Topology topology) throws IOException {
-        super(outputFile, topology);
+    public CSVReporter(File outputFile) throws IOException {
+        super(outputFile);
 
         File countsFile = getClassFile(outputFile, "counts");
         this.countsWriter = new BufferedWriter(new FileWriter(countsFile));

@@ -3,10 +3,9 @@ package simulators;
 import addons.protocolchangers.PeriodicProtocolChanger;
 import core.Engine;
 import core.Protocol;
+import core.State;
 import core.topology.Node;
-import core.topology.Topology;
 import io.reporters.Reporter;
-import protocols.BGPProtocol;
 import simulators.data.GradualDeploymentDataCollector;
 import utils.RandomNodesSelector;
 
@@ -36,13 +35,13 @@ public class GradualDeploymentSimulator extends Simulator {
      * @param deployProtocol            initial protocol.
      * @param deployedNodePercentage    percentage of nodes to deploy in each period
      */
-    public GradualDeploymentSimulator(Engine engine, Topology topology, int destinationId, Protocol deployProtocol,
-                                      long deployPeriod, double deployedNodePercentage) {
-        super(engine, topology, destinationId, new BGPProtocol());
+    public GradualDeploymentSimulator(Engine engine, State initialState, Protocol deployProtocol,
+                                      long deployPeriod, int deployedNodeCount) {
+        super(engine, initialState);
         this.deployProtocol = deployProtocol;
         this.deployPeriod = deployPeriod;
-        this.deployedNodeCount = (int) Math.ceil(deployedNodePercentage * topology.getNetwork().getNodeCount());
-        this.nodesSelector = new RandomNodesSelector(topology.getNetwork());
+        this.deployedNodeCount = deployedNodeCount;
+        this.nodesSelector = new RandomNodesSelector(initialState.getTopology().getNetwork());
 
         this.gradualDeploymentDataCollector.register(engine);
     }

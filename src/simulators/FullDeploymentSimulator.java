@@ -3,9 +3,8 @@ package simulators;
 import addons.protocolchangers.FixedTimeProtocolChanger;
 import core.Engine;
 import core.Protocol;
-import core.topology.Topology;
+import core.State;
 import io.reporters.Reporter;
-import protocols.BGPProtocol;
 import simulators.data.FullDeploymentDataCollector;
 
 import java.io.IOException;
@@ -20,13 +19,12 @@ public class FullDeploymentSimulator extends Simulator {
     protected FullDeploymentDataCollector fullDeploymentDataCollector;
     private Protocol deployProtocol;
 
-    FullDeploymentSimulator(Engine engine, Topology topology, int destinationId, Protocol deployProtocol,
-                            FullDeploymentDataCollector fullDeploymentDataCollector, int deployTime) {
-
-        super(engine, topology, destinationId, new BGPProtocol());
+    FullDeploymentSimulator(Engine engine, State initialState, Protocol deployProtocol, long deployTime,
+                            FullDeploymentDataCollector fullDeploymentDataCollector) {
+        super(engine, initialState);
         this.deployProtocol = deployProtocol;
-        this.fullDeploymentDataCollector = fullDeploymentDataCollector;
         this.deployTime = deployTime;
+        this.fullDeploymentDataCollector = fullDeploymentDataCollector;
 
         this.fullDeploymentDataCollector.register(engine);
     }

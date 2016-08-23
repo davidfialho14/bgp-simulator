@@ -10,7 +10,7 @@ import core.topology.Network;
 import core.topology.Policy;
 import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
-import io.networkreaders.exceptions.ParseException;
+import io.networkreaders.exceptions.TopologyParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,12 +42,12 @@ public class GraphvizReader implements TopologyReader {
      * @return topology associating the topology and policy read
      */
     @Override
-    public Topology read() throws IOException, ParseException, NodeNotFoundException {
+    public Topology read() throws IOException, TopologyParseException {
 
         try {
             parser.parse(fileReader);
         } catch (com.alexmerz.graphviz.ParseException e) {
-            throw new ParseException(e.getMessage());
+            throw new TopologyParseException(e.getMessage());
         }
 
         // get the parsed graph, note that the DOT language allows more then one graph to be parsed
@@ -68,7 +68,12 @@ public class GraphvizReader implements TopologyReader {
             int destId = getId(edge.getTarget());
             Label label = policy.createLabel(edge.getAttribute("label"));
 
-            network.addLink(sourceId, destId, label);
+            try {
+                network.addLink(sourceId, destId, label);
+            } catch (NodeNotFoundException e) {
+                // does not happen because the nodes are added right before adding the link
+                // the Graphviz parser would throw a TopologyParseException if there was a problem with a missing node
+            }
         }
 
         return new Topology(network, policy);

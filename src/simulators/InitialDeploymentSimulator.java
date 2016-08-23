@@ -1,8 +1,7 @@
 package simulators;
 
 import core.Engine;
-import core.Protocol;
-import core.topology.Topology;
+import core.State;
 import io.reporters.Reporter;
 import simulators.data.BasicDataCollector;
 
@@ -16,10 +15,10 @@ public class InitialDeploymentSimulator extends Simulator {
 
     protected BasicDataCollector basicDataCollector;
 
-    InitialDeploymentSimulator(Engine engine, Topology topology, int destinationId, Protocol deployProtocol,
-                               BasicDataCollector basicDataCollector) {
-        super(engine, topology, destinationId, deployProtocol);
+    InitialDeploymentSimulator(Engine engine, State initialState, BasicDataCollector basicDataCollector) {
+        super(engine, initialState);
         this.basicDataCollector = basicDataCollector;
+
         basicDataCollector.register(engine);
     }
 

@@ -1,29 +1,27 @@
 package main.gui;
 
-import core.Engine;
 import core.Protocol;
-import core.schedulers.RandomScheduler;
-import core.topology.Topology;
-import core.topology.exceptions.NodeNotFoundException;
-import io.networkreaders.GraphvizReader;
-import io.networkreaders.TopologyReader;
-import io.networkreaders.exceptions.ParseException;
-import io.reporters.CSVReporter;
-import io.reporters.Reporter;
+import io.networkreaders.GraphvizReaderFactory;
+import io.networkreaders.exceptions.TopologyParseException;
+import io.reporters.CSVReporterFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import main.ErrorHandler;
+import main.SimulatorLauncher;
+import main.SimulatorParameters;
 import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import simulators.Simulator;
+import simulators.FullDeploymentSimulatorFactory;
+import simulators.GradualDeploymentSimulatorFactory;
+import simulators.InitialDeploymentSimulatorFactory;
 import simulators.SimulatorFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -31,6 +29,43 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Simulator launcher with the error handler implemented for the GUI interface
+     *  Note the error handler takes advantage of the GUI interface to display graphical alerts
+     *  to the user
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new ErrorHandler() {
+        @Override
+        public void onTopologyLoadIOException(IOException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file");
+            alert.setHeaderText("Network File Error");
+            alert.showAndWait();
+        }
+
+        @Override
+        public void onTopologyLoadParseException(TopologyParseException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "initialTopology file is corrupted");
+            alert.setHeaderText("Invalid File Error");
+            alert.showAndWait();
+        }
+
+        @Override
+        public void onReportingIOException(IOException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file");
+            alert.setHeaderText("IO Error");
+            alert.showAndWait();
+        }
+    });
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Controls
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     public GridPane pane;
     public TextField networkTextField;
@@ -43,8 +78,13 @@ public class Controller implements Initializable {
     public GradualDeploymentController gradualDeploymentFormController;
     public CheckBox debugCheckBox;
     public ProtocolToggleGroup detectionGroup;
-
     private FileChooser fileChooser = new FileChooser();
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Initializer
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,14 +117,11 @@ public class Controller implements Initializable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Network files (*.gv)", "*.gv"));
     }
 
-    /**
-     * Updates the networkTextField with the default topology file.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @param networkFile default topology file to set.
-     */
-    public void setDefaultNetworkFile(File networkFile) {
-        networkTextField.setText(networkFile.getAbsolutePath());
-    }
+     *  Action methods - Invoked when the user interacts with the interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Handles browsing for topology files. Opens up a file chooser for the user to select the topology files to
@@ -114,108 +151,56 @@ public class Controller implements Initializable {
 
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private helper methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
      * Simulates each topology file.
      *
-     * @param networkFile topology file to be simulated.
+     * @param topologyFile topology file to be simulated.
      */
-    private void simulate(File networkFile) {
+    private void simulate(File topologyFile) {
 
-        // read the topology and handle possible errors
-        Topology topology = null;   // stores the read topology
-        try (TopologyReader topologyReader = new GraphvizReader(networkFile)) {
-            topology = topologyReader.read();
+        Protocol protocol = detectionGroup.getSelectedProtocol();
 
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file", ButtonType.OK);
-            alert.setHeaderText("Network File Error");
-            alert.showAndWait();
+        //
+        // Choose the correct simulator factory based on the user input
+        //
+        SimulatorFactory simulatorFactory;
+        if (fullDeploymentFormController.activateToggle.isSelected()) {
+            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
+            simulatorFactory = new FullDeploymentSimulatorFactory(protocol, deployTime);
 
-        } catch (ParseException | NodeNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "topology file is corrupted", ButtonType.OK);
-            alert.setHeaderText("Invalid File Error");
-            alert.showAndWait();
+        } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
+            int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
+            int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
+
+            simulatorFactory = new GradualDeploymentSimulatorFactory(protocol, deployPeriod, deployPercentage);
+
+        } else {
+            simulatorFactory = new InitialDeploymentSimulatorFactory(protocol);
         }
 
-        if (topology != null) {
+        // generate the report file name from topology filename
+        String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");
+        File reportFile = new File(topologyFile.getParent(), reportFileName);
 
-            Integer minDelay = minDelaySpinner.getValue();
-            Integer maxDelay = maxDelaySpinner.getValue();
-            // load the engine
-            Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
+        simulatorLauncher.setParameters(new SimulatorParameters.Builder(topologyFile, reportFile)
+                .readerFactory(new GraphvizReaderFactory())
+                .minDelay(minDelaySpinner.getValue())
+                .maxDelay(maxDelaySpinner.getValue())
+                .destinationId(destinationIdSpinner.getValue())
+                .repetitionCount(repetitionsSpinner.getValue())
+                .protocol(protocol)
+                .simulatorFactory(simulatorFactory)
+                .reporterFactory(new CSVReporterFactory())
+                .build());
 
-            // read the user input from the controls
-            int destinationId = destinationIdSpinner.getValue();
-            int repetitionCount = repetitionsSpinner.getValue();
-            Protocol protocol = detectionGroup.getSelectedProtocol();
+        simulatorLauncher.launch();
 
-            // simulator that will be used to simulate
-            Simulator simulator;
-
-            if (fullDeploymentFormController.activateToggle.isSelected()) {
-                int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
-
-                simulator = SimulatorFactory.newSimulator(
-                        engine, topology, destinationId, protocol, deployTime);
-
-            } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
-                int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
-                int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
-
-                simulator = SimulatorFactory.newSimulator(
-                        engine, topology, destinationId, protocol, deployPeriod, deployPercentage / 100.0);
-
-            } else {
-                simulator = SimulatorFactory.newSimulator(
-                        engine, topology, destinationId, protocol);
-            }
-
-            try {
-                String debugFilePath = networkFile.getPath().replaceFirst("\\.gv", ".debug");
-                simulator.enableDebugReport(debugCheckBox.isSelected(), new File(debugFilePath));
-            } catch (FileNotFoundException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open debug report file", ButtonType.OK);
-                alert.setHeaderText("IO Error");
-                alert.showAndWait();
-            }
-
-            String reportFileName = networkFile.getName().replaceFirst("\\.gv", ".csv");
-            File reportFile = new File(networkFile.getParent(), reportFileName);
-
-            try (Reporter reporter = new CSVReporter(reportFile, topology)) {
-                reporter.dumpBasicInfo(topology, destinationId, minDelay, maxDelay, protocol, simulator);
-
-                for (int i = 0; i < repetitionCount; i++) {
-                    simulator.simulate();
-                    reportData(simulator, reporter);
-                }
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file", ButtonType
-                        .OK);
-                alert.setHeaderText("IO Error");
-                alert.showAndWait();
-            }
-
-        }
-
-    }
-
-    /**
-     * Reports the data collected from the last simulation performed by the simulator using the given reporter.
-     * It handles IO errors that may occur when writing the data.
-     *
-     * @param simulator simulator that holds the data to be reported.
-     * @param reporter  reporter used to report the data.
-     */
-    private void reportData(Simulator simulator, Reporter reporter) {
-        try {
-            simulator.report(reporter);
-
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "could not generate report", ButtonType.OK);
-            alert.setHeaderText("Report File Error");
-            alert.showAndWait();
-        }
     }
 
 }
