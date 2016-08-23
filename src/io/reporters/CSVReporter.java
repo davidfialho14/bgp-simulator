@@ -33,17 +33,7 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final File baseOutputFile;  // path with the base file name for the output
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Private fields
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    private int simulationCounter = 0;                     // counts the simulations
-    private boolean isCountsFileMissingHeaders = true;     // indicates if the counts file is missing the headers
-    private boolean isDetectionsFileMissingHeaders = true; // indicates if the detections file is missing the headers
-    private boolean isDeploymentsFileMissingHeaders = true; // indicates if the deployments file is missing the headers
+    private final ReportState state = new ReportState();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -83,7 +73,6 @@ public class CSVReporter implements Reporter {
             csvPrinter.printRecord("Message Delay", minDelay, maxDelay);
             csvPrinter.printRecord("Protocol", protocol);
             csvPrinter.printRecord("Simulation Type", simulator);
-            csvPrinter.printRecord("Simulation Count", simulationCounter);
         }
     }
 
@@ -127,7 +116,7 @@ public class CSVReporter implements Reporter {
                            GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
             throws IOException {
 
-        simulationCounter++;    // every time write is called it is for a new simulation
+        state.incrementSimulationCount();    // every time write is called it is for a new simulation
 
         //
         // Write counts data
@@ -163,7 +152,7 @@ public class CSVReporter implements Reporter {
 
             int detectionNumber = 1;
             for (Detection detection : basicDataSet.getDetections()) {
-                printer.print(simulationCounter);
+                printer.print(state.getSimulationCount());
                 printer.print(detectionNumber++);
                 printer.print(pretty(detection.getDetectingNode()));
                 printer.print(pretty(detection.getCutOffLink()));
@@ -175,6 +164,8 @@ public class CSVReporter implements Reporter {
 
                 printer.println();
             }
+
+            state.addToDetectionCount(detectionNumber);
         }
 
         if (gradualDeploymentDataSet != null) {
@@ -184,13 +175,15 @@ public class CSVReporter implements Reporter {
             //
 
             try (CSVPrinter printer = getDeploymentsFilePrinter()) {
-                printer.print(simulationCounter);
+                printer.print(state.getSimulationCount());
 
                 for (Node node : gradualDeploymentDataSet.getDeployedNodes()) {
                     printer.print(node);
                 }
 
                 printer.println();
+
+                state.addToDeploymentsCount(gradualDeploymentDataSet.getDeployedNodesCount());
             }
         }
 
