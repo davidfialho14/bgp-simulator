@@ -6,13 +6,10 @@ import core.topology.Link;
 import core.topology.Network;
 import core.topology.Node;
 import core.topology.Topology;
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import protocols.D1R1Protocol;
-import protocols.D2R1Protocol;
-import simulators.FullDeploymentSimulator;
-import simulators.GradualDeploymentSimulator;
-import simulators.InitialDeploymentSimulator;
 import simulators.Simulator;
 import simulators.data.*;
 
@@ -38,10 +35,6 @@ public class CSVReporter implements Reporter {
 
     private final File baseOutputFile;  // path with the base file name for the output
 
-    private final CSVPrinter countsWriter;
-    private final CSVPrinter detectionsWriter;
-    private final CSVPrinter deploymentsWriter;
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Private fields
@@ -66,15 +59,6 @@ public class CSVReporter implements Reporter {
      */
     public CSVReporter(File baseOutputFile) throws IOException {
         this.baseOutputFile = baseOutputFile;
-
-        File countsFile = getClassFile(baseOutputFile, "counts");
-        this.countsWriter = new BufferedWriter(new FileWriter(countsFile));
-
-        File detectionsFile = getClassFile(baseOutputFile, "detections");
-        this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
-
-        File deploymentsFile = getClassFile(baseOutputFile, "deployments");
-        this.deploymentsWriter = new BufferedWriter(new FileWriter(deploymentsFile));
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -91,32 +75,13 @@ public class CSVReporter implements Reporter {
 
         Network network = topology.getNetwork();
 
-        File basicFile = getClassFile(baseOutputFile, "basic");
-        try (BufferedWriter basicWriter = new BufferedWriter(new FileWriter(basicFile))) {
-            writeColumns(basicWriter, "Node Count", network.getNodeCount());    basicWriter.newLine();
-            writeColumns(basicWriter, "Link Count", network.getLinkCount());    basicWriter.newLine();
-            writeColumns(basicWriter, "Destination", destinationId);            basicWriter.newLine();
-            writeColumns(basicWriter, "Message Delay", minDelay, maxDelay);     basicWriter.newLine();
-
-            String protocolName = "";
-            if (protocol instanceof D1R1Protocol)
-                protocolName = "D1";
-            else if(protocol instanceof D2R1Protocol) {
-                protocolName = "D2";
-            }
-            writeColumns(basicWriter, "Detection", protocolName); basicWriter.newLine();
-
-
-            String simulationType = "";
-            if (simulator instanceof InitialDeploymentSimulator)
-                simulationType = "Initial";
-            else if(simulator instanceof FullDeploymentSimulator) {
-                simulationType = "Full";
-            } else if (simulator instanceof GradualDeploymentSimulator) {
-                simulationType = "Gradual";
-            }
-            writeColumns(basicWriter, "Simulation Type", simulationType); basicWriter.newLine();
-
+        try (CSVPrinter csvPrinter = getSummaryFilePrinter()) {
+            csvPrinter.printRecord("Node Count", network.getNodeCount());
+            csvPrinter.printRecord("Link Count", network.getLinkCount());
+            csvPrinter.printRecord("Destination", destinationId);
+            csvPrinter.printRecord("Message Delay", minDelay, maxDelay);
+            csvPrinter.printRecord("Protocol", protocol);
+            csvPrinter.printRecord("Simulation Type", simulator);
         }
     }
 
@@ -262,40 +227,54 @@ public class CSVReporter implements Reporter {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Private Helper Methods
+     *  Private Helper Methods to get a CSV printer for each type of output file
+     *
+     *  They all return a file printer for the respective file type
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    private CSVPrinter getSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("summary"), false);
+    }
+
+    private CSVPrinter getCountsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("counts"), true);
+    }
+
+    private CSVPrinter getDetectionsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("detections"), true);
+    }
+
+    private CSVPrinter getDeploymentsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("deployments"), true);
+    }
+
     /**
-     * Returns a file with the class name associated to its name.
+     * Base method to get a CSV printer for any file. All other "get printer" methods call this base method.
      *
-     * @param originalFile original file.
-     * @param fileClass    class name to associate with the file.
+     * @param file      file to associate with the printer.
+     * @param append    true to open the file in append mode and false to truncate the file.
+     * @return a new instance of a CSV printer associated with the given file.
+     * @throws IOException if fails to open the file.
+     */
+    private static CSVPrinter getFilePrinter(File file, boolean append) throws IOException {
+        return new CSVPrinter(new FileWriter(file, append), CSVFormat.EXCEL.withDelimiter(DELIMITER));
+    }
+
+    /**
+     * Appends the given tag to the end of the base output filename and returns the result file. Keeps original file
+     * extension.
+     *
+     * @param tag   tag to add to the base output file.
      * @return file with the class name associated to its name.
      */
-    private static File getClassFile(File originalFile, String fileClass) {
-        return new File(originalFile.getParent(),
-                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
-    }
+    private File getFile(String tag) {
+        String extension = FilenameUtils.getExtension(baseOutputFile.getName());
 
-    /**
-     * Writes a sequence of columns in the CSV format.
-     *
-     * @param writer      writer used to write columns.
-     * @param firstColumn first column to write.
-     * @param columns     following columns to write
-     * @throws IOException
-     */
-    private void writeColumns(BufferedWriter writer, Object firstColumn, Object... columns) throws IOException {
-        writer.write(firstColumn.toString());
+        // append the tag to the original file name (keep the extension)
+        String filename = FilenameUtils.getBaseName(baseOutputFile.getName()) + String.format("-%s.%s", tag, extension);
 
-        for (Object column : columns) {
-            appendColumn(writer, column);
-        }
-    }
-
-    private void appendColumn(BufferedWriter writer, Object column) throws IOException {
-        writer.write(COMMA + column.toString());
+        return new File(baseOutputFile.getParent(), filename);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -319,6 +298,32 @@ public class CSVReporter implements Reporter {
                 .collect(Collectors.toList());
 
         return StringUtils.join(pathNodesIds.iterator(), " → ");
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Helper Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Writes a sequence of columns in the CSV format.
+     *
+     * @param writer      writer used to write columns.
+     * @param firstColumn first column to write.
+     * @param columns     following columns to write
+     * @throws IOException
+     */
+    private void writeColumns(BufferedWriter writer, Object firstColumn, Object... columns) throws IOException {
+        writer.write(firstColumn.toString());
+
+        for (Object column : columns) {
+            appendColumn(writer, column);
+        }
+    }
+
+    private void appendColumn(BufferedWriter writer, Object column) throws IOException {
+        writer.write(COMMA + column.toString());
     }
 
 }
