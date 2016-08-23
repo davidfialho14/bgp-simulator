@@ -143,10 +143,10 @@ public class Controller implements Initializable {
                 .protocol(detectionGroup.getSelectedProtocol())
                 .reporterFactory(new CSVReporterFactory())
                 .enableFullDeployment(fullDeploymentFormController.activateToggle.isSelected())
-                .deployTime(fullDeploymentFormController.detectingTimeSpinner.getValue())
+                    .deployTime(fullDeploymentFormController.detectingTimeSpinner.getValue())
                 .enableGradualDeployment(gradualDeploymentFormController.activateToggle.isSelected())
-                .deployPeriod(gradualDeploymentFormController.deployPeriodSpinner.getValue())
-                .deployPercentage(gradualDeploymentFormController.deployPercentageSpinner.getValue())
+                    .deployPeriod(gradualDeploymentFormController.deployPeriodSpinner.getValue())
+                    .deployPercentage(gradualDeploymentFormController.deployPercentageSpinner.getValue())
                 .commit();
 
         String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");

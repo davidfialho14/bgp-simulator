@@ -116,7 +116,7 @@ public class Main {
                 .protocol(protocol)
                 .reporterFactory(new CSVReporterFactory())
                 .enableFullDeployment(deployTime != null)
-                .deployTime(deployTime == null ? 0 : deployTime)
+                    .deployTime(deployTime == null ? 0 : deployTime)
                 .commit();
 
         String reportFileName = topologyFile.getName().replaceFirst("\\.gv",
