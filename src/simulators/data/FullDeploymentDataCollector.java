@@ -1,7 +1,7 @@
 package simulators.data;
 
-import io.reporters.Reporter;
 import core.events.ExportEvent;
+import io.reporters.Reporter;
 
 import java.io.IOException;
 
@@ -13,11 +13,11 @@ public class FullDeploymentDataCollector extends BasicDataCollector {
     /**
      * Dumps the current data to the reporter.
      *
-     * @param reporter reporter to dump data to.
+     * @param reporter reporter to write data to.
      */
     @Override
     public void dump(Reporter reporter) throws IOException {
-        reporter.dump(basicDataSet, fullDeploymentDataSet);
+        reporter.write(basicDataSet, fullDeploymentDataSet);
     }
 
     /**

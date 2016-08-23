@@ -1,8 +1,8 @@
 package simulators.data;
 
-import io.reporters.Reporter;
 import core.Engine;
 import core.TimeListener;
+import io.reporters.Reporter;
 
 import java.io.IOException;
 
@@ -30,11 +30,11 @@ public class BasicDataCollector implements DataCollector, core.events.ExportList
     /**
      * Dumps the current data to the reporter.
      *
-     * @param reporter reporter to dump data to.
+     * @param reporter reporter to write data to.
      */
     @Override
     public void dump(Reporter reporter) throws IOException {
-        reporter.dump(basicDataSet);
+        reporter.write(basicDataSet);
     }
 
     /**

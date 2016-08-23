@@ -1,7 +1,7 @@
 package simulators.data;
 
-import io.reporters.Reporter;
 import core.Engine;
+import io.reporters.Reporter;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public interface DataCollector {
     /**
      * Dumps the current data to the reporter.
      *
-     * @param reporter reporter to dump data to.
+     * @param reporter reporter to write data to.
      */
     void dump(Reporter reporter) throws IOException;
 

@@ -1,10 +1,10 @@
 package simulators.data;
 
-import io.reporters.Reporter;
-import core.topology.Node;
 import core.Path;
-import policies.shortestpath.ShortestPathLabel;
 import core.events.DetectEvent;
+import core.topology.Node;
+import io.reporters.Reporter;
+import policies.shortestpath.ShortestPathLabel;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -44,11 +44,11 @@ public class SPPolicyBasicDataCollector extends BasicDataCollector {
     /**
      * Dumps the current data to the reporter.
      *
-     * @param reporter reporter to dump data to.
+     * @param reporter reporter to write data to.
      */
     @Override
     public void dump(Reporter reporter) throws IOException {
-        reporter.dump(basicDataSet, spPolicyDataSet);
+        reporter.write(basicDataSet, spPolicyDataSet);
     }
 
     /**

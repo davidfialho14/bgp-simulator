@@ -20,25 +20,25 @@ public interface Reporter {
     /**
      * Dumps all the basic information from the simulation.
      */
-    void dumpBasicInfo(Topology topology, int destinationId, int minDelay, int maxDelay,
-                                       Protocol protocol, Simulator simulator) throws IOException;
+    void writeSimulationInfo(Topology topology, int destinationId, int minDelay, int maxDelay,
+                             Protocol protocol, Simulator simulator) throws IOException;
 
     /**
      * Dumps that data from the data set to the current output file.
      *
-     * @param dataSet data set to dump to the output file.
+     * @param dataSet data set to write to the output file.
      */
-    void dump(BasicDataSet dataSet) throws IOException;
+    void write(BasicDataSet dataSet) throws IOException;
 
-    void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
+    void write(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException;
 
-    void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet)
+    void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet)
             throws IOException;
 
-    void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                              SPPolicyDataSet spPolicyDataSet) throws IOException;
+    void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+               SPPolicyDataSet spPolicyDataSet) throws IOException;
 
-    void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet)
+    void write(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet)
             throws IOException;
 
 }

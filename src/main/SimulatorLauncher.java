@@ -49,7 +49,7 @@ public class SimulatorLauncher {
     /**
      * Starting point of any simulation. This method should be called after configuring the simulation. After calling
      * this method the simulation will load the topology from the topology file, simulate according to the predefined
-     * configurations, and dump a proper report.
+     * configurations, and write a proper report.
      */
     public void launch() {
 
@@ -82,7 +82,7 @@ public class SimulatorLauncher {
 
             try  {
                 Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile());
-                reporter.dumpBasicInfo(topology, parameters.getDestinationId(), parameters.getMinDelay(),
+                reporter.writeSimulationInfo(topology, parameters.getDestinationId(), parameters.getMinDelay(),
                         parameters.getMaxDelay(), parameters.getProtocol(), simulator);
 
                 for (int i = 0; i < parameters.getRepetitionCount(); i++) {

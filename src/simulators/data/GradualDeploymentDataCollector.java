@@ -1,8 +1,8 @@
 package simulators.data;
 
 
-import io.reporters.Reporter;
 import core.topology.Node;
+import io.reporters.Reporter;
 
 import java.io.IOException;
 
@@ -25,11 +25,11 @@ public class GradualDeploymentDataCollector extends BasicDataCollector {
     /**
      * Dumps the current data to the reporter.
      *
-     * @param reporter reporter to dump data to.
+     * @param reporter reporter to write data to.
      */
     @Override
     public void dump(Reporter reporter) throws IOException {
-        reporter.dump(basicDataSet, gradualDeploymentDataSet);
+        reporter.write(basicDataSet, gradualDeploymentDataSet);
     }
 
     /**

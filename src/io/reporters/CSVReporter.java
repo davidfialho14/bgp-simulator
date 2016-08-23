@@ -89,8 +89,8 @@ public class CSVReporter implements Reporter {
     /**
      * Dumps all the basic information from the simulation.
      */
-    public void dumpBasicInfo(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
-                              Simulator simulator) throws IOException {
+    public void writeSimulationInfo(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
+                                    Simulator simulator) throws IOException {
 
         Network network = topology.getNetwork();
 
@@ -126,31 +126,31 @@ public class CSVReporter implements Reporter {
     /**
      * Dumps that data from the data set to the current output file.
      *
-     * @param dataSet data set to dump to the output file.
+     * @param dataSet data set to write to the output file.
      */
     @Override
-    public void dump(BasicDataSet dataSet) throws IOException {
+    public void write(BasicDataSet dataSet) throws IOException {
         dumpMain(dataSet, null, null, null);
     }
 
     @Override
-    public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
+    public void write(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
         dumpMain(basicDataSet, null, null, spPolicyDataSet);
     }
 
     @Override
-    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
+    public void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
         dumpMain(basicDataSet, fullDeploymentDataSet, null, null);
     }
 
     @Override
-    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                     SPPolicyDataSet spPolicyDataSet) throws IOException {
+    public void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
+                      SPPolicyDataSet spPolicyDataSet) throws IOException {
         dumpMain(basicDataSet, fullDeploymentDataSet, null, spPolicyDataSet);
     }
 
     @Override
-    public void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
+    public void write(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
         dumpMain(basicDataSet, null, gradualDeploymentDataSet, null);
     }
 
@@ -162,13 +162,13 @@ public class CSVReporter implements Reporter {
      */
 
     /**
-     * Main dump method. All dump methods call this method underneath.
+     * Main write method. All write methods call this method underneath.
      */
     private void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
                           GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
             throws IOException {
 
-        simulationCounter++;    // every time dump is called it is for a new simulation
+        simulationCounter++;    // every time write is called it is for a new simulation
 
         // write counts headers
 

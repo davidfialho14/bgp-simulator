@@ -1,8 +1,8 @@
 package simulators.data;
 
-import io.reporters.Reporter;
 import core.Path;
 import core.events.DetectEvent;
+import io.reporters.Reporter;
 
 import java.io.IOException;
 
@@ -15,11 +15,11 @@ public class SPPolicyFullDeploymentDataCollector extends FullDeploymentDataColle
     /**
      * Dumps the current data to the reporter.
      *
-     * @param reporter reporter to dump data to.
+     * @param reporter reporter to write data to.
      */
     @Override
     public void dump(Reporter reporter) throws IOException {
-        reporter.dump(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
+        reporter.write(basicDataSet, fullDeploymentDataSet, spPolicyDataSet);
     }
 
     /**
