@@ -33,7 +33,7 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final File baseOutputFile;  // path with the base file name for the output
-    private final ReportState state = new ReportState();
+    private final SimulationStateTracker stateTracker;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -46,8 +46,9 @@ public class CSVReporter implements Reporter {
      *
      * @param baseOutputFile file to output report to.
      */
-    public CSVReporter(File baseOutputFile) throws IOException {
+    public CSVReporter(File baseOutputFile, SimulationStateTracker stateTracker) throws IOException {
         this.baseOutputFile = baseOutputFile;
+        this.stateTracker = stateTracker;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -84,15 +85,12 @@ public class CSVReporter implements Reporter {
     public void writeAfterSummary() throws IOException {
 
         // be careful to avoid division by zero
-        float detectionAvg = state.getDetectionCount() != 0 ?
-                (float) state.getDetectionCount() / (float) state.getSimulationCount() : 0;
-        float deploymentsAvg = state.getDeploymentsCount() != 0 ?
-                (float) state.getDeploymentsCount() / (float) state.getSimulationCount() : 0;
+        float detectionAvg = stateTracker.getDetectionCount() != 0 ?
+                (float) stateTracker.getDetectionCount() / (float) stateTracker.getSimulationCount() : 0;
 
         try (CSVPrinter csvPrinter = getAfterSummaryFilePrinter()) {
-            csvPrinter.printRecord("Simulation Count", state.getSimulationCount());
+            csvPrinter.printRecord("Simulation Count", stateTracker.getSimulationCount());
             csvPrinter.printRecord("Avg. Detection Count", String.format("%.2f", detectionAvg));
-            csvPrinter.printRecord("Avg. Deployments Count", String.format("%.2f", deploymentsAvg));
         }
 
     }
@@ -137,8 +135,6 @@ public class CSVReporter implements Reporter {
                            GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
             throws IOException {
 
-        state.incrementSimulationCount();    // every time write is called it is for a new simulation
-
         //
         // Write counts data
         //
@@ -173,7 +169,7 @@ public class CSVReporter implements Reporter {
 
             int detectionNumber = 1;
             for (Detection detection : basicDataSet.getDetections()) {
-                printer.print(state.getSimulationCount());
+                printer.print(currentSimulationNumber());
                 printer.print(detectionNumber++);
                 printer.print(pretty(detection.getDetectingNode()));
                 printer.print(pretty(detection.getCutOffLink()));
@@ -185,8 +181,6 @@ public class CSVReporter implements Reporter {
 
                 printer.println();
             }
-
-            state.addToDetectionCount(detectionNumber);
         }
 
         if (gradualDeploymentDataSet != null) {
@@ -196,15 +190,13 @@ public class CSVReporter implements Reporter {
             //
 
             try (CSVPrinter printer = getDeploymentsFilePrinter()) {
-                printer.print(state.getSimulationCount());
+                printer.print(currentSimulationNumber());
 
                 for (Node node : gradualDeploymentDataSet.getDeployedNodes()) {
                     printer.print(node);
                 }
 
                 printer.println();
-
-                state.addToDeploymentsCount(gradualDeploymentDataSet.getDeployedNodesCount());
             }
         }
 
@@ -287,6 +279,21 @@ public class CSVReporter implements Reporter {
                 .collect(Collectors.toList());
 
         return StringUtils.join(pathNodesIds.iterator(), " → ");
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Helper Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Returns the current simulation number based on the current simulation stateTracker.
+     *
+     * @return the current simulation number.
+     */
+    private int currentSimulationNumber() {
+        return stateTracker.getSimulationCount();
     }
 
 }

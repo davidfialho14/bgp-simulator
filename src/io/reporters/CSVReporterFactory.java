@@ -13,11 +13,12 @@ public class CSVReporterFactory implements ReporterFactory {
      * Creates a new CSV reporter instance.
      *
      * @param reportFile file to associate with the reporter.
+     * @param stateTracker tracker of the simulation state.
      * @return new instance CSV Reporter.
      * @throws IOException if the reporter fails to open the report file.
      */
     @Override
-    public Reporter getReporter(File reportFile) throws IOException {
-        return new CSVReporter(reportFile);
+    public Reporter getReporter(File reportFile, SimulationStateTracker stateTracker) throws IOException {
+        return new CSVReporter(reportFile, stateTracker);
     }
 }

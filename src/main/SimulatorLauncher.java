@@ -6,6 +6,7 @@ import core.topology.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.Reporter;
+import io.reporters.SimulationStateTracker;
 import simulators.Simulator;
 
 import java.io.IOException;
@@ -76,12 +77,15 @@ public class SimulatorLauncher {
             // load the engine
             Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()));
 
+            SimulationStateTracker simulationStateTracker = new SimulationStateTracker(engine);
+
             // use the simulator factory to get a properly configured simulator
             Simulator simulator = parameters.getSimulatorFactory().getSimulator(
                     engine, topology, parameters.getDestinationId());
 
             try  {
-                Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile());
+                Reporter reporter = parameters.getReporterFactory().getReporter(
+                        parameters.getReportFile(), simulationStateTracker);
 
                 reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
                         parameters.getMaxDelay(), parameters.getProtocol(), simulator);
@@ -95,6 +99,8 @@ public class SimulatorLauncher {
 
             } catch (IOException e) {
                 errorHandler.onReportingIOException(e);
+            } finally {
+                simulationStateTracker.unregister();
             }
 
         }

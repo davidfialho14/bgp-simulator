@@ -17,8 +17,9 @@ public interface ReporterFactory {
      * implementation.
      *
      * @param reportFile file to associate with the reporter.
+     * @param simulationStateTracker
      * @return new instance Reporter.
      * @throws IOException if the reporter fails to open the report file.
      */
-    Reporter getReporter(File reportFile) throws IOException;
+    Reporter getReporter(File reportFile, SimulationStateTracker simulationStateTracker) throws IOException;
 }
