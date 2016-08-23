@@ -80,7 +80,8 @@ public class SimulatorLauncher {
             Simulator simulator = parameters.getSimulatorFactory().getSimulator(
                     engine, topology, parameters.getDestinationId());
 
-            try (Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile())) {
+            try  {
+                Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile());
                 reporter.dumpBasicInfo(topology, parameters.getDestinationId(), parameters.getMinDelay(),
                         parameters.getMaxDelay(), parameters.getProtocol(), simulator);
 

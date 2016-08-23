@@ -25,9 +25,11 @@ import java.util.stream.Collectors;
 /**
  * Generates reports in CSV format.
  */
-public class CSVReporter extends Reporter {
+public class CSVReporter implements Reporter {
 
     private static final char COMMA = ';';
+
+    private final File outputFile;
 
     private final BufferedWriter countsWriter;
     private final BufferedWriter detectionsWriter;
@@ -44,7 +46,7 @@ public class CSVReporter extends Reporter {
      * @param outputFile file to output report to.
      */
     public CSVReporter(File outputFile) throws IOException {
-        super(outputFile);
+        this.outputFile = outputFile;
 
         File countsFile = getClassFile(outputFile, "counts");
         this.countsWriter = new BufferedWriter(new FileWriter(countsFile));
@@ -150,21 +152,6 @@ public class CSVReporter extends Reporter {
     @Override
     public void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
         dumpMain(basicDataSet, null, gradualDeploymentDataSet, null);
-    }
-
-    @Override
-    public void close() throws IOException {
-        if (countsWriter != null) {
-            countsWriter.close();
-        }
-
-        if (detectionsWriter != null) {
-            detectionsWriter.close();
-        }
-
-        if (deploymentsWriter != null) {
-            deploymentsWriter.close();
-        }
     }
 
     // --- PRIVATE METHODS ---
