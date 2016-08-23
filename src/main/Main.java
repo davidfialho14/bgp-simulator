@@ -1,15 +1,13 @@
 package main;
 
-import core.Engine;
 import core.Protocol;
-import core.schedulers.RandomScheduler;
-import core.topology.Topology;
 import io.networkreaders.GraphvizReader;
 import io.networkreaders.PolicyTagger;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.ParseException;
 import io.reporters.CSVReporter;
 import io.reporters.Reporter;
+import javafx.scene.control.Alert;
 import main.gui.SimulatorApplication;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -20,8 +18,6 @@ import policies.roc.RoCPolicy;
 import policies.shortestpath.ShortestPathPolicy;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import simulators.Simulator;
-import simulators.SimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +34,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("d", "destination", true, "simulate with the given destination id");
-        options.addOption("n", "topology", true, "core.topology to be simulated");
+        options.addOption("n", "initialTopology", true, "core.initialTopology to be simulated");
         options.addOption("c", "repetition_count", true, "number of repetitions");
         options.addOption("d2", "use detection 2 instead of detection 1");
         options.addOption("deploy", true, "time deploy detection");
@@ -48,8 +44,8 @@ public class Main {
             CommandLine cmd = parser.parse(options, args);
 
             File networkFile = null;
-            if (cmd.hasOption("topology")) {
-                networkFile = new File(cmd.getOptionValue("topology"));
+            if (cmd.hasOption("initialTopology")) {
+                networkFile = new File(cmd.getOptionValue("initialTopology"));
 
                 if (!networkFile.exists()) {
                     System.err.println("Network file does not exist");
@@ -63,7 +59,7 @@ public class Main {
                 int repetitionCount = Integer.parseInt(cmd.getOptionValue("repetition_count"));
 
                 if (networkFile == null) {
-                    System.err.println("It is missing the core.topology file");
+                    System.err.println("It is missing the core.initialTopology file");
                     System.exit(1);
                 }
 
@@ -98,55 +94,49 @@ public class Main {
         int minDelay = 0;
         int maxDelay = 10;
 
-        // read the topology and handle possible errors
-        Topology topology = null;   // stores the read topology
-        try (TopologyReader topologyReader = new GraphvizReader(networkFile)) {
-            topology = topologyReader.read();
+        ErrorHandler errorHandler = new ErrorHandler() {
+            @Override
+            public void onTopologyLoadIOException(IOException exception) {
+                System.err.println("can not open the file");
+            }
+
+            @Override
+            public void onTopologyLoadParseException(ParseException exception) {
+                System.err.println("initialTopology file is corrupted");
+            }
+
+            @Override
+            public void onReportingIOException(IOException exception) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file");
+                alert.setHeaderText("IO Error");
+                alert.showAndWait();
+            }
+        };
+
+        SimulatorLauncher simulatorLauncher = new SimulatorLauncher.Builder(
+                errorHandler,
+                minDelay, maxDelay,
+                destinationId,
+                repetitionCount,
+                protocol)
+                .fullDeployment(deployTime != null,
+                        deployTime == null ? 0 : deployTime)
+                .build();
+
+        String reportFileName = networkFile.getName().replaceFirst("\\.gv",
+                String.format("-dest%02d.csv", destinationId));
+        File reportFile = new File(networkFile.getParent(), reportFileName);
+
+        try (
+                TopologyReader topologyReader = new GraphvizReader(networkFile);
+                Reporter reporter = new CSVReporter(reportFile)
+        ) {
+            simulatorLauncher.launch(topologyReader, reporter);
 
         } catch (IOException e) {
-            System.err.println("can not open the file");
-        } catch (ParseException e) {
-            System.err.println("topology file is corrupted");
+            System.err.println("failed to open report file");
         }
 
-        if (topology != null) {
-            Engine engine = new Engine(new RandomScheduler(minDelay, maxDelay));
-
-            Simulator simulator;
-            if (deployTime == null) {
-                simulator = SimulatorFactory.newSimulator(
-                        engine, topology, destinationId, protocol);
-            } else {
-                simulator = SimulatorFactory.newSimulator(
-                        engine, topology, destinationId, protocol, deployTime);
-            }
-
-            String reportFileName = networkFile.getName().replaceFirst("\\.gv",
-                    String.format("-dest%02d.csv", destinationId));
-            File reportFile = new File(networkFile.getParent(), reportFileName);
-
-            try (Reporter reporter = new CSVReporter(reportFile, topology)) {
-                reporter.dumpBasicInfo(topology, destinationId, minDelay, maxDelay, protocol, simulator);
-
-                for (int i = 0; i < repetitionCount; i++) {
-                    long startTime = System.currentTimeMillis();
-                    System.out.println("Started core " + i);
-
-                    simulator.simulate();
-
-                    try {
-                        simulator.report(reporter);
-                    } catch (IOException e) {
-                        System.err.println("could not generate report");
-                    }
-
-                    long estimatedTime = System.currentTimeMillis() - startTime;
-                    System.out.println(String.format("Finished core " + i + " in %.2f", estimatedTime / 1000.0));
-                }
-            } catch (IOException e) {
-                System.err.println("failed to open/create/write report file");
-            }
-        }
     }
 
 }

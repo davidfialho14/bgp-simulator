@@ -42,7 +42,7 @@ public class Engine {
     /**
      * Simulates according to the given initial state. Simulates only for one destination.
      *
-     * @param initialState initial state to start simulation.
+     * @param state initial state to start simulation.
      */
     public void simulate(State initialState) {
         currentState = initialState;

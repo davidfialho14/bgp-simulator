@@ -2,9 +2,7 @@ package simulators;
 
 import addons.eventhandlers.DebugEventHandler;
 import core.Engine;
-import core.Protocol;
 import core.State;
-import core.topology.Topology;
 import io.reporters.Reporter;
 
 import java.io.File;
@@ -28,14 +26,12 @@ public abstract class Simulator {
 
     /**
      * Constructs a simulator by creating an initial state to be simulated.
-     *  @param engine            engine used for simulation.
-     * @param topology           topology to simulate.
-     * @param destinationId     id of the destination node.
-     * @param initialProtocol   initial protocol.
+     *
+     * @param engine            engine used for simulation.
      */
-    public Simulator(Engine engine, Topology topology, int destinationId, Protocol initialProtocol) {
+    Simulator(Engine engine, State initialState) {
         this.engine = engine;
-        this.state = State.create(topology, destinationId, initialProtocol);
+        this.state = initialState;
     }
 
     // --- BEGIN PUBLIC INTERFACE ---

@@ -19,17 +19,14 @@ import java.io.IOException;
 public abstract class Reporter implements Closeable, AutoCloseable {
 
     protected File outputFile;
-    protected Topology topology;    // holds the topology to dump topology information
 
     /**
      * Constructs a reporter associating the output file.
      *
      * @param outputFile file to output report to.
-     * @param topology   topology being simulated.
      */
-    public Reporter(File outputFile, Topology topology) {
+    public Reporter(File outputFile) {
         this.outputFile = outputFile;
-        this.topology = topology;
     }
 
     /**
