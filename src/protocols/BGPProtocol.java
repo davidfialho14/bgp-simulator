@@ -1,10 +1,10 @@
 package protocols;
 
+import core.Attribute;
 import core.Protocol;
+import core.Route;
 import core.topology.Link;
 import core.topology.Node;
-import core.Attribute;
-import core.Route;
 
 public class BGPProtocol implements Protocol {
 
@@ -26,6 +26,11 @@ public class BGPProtocol implements Protocol {
     @Override
     public void reset() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "BGP";
     }
 
 }
