@@ -6,26 +6,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
+public class GUIApplication extends Application {
 
-public class SimulatorApplication extends Application {
-
-    private static File defaultNetworkFile = null;
-
-    public static void launch(String[] args, File networkFile) {
-        defaultNetworkFile = networkFile;
-        launch(args);
+    /**
+     * Launch method to avoid RuntimeException. If we call the launch method of the application from another class
+     * (for instance the Main class) it throws a RuntimeException. This is a clean hack to prevent that.
+     */
+    public static void launch(String[] args) {
+        Application.launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui.fxml"));
         Parent root = fxmlLoader.load();
-
-        if (defaultNetworkFile != null) {
-            Controller controller = fxmlLoader.getController();
-            controller.setDefaultNetworkFile(defaultNetworkFile);
-        }
 
         primaryStage.setTitle("Routing Simulator");
         primaryStage.setScene(new Scene(root));
