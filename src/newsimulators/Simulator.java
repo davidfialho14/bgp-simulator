@@ -58,6 +58,13 @@ public abstract class Simulator {
         cleanup();
     }
 
+    /**
+     * Gives access to the data collector used by the simulator.
+     *
+     * @return instance of the data collector used by the simulator.
+     */
+    public abstract DataCollector getDataCollector();
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Template Methods
