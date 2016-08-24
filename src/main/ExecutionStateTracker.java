@@ -1,4 +1,4 @@
-package io.reporters;
+package main;
 
 
 import core.Engine;
@@ -8,9 +8,9 @@ import core.events.EndEvent;
 import core.events.EndListener;
 
 /**
- * Keeps track of the simulation state while the simulation execution evolves.
+ * Keeps track of the execution state while the execution execution evolves.
  */
-public class SimulationStateTracker implements EndListener, DetectListener {
+public class ExecutionStateTracker implements EndListener, DetectListener {
 
     private final Engine engine;    // stores the engine to which it is registered
 
@@ -23,7 +23,7 @@ public class SimulationStateTracker implements EndListener, DetectListener {
     private int simulationCount = 0;
     private int detectionCount = 0;
 
-    public SimulationStateTracker(Engine engine) {
+    public ExecutionStateTracker(Engine engine) {
         this.engine = engine;
         engine.getEventGenerator().addEndListener(this);
         engine.getEventGenerator().addDetectListener(this);
@@ -45,7 +45,7 @@ public class SimulationStateTracker implements EndListener, DetectListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Methods invoked during the simulation process to update the state
+     *  Methods invoked during the execution process to update the state
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 

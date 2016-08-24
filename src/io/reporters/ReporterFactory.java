@@ -1,5 +1,7 @@
 package io.reporters;
 
+import main.ExecutionStateTracker;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -17,9 +19,9 @@ public interface ReporterFactory {
      * implementation.
      *
      * @param reportFile file to associate with the reporter.
-     * @param simulationStateTracker
+     * @param executionStateTracker
      * @return new instance Reporter.
      * @throws IOException if the reporter fails to open the report file.
      */
-    Reporter getReporter(File reportFile, SimulationStateTracker simulationStateTracker) throws IOException;
+    Reporter getReporter(File reportFile, ExecutionStateTracker executionStateTracker) throws IOException;
 }

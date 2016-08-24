@@ -3,7 +3,7 @@ package io.newreporters;
 import core.Path;
 import core.topology.Link;
 import core.topology.Node;
-import io.reporters.SimulationStateTracker;
+import main.ExecutionStateTracker;
 import newsimulators.BasicDataSet;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -31,7 +31,7 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final File baseOutputFile;  // path with the base file name for the output
-    private final SimulationStateTracker stateTracker;
+    private final ExecutionStateTracker stateTracker;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -45,7 +45,7 @@ public class CSVReporter implements Reporter {
      *
      * @param baseOutputFile file to output report to.
      */
-    public CSVReporter(File baseOutputFile, SimulationStateTracker stateTracker) throws IOException {
+    public CSVReporter(File baseOutputFile, ExecutionStateTracker stateTracker) throws IOException {
         this.baseOutputFile = baseOutputFile;
         this.stateTracker = stateTracker;
     }

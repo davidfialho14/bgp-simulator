@@ -6,6 +6,7 @@ import core.topology.Link;
 import core.topology.Network;
 import core.topology.Node;
 import core.topology.Topology;
+import main.ExecutionStateTracker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;
@@ -33,7 +34,7 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final File baseOutputFile;  // path with the base file name for the output
-    private final SimulationStateTracker stateTracker;
+    private final ExecutionStateTracker stateTracker;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -46,7 +47,7 @@ public class CSVReporter implements Reporter {
      *
      * @param baseOutputFile file to output report to.
      */
-    public CSVReporter(File baseOutputFile, SimulationStateTracker stateTracker) throws IOException {
+    public CSVReporter(File baseOutputFile, ExecutionStateTracker stateTracker) throws IOException {
         this.baseOutputFile = baseOutputFile;
         this.stateTracker = stateTracker;
     }

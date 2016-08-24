@@ -1,5 +1,7 @@
 package io.reporters;
 
+import main.ExecutionStateTracker;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -18,7 +20,7 @@ public class CSVReporterFactory implements ReporterFactory {
      * @throws IOException if the reporter fails to open the report file.
      */
     @Override
-    public Reporter getReporter(File reportFile, SimulationStateTracker stateTracker) throws IOException {
+    public Reporter getReporter(File reportFile, ExecutionStateTracker stateTracker) throws IOException {
         return new CSVReporter(reportFile, stateTracker);
     }
 }
