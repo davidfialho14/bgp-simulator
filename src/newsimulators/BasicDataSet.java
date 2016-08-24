@@ -4,6 +4,7 @@ import core.topology.Node;
 import io.newreporters.Reporter;
 import simulators.data.Detection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -137,7 +138,7 @@ public class BasicDataSet implements Dataset {
      * @param reporter reporter implementation to be used.
      */
     @Override
-    public void report(Reporter reporter) {
+    public void report(Reporter reporter) throws IOException {
         reporter.writeData(this);
     }
 

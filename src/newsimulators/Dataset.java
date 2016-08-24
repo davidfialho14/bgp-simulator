@@ -2,6 +2,8 @@ package newsimulators;
 
 import io.newreporters.Reporter;
 
+import java.io.IOException;
+
 /**
  * Tag interface for a simulation dataset.
  * A dataset stores a group of data collected by a data collector and provides and interface to access that data.
@@ -19,6 +21,6 @@ public interface Dataset {
      *
      * @param reporter reporter implementation to be used.
      */
-    void report(Reporter reporter);
+    void report(Reporter reporter) throws IOException;
 
 }
