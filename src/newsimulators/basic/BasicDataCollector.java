@@ -1,4 +1,4 @@
-package newsimulators;
+package newsimulators.basic;
 
 import core.Engine;
 import core.TimeListener;
@@ -6,6 +6,8 @@ import core.events.DetectEvent;
 import core.events.DetectListener;
 import core.events.ExportEvent;
 import core.events.ExportListener;
+import newsimulators.DataCollector;
+import newsimulators.Dataset;
 import simulators.data.Detection;
 
 /**

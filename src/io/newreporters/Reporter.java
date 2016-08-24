@@ -1,6 +1,6 @@
 package io.newreporters;
 
-import newsimulators.BasicDataSet;
+import newsimulators.basic.BasicDataSet;
 
 import java.io.IOException;
 

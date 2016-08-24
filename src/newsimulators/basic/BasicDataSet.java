@@ -1,7 +1,8 @@
-package newsimulators;
+package newsimulators.basic;
 
 import core.topology.Node;
 import io.newreporters.Reporter;
+import newsimulators.Dataset;
 import simulators.data.Detection;
 
 import java.io.IOException;

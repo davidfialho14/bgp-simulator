@@ -4,7 +4,7 @@ import core.Path;
 import core.topology.Link;
 import core.topology.Node;
 import main.ExecutionStateTracker;
-import newsimulators.BasicDataSet;
+import newsimulators.basic.BasicDataSet;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;

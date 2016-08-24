@@ -1,9 +1,11 @@
-package newsimulators;
+package newsimulators.basic;
 
 import core.Engine;
 import core.Protocol;
 import core.State;
 import core.topology.Topology;
+import newsimulators.Simulator;
+import newsimulators.SimulatorFactory;
 
 /**
  * Creates instances of basic simulator for the configurations given in the factory constructor.

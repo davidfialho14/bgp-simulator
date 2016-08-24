@@ -16,8 +16,8 @@ import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import newsimulators.BasicSimulatorFactory;
 import newsimulators.SimulatorFactory;
+import newsimulators.basic.BasicSimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
