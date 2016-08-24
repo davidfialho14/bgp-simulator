@@ -59,6 +59,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
             this.engine.getEventGenerator().removeExportListener(this);
             this.engine.getEventGenerator().removeDetectListener(this);
             this.engine.timeProperty().removeListener(this);
+            this.engine = null;
         }
     }
 
