@@ -3,7 +3,7 @@ package main.gui;
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.exceptions.TopologyParseException;
-import io.reporters.CSVReporterFactory;
+import io.newreporters.CSVReporterFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -16,10 +16,8 @@ import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import simulators.FullDeploymentSimulatorFactory;
-import simulators.GradualDeploymentSimulatorFactory;
-import simulators.InitialDeploymentSimulatorFactory;
-import simulators.SimulatorFactory;
+import newsimulators.BasicSimulatorFactory;
+import newsimulators.SimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -169,19 +167,23 @@ public class Controller implements Initializable {
         //
         // Choose the correct simulator factory based on the user input
         //
+
+        // TODO add support for all simulators
         SimulatorFactory simulatorFactory;
         if (fullDeploymentFormController.activateToggle.isSelected()) {
-            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
-            simulatorFactory = new FullDeploymentSimulatorFactory(protocol, deployTime);
+//            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
+//            simulatorFactory = new FullDeploymentSimulatorFactory(protocol, deployTime);
+            simulatorFactory = new BasicSimulatorFactory(protocol);
 
         } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
-            int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
-            int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
-
-            simulatorFactory = new GradualDeploymentSimulatorFactory(protocol, deployPeriod, deployPercentage);
+//            int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
+//            int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
+//
+//            simulatorFactory = new GradualDeploymentSimulatorFactory(protocol, deployPeriod, deployPercentage);
+            simulatorFactory = new BasicSimulatorFactory(protocol);
 
         } else {
-            simulatorFactory = new InitialDeploymentSimulatorFactory(protocol);
+            simulatorFactory = new BasicSimulatorFactory(protocol);
         }
 
         // generate the report file name from topology filename

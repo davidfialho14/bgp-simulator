@@ -2,14 +2,13 @@ package main.cli;
 
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
-import io.reporters.CSVReporterFactory;
+import io.newreporters.CSVReporterFactory;
 import main.SimulatorParameters;
+import newsimulators.BasicSimulatorFactory;
+import newsimulators.SimulatorFactory;
 import org.apache.commons.cli.*;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import simulators.FullDeploymentSimulatorFactory;
-import simulators.InitialDeploymentSimulatorFactory;
-import simulators.SimulatorFactory;
 
 import java.io.File;
 
@@ -170,11 +169,14 @@ public class ParametersCommandLineParser {
      */
     private SimulatorFactory getSimulatorFactory(CommandLine commandLine) throws ParseException {
 
-        if (commandLine.hasOption(DEPLOY_TIME)) {
-            return new FullDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
-        } else {
-            return new InitialDeploymentSimulatorFactory(getProtocol(commandLine));
-        }
+        // TODO add extra simulators
+        return new BasicSimulatorFactory(getProtocol(commandLine));
+
+//        if (commandLine.hasOption(DEPLOY_TIME)) {
+//            return new FullDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
+//        } else {
+//            return new InitialDeploymentSimulatorFactory(getProtocol(commandLine));
+//        }
     }
 
     /**

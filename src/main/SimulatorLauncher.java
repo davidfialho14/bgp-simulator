@@ -5,8 +5,8 @@ import core.schedulers.RandomScheduler;
 import core.topology.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.TopologyParseException;
-import io.reporters.Reporter;
-import simulators.Simulator;
+import io.newreporters.Reporter;
+import newsimulators.Simulator;
 
 import java.io.IOException;
 
@@ -86,15 +86,17 @@ public class SimulatorLauncher {
                 Reporter reporter = parameters.getReporterFactory().getReporter(
                         parameters.getReportFile(), executionStateTracker);
 
-                reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
-                        parameters.getMaxDelay(), parameters.getProtocol(), simulator);
+                // TODO add before summary
+//                reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
+//                        parameters.getMaxDelay(), parameters.getProtocol(), simulator);
 
                 for (int i = 0; i < parameters.getRepetitionCount(); i++) {
                     simulator.simulate();
-                    simulator.report(reporter);
+                    simulator.getData().report(reporter);
                 }
 
-                reporter.writeAfterSummary();
+                // TODO add after summary
+//                reporter.writeAfterSummary();
 
             } catch (IOException e) {
                 errorHandler.onReportingIOException(e);

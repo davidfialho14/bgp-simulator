@@ -3,10 +3,10 @@ package main;
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.TopologyReaderFactory;
-import io.reporters.CSVReporterFactory;
-import io.reporters.ReporterFactory;
+import io.newreporters.CSVReporterFactory;
+import io.newreporters.ReporterFactory;
+import newsimulators.SimulatorFactory;
 import protocols.BGPProtocol;
-import simulators.SimulatorFactory;
 
 import java.io.File;
 
