@@ -1,6 +1,6 @@
 package newsimulators;
 
-import io.reporters.Reporter;
+import io.newreporters.Reporter;
 
 /**
  * Tag interface for a simulation dataset.
