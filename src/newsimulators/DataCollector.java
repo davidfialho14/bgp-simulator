@@ -20,15 +20,15 @@ public interface DataCollector {
     void register(Engine engine) throws IllegalStateException;
 
     /**
-     * Clears all data that has been collected
-     */
-    void clear();
-
-    /**
      * Unregisters the collector from the registered engine. If the collector is not registered the method will take
      * no effect.
      */
     void unregister();
+
+    /**
+     * Clears all data that has been collected
+     */
+    void clear();
 
     /**
      * Gives access to the data set storing the collected data. The dataset implementation returned depends on the
