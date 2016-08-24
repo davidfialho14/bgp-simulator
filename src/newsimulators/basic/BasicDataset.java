@@ -18,7 +18,7 @@ import java.util.Set;
  *  - cut-off links count
  *  - detections
  */
-public class BasicDataSet implements Dataset {
+public class BasicDataset implements Dataset {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *

@@ -1,6 +1,6 @@
 package io.newreporters;
 
-import newsimulators.basic.BasicDataSet;
+import newsimulators.basic.BasicDataset;
 
 import java.io.IOException;
 
@@ -17,6 +17,6 @@ public interface Reporter {
     *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    void writeData(BasicDataSet dataSet) throws IOException;
+    void writeData(BasicDataset dataSet) throws IOException;
 
 }

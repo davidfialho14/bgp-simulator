@@ -4,7 +4,7 @@ import core.Path;
 import core.topology.Link;
 import core.topology.Node;
 import main.ExecutionStateTracker;
-import newsimulators.basic.BasicDataSet;
+import newsimulators.basic.BasicDataset;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;
@@ -57,7 +57,7 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     @Override
-    public void writeData(BasicDataSet dataSet) throws IOException {
+    public void writeData(BasicDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
 

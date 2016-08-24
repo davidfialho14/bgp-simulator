@@ -21,7 +21,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final BasicDataSet dataSet = new BasicDataSet();
+    protected final BasicDataset dataSet;
     private Engine engine = null;    // registered engine
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
