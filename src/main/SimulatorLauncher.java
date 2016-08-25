@@ -5,7 +5,7 @@ import core.schedulers.RandomScheduler;
 import core.topology.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.TopologyParseException;
-import io.newreporters.Reporter;
+import io.reporters.Reporter;
 import newsimulators.Simulator;
 
 import java.io.IOException;

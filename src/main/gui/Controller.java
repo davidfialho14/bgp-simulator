@@ -3,7 +3,7 @@ package main.gui;
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.exceptions.TopologyParseException;
-import io.newreporters.CSVReporterFactory;
+import io.reporters.CSVReporterFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -169,8 +169,6 @@ public class Controller implements Initializable {
         //
         // Choose the correct simulator factory based on the user input
         //
-
-        // TODO add support for all simulators
         SimulatorFactory simulatorFactory;
         if (fullDeploymentFormController.activateToggle.isSelected()) {
             int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();

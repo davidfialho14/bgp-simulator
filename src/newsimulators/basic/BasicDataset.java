@@ -1,7 +1,7 @@
 package newsimulators.basic;
 
 import core.topology.Node;
-import io.newreporters.Reporter;
+import io.reporters.Reporter;
 import newsimulators.Dataset;
 import simulators.data.Detection;
 

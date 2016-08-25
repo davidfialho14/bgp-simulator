@@ -1,6 +1,6 @@
 package newsimulators.timeddeployment;
 
-import io.newreporters.Reporter;
+import io.reporters.Reporter;
 import newsimulators.Dataset;
 import newsimulators.basic.BasicDataset;
 import simulators.data.Detection;

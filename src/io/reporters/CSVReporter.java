@@ -7,12 +7,15 @@ import core.topology.Network;
 import core.topology.Node;
 import core.topology.Topology;
 import main.ExecutionStateTracker;
+import newsimulators.Simulator;
+import newsimulators.basic.BasicDataset;
+import newsimulators.gradualdeployment.GradualDeploymentDataset;
+import newsimulators.timeddeployment.TimedDeploymentDataset;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import simulators.Simulator;
-import simulators.data.*;
+import simulators.data.Detection;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,7 +46,8 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Constructs a reporter associating the output file.
+     * Constructs a reporter associating the output file. Takes a simulation tracker used by the reporter when
+     * reporting information relative to some simulation instance.
      *
      * @param baseOutputFile file to output report to.
      */
@@ -59,12 +63,85 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Writes a summary of the simulation. Containing basic information about the topology and the simulation
-     * parameters.
+     * Writes the simulation time, total message count, number of detection nodes, and number of cut-off links to
+     * the counts csv file and fills the detections file with the detections relative to this simulation.
+     *
+     * @param dataSet basic data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
      */
-    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
-                                   Simulator simulator) throws IOException {
+    @Override
+    public void writeData(BasicDataset dataSet) throws IOException {
 
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet);
+            printer.println();
+        }
+
+        writeDetections(dataSet);
+    }
+
+    /**
+     * The difference from the version with a basic data is set is that: Adds the number of messages after deployment
+     * to the counts file.
+     *
+     * @param dataSet timed deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(TimedDeploymentDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet.getBasicDataset());
+            printer.print(dataSet.getMessageCountAfterDeployment());
+            printer.println();
+        }
+
+        writeDetections(dataSet.getBasicDataset());
+    }
+
+    /**
+     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
+     * method.
+     *
+     * @param dataSet gradual deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(GradualDeploymentDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet.getBasicDataset());
+            printer.print(dataSet.getDeployingNodesCount());
+            printer.println();
+        }
+
+        writeDetections(dataSet.getBasicDataset());
+
+        // write the deploying nodes
+        try (CSVPrinter printer = getDeploymentsFilePrinter()) {
+            printer.print(currentSimulationNumber());
+
+            for (Node node : dataSet.getDeployingNodes()) {
+                printer.print(node);
+            }
+
+            printer.println();
+        }
+    }
+
+    /**
+     * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
+     * simulation parameters.
+     *
+     * @param topology      original topology.
+     * @param destinationId ID of the destination.
+     * @param minDelay      minimum delay for an exported message.
+     * @param maxDelay      maximum delay for an exported message.
+     * @param protocol      protocol being analysed.
+     * @param simulator     simulator used for the simulation.
+     */
+    @Override
+    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol, Simulator simulator) throws IOException {
         Network network = topology.getNetwork();
 
         try (CSVPrinter csvPrinter = getBeforeSummaryFilePrinter()) {
@@ -93,114 +170,41 @@ public class CSVReporter implements Reporter {
             csvPrinter.printRecord("Simulation Count", stateTracker.getSimulationCount());
             csvPrinter.printRecord("Avg. Detection Count", String.format("%.2f", detectionAvg));
         }
-
-    }
-
-    @Override
-    public void write(BasicDataSet dataSet) throws IOException {
-        mainWrite(dataSet, null, null, null);
-    }
-
-    @Override
-    public void write(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
-        mainWrite(basicDataSet, null, null, spPolicyDataSet);
-    }
-
-    @Override
-    public void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
-        mainWrite(basicDataSet, fullDeploymentDataSet, null, null);
-    }
-
-    @Override
-    public void write(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                      SPPolicyDataSet spPolicyDataSet) throws IOException {
-        mainWrite(basicDataSet, fullDeploymentDataSet, null, spPolicyDataSet);
-    }
-
-    @Override
-    public void write(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
-        mainWrite(basicDataSet, null, gradualDeploymentDataSet, null);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Private Main write called by all other write methods
-     *  Centralized way to write reports
+     *  Private Print methods that can be concatenated. This is true because they do not print a
+     *  new line after printing a new column of data.
+     *
+     *  There is also write methods in the cases where concatenation is not necessary. Write
+     *  methods print a new line after each record.
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    /**
-     * Main write method. All write methods call this method underneath.
-     */
-    private void mainWrite(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                           GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
-            throws IOException {
+    private void printCounts(CSVPrinter printer, BasicDataset dataSet) throws IOException {
+        printer.print(dataSet.getSimulationTime());
+        printer.print(dataSet.getTotalMessageCount());
+        printer.print(dataSet.getDetectingNodesCount());
+        printer.print(dataSet.getCutOffLinksCount());
+    }
 
-        //
-        // Write counts data
-        //
-
-        try (CSVPrinter printer = getCountsFilePrinter()) {
-
-            printer.print(basicDataSet.getSimulationTime());
-            printer.print(basicDataSet.getTotalMessageCount());
-            printer.print(basicDataSet.getDetectingNodesCount());
-            printer.print(basicDataSet.getCutOffLinksCount());
-
-            if (fullDeploymentDataSet != null) {
-                printer.print(fullDeploymentDataSet.getMessageCount());
-            }
-
-            if (gradualDeploymentDataSet != null) {
-                printer.print(gradualDeploymentDataSet.getDeployedNodesCount());
-            }
-
-            if (spPolicyDataSet != null) {
-                printer.print(spPolicyDataSet.getFalsePositiveCount());
-            }
-
-            printer.println();
-        }
-
-        //
-        // Write the detections table data
-        //
+    private void writeDetections(BasicDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getDetectionsFilePrinter()) {
 
             int detectionNumber = 1;
-            for (Detection detection : basicDataSet.getDetections()) {
-                printer.print(currentSimulationNumber());
-                printer.print(detectionNumber++);
-                printer.print(pretty(detection.getDetectingNode()));
-                printer.print(pretty(detection.getCutOffLink()));
-                printer.print(pretty(detection.getCycle()));
+            for (Detection detection : dataSet.getDetections()) {
 
-                if (spPolicyDataSet != null) {
-                    printer.print(detection.isFalsePositive() ? "Yes" : "No");
-                }
-
-                printer.println();
+                printer.printRecord(
+                        currentSimulationNumber(),
+                        detectionNumber++,
+                        pretty(detection.getDetectingNode()),
+                        pretty(detection.getCutOffLink()),
+                        pretty(detection.getCycle())
+                );
             }
         }
-
-        if (gradualDeploymentDataSet != null) {
-
-            //
-            // Write the deployments table data
-            //
-
-            try (CSVPrinter printer = getDeploymentsFilePrinter()) {
-                printer.print(currentSimulationNumber());
-
-                for (Node node : gradualDeploymentDataSet.getDeployedNodes()) {
-                    printer.print(node);
-                }
-
-                printer.println();
-            }
-        }
-
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

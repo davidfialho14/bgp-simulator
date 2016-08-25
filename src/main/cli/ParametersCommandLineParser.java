@@ -2,7 +2,7 @@ package main.cli;
 
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
-import io.newreporters.CSVReporterFactory;
+import io.reporters.CSVReporterFactory;
 import main.SimulatorParameters;
 import newsimulators.SimulatorFactory;
 import newsimulators.basic.BasicSimulatorFactory;

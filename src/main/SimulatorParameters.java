@@ -3,8 +3,8 @@ package main;
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.TopologyReaderFactory;
-import io.newreporters.CSVReporterFactory;
-import io.newreporters.ReporterFactory;
+import io.reporters.CSVReporterFactory;
+import io.reporters.ReporterFactory;
 import newsimulators.SimulatorFactory;
 import protocols.BGPProtocol;
 

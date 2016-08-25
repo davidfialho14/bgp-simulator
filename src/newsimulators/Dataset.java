@@ -1,6 +1,6 @@
 package newsimulators;
 
-import io.newreporters.Reporter;
+import io.reporters.Reporter;
 
 import java.io.IOException;
 
