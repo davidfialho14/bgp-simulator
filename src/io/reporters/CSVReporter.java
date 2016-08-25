@@ -32,12 +32,30 @@ public class CSVReporter implements Reporter {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
+     *  Set of headers
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private static final String[] BASIC_COUNTS_HEADERS =
+            { "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count" };
+    private static final String[] TIMED_DEPLOYMENT_COUNTS_HEADERS = { "Messages After Deployment Count" };
+    private static final String[] GRADUAL_DEPLOYMENT_COUNTS_HEADERS = { "Deployed Nodes Count" };
+    private static final String[] DETECTIONS_HEADERS =
+            { "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles" };
+    private static final String[] DEPLOYMENTS_HEADERS = { "Simulation", "Deployed Nodes" };
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
      *  Private fields
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final File baseOutputFile;  // path with the base file name for the output
     private final ExecutionStateTracker stateTracker;
+
+    private boolean countsHeadersWereAlreadyPrinted = false;
+    private boolean detectionsHeadersWereAlreadyPrinted = false;
+    private boolean deploymentsHeadersWereAlreadyPrinted = false;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -73,6 +91,11 @@ public class CSVReporter implements Reporter {
     public void writeData(BasicDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
+            if (!countsHeadersWereAlreadyPrinted) {
+                printer.printRecord((Object[]) BASIC_COUNTS_HEADERS);
+                countsHeadersWereAlreadyPrinted = true;
+            }
+
             printCounts(printer, dataSet);
             printer.println();
         }
@@ -91,6 +114,11 @@ public class CSVReporter implements Reporter {
     public void writeData(TimedDeploymentDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
+            if (!countsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, BASIC_COUNTS_HEADERS, TIMED_DEPLOYMENT_COUNTS_HEADERS);
+                countsHeadersWereAlreadyPrinted = true;
+            }
+
             printCounts(printer, dataSet.getBasicDataset());
             printer.print(dataSet.getMessageCountAfterDeployment());
             printer.println();
@@ -110,6 +138,11 @@ public class CSVReporter implements Reporter {
     public void writeData(GradualDeploymentDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
+            if (!countsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, BASIC_COUNTS_HEADERS, GRADUAL_DEPLOYMENT_COUNTS_HEADERS);
+                countsHeadersWereAlreadyPrinted = true;
+            }
+
             printCounts(printer, dataSet.getBasicDataset());
             printer.print(dataSet.getDeployingNodesCount());
             printer.println();
@@ -119,12 +152,15 @@ public class CSVReporter implements Reporter {
 
         // write the deploying nodes
         try (CSVPrinter printer = getDeploymentsFilePrinter()) {
-            printer.print(currentSimulationNumber());
+            if (!deploymentsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, BASIC_COUNTS_HEADERS);
+                deploymentsHeadersWereAlreadyPrinted = true;
+            }
 
+            printer.print(currentSimulationNumber());
             for (Node node : dataSet.getDeployingNodes()) {
                 printer.print(node);
             }
-
             printer.println();
         }
     }
@@ -193,6 +229,11 @@ public class CSVReporter implements Reporter {
 
         try (CSVPrinter printer = getDetectionsFilePrinter()) {
 
+            if (!detectionsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, DETECTIONS_HEADERS);
+                detectionsHeadersWereAlreadyPrinted = true;
+            }
+
             int detectionNumber = 1;
             for (Detection detection : dataSet.getDetections()) {
 
@@ -206,6 +247,8 @@ public class CSVReporter implements Reporter {
             }
         }
     }
+
+
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -299,6 +342,25 @@ public class CSVReporter implements Reporter {
      */
     private int currentSimulationNumber() {
         return stateTracker.getSimulationCount();
+    }
+
+    /**
+     * Prints multiple groups of headers.
+     *
+     * @param printer       printer used to print.
+     * @param headerGroups  groups of headers to print.
+     * @throws IOException
+     */
+    private void printHeaders(CSVPrinter printer, String[]... headerGroups) throws IOException {
+
+        for (String[] headers : headerGroups) {
+            for (String header : headers) {
+                printer.print(header);
+            }
+        }
+
+        printer.println();
+
     }
 
 }
