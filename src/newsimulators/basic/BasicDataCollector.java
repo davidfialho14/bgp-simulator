@@ -21,7 +21,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final BasicDataset dataSet;
+    protected final BasicDataset dataset;
     private Engine engine = null;    // registered engine
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -34,7 +34,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      * Creates new basic data collector with an empty basic dataset.
      */
     public BasicDataCollector() {
-        dataSet = new BasicDataset();
+        dataset = new BasicDataset();
     }
 
     /**
@@ -44,7 +44,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      * @param basicDataset basic dataset to store the collected data.
      */
     protected BasicDataCollector(BasicDataset basicDataset) {
-        dataSet = basicDataset;
+        dataset = basicDataset;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -93,7 +93,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void clear() {
-        dataSet.clear();
+        dataset.clear();
     }
 
     /**
@@ -104,7 +104,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public Dataset getDataset() {
-        return dataSet;
+        return dataset;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -121,7 +121,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void onTimeChange(long newTime) {
-        dataSet.setSimulationTime(newTime);
+        dataset.setSimulationTime(newTime);
     }
 
     /**
@@ -131,7 +131,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void onDetected(DetectEvent event) {
-        dataSet.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), DetectEvent.getCycle(event)));
+        dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), DetectEvent.getCycle(event)));
     }
 
     /**
@@ -141,7 +141,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void onExported(ExportEvent event) {
-        dataSet.addMessage();
+        dataset.addMessage();
     }
 
 }

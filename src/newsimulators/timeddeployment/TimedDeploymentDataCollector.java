@@ -14,7 +14,7 @@ public class TimedDeploymentDataCollector extends BasicDataCollector {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final TimedDeploymentDataset dataset = new TimedDeploymentDataset();
+    private final TimedDeploymentDataset timedDeploymentDataset;
 
     private boolean deployed = false;   // flag to indicate if the deployment already took place
 
@@ -30,6 +30,7 @@ public class TimedDeploymentDataCollector extends BasicDataCollector {
     public TimedDeploymentDataCollector() {
         // the basic data collector will also collect to the timed deployment dataset
         super(new TimedDeploymentDataset());
+        this.timedDeploymentDataset = (TimedDeploymentDataset) this.dataset;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -64,7 +65,7 @@ public class TimedDeploymentDataCollector extends BasicDataCollector {
         super.onExported(event);
 
         if (deployed) {
-            dataset.addMessageAfterDeployment();
+            timedDeploymentDataset.addMessageAfterDeployment();
         }
     }
 
