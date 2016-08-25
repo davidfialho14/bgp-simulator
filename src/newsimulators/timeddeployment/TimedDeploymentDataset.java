@@ -50,7 +50,9 @@ public class TimedDeploymentDataset extends BasicDataset {
     /**
      * Clears all data from the dataset.
      */
+    @Override
     public void clear() {
+        super.clear();
         messageCountAfterDeployment = 0;
     }
 
