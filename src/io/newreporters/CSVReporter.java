@@ -86,12 +86,12 @@ public class CSVReporter implements Reporter {
     public void writeData(TimedDeploymentDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
-            printCounts(printer, dataSet);
+            printCounts(printer, dataSet.getBasicDataset());
             printer.print(dataSet.getMessageCountAfterDeployment());
             printer.println();
         }
 
-        writeDetections(dataSet);
+        writeDetections(dataSet.getBasicDataset());
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

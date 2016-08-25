@@ -8,7 +8,11 @@ import core.events.ExportEvent;
 import core.events.ExportListener;
 import newsimulators.DataCollector;
 import newsimulators.Dataset;
+import registers.Registration;
 import simulators.data.Detection;
+
+import static registers.Registration.noRegistration;
+import static registers.Registration.registrationFor;
 
 /**
  * Collects all data that can be stored in a basic dataset.
@@ -22,7 +26,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     protected final BasicDataset dataset;
-    private Engine engine = null;    // registered engine
+    private Registration registration = noRegistration();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -43,7 +47,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      *
      * @param basicDataset basic dataset to store the collected data.
      */
-    protected BasicDataCollector(BasicDataset basicDataset) {
+    public BasicDataCollector(BasicDataset basicDataset) {
         dataset = basicDataset;
     }
 
@@ -61,16 +65,15 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void register(Engine engine) throws IllegalStateException {
-
-        if (this.engine != null) {
+        if (registration.isRegistered()) {
             throw new IllegalStateException("can not register collector that is already registered");
         }
 
-        this.engine = engine;
-        this.engine.getEventGenerator().addExportListener(this);
-        this.engine.getEventGenerator().addDetectListener(this);
-        this.engine.timeProperty().addListener(this);
-
+        registration = registrationFor(engine, this)
+                .exportEvents()
+                .detectEvents()
+                .timeEvents()
+                .register();
     }
 
     /**
@@ -79,13 +82,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void unregister() {
-
-        if (engine != null) {
-            this.engine.getEventGenerator().removeExportListener(this);
-            this.engine.getEventGenerator().removeDetectListener(this);
-            this.engine.timeProperty().removeListener(this);
-            this.engine = null;
-        }
+        registration.cancel();
     }
 
     /**
