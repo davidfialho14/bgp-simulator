@@ -43,7 +43,7 @@ public class GradualDeploymentSimulatorFactory implements SimulatorFactory {
     public Simulator getSimulator(Engine engine, Topology topology, int destinationId) {
         // always initiate with the BGP deployProtocol!
         State initialState = State.create(topology, destinationId, new BGPProtocol());
-        int deployedNodeCount = (int) Math.ceil(deployPercentage * topology.getNetwork().getNodeCount());
+        int deployedNodeCount = (int) Math.ceil(deployPercentage / 100.0 * topology.getNetwork().getNodeCount());
 
         return new GradualDeploymentSimulator(engine, initialState, deployProtocol, deployPeriod, deployedNodeCount);
     }
