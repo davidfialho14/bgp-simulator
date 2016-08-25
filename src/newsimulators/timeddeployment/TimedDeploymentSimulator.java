@@ -67,6 +67,7 @@ public class TimedDeploymentSimulator extends Simulator {
      */
     @Override
     protected void setup() {
+        dataCollector.clear();
         dataCollector.register(engine);
 
         // use a timer to deploy the new protocol at the deploy time

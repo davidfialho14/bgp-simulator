@@ -78,7 +78,10 @@ public class GradualDeploymentSimulator extends Simulator {
      */
     @Override
     protected void setup() {
+        dataCollector.clear();
         dataCollector.register(engine);
+        nodesSelector.reset();
+        deployProtocol.reset();
 
         // use a timer to deploy the new protocol at the deploy time
         deployPeriodicTimer = periodicTimer(engine)
