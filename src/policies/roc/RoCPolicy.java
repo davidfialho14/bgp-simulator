@@ -30,4 +30,15 @@ public class RoCPolicy implements Policy {
                 throw new InvalidPolicyTagException(tag, "not a valid tag for a Gao Rexford label");
         }
     }
+
+    /**
+     * Returns a string with the name of the policy.
+     *
+     * @return string "RoC"
+     */
+    @Override
+    public String toString() {
+        return "RoC";
+    }
+
 }

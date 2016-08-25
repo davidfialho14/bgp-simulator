@@ -1,79 +1,92 @@
 package simulators;
 
-import addons.eventhandlers.DebugEventHandler;
+
 import core.Engine;
 import core.State;
-import io.reporters.Reporter;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
 
 /**
- * Simulator is the base class that all simulators must extend.
- * This class should be subclasses to implement the different types of simulations.
- * A simulator is responsible for executing simulations for a topology and be able to report the data collected
- * during that simulation.
+ * Simulators execute one simulation instance through the {@link #simulate()}. Simulators might have different
+ * behaviours during the simulation and might collect different sets of data. Simulators have two components: the
+ * data collection and simulation behaviour. Data collection is delegated to a data collectors, which means the
+ * simulator only implements the behaviour of the simulation.
+ *
+ * The Simulator class is a template class for simulator with two template methods {@link #setup()} and
+ * {@link #cleanup()} called before and after the simulation, respectively.
  */
 public abstract class Simulator {
 
-    protected Engine engine;    // engine used for simulation
-    protected State state;      // state to be simulated
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private boolean debugEnabled = false;
-    private DebugEventHandler debugEventHandler = null;
+    protected final Engine engine;  // engine used for the simulation
+    protected final State state;    // current state of the simulation
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Constructs a simulator by creating an initial state to be simulated.
+     * Creates a new simulator given an engine and initial state.
      *
-     * @param engine            engine used for simulation.
+     * @param engine        engine used for the simulation.
+     * @param initialState  initial state.
      */
-    Simulator(Engine engine, State initialState) {
+    public Simulator(Engine engine, State initialState) {
         this.engine = engine;
         this.state = initialState;
     }
 
-    // --- BEGIN PUBLIC INTERFACE ---
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Executes one simulation. Should be overridden by subclasses in order to add additional operations
-     * prior or after simulation. By default activates the debug report if enabled and calls the simulate() method
-     * of the engine.
+     * Executes a simulation using the provided engine. It always starts the simulation with the initial state
+     * provided in the constructor (it calls the state reset() method to make sure of that.
      */
     public void simulate() {
+        setup();
         state.reset();
         engine.simulate(state);
+        cleanup();
     }
 
     /**
-     * Calls the reporter's generate() method to generate a report with the collected stats.
+     * Gives access to the data collected during the last simulation.
      *
-     * @param reporter reporter to generate report.
-     * @throws IOException if an error with the output file occurs.
+     * @return a dataset with the data collected in the last simulation.
      */
-    public abstract void report(Reporter reporter) throws IOException;
+    public abstract Dataset getData();
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Template Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Enables the debug report for the simulator. Enabling/disabling the debug report will only take effect in the
-     * next call to simulate.
+     * (Template Method)
      *
-     * @param enable true to debugEnabled and false to disable.
-     * @param debugFile file to output debug messages.
+     * Called before starting a simulations instance (before running {@link #simulate()}).
+     * Subclasses should use this method to implement any necessary initial setup before a
+     * simulation starts.
      */
-    public void enableDebugReport(boolean enable, File debugFile) throws FileNotFoundException {
+    protected abstract void setup();
 
-        if (!this.debugEnabled && enable) { // enabling
-            debugEventHandler = new DebugEventHandler(new PrintStream(debugFile), true);
-            debugEventHandler.register(engine.getEventGenerator());
-        } else if (this.debugEnabled && !enable) { // disabling
-            debugEventHandler.unregister(engine.getEventGenerator());
-            debugEventHandler = null;
-        }
-
-        this.debugEnabled = enable;
-    }
-
-    // --- END PUBLIC INTERFACE ---
+    /**
+     * (Template Method)
+     *
+     * Called after finishing a simulation instance (after running {@link #simulate()}).
+     * Subclasses should use this method to implement any necessary final cleanup after a
+     * simulation finishes.
+     */
+    protected abstract void cleanup();
 
 }

@@ -1,8 +1,8 @@
 package protocols;
 
 import core.Protocol;
-import core.topology.Link;
 import core.Route;
+import core.topology.Link;
 
 /**
  * Implements the detection D2 and the reaction R1.
@@ -23,6 +23,11 @@ public class D2R1Protocol extends Reaction1 implements Protocol, Detection2 {
     @Override
     public void reset() {
         destinationCutLinks.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "D2R1";
     }
 
 }

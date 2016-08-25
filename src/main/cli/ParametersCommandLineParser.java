@@ -7,9 +7,9 @@ import main.SimulatorParameters;
 import org.apache.commons.cli.*;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
-import simulators.FullDeploymentSimulatorFactory;
-import simulators.InitialDeploymentSimulatorFactory;
 import simulators.SimulatorFactory;
+import simulators.basic.BasicSimulatorFactory;
+import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 
@@ -171,9 +171,9 @@ public class ParametersCommandLineParser {
     private SimulatorFactory getSimulatorFactory(CommandLine commandLine) throws ParseException {
 
         if (commandLine.hasOption(DEPLOY_TIME)) {
-            return new FullDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
+            return new TimedDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
         } else {
-            return new InitialDeploymentSimulatorFactory(getProtocol(commandLine));
+            return new BasicSimulatorFactory(getProtocol(commandLine));
         }
     }
 

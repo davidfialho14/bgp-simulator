@@ -42,4 +42,15 @@ public class ShortestPathPolicy implements Policy {
     public int hashCode() {
         return 31;
     }
+
+    /**
+     * Returns a string with the name of the policy.
+     *
+     * @return string "Shortest Path"
+     */
+    @Override
+    public String toString() {
+        return "Shortest Path";
+    }
+
 }

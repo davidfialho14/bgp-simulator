@@ -16,10 +16,10 @@ import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import simulators.FullDeploymentSimulatorFactory;
-import simulators.GradualDeploymentSimulatorFactory;
-import simulators.InitialDeploymentSimulatorFactory;
 import simulators.SimulatorFactory;
+import simulators.basic.BasicSimulatorFactory;
+import simulators.gradualdeployment.GradualDeploymentSimulatorFactory;
+import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -172,7 +172,7 @@ public class Controller implements Initializable {
         SimulatorFactory simulatorFactory;
         if (fullDeploymentFormController.activateToggle.isSelected()) {
             int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
-            simulatorFactory = new FullDeploymentSimulatorFactory(protocol, deployTime);
+            simulatorFactory = new TimedDeploymentSimulatorFactory(protocol, deployTime);
 
         } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
             int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
@@ -181,7 +181,7 @@ public class Controller implements Initializable {
             simulatorFactory = new GradualDeploymentSimulatorFactory(protocol, deployPeriod, deployPercentage);
 
         } else {
-            simulatorFactory = new InitialDeploymentSimulatorFactory(protocol);
+            simulatorFactory = new BasicSimulatorFactory(protocol);
         }
 
         // generate the report file name from topology filename

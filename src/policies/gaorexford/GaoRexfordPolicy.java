@@ -28,4 +28,15 @@ public class GaoRexfordPolicy implements Policy {
                 throw new InvalidPolicyTagException(tag, "not a valid tag for a Gao Rexford label");
         }
     }
+
+    /**
+     * Returns a string with the name of the policy.
+     *
+     * @return string "Gao-Rexford"
+     */
+    @Override
+    public String toString() {
+        return "Gao-Rexford";
+    }
+
 }

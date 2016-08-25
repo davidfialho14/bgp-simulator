@@ -49,7 +49,7 @@ public class SimulatorLauncher {
     /**
      * Starting point of any simulation. This method should be called after configuring the simulation. After calling
      * this method the simulation will load the topology from the topology file, simulate according to the predefined
-     * configurations, and dump a proper report.
+     * configurations, and write a proper report.
      */
     public void launch() {
 
@@ -76,21 +76,30 @@ public class SimulatorLauncher {
             // load the engine
             Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()));
 
+            ExecutionStateTracker executionStateTracker = new ExecutionStateTracker(engine);
+
             // use the simulator factory to get a properly configured simulator
             Simulator simulator = parameters.getSimulatorFactory().getSimulator(
                     engine, topology, parameters.getDestinationId());
 
-            try (Reporter reporter = parameters.getReporterFactory().getReporter(parameters.getReportFile())) {
-                reporter.dumpBasicInfo(topology, parameters.getDestinationId(), parameters.getMinDelay(),
+            try  {
+                Reporter reporter = parameters.getReporterFactory().getReporter(
+                        parameters.getReportFile(), executionStateTracker);
+
+                reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
                         parameters.getMaxDelay(), parameters.getProtocol(), simulator);
 
                 for (int i = 0; i < parameters.getRepetitionCount(); i++) {
                     simulator.simulate();
-                    simulator.report(reporter);
+                    simulator.getData().report(reporter);
                 }
+
+                reporter.writeAfterSummary();
 
             } catch (IOException e) {
                 errorHandler.onReportingIOException(e);
+            } finally {
+                executionStateTracker.unregister();
             }
 
         }

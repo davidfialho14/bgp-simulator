@@ -6,16 +6,17 @@ import core.topology.Link;
 import core.topology.Network;
 import core.topology.Node;
 import core.topology.Topology;
+import main.ExecutionStateTracker;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import protocols.D1R1Protocol;
-import protocols.D2R1Protocol;
-import simulators.FullDeploymentSimulator;
-import simulators.GradualDeploymentSimulator;
-import simulators.InitialDeploymentSimulator;
+import simulators.Detection;
 import simulators.Simulator;
-import simulators.data.*;
+import simulators.basic.BasicDataset;
+import simulators.gradualdeployment.GradualDeploymentDataset;
+import simulators.timeddeployment.TimedDeploymentDataset;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,48 +26,249 @@ import java.util.stream.Collectors;
 /**
  * Generates reports in CSV format.
  */
-public class CSVReporter extends Reporter {
+public class CSVReporter implements Reporter {
 
-    private static final char COMMA = ';';
+    private static final char DELIMITER = ';';
 
-    private final BufferedWriter countsWriter;
-    private final BufferedWriter detectionsWriter;
-    private final BufferedWriter deploymentsWriter;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private int simulationCounter = 0;                     // counts the simulations
-    private boolean isCountsFileMissingHeaders = true;     // indicates if the counts file is missing the headers
-    private boolean isDetectionsFileMissingHeaders = true; // indicates if the detections file is missing the headers
-    private boolean isDeploymentsFileMissingHeaders = true; // indicates if the deployments file is missing the headers
+    private final File baseOutputFile;  // path with the base file name for the output
+    private final ExecutionStateTracker stateTracker;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Constructs a reporter associating the output file.
+     * Constructs a reporter associating the output file. Takes a simulation tracker used by the reporter when
+     * reporting information relative to some simulation instance.
      *
-     * @param outputFile file to output report to.
+     * @param baseOutputFile file to output report to.
      */
-    public CSVReporter(File outputFile) throws IOException {
-        super(outputFile);
+    public CSVReporter(File baseOutputFile, ExecutionStateTracker stateTracker) throws IOException {
+        this.baseOutputFile = baseOutputFile;
+        this.stateTracker = stateTracker;
+    }
 
-        File countsFile = getClassFile(outputFile, "counts");
-        this.countsWriter = new BufferedWriter(new FileWriter(countsFile));
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public interface - Write methods from the Reporter Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        File detectionsFile = getClassFile(outputFile, "detections");
-        this.detectionsWriter = new BufferedWriter(new FileWriter(detectionsFile));
+    /**
+     * Writes the simulation time, total message count, number of detection nodes, and number of cut-off links to
+     * the counts csv file and fills the detections file with the detections relative to this simulation.
+     *
+     * @param dataSet basic data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(BasicDataset dataSet) throws IOException {
 
-        File deploymentsFile = getClassFile(outputFile, "deployments");
-        this.deploymentsWriter = new BufferedWriter(new FileWriter(deploymentsFile));
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet);
+            printer.println();
+        }
+
+        writeDetections(dataSet);
     }
 
     /**
-     * Returns a file with the class name associated to its name.
+     * The difference from the version with a basic data is set is that: Adds the number of messages after deployment
+     * to the counts file.
      *
-     * @param originalFile original file.
-     * @param fileClass    class name to associate with the file.
+     * @param dataSet timed deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(TimedDeploymentDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet.getBasicDataset());
+            printer.print(dataSet.getMessageCountAfterDeployment());
+            printer.println();
+        }
+
+        writeDetections(dataSet.getBasicDataset());
+    }
+
+    /**
+     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
+     * method.
+     *
+     * @param dataSet gradual deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(GradualDeploymentDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet.getBasicDataset());
+            printer.print(dataSet.getDeployingNodesCount());
+            printer.println();
+        }
+
+        writeDetections(dataSet.getBasicDataset());
+
+        // write the deploying nodes
+        try (CSVPrinter printer = getDeploymentsFilePrinter()) {
+            printer.print(currentSimulationNumber());
+
+            for (Node node : dataSet.getDeployingNodes()) {
+                printer.print(node);
+            }
+
+            printer.println();
+        }
+    }
+
+    /**
+     * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
+     * simulation parameters.
+     *
+     * @param topology      original topology.
+     * @param destinationId ID of the destination.
+     * @param minDelay      minimum delay for an exported message.
+     * @param maxDelay      maximum delay for an exported message.
+     * @param protocol      protocol being analysed.
+     * @param simulator     simulator used for the simulation.
+     */
+    @Override
+    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol, Simulator simulator) throws IOException {
+        Network network = topology.getNetwork();
+
+        try (CSVPrinter csvPrinter = getBeforeSummaryFilePrinter()) {
+            csvPrinter.printRecord("Policy", topology.getPolicy());
+            csvPrinter.printRecord("Node Count", network.getNodeCount());
+            csvPrinter.printRecord("Link Count", network.getLinkCount());
+            csvPrinter.printRecord("Destination", destinationId);
+            csvPrinter.printRecord("Message Delay", minDelay, maxDelay);
+            csvPrinter.printRecord("Protocol", protocol);
+            csvPrinter.printRecord("Simulation Type", simulator);
+        }
+    }
+
+    /**
+     * Writes a summary of the simulation after it finishes. Writes basic information abouts the total results of
+     * the simulation.
+     */
+    @Override
+    public void writeAfterSummary() throws IOException {
+
+        // be careful to avoid division by zero
+        float detectionAvg = stateTracker.getDetectionCount() != 0 ?
+                (float) stateTracker.getDetectionCount() / (float) stateTracker.getSimulationCount() : 0;
+
+        try (CSVPrinter csvPrinter = getAfterSummaryFilePrinter()) {
+            csvPrinter.printRecord("Simulation Count", stateTracker.getSimulationCount());
+            csvPrinter.printRecord("Avg. Detection Count", String.format("%.2f", detectionAvg));
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Print methods that can be concatenated. This is true because they do not print a
+     *  new line after printing a new column of data.
+     *
+     *  There is also write methods in the cases where concatenation is not necessary. Write
+     *  methods print a new line after each record.
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private void printCounts(CSVPrinter printer, BasicDataset dataSet) throws IOException {
+        printer.print(dataSet.getSimulationTime());
+        printer.print(dataSet.getTotalMessageCount());
+        printer.print(dataSet.getDetectingNodesCount());
+        printer.print(dataSet.getCutOffLinksCount());
+    }
+
+    private void writeDetections(BasicDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getDetectionsFilePrinter()) {
+
+            int detectionNumber = 1;
+            for (Detection detection : dataSet.getDetections()) {
+
+                printer.printRecord(
+                        currentSimulationNumber(),
+                        detectionNumber++,
+                        pretty(detection.getDetectingNode()),
+                        pretty(detection.getCutOffLink()),
+                        pretty(detection.getCycle())
+                );
+            }
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Helper Methods to get a CSV printer for each type of output file
+     *
+     *  They all return a file printer for the respective file type
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private CSVPrinter getBeforeSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("beforesummary"), false);
+    }
+
+    private CSVPrinter getAfterSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("aftersummary"), false);
+    }
+
+    private CSVPrinter getCountsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("counts"), true);
+    }
+
+    private CSVPrinter getDetectionsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("detections"), true);
+    }
+
+    private CSVPrinter getDeploymentsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("deployments"), true);
+    }
+
+    /**
+     * Base method to get a CSV printer for any file. All other "get printer" methods call this base method.
+     *
+     * @param file      file to associate with the printer.
+     * @param append    true to open the file in append mode and false to truncate the file.
+     * @return a new instance of a CSV printer associated with the given file.
+     * @throws IOException if fails to open the file.
+     */
+    private static CSVPrinter getFilePrinter(File file, boolean append) throws IOException {
+        return new CSVPrinter(new FileWriter(file, append), CSVFormat.EXCEL.withDelimiter(DELIMITER));
+    }
+
+    /**
+     * Appends the given tag to the end of the base output filename and returns the result file. Keeps original file
+     * extension.
+     *
+     * @param tag   tag to add to the base output file.
      * @return file with the class name associated to its name.
      */
-    private static File getClassFile(File originalFile, String fileClass) {
-        return new File(originalFile.getParent(),
-                originalFile.getName().replaceFirst(".csv", "-" + fileClass + ".csv"));
+    private File getFile(String tag) {
+        String extension = FilenameUtils.getExtension(baseOutputFile.getName());
+
+        // append the tag to the original file name (keep the extension)
+        String filename = FilenameUtils.getBaseName(baseOutputFile.getName()) + String.format("-%s.%s", tag, extension);
+
+        return new File(baseOutputFile.getParent(), filename);
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Set of helper methods to display any element like Nodes, Links, Paths, etc in a prettier
+     *  format then its standard toString() result.
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private static String pretty(Node node) {
         return String.valueOf(node.getId());
@@ -84,216 +286,19 @@ public class CSVReporter extends Reporter {
         return StringUtils.join(pathNodesIds.iterator(), " → ");
     }
 
-    /**
-     * Dumps all the basic information from the simulation.
-     */
-    public void dumpBasicInfo(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
-                              Simulator simulator) throws IOException {
-
-        Network network = topology.getNetwork();
-
-        File basicFile = getClassFile(outputFile, "basic");
-        try (BufferedWriter basicWriter = new BufferedWriter(new FileWriter(basicFile))) {
-            writeColumns(basicWriter, "Node Count", network.getNodeCount());    basicWriter.newLine();
-            writeColumns(basicWriter, "Link Count", network.getLinkCount());    basicWriter.newLine();
-            writeColumns(basicWriter, "Destination", destinationId);            basicWriter.newLine();
-            writeColumns(basicWriter, "Message Delay", minDelay, maxDelay);     basicWriter.newLine();
-
-            String protocolName = "";
-            if (protocol instanceof D1R1Protocol)
-                protocolName = "D1";
-            else if(protocol instanceof D2R1Protocol) {
-                protocolName = "D2";
-            }
-            writeColumns(basicWriter, "Detection", protocolName); basicWriter.newLine();
-
-
-            String simulationType = "";
-            if (simulator instanceof InitialDeploymentSimulator)
-                simulationType = "Initial";
-            else if(simulator instanceof FullDeploymentSimulator) {
-                simulationType = "Full";
-            } else if (simulator instanceof GradualDeploymentSimulator) {
-                simulationType = "Gradual";
-            }
-            writeColumns(basicWriter, "Simulation Type", simulationType); basicWriter.newLine();
-
-        }
-    }
-
-    /**
-     * Dumps that data from the data set to the current output file.
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     * @param dataSet data set to dump to the output file.
-     */
-    @Override
-    public void dump(BasicDataSet dataSet) throws IOException {
-        dumpMain(dataSet, null, null, null);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, null, null, spPolicyDataSet);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, null, null);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                     SPPolicyDataSet spPolicyDataSet) throws IOException {
-        dumpMain(basicDataSet, fullDeploymentDataSet, null, spPolicyDataSet);
-    }
-
-    @Override
-    public void dump(BasicDataSet basicDataSet, GradualDeploymentDataSet gradualDeploymentDataSet) throws IOException {
-        dumpMain(basicDataSet, null, gradualDeploymentDataSet, null);
-    }
-
-    @Override
-    public void close() throws IOException {
-        if (countsWriter != null) {
-            countsWriter.close();
-        }
-
-        if (detectionsWriter != null) {
-            detectionsWriter.close();
-        }
-
-        if (deploymentsWriter != null) {
-            deploymentsWriter.close();
-        }
-    }
-
-    // --- PRIVATE METHODS ---
-
-    /*
-        Set of helper method that allow displaying any element like Nodes, Links, Paths, etc into a more prettier
-        format.
-     */
-
-    /**
-     * Main dump method. All dump methods call this method underneath.
-     */
-    private void dumpMain(BasicDataSet basicDataSet, FullDeploymentDataSet fullDeploymentDataSet,
-                          GradualDeploymentDataSet gradualDeploymentDataSet, SPPolicyDataSet spPolicyDataSet)
-            throws IOException {
-
-        simulationCounter++;    // every time dump is called it is for a new simulation
-
-        // write counts headers
-
-        if (isCountsFileMissingHeaders) {
-            isCountsFileMissingHeaders = false;
-
-            writeColumns(countsWriter, "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off " +
-                    "Links " +
-                    "Count");
-            if (fullDeploymentDataSet != null) {
-                appendColumn(countsWriter, "Messages After Deployment Count");
-            }
-            if (gradualDeploymentDataSet != null) {
-                appendColumn(countsWriter, "Deployed Nodes Count");
-            }
-            if (spPolicyDataSet != null) {
-                appendColumn(countsWriter, "False Positive Count");
-            }
-            countsWriter.newLine();
-        }
-
-        // write counts data
-
-        writeColumns(countsWriter,
-                basicDataSet.getSimulationTime(),
-                basicDataSet.getTotalMessageCount(),
-                basicDataSet.getDetectingNodesCount(),
-                basicDataSet.getCutOffLinksCount()
-        );
-
-        if (fullDeploymentDataSet != null) {
-            appendColumn(countsWriter, fullDeploymentDataSet.getMessageCount());
-        }
-        if (gradualDeploymentDataSet != null) {
-            appendColumn(countsWriter, gradualDeploymentDataSet.getDeployedNodesCount());
-        }
-        if (spPolicyDataSet != null) {
-            appendColumn(countsWriter, spPolicyDataSet.getFalsePositiveCount());
-        }
-
-        countsWriter.newLine();
-
-        // write the detections table headers
-
-        if (isDetectionsFileMissingHeaders) {
-            isDetectionsFileMissingHeaders = false;
-
-            writeColumns(detectionsWriter, "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles");
-            if (spPolicyDataSet != null) {
-                appendColumn(detectionsWriter, "False Positive");
-            }
-
-            detectionsWriter.newLine();
-        }
-
-        // write the detections table data
-
-        int detectionNumber = 1;
-        for (Detection detection : basicDataSet.getDetections()) {
-            writeColumns(detectionsWriter, simulationCounter,
-                    detectionNumber++,
-                    pretty(detection.getDetectingNode()),
-                    pretty(detection.getCutOffLink()),
-                    pretty(detection.getCycle()));
-            if (spPolicyDataSet != null) {
-                appendColumn(detectionsWriter, (detection.isFalsePositive() ? "Yes" : "No"));
-            }
-            detectionsWriter.newLine();
-        }
-
-        if (gradualDeploymentDataSet != null) {
-
-            // write the deployments table headers
-
-            if (isDeploymentsFileMissingHeaders) {
-                isDeploymentsFileMissingHeaders = false;
-
-                writeColumns(deploymentsWriter, "Simulation", "Deployed Nodes");
-
-                deploymentsWriter.newLine();
-            }
-
-            // write the deployments table data
-
-            String deployedNodes = gradualDeploymentDataSet.getDeployedNodes().stream()
-                    .map(Node::toString)
-                    .collect(Collectors.joining(", "));
-
-            writeColumns(deploymentsWriter, simulationCounter, deployedNodes);
-            deploymentsWriter.newLine();
-        }
-
-    }
-
-    /**
-     * Writes a sequence of columns in the CSV format.
+     *  Private Helper Methods
      *
-     * @param writer      writer used to write columns.
-     * @param firstColumn first column to write.
-     * @param columns     following columns to write
-     * @throws IOException
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Returns the current simulation number based on the current simulation stateTracker.
+     *
+     * @return the current simulation number.
      */
-    private void writeColumns(BufferedWriter writer, Object firstColumn, Object... columns) throws IOException {
-        writer.write(firstColumn.toString());
-
-        for (Object column : columns) {
-            appendColumn(writer, column);
-        }
-    }
-
-    private void appendColumn(BufferedWriter writer, Object column) throws IOException {
-        writer.write(COMMA + column.toString());
+    private int currentSimulationNumber() {
+        return stateTracker.getSimulationCount();
     }
 
 }

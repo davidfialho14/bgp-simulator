@@ -8,12 +8,6 @@ import core.topology.Topology;
  */
 public interface SimulatorFactory {
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Factory methods
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
     /**
      * Creates a new simulator instance with the pre-configured parameters. The returned simulator implementation
      * depends on the factory implementation and on the parameters provided to the factory.
