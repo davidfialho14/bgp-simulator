@@ -1,6 +1,7 @@
 package io.newreporters;
 
 import newsimulators.basic.BasicDataset;
+import newsimulators.gradualdeployment.GradualDeploymentDataset;
 import newsimulators.timeddeployment.TimedDeploymentDataset;
 
 import java.io.IOException;
@@ -34,5 +35,14 @@ public interface Reporter {
      * @throws IOException if it fails to write to the report resource.
      */
     void writeData(TimedDeploymentDataset dataSet) throws IOException;
+
+    /**
+     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
+     * method.
+     *
+     * @param dataSet gradual deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    void writeData(GradualDeploymentDataset dataSet) throws IOException;
 
 }

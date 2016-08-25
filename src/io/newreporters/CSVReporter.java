@@ -5,6 +5,7 @@ import core.topology.Link;
 import core.topology.Node;
 import main.ExecutionStateTracker;
 import newsimulators.basic.BasicDataset;
+import newsimulators.gradualdeployment.GradualDeploymentDataset;
 import newsimulators.timeddeployment.TimedDeploymentDataset;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -94,6 +95,36 @@ public class CSVReporter implements Reporter {
         writeDetections(dataSet.getBasicDataset());
     }
 
+    /**
+     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
+     * method.
+     *
+     * @param dataSet gradual deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(GradualDeploymentDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet.getBasicDataset());
+            printer.print(dataSet.getDeployingNodesCount());
+            printer.println();
+        }
+
+        writeDetections(dataSet.getBasicDataset());
+
+        // write the deploying nodes
+        try (CSVPrinter printer = getDeploymentsFilePrinter()) {
+            printer.print(currentSimulationNumber());
+
+            for (Node node : dataSet.getDeployingNodes()) {
+                printer.print(node);
+            }
+
+            printer.println();
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Private Print methods that can be concatenated. This is true because they do not print a
@@ -143,6 +174,10 @@ public class CSVReporter implements Reporter {
 
     private CSVPrinter getDetectionsFilePrinter() throws IOException {
         return getFilePrinter(getFile("detections"), true);
+    }
+
+    private CSVPrinter getDeploymentsFilePrinter() throws IOException {
+        return getFilePrinter(getFile("deployments"), true);
     }
 
     /**
