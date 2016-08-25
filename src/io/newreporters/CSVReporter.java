@@ -5,6 +5,7 @@ import core.topology.Link;
 import core.topology.Node;
 import main.ExecutionStateTracker;
 import newsimulators.basic.BasicDataset;
+import newsimulators.timeddeployment.TimedDeploymentDataset;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;
@@ -56,31 +57,76 @@ public class CSVReporter implements Reporter {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    /**
+     * Writes the simulation time, total message count, number of detection nodes, and number of cut-off links to
+     * the counts csv file and fills the detections file with the detections relative to this simulation.
+     *
+     * @param dataSet basic data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
     @Override
     public void writeData(BasicDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
-
-            printer.print(dataSet.getSimulationTime());
-            printer.print(dataSet.getTotalMessageCount());
-            printer.print(dataSet.getDetectingNodesCount());
-            printer.print(dataSet.getCutOffLinksCount());
+            printCounts(printer, dataSet);
             printer.println();
         }
+
+        writeDetections(dataSet);
+    }
+
+    /**
+     * The difference from the version with a basic data is set is that: Adds the number of messages after deployment
+     * to the counts file.
+     *
+     * @param dataSet timed deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    @Override
+    public void writeData(TimedDeploymentDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            printCounts(printer, dataSet);
+            printer.print(dataSet.getMessageCountAfterDeployment());
+            printer.println();
+        }
+
+        writeDetections(dataSet);
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Print methods that can be concatenated. This is true because they do not print a
+     *  new line after printing a new column of data.
+     *
+     *  There is also write methods in the cases where concatenation is not necessary. Write
+     *  methods print a new line after each record.
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private void printCounts(CSVPrinter printer, BasicDataset dataSet) throws IOException {
+        printer.print(dataSet.getSimulationTime());
+        printer.print(dataSet.getTotalMessageCount());
+        printer.print(dataSet.getDetectingNodesCount());
+        printer.print(dataSet.getCutOffLinksCount());
+    }
+
+    private void writeDetections(BasicDataset dataSet) throws IOException {
 
         try (CSVPrinter printer = getDetectionsFilePrinter()) {
 
             int detectionNumber = 1;
             for (Detection detection : dataSet.getDetections()) {
-                printer.print(currentSimulationNumber());
-                printer.print(detectionNumber++);
-                printer.print(pretty(detection.getDetectingNode()));
-                printer.print(pretty(detection.getCutOffLink()));
-                printer.print(pretty(detection.getCycle()));
-                printer.println();
+
+                printer.printRecord(
+                        currentSimulationNumber(),
+                        detectionNumber++,
+                        pretty(detection.getDetectingNode()),
+                        pretty(detection.getCutOffLink()),
+                        pretty(detection.getCycle())
+                );
             }
         }
-
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

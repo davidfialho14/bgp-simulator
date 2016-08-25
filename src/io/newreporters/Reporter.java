@@ -1,6 +1,7 @@
 package io.newreporters;
 
 import newsimulators.basic.BasicDataset;
+import newsimulators.timeddeployment.TimedDeploymentDataset;
 
 import java.io.IOException;
 
@@ -17,6 +18,21 @@ public interface Reporter {
     *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    /**
+     * Writes the data in a basic dataset to the report. Called by the basic dataset report method.
+     *
+     * @param dataSet basic data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
     void writeData(BasicDataset dataSet) throws IOException;
+
+    /**
+     * Writes the data in a timed deployment dataset to the report. Called by the timed deployment dataset report
+     * method.
+     *
+     * @param dataSet timed deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
+    void writeData(TimedDeploymentDataset dataSet) throws IOException;
 
 }
