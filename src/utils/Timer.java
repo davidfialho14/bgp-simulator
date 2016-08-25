@@ -16,14 +16,15 @@ public class Timer implements TimeListener {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final Engine engine;
-    private final long stopTime;
+    private long stopTime;
     private final Runnable runnable;
 
+    private boolean paused = false;
     private boolean stopped = false;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Private Constructor - Timer should be created with the TimerScheduler class
+     *  Private Constructor - Timer should be created with the PeriodicTimerScheduler class
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -43,14 +44,42 @@ public class Timer implements TimeListener {
      * Starts the timer by starting to listen for the time property.
      */
     public void start() {
+        stopped = false;
+        paused = false;
         this.engine.timeProperty().addListener(this);
     }
 
     /**
-     * Stops the timer by removing it from the timer listeners of the engine. Stopping a stopped timer has no effect.
+     * Stops the timer by removing it from the timer listeners of the engine. Stopping a paused timer has no effect.
      */
     public void stop() {
         engine.timeProperty().removeListener(this);
+        stopped = true;
+    }
+
+    /**
+     * Restarts a stopped timer with the same time. If the timer is not stopped it throws an IllegalStateException.
+     *
+     * @throws IllegalStateException if the timer is not stopped.
+     */
+    public void restart() {
+
+        if (!stopped) {
+            throw new IllegalStateException("can not restarted running timer");
+        }
+
+        start();
+    }
+
+    /**
+     * Restarts a stopped timer with a new time. If the timer is not stopped it throws an IllegalStateException.
+     *
+     * @param newStopTime new stop time.
+     * @throws IllegalStateException if the timer is not stopped.
+     */
+    public void restart(long newStopTime) {
+        stopTime = newStopTime;
+        restart();
     }
 
     /**
@@ -59,9 +88,9 @@ public class Timer implements TimeListener {
      */
     @Override
     public void onTimeChange(long newTime) {
-        if (!stopped && newTime >= stopTime) {
+        if (!paused && newTime >= stopTime) {
             runnable.run();
-            stopped = true;
+            paused = true;
         }
     }
 
