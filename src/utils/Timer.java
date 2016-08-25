@@ -19,8 +19,8 @@ public class Timer implements TimeListener {
     private long stopTime;
     private final Runnable runnable;
 
-    private boolean paused = false;
-    private boolean stopped = false;
+    private boolean paused = true;
+    private boolean stopped = true;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -39,15 +39,6 @@ public class Timer implements TimeListener {
      *  Public Interface
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Starts the timer by starting to listen for the time property.
-     */
-    public void start() {
-        stopped = false;
-        paused = false;
-        this.engine.timeProperty().addListener(this);
-    }
 
     /**
      * Stops the timer by removing it from the timer listeners of the engine. Stopping a paused timer has no effect.
@@ -140,6 +131,16 @@ public class Timer implements TimeListener {
             return timer;
         }
 
+    }
+
+
+    /**
+     * Starts the timer by starting to listen for the time property. Puts the timer in running state.
+     */
+    private void start() {
+        stopped = false;
+        paused = false;
+        this.engine.timeProperty().addListener(this);
     }
 
 }
