@@ -109,4 +109,14 @@ public class GradualDeploymentSimulator extends Simulator {
         dataCollector.unregister();
     }
 
+    /**
+     * Returns an identification of the simulator.
+     *
+     * @return string "Gradual Deployment"
+     */
+    @Override
+    public String toString() {
+        return "Gradual Deployment";
+    }
+
 }

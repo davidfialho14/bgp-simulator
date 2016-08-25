@@ -94,4 +94,14 @@ public class TimedDeploymentSimulator extends Simulator {
         dataCollector.unregister();
     }
 
+    /**
+     * Returns an identification of the simulator.
+     *
+     * @return string "Timed Deployment"
+     */
+    @Override
+    public String toString() {
+        return "Timed Deployment";
+    }
+
 }

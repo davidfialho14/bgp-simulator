@@ -77,4 +77,14 @@ public class BasicSimulator extends Simulator {
         dataCollector.unregister();
     }
 
+    /**
+     * Returns an identification of the simulator.
+     *
+     * @return string "Basic"
+     */
+    @Override
+    public String toString() {
+        return "Basic";
+    }
+
 }
