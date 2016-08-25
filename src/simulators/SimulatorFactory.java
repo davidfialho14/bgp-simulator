@@ -1,4 +1,4 @@
-package newsimulators;
+package simulators;
 
 import core.Engine;
 import core.topology.Topology;

@@ -1,8 +1,8 @@
-package simulators.data;
+package simulators;
 
+import core.Path;
 import core.topology.Link;
 import core.topology.Node;
-import core.Path;
 
 
 /**

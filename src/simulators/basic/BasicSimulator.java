@@ -1,9 +1,9 @@
-package newsimulators.basic;
+package simulators.basic;
 
 import core.Engine;
 import core.State;
-import newsimulators.Dataset;
-import newsimulators.Simulator;
+import simulators.Dataset;
+import simulators.Simulator;
 
 /**
  * The basic simulator executes a simulation without ever modifying the initial state. It uses a basic data collector.

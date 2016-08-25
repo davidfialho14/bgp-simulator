@@ -16,10 +16,10 @@ import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import newsimulators.SimulatorFactory;
-import newsimulators.basic.BasicSimulatorFactory;
-import newsimulators.gradualdeployment.GradualDeploymentSimulatorFactory;
-import newsimulators.timeddeployment.TimedDeploymentSimulatorFactory;
+import simulators.SimulatorFactory;
+import simulators.basic.BasicSimulatorFactory;
+import simulators.gradualdeployment.GradualDeploymentSimulatorFactory;
+import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;

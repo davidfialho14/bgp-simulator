@@ -1,9 +1,9 @@
-package newsimulators.basic;
+package simulators.basic;
 
 import core.topology.Node;
 import io.reporters.Reporter;
-import newsimulators.Dataset;
-import simulators.data.Detection;
+import simulators.Dataset;
+import simulators.Detection;
 
 import java.io.IOException;
 import java.util.ArrayList;

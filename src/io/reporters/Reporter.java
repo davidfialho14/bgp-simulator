@@ -2,10 +2,10 @@ package io.reporters;
 
 import core.Protocol;
 import core.topology.Topology;
-import newsimulators.Simulator;
-import newsimulators.basic.BasicDataset;
-import newsimulators.gradualdeployment.GradualDeploymentDataset;
-import newsimulators.timeddeployment.TimedDeploymentDataset;
+import simulators.Simulator;
+import simulators.basic.BasicDataset;
+import simulators.gradualdeployment.GradualDeploymentDataset;
+import simulators.timeddeployment.TimedDeploymentDataset;
 
 import java.io.IOException;
 

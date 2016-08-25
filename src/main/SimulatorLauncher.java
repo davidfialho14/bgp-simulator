@@ -6,7 +6,7 @@ import core.topology.Topology;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.Reporter;
-import newsimulators.Simulator;
+import simulators.Simulator;
 
 import java.io.IOException;
 

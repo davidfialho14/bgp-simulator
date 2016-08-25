@@ -1,12 +1,12 @@
-package newsimulators.gradualdeployment;
+package simulators.gradualdeployment;
 
 import core.Engine;
 import core.Protocol;
 import core.State;
 import core.topology.Topology;
-import newsimulators.Simulator;
-import newsimulators.SimulatorFactory;
 import protocols.BGPProtocol;
+import simulators.Simulator;
+import simulators.SimulatorFactory;
 
 /**
  * Creates instances of gradual deployment simulator with the configurations given in the factory constructor.

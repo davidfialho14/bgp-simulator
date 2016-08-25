@@ -1,9 +1,9 @@
-package newsimulators.timeddeployment;
+package simulators.timeddeployment;
 
 import io.reporters.Reporter;
-import newsimulators.Dataset;
-import newsimulators.basic.BasicDataset;
-import simulators.data.Detection;
+import simulators.Dataset;
+import simulators.Detection;
+import simulators.basic.BasicDataset;
 
 import java.io.IOException;
 import java.util.List;

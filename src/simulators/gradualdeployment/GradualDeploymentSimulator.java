@@ -1,20 +1,24 @@
-package newsimulators.timeddeployment;
+package simulators.gradualdeployment;
 
 import core.Engine;
 import core.Protocol;
 import core.State;
-import newsimulators.Dataset;
-import newsimulators.Simulator;
+import core.topology.Node;
+import simulators.Dataset;
+import simulators.Simulator;
 import statemodifiers.StateModifiers;
-import utils.Timer;
+import utils.PeriodicTimer;
+import utils.RandomNodesSelector;
 
-import static utils.Timer.timer;
+import java.util.Collection;
+
+import static utils.PeriodicTimer.periodicTimer;
 
 /**
- * Starts the simulation with an initial state and at a fixed time instant it deploys a new protocol for all
- * nodes. The new protocol and time of deployment can be configured.
+ * Starts the simulation with an initial state and after a fixed periods of time a fixed number of nodes deploys
+ * a new protocol. The new protocol, the time periods and the number of deploying nodes can be configured.
  */
-public class TimedDeploymentSimulator extends Simulator {
+public class GradualDeploymentSimulator extends Simulator {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -22,11 +26,13 @@ public class TimedDeploymentSimulator extends Simulator {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final TimedDeploymentDataCollector dataCollector = new TimedDeploymentDataCollector();
-    private Timer deployTimer;
+    private final GradualDeploymentDataCollector dataCollector = new GradualDeploymentDataCollector();
+    private final RandomNodesSelector nodesSelector;
+    private PeriodicTimer deployPeriodicTimer;
 
-    private final long deployTime;
     private final Protocol deployProtocol;
+    private final int deployPeriod;
+    private final int deployedNodeCount;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -39,13 +45,18 @@ public class TimedDeploymentSimulator extends Simulator {
      *
      * @param engine            engine used for the simulation.
      * @param initialState      initial state.
-     * @param deployTime        time instant to deploy new protocol.
      * @param deployProtocol    protocol to deploy at instant deployTime.
+     * @param deployPeriod      time period to make deployments.
+     * @param deployedNodeCount number of nodes to deploy new protocol in each period of time.
      */
-    public TimedDeploymentSimulator(Engine engine, State initialState, long deployTime, Protocol deployProtocol) {
+    public GradualDeploymentSimulator(Engine engine, State initialState, Protocol deployProtocol,
+                                      int deployPeriod, int deployedNodeCount) {
         super(engine, initialState);
-        this.deployTime = deployTime;
         this.deployProtocol = deployProtocol;
+        this.deployPeriod = deployPeriod;
+        this.deployedNodeCount = deployedNodeCount;
+
+        nodesSelector = new RandomNodesSelector(initialState.getTopology().getNetwork());
     }
 
     /**
@@ -69,14 +80,18 @@ public class TimedDeploymentSimulator extends Simulator {
     protected void setup() {
         dataCollector.clear();
         dataCollector.register(engine);
+        nodesSelector.reset();
+        deployProtocol.reset();
 
         // use a timer to deploy the new protocol at the deploy time
-        deployTimer = timer(engine)
-                .atTime(deployTime)
+        deployPeriodicTimer = periodicTimer(engine)
+                .withPeriod(deployPeriod)
                 .doOperation(() -> {
-                    deployProtocol.reset();
-                    StateModifiers.deployProtocolToAll(state, deployProtocol);
-                    dataCollector.setDeployed(true);
+                    Collection<Node> selectedNodes = nodesSelector.selectNodes(deployedNodeCount);
+                    for (Node selectedNode : selectedNodes) {
+                        StateModifiers.deployProtocol(state, selectedNode, deployProtocol);
+                        dataCollector.notifyDeployment(selectedNode);
+                    }
                 })
                 .start();
     }
@@ -90,18 +105,18 @@ public class TimedDeploymentSimulator extends Simulator {
      */
     @Override
     protected void cleanup() {
-        deployTimer.stop(); // ensure the deploy timer is stopped and removed from the engine
+        deployPeriodicTimer.stop(); // ensure the deploy timer is stopped and removed from the engine
         dataCollector.unregister();
     }
 
     /**
      * Returns an identification of the simulator.
      *
-     * @return string "Timed Deployment"
+     * @return string "Gradual Deployment"
      */
     @Override
     public String toString() {
-        return "Timed Deployment";
+        return "Gradual Deployment";
     }
 
 }

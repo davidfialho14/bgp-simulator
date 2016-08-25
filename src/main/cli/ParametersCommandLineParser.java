@@ -4,12 +4,12 @@ import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
 import io.reporters.CSVReporterFactory;
 import main.SimulatorParameters;
-import newsimulators.SimulatorFactory;
-import newsimulators.basic.BasicSimulatorFactory;
-import newsimulators.timeddeployment.TimedDeploymentSimulatorFactory;
 import org.apache.commons.cli.*;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
+import simulators.SimulatorFactory;
+import simulators.basic.BasicSimulatorFactory;
+import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 

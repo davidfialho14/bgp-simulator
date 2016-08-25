@@ -1,4 +1,4 @@
-package newsimulators.basic;
+package simulators.basic;
 
 import core.Engine;
 import core.TimeListener;
@@ -6,10 +6,10 @@ import core.events.DetectEvent;
 import core.events.DetectListener;
 import core.events.ExportEvent;
 import core.events.ExportListener;
-import newsimulators.DataCollector;
-import newsimulators.Dataset;
 import registers.Registration;
-import simulators.data.Detection;
+import simulators.DataCollector;
+import simulators.Dataset;
+import simulators.Detection;
 
 import static registers.Registration.noRegistration;
 import static registers.Registration.registrationFor;

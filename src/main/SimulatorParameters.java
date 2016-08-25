@@ -5,8 +5,8 @@ import io.networkreaders.GraphvizReaderFactory;
 import io.networkreaders.TopologyReaderFactory;
 import io.reporters.CSVReporterFactory;
 import io.reporters.ReporterFactory;
-import newsimulators.SimulatorFactory;
 import protocols.BGPProtocol;
+import simulators.SimulatorFactory;
 
 import java.io.File;
 

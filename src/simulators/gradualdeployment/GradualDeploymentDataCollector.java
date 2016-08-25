@@ -1,12 +1,12 @@
-package newsimulators.gradualdeployment;
+package simulators.gradualdeployment;
 
 import core.Engine;
 import core.events.DetectEvent;
 import core.events.ExportEvent;
 import core.topology.Node;
-import newsimulators.Dataset;
-import newsimulators.basic.BasicDataCollector;
 import registers.Registration;
+import simulators.Dataset;
+import simulators.basic.BasicDataCollector;
 
 import static registers.Registration.noRegistration;
 import static registers.Registration.registrationFor;
