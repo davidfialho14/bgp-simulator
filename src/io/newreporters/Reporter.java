@@ -1,5 +1,8 @@
 package io.newreporters;
 
+import core.Protocol;
+import core.topology.Topology;
+import newsimulators.Simulator;
 import newsimulators.basic.BasicDataset;
 import newsimulators.gradualdeployment.GradualDeploymentDataset;
 import newsimulators.timeddeployment.TimedDeploymentDataset;
@@ -44,5 +47,31 @@ public interface Reporter {
      * @throws IOException if it fails to write to the report resource.
      */
     void writeData(GradualDeploymentDataset dataSet) throws IOException;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *
+    *  Methods to write summaries
+    *
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
+     * simulation parameters.
+     *
+     * @param topology      original topology.
+     * @param destinationId ID of the destination.
+     * @param minDelay      minimum delay for an exported message.
+     * @param maxDelay      maximum delay for an exported message.
+     * @param protocol      protocol being analysed.
+     * @param simulator     simulator used for the simulation.
+     */
+    void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay,
+                            Protocol protocol, Simulator simulator) throws IOException;
+
+    /**
+     * Writes a summary of the simulation after it finishes. Writes basic information abouts the total results of
+     * the simulation.
+     */
+    void writeAfterSummary() throws IOException;
 
 }

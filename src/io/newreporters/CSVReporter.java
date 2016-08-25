@@ -1,9 +1,13 @@
 package io.newreporters;
 
 import core.Path;
+import core.Protocol;
 import core.topology.Link;
+import core.topology.Network;
 import core.topology.Node;
+import core.topology.Topology;
 import main.ExecutionStateTracker;
+import newsimulators.Simulator;
 import newsimulators.basic.BasicDataset;
 import newsimulators.gradualdeployment.GradualDeploymentDataset;
 import newsimulators.timeddeployment.TimedDeploymentDataset;
@@ -125,6 +129,49 @@ public class CSVReporter implements Reporter {
         }
     }
 
+    /**
+     * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
+     * simulation parameters.
+     *
+     * @param topology      original topology.
+     * @param destinationId ID of the destination.
+     * @param minDelay      minimum delay for an exported message.
+     * @param maxDelay      maximum delay for an exported message.
+     * @param protocol      protocol being analysed.
+     * @param simulator     simulator used for the simulation.
+     */
+    @Override
+    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol, Simulator simulator) throws IOException {
+        Network network = topology.getNetwork();
+
+        try (CSVPrinter csvPrinter = getBeforeSummaryFilePrinter()) {
+            csvPrinter.printRecord("Policy", topology.getPolicy());
+            csvPrinter.printRecord("Node Count", network.getNodeCount());
+            csvPrinter.printRecord("Link Count", network.getLinkCount());
+            csvPrinter.printRecord("Destination", destinationId);
+            csvPrinter.printRecord("Message Delay", minDelay, maxDelay);
+            csvPrinter.printRecord("Protocol", protocol);
+            csvPrinter.printRecord("Simulation Type", simulator);
+        }
+    }
+
+    /**
+     * Writes a summary of the simulation after it finishes. Writes basic information abouts the total results of
+     * the simulation.
+     */
+    @Override
+    public void writeAfterSummary() throws IOException {
+
+        // be careful to avoid division by zero
+        float detectionAvg = stateTracker.getDetectionCount() != 0 ?
+                (float) stateTracker.getDetectionCount() / (float) stateTracker.getSimulationCount() : 0;
+
+        try (CSVPrinter csvPrinter = getAfterSummaryFilePrinter()) {
+            csvPrinter.printRecord("Simulation Count", stateTracker.getSimulationCount());
+            csvPrinter.printRecord("Avg. Detection Count", String.format("%.2f", detectionAvg));
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Private Print methods that can be concatenated. This is true because they do not print a
@@ -167,6 +214,14 @@ public class CSVReporter implements Reporter {
      *  They all return a file printer for the respective file type
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private CSVPrinter getBeforeSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("beforesummary"), false);
+    }
+
+    private CSVPrinter getAfterSummaryFilePrinter() throws IOException {
+        return getFilePrinter(getFile("aftersummary"), false);
+    }
 
     private CSVPrinter getCountsFilePrinter() throws IOException {
         return getFilePrinter(getFile("counts"), true);
