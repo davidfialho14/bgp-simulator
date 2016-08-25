@@ -18,6 +18,7 @@ import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
 import newsimulators.SimulatorFactory;
 import newsimulators.basic.BasicSimulatorFactory;
+import newsimulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -171,9 +172,8 @@ public class Controller implements Initializable {
         // TODO add support for all simulators
         SimulatorFactory simulatorFactory;
         if (fullDeploymentFormController.activateToggle.isSelected()) {
-//            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
-//            simulatorFactory = new FullDeploymentSimulatorFactory(protocol, deployTime);
-            simulatorFactory = new BasicSimulatorFactory(protocol);
+            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
+            simulatorFactory = new TimedDeploymentSimulatorFactory(protocol, deployTime);
 
         } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
 //            int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();

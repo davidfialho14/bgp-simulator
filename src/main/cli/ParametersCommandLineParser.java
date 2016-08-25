@@ -6,6 +6,7 @@ import io.newreporters.CSVReporterFactory;
 import main.SimulatorParameters;
 import newsimulators.SimulatorFactory;
 import newsimulators.basic.BasicSimulatorFactory;
+import newsimulators.timeddeployment.TimedDeploymentSimulatorFactory;
 import org.apache.commons.cli.*;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
@@ -169,14 +170,11 @@ public class ParametersCommandLineParser {
      */
     private SimulatorFactory getSimulatorFactory(CommandLine commandLine) throws ParseException {
 
-        // TODO add extra simulators
-        return new BasicSimulatorFactory(getProtocol(commandLine));
-
-//        if (commandLine.hasOption(DEPLOY_TIME)) {
-//            return new FullDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
-//        } else {
-//            return new InitialDeploymentSimulatorFactory(getProtocol(commandLine));
-//        }
+        if (commandLine.hasOption(DEPLOY_TIME)) {
+            return new TimedDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
+        } else {
+            return new BasicSimulatorFactory(getProtocol(commandLine));
+        }
     }
 
     /**
