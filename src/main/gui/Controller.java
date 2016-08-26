@@ -2,14 +2,16 @@ package main.gui;
 
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
-import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.CSVReporterFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import main.ErrorHandler;
+import main.ProgressHandler;
 import main.SimulatorLauncher;
 import main.SimulatorParameters;
 import main.gui.basics.NumberSpinner;
@@ -22,7 +24,6 @@ import simulators.gradualdeployment.GradualDeploymentSimulatorFactory;
 import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,28 +39,8 @@ public class Controller implements Initializable {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new ErrorHandler() {
-        @Override
-        public void onTopologyLoadIOException(IOException exception) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "can't open the file");
-            alert.setHeaderText("Network File Error");
-            alert.showAndWait();
-        }
-
-        @Override
-        public void onTopologyLoadParseException(TopologyParseException exception) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "initialTopology file is corrupted");
-            alert.setHeaderText("Invalid File Error");
-            alert.showAndWait();
-        }
-
-        @Override
-        public void onReportingIOException(IOException exception) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "failed to open/create/write report file");
-            alert.setHeaderText("IO Error");
-            alert.showAndWait();
-        }
-    });
+    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(
+            new GUIErrorHandler(), new ProgressHandler() {});   // no support for progress right now
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
