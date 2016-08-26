@@ -132,7 +132,7 @@ public class State {
         return nodesStates.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getSelectedRoute()
+                        entry -> entry.getValue().getTable().getSelectedRoute()
                 ));
     }
 

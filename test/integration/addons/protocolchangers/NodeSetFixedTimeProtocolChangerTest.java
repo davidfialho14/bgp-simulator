@@ -57,9 +57,9 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         State state = simulate(3, 0, new D1R1Protocol(), 2, 3L);
 
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
     }
 
     @Test(timeout = 2000)
@@ -92,9 +92,9 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         State state = simulate(3, 0, new D1R1Protocol(), 2, 15L);
 
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
     }
 
     @Test(timeout = 2000)
@@ -103,9 +103,9 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         State state = simulate(3, 0, new D1R1Protocol(), 1, 3L);
 
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(-1), path(3, 1, 0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(0, sp(-1), path(3, 1, 0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
     }
 
     @Test(timeout = 2000)

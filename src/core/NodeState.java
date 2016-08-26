@@ -1,7 +1,6 @@
 package core;
 
 import core.topology.ConnectedNode;
-import core.topology.Link;
 
 /**
  * Aggregates all the state of one node in one unique class
@@ -33,23 +32,6 @@ public class NodeState {
     }
 
     /**
-     * Returns the current selected route.
-     *
-     * @return current selected route.
-     */
-    public Route getSelectedRoute() {
-        return table.getSelectedRoute();
-    }
-
-    /**
-     * Sets the given route as the currently selected route for the destination.
-     *
-     * @param route route to set as selected.
-     */
-    public void setSelectedRoute(Route route) {
-    }
-
-    /**
      * Returns the current protocol being used by the node.
      *
      * @return current protocol being used by the node.
@@ -65,28 +47,6 @@ public class NodeState {
      */
     public void setProtocol(Protocol protocol) {
         this.protocol = protocol;
-    }
-
-    /**
-     * Returns the currently selected route for the given destination. If the ignored link is specified it selects
-     * the preferred route excluding the route learned from that out-link.
-     *
-     * @param ignoredLink out-link to be ignored.
-     * @return currently selected route.
-     */
-    public Route getExclRoute(Link ignoredLink) {
-        return table.getExclRoute(ignoredLink);
-    }
-
-    /**
-     * Updates the attribute and/or path of the route for the given destination and out-link.
-     *
-     * @param outLink out-link to update.
-     * @param attribute attribute to update route to.
-     * @param path path to update to.
-     */
-    public void updateRoute(Link outLink, Attribute attribute, Path path) {
-        table.setRoute(outLink, new Route(table.getDestination(), attribute, path));
     }
 
 }

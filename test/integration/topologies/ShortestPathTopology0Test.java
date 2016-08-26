@@ -59,7 +59,7 @@ public class ShortestPathTopology0Test {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(1)).getSelectedRoute(), is(sproute(0, 1, path(0))));
+        assertThat(state.get(new ConnectedNode(1)).getTable().getSelectedRoute(), is(sproute(0, 1, path(0))));
     }
 
     @Test(timeout = 2000)

@@ -140,9 +140,10 @@ public class Engine {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
         ConnectedNode learningNode = link.getSource();
+        RouteTable table = nodeState.getTable();
 
         // select the best route learned from all out-neighbours except the exporting out-link
-        Route exclRoute = nodeState.getExclRoute(link);
+        Route exclRoute = table.getExclRoute(link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
@@ -157,9 +158,9 @@ public class Engine {
             learnedRoute = invalidRoute(destination);
         }
 
-        nodeState.updateRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
+        table.setRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
-        return nodeState.getSelectedRoute();
+        return table.getSelectedRoute();
     }
 
     /**
@@ -196,7 +197,7 @@ public class Engine {
      */
     void processSelection(NodeState nodeState, Link link, Route learnedRoute) {
         // store the currently selected route
-        Route prevSelectedRoute = nodeState.getSelectedRoute();
+        Route prevSelectedRoute = nodeState.getTable().getSelectedRoute();
 
         Route selectedRoute = select(nodeState, link, learnedRoute);
         eventGenerator.fireSelectEvent(new SelectEvent(link.getSource(), prevSelectedRoute, selectedRoute));
@@ -242,8 +243,7 @@ public class Engine {
         Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
 
         // add the self route to the node's route table
-        nodeState.updateRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
-        nodeState.setSelectedRoute(selfRoute);
+        nodeState.getTable().setRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
 
         node.getInLinks().forEach(link -> export(link, selfRoute));
     }
