@@ -1,10 +1,10 @@
 package protocols;
 
-import core.topology.Link;
-import core.topology.Node;
 import core.Attribute;
 import core.InvalidAttribute;
 import core.Route;
+import core.topology.Link;
+import core.topology.Node;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +40,10 @@ class Reaction1 {
             // there was already a set of cut links for this destination
             curLinkSet.add(link);
         }
+    }
+
+    public void reset() {
+        destinationCutLinks.clear();
     }
 
 }

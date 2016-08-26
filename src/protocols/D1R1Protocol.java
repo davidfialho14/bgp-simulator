@@ -1,27 +1,36 @@
 package protocols;
 
+import core.Attribute;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
+import core.topology.Node;
 
 /**
  * Implements the detection D1 and the reaction R1.
  */
-public class D1R1Protocol extends Reaction1 implements Protocol, Detection1 {
+public class D1R1Protocol implements Protocol {
+
+    private final Reaction1 reaction = new Reaction1();
 
     @Override
     public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
-        return Detection1.isOscillation(learnedRoute.getAttribute(), exclRoute);
+        return Detections.detection1(learnedRoute.getAttribute(), exclRoute.getAttribute());
     }
 
     @Override
     public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
-        setParameters(link, learnedRoute);
+        reaction.setParameters(link, learnedRoute);
+    }
+
+    @Override
+    public Attribute extend(Node destination, Link link, Attribute attribute) {
+        return reaction.extend(destination, link, attribute);
     }
 
     @Override
     public void reset() {
-        destinationCutLinks.clear();
+        reaction.reset();
     }
 
     @Override
