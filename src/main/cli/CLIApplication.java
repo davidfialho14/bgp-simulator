@@ -19,7 +19,8 @@ public class CLIApplication {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new CLIErrorHandler());
+    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(
+            new CLIErrorHandler(), new CLIProgressHandler());
 
     /**
      * Creates a new CLI application instance with the parameters for the launcher already initialized. It can only
