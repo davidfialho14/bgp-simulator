@@ -19,6 +19,7 @@ import java.io.IOException;
 public class SimulatorLauncher {
 
     private final ErrorHandler errorHandler;
+    private final ProgressHandler progressHandler;
     private SimulatorParameters parameters = null;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -31,9 +32,11 @@ public class SimulatorLauncher {
      * Creates a new simulator launcher associated with an error handler.
      *
      * @param errorHandler class to handle errors.
+     * @param progressHandler class to handle progress events.
      */
-    public SimulatorLauncher(ErrorHandler errorHandler) {
+    public SimulatorLauncher(ErrorHandler errorHandler, ProgressHandler progressHandler) {
         this.errorHandler = errorHandler;
+        this.progressHandler = progressHandler;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -57,12 +60,16 @@ public class SimulatorLauncher {
             throw new IllegalStateException("can not launch the simulator before the parameters have been set");
         }
 
+        progressHandler.onStartExecution();
+
         // Load the topology
         Topology topology = null;
         try (TopologyReader topologyReader =
                      parameters.getReaderFactory().getTopologyReader(parameters.getTopologyFile())) {
 
+            progressHandler.onStartLoading(parameters.getTopologyFile());
             topology = topologyReader.read();
+            progressHandler.onFinishedLoading(topology);
 
         } catch (IOException e) {
             errorHandler.onTopologyLoadIOException(e);
@@ -90,8 +97,13 @@ public class SimulatorLauncher {
                         parameters.getMaxDelay(), parameters.getProtocol(), simulator);
 
                 for (int i = 0; i < parameters.getRepetitionCount(); i++) {
+                    progressHandler.onStartSimulation(i, parameters);
                     simulator.simulate();
+                    progressHandler.onFinishSimulation(i);
+
+                    progressHandler.onStartReporting(i);
                     simulator.getData().report(reporter);
+                    progressHandler.onFinishReporting(i);
                 }
 
                 reporter.writeAfterSummary();
@@ -101,6 +113,8 @@ public class SimulatorLauncher {
             } finally {
                 executionStateTracker.unregister();
             }
+
+            progressHandler.onFinishExecution();
 
         }
 
