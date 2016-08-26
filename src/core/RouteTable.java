@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static core.Route.invalidRoute;
+
 /**
  * Stores the routes learned from each out-link to reach one destination.
  */
@@ -42,7 +44,7 @@ public class RouteTable {
     public RouteTable(Node destination) {
         this.destination = destination;
         this.routes = new HashMap<>();
-        this.selectedRoute = null;
+        this.selectedRoute = invalidRoute(destination);
         this.selectedOutLink = null;
     }
 
@@ -56,7 +58,7 @@ public class RouteTable {
     public RouteTable(ConnectedNode destination, Collection<Link> outLinks) {
         this.destination = destination;
         this.routes = new HashMap<>(outLinks.size());
-        this.selectedRoute = null;
+        this.selectedRoute = invalidRoute(destination);
         this.selectedOutLink = null;
 
         outLinks.forEach(this::addOutLink);
@@ -83,7 +85,7 @@ public class RouteTable {
      * @param outLink out-link to add to the table.
      */
     public void addOutLink(Link outLink) {
-        routes.putIfAbsent(outLink, Route.invalidRoute(destination));
+        routes.putIfAbsent(outLink, invalidRoute(destination));
     }
 
     /**
@@ -153,7 +155,7 @@ public class RouteTable {
      * Clears all the routes and destinations from the table. It keeps the out-links.
      */
     public void clear() {
-        routes.replaceAll((link, route) -> Route.invalidRoute(destination));
+        routes.replaceAll((link, route) -> invalidRoute(destination));
     }
 
     /**
