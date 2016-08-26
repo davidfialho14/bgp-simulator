@@ -147,7 +147,14 @@ public class RouteTable {
      * @return route associated with the given pair or null if the out-link does not exist.
      */
     public Route getRoute(Link outLink) {
-        return routes.get(outLink);
+        Route route = routes.get(outLink);
+
+        if (route == null) {
+            return invalidRoute(destination);
+        } else {
+            return route;
+        }
+
     }
 
     /**

@@ -49,4 +49,14 @@ public interface RouteWrapper {
     static Route anyRoute(int destId) {
         return anyRoute(new ConnectedNode(destId));
     }
+
+    /**
+     * Creates an invalid route from an integer ID instead of a node.
+     *
+     * @param destId id for the destination.
+     * @return new invalid route for a destianiton with the given id.
+     */
+    static Route invalidRoute(int destId) {
+        return Route.invalidRoute(Node.newNode(destId));
+    }
 }
