@@ -40,8 +40,8 @@ public class CSVReporter implements Reporter {
             { "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count", "False Positive Count" };
     private static final String[] TIMED_DEPLOYMENT_COUNTS_HEADERS = { "Messages After Deployment Count" };
     private static final String[] GRADUAL_DEPLOYMENT_COUNTS_HEADERS = { "Deployed Nodes Count" };
-    private static final String[] DETECTIONS_HEADERS =
-            { "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles", "False Positive" };
+    private static final String[] DETECTIONS_HEADERS = { "Simulation", "Detections", "Detecting Nodes",
+            "Cut-Off Links", "Cycles", "Initial Attribute", "False Positive" };
     private static final String[] DEPLOYMENTS_HEADERS = { "Simulation", "Deployed Nodes" };
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -244,6 +244,7 @@ public class CSVReporter implements Reporter {
                         pretty(detection.getDetectingNode()),
                         pretty(detection.getCutOffLink()),
                         pretty(detection.getCycle()),
+                        detection.getInitialAttribute(),
                         detection.isFalsePositive() ? "Yes" : "No"
                 );
             }

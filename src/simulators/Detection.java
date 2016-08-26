@@ -1,5 +1,6 @@
 package simulators;
 
+import core.Attribute;
 import core.Path;
 import core.topology.ConnectedNode;
 import core.topology.Link;
@@ -11,15 +12,19 @@ import core.topology.Link;
  */
 public class Detection {
 
-    private ConnectedNode detectingNode;
-    private Link cutOffLink;
-    private Path cycle;
-    private boolean falsePositive;
+    private final ConnectedNode detectingNode;
+    private final Link cutOffLink;
+    private final Path cycle;
+    private final Attribute initialAttribute;
+    private final boolean falsePositive;
 
-    public Detection(ConnectedNode detectingNode, Link cutOffLink, Path cycle, boolean falsePositive) {
+    public Detection(ConnectedNode detectingNode, Link cutOffLink, Path cycle, Attribute initialAttribute,
+                     boolean falsePositive) {
+
         this.detectingNode = detectingNode;
         this.cutOffLink = cutOffLink;
         this.cycle = cycle;
+        this.initialAttribute = initialAttribute;
         this.falsePositive = falsePositive;
     }
 
@@ -33,6 +38,10 @@ public class Detection {
 
     public Path getCycle() {
         return cycle;
+    }
+
+    public Attribute getInitialAttribute() {
+        return initialAttribute;
     }
 
     public boolean isFalsePositive() {

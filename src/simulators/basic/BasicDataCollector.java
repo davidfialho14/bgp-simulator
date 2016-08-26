@@ -148,7 +148,8 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
         // it's guaranteed a false positive if the extend attribute along the cycle is not better the initial attribute
         boolean falsePositive = (attribute.compareTo(initialAttribute) >= 0);
 
-        dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), cycle, falsePositive));
+        dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), cycle,
+                initialAttribute, falsePositive));
     }
 
     /**
