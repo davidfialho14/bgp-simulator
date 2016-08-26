@@ -11,7 +11,7 @@ public class SelfLink extends Link {
      * Creates a self link.
      * @param node node to create self link for
      */
-    public SelfLink(Node node) {
+    public SelfLink(ConnectedNode node) {
         super(node, node, null);
     }
 

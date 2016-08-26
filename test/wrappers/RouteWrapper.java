@@ -1,7 +1,7 @@
 package wrappers;
 
+import core.topology.ConnectedNode;
 import stubs.StubAttribute;
-import core.topology.Node;
 import core.Attribute;
 import core.Path;
 import core.Route;
@@ -16,7 +16,7 @@ public interface RouteWrapper {
     /**
      * More readable way to create a route instance.
      */
-    static Route route(Node destination, Attribute attribute, Path path) {
+    static Route route(ConnectedNode destination, Attribute attribute, Path path) {
         return new Route(destination, attribute, path);
     }
 
@@ -24,7 +24,7 @@ public interface RouteWrapper {
      * More readable way to create a route instance.
      */
     static Route route(int destId, Attribute attribute, Path path) {
-        return route(new Node(destId), attribute, path);
+        return route(new ConnectedNode(destId), attribute, path);
     }
 
     /**
@@ -34,7 +34,7 @@ public interface RouteWrapper {
      * @param destination destination node of the route.
      * @return new route instance for the given destination.
      */
-    static Route anyRoute(Node destination) {
+    static Route anyRoute(ConnectedNode destination) {
         return new Route(destination, new StubAttribute(), path());
     }
 
@@ -46,6 +46,6 @@ public interface RouteWrapper {
      * @return new route instance for the given destination.
      */
     static Route anyRoute(int destId) {
-        return anyRoute(new Node(destId));
+        return anyRoute(new ConnectedNode(destId));
     }
 }

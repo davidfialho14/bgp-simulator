@@ -1,7 +1,7 @@
 package core.events;
 
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 import core.Path;
 import core.Route;
 
@@ -72,7 +72,7 @@ public class DetectEvent implements SimulationEvent {
      *
      * @return node that detected.
      */
-    public Node getDetectingNode() {
+    public ConnectedNode getDetectingNode() {
         return outLink.getSource();
     }
 

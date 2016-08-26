@@ -4,12 +4,12 @@ import core.Attribute;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 public class BGPProtocol implements Protocol {
 
     @Override
-    public Attribute extend(Node destination, Link link, Attribute attribute) {
+    public Attribute extend(ConnectedNode destination, Link link, Attribute attribute) {
         return link.extend(attribute);
     }
 

@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import core.topology.Policy;
 
 import static core.InvalidAttribute.invalidAttr;
@@ -12,7 +12,7 @@ import static core.InvalidPath.invalidPath;
  */
 public class Route implements Comparable<Route> {
 
-    private Node destination;
+    private ConnectedNode destination;
     private Attribute attribute;
     private Path path;
 
@@ -22,7 +22,7 @@ public class Route implements Comparable<Route> {
      * @param attribute policy attribute of the route.
      * @param path path to reach the destination.
      */
-    public Route(Node destination, Attribute attribute, Path path) {
+    public Route(ConnectedNode destination, Attribute attribute, Path path) {
         this.destination = destination;
         this.attribute = attribute;
         this.path = path;
@@ -44,7 +44,7 @@ public class Route implements Comparable<Route> {
      * @param destination destination of the route.
      * @return new invalid Route instance.
      */
-    public static Route invalidRoute(Node destination) {
+    public static Route invalidRoute(ConnectedNode destination) {
         return new Route(destination, invalidAttr(), invalidPath());
     }
 
@@ -54,7 +54,7 @@ public class Route implements Comparable<Route> {
      * @param policy policy used to create a self attribute to the given node.
      * @return new self Route instance to the given node.
      */
-    public static Route createSelf(Node node, Policy policy) {
+    public static Route createSelf(ConnectedNode node, Policy policy) {
         return new Route(node, policy.createSelf(node), new Path());
     }
 
@@ -62,7 +62,7 @@ public class Route implements Comparable<Route> {
      * Returns the route's destination.
      * @return destination of the route.
      */
-    public Node getDestination() {
+    public ConnectedNode getDestination() {
         return destination;
     }
 
@@ -70,7 +70,7 @@ public class Route implements Comparable<Route> {
      * Assigns the given destination to the route.
      * @param destination node to be assigned as destination.
      */
-    public void setDestination(Node destination) {
+    public void setDestination(ConnectedNode destination) {
         this.destination = destination;
     }
 

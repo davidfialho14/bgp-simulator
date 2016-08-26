@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import org.junit.Test;
 
 import static core.Route.invalidRoute;
@@ -13,7 +13,7 @@ import static wrappers.topology.TopologyWrapper.anyNode;
 
 public class RouteTest {
     
-    private Node destination = anyNode();
+    private ConnectedNode destination = anyNode();
 
     @Test
     public void compareTo_InvalidRouteToInvalidRoute_Equal() throws Exception {

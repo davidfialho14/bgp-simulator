@@ -3,7 +3,7 @@ package addons.protocolchangers;
 import core.Engine;
 import core.Protocol;
 import core.State;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -15,7 +15,7 @@ import java.util.Set;
 public class RandomNodesFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
 
     private final Protocol protocolToChangeTo;
-    private final Set<Node> nodeSet = new HashSet<>();
+    private final Set<ConnectedNode> nodeSet = new HashSet<>();
 
     private RandomNodesFixedTimeProtocolChanger(Builder builder) {
         super(builder.engine, builder.state, builder.changeTime);

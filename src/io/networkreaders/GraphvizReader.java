@@ -91,10 +91,10 @@ public class GraphvizReader implements TopologyReader {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Returns the ID of the graphviz Node.
+     * Returns the ID of the graphviz ConnectedNode.
      *
-     * @param node graphviz Node to get ID from
-     * @return the ID of the graphviz Node.
+     * @param node graphviz ConnectedNode to get ID from
+     * @return the ID of the graphviz ConnectedNode.
      */
     private int getId(Node node) {
         String id = node.getId().getId();

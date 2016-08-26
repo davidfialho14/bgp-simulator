@@ -19,10 +19,10 @@ public class Factory {
      * higher. All the other node attributes will be initialized to null.
      * @return array with n node instances.
      */
-    public static Node[] createNodes(int n) {
-        Node[] nodes = new Node[n];
+    public static ConnectedNode[] createNodes(int n) {
+        ConnectedNode[] nodes = new ConnectedNode[n];
         for (int i = 0; i < n; i++) {
-            nodes[i] = new Node(i);
+            nodes[i] = new ConnectedNode(i);
         }
 
         return nodes;
@@ -33,8 +33,8 @@ public class Factory {
      * initialized to null.
      * @return new node instance.
      */
-    public static Node createRandomNode() {
-        return new Node(nodeId++);
+    public static ConnectedNode createRandomNode() {
+        return new ConnectedNode(nodeId++);
     }
 
     /**
@@ -42,10 +42,10 @@ public class Factory {
      * initialized to null.
      * @return array with the created nodes.
      */
-    public static Node[] createRandomNodes(int n) {
-        Node[] nodes = new Node[n];
+    public static ConnectedNode[] createRandomNodes(int n) {
+        ConnectedNode[] nodes = new ConnectedNode[n];
         for (int i = 0; i < n; i++) {
-            nodes[i] = new Node(nodeId++);
+            nodes[i] = new ConnectedNode(nodeId++);
         }
 
         return nodes;
@@ -60,8 +60,8 @@ public class Factory {
      */
     public static Link createLink(int srcId, int destId) {
         // do not care about the link length
-        return new Link(new Node(srcId),
-                new Node(destId), null);
+        return new Link(new ConnectedNode(srcId),
+                new ConnectedNode(destId), null);
     }
 
     /**

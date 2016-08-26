@@ -1,8 +1,8 @@
 package core;
 
+import core.topology.ConnectedNode;
 import dnl.utils.text.table.TextTable;
 import core.topology.Link;
-import core.topology.Node;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,15 +13,27 @@ import java.util.*;
  */
 public class RouteTable {
 
-    private Node destination;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private ConnectedNode destination;
     private Map<Link, Route> routes;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Constructs a new empty route table for one destination and with no out-links.
      *
      * @param destination destination of the routes to be stored.
      */
-    public RouteTable(Node destination) {
+    public RouteTable(ConnectedNode destination) {
         this.destination = destination;
         this.routes = new HashMap<>();
     }
@@ -33,12 +45,18 @@ public class RouteTable {
      * @param destination destination of the routes to be stored.
      * @param outLinks out out-links of the route table.
      */
-    public RouteTable(Node destination, Collection<Link> outLinks) {
+    public RouteTable(ConnectedNode destination, Collection<Link> outLinks) {
         this.destination = destination;
         this.routes = new HashMap<>(outLinks.size());
 
         outLinks.forEach(this::addOutLink);
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Removes the given out-link from the table.
@@ -63,7 +81,7 @@ public class RouteTable {
      *
      * @return the destination node associated with the route table.
      */
-    public Node getDestination() {
+    public ConnectedNode getDestination() {
         return destination;
     }
 

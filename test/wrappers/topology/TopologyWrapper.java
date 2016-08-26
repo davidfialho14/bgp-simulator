@@ -1,7 +1,7 @@
 package wrappers.topology;
 
+import core.topology.ConnectedNode;
 import core.topology.Network;
-import core.topology.Node;
 import core.topology.Policy;
 import core.topology.Topology;
 import core.topology.exceptions.NodeNotFoundException;
@@ -40,8 +40,8 @@ public class TopologyWrapper {
     /**
      * Creates a node with any id. To be used in a context when the id of the node is not important.
      */
-    public static Node anyNode() {
-        return new Node(Integer.MAX_VALUE);
+    public static ConnectedNode anyNode() {
+        return new ConnectedNode(Integer.MAX_VALUE);
     }
 
 }

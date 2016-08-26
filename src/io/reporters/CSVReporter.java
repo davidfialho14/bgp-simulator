@@ -4,7 +4,7 @@ import core.Path;
 import core.Protocol;
 import core.topology.Link;
 import core.topology.Network;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import core.topology.Topology;
 import main.ExecutionStateTracker;
 import org.apache.commons.csv.CSVFormat;
@@ -158,7 +158,7 @@ public class CSVReporter implements Reporter {
             }
 
             printer.print(currentSimulationNumber());
-            for (Node node : dataSet.getDeployingNodes()) {
+            for (ConnectedNode node : dataSet.getDeployingNodes()) {
                 printer.print(node);
             }
             printer.println();
@@ -182,7 +182,7 @@ public class CSVReporter implements Reporter {
 
         try (CSVPrinter csvPrinter = getBeforeSummaryFilePrinter()) {
             csvPrinter.printRecord("Policy", topology.getPolicy());
-            csvPrinter.printRecord("Node Count", network.getNodeCount());
+            csvPrinter.printRecord("ConnectedNode Count", network.getNodeCount());
             csvPrinter.printRecord("Link Count", network.getLinkCount());
             csvPrinter.printRecord("Destination", destinationId);
             csvPrinter.printRecord("Message Delay", minDelay, maxDelay);
@@ -313,7 +313,7 @@ public class CSVReporter implements Reporter {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private static String pretty(Node node) {
+    private static String pretty(ConnectedNode node) {
         return String.valueOf(node.getId());
     }
 
@@ -323,7 +323,7 @@ public class CSVReporter implements Reporter {
 
     private static String pretty(Path path) {
         List<Integer> pathNodesIds = path.stream()
-                .map(Node::getId)
+                .map(ConnectedNode::getId)
                 .collect(Collectors.toList());
 
         return StringUtils.join(pathNodesIds.iterator(), " → ");

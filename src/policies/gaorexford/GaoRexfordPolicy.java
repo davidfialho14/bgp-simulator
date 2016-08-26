@@ -2,7 +2,7 @@ package policies.gaorexford;
 
 import core.Attribute;
 import core.topology.Label;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import core.topology.Policy;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 
@@ -11,7 +11,7 @@ import static policies.gaorexford.SelfAttribute.self;
 public class GaoRexfordPolicy implements Policy {
 
     @Override
-    public Attribute createSelf(Node node) {
+    public Attribute createSelf(ConnectedNode node) {
         return self();
     }
 

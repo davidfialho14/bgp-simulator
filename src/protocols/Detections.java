@@ -2,7 +2,7 @@ package protocols;
 
 import core.Attribute;
 import core.Route;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 /**
  * Provides static implementations multiple detection conditions.
@@ -34,7 +34,7 @@ interface Detections {
      * @param exclRoute     best route learned from any other but the neighbor of the new learned route.
      * @return true if the detection condition is met.
      */
-    static boolean detection2(Node learningNode, Route learnedRoute, Route exclRoute) {
+    static boolean detection2(ConnectedNode learningNode, Route learnedRoute, Route exclRoute) {
         return learnedRoute.getAttribute().compareTo(exclRoute.getAttribute()) < 0
                 && learnedRoute.getPath().getPathAfter(learningNode).equals(exclRoute.getPath());
     }

@@ -1,8 +1,8 @@
 package core.events;
 
 import core.Route;
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 
 /**
  * Events generated when a node imports a route.
@@ -46,7 +46,7 @@ public class ImportEvent implements SimulationEvent {
      *
      * @return node that imported the route
      */
-    public Node getImportingNode() {
+    public ConnectedNode getImportingNode() {
         return link.getSource();
     }
 
@@ -55,7 +55,7 @@ public class ImportEvent implements SimulationEvent {
      *
      * @return node that exported the route
      */
-    public Node getExportingNode() {
+    public ConnectedNode getExportingNode() {
         return link.getDestination();
     }
 

@@ -11,7 +11,7 @@ public class NodeTest {
     @Test
     public void
     addOutLink_FromNode0ToNode1WithDummyLabel_NodeContainsOutLinkFromNode0ToNode1WithDummyLabel() throws Exception {
-        Node node = new Node(0);
+        ConnectedNode node = new ConnectedNode(0);
         node.addOutLink(stubLink(0, 1));
 
         assertThat(node.getOutLinks(), containsInAnyOrder(stubLink(0, 1)));
@@ -20,7 +20,7 @@ public class NodeTest {
     @Test
     public void
     addInLink_FromNode0ToNode1WithDummyLabel_NodeContainsInLinkFromNode0ToNode1WithDummyLabel() throws Exception {
-        Node node = new Node(1);
+        ConnectedNode node = new ConnectedNode(1);
         node.addInLink(stubLink(0, 1));
 
         assertThat(node.getInLinks(), containsInAnyOrder(stubLink(0, 1)));

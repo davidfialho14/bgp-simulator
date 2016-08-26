@@ -1,7 +1,7 @@
 package utils;
 
+import core.topology.ConnectedNode;
 import core.topology.Network;
-import core.topology.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.Random;
 public class RandomNodesSelector {
 
     private Network network;
-    private List<Node> availableNodes;
+    private List<ConnectedNode> availableNodes;
     private Random random = new Random();
 
     public RandomNodesSelector(Network network) {
@@ -23,7 +23,7 @@ public class RandomNodesSelector {
         reset();
     }
 
-    public RandomNodesSelector(List<Node> nodes) {
+    public RandomNodesSelector(List<ConnectedNode> nodes) {
         availableNodes = new ArrayList<>(nodes);
     }
 
@@ -36,8 +36,8 @@ public class RandomNodesSelector {
      * @param nodeCount number of nodes to select.
      * @return collection with the selected nodes
      */
-    public Collection<Node> selectNodes(int nodeCount) {
-        Collection<Node> selectedNodes = new ArrayList<>(nodeCount);
+    public Collection<ConnectedNode> selectNodes(int nodeCount) {
+        Collection<ConnectedNode> selectedNodes = new ArrayList<>(nodeCount);
 
         int maxSelectableNodes = Math.min(nodeCount, availableNodes.size());
         for (int i = 0; i < maxSelectableNodes; i++) {

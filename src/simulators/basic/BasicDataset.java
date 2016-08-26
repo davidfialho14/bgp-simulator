@@ -1,6 +1,6 @@
 package simulators.basic;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import io.reporters.Reporter;
 import simulators.Dataset;
 import simulators.Detection;
@@ -27,7 +27,7 @@ public class BasicDataset implements Dataset {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private int totalMessageCount = 0;
-    private Set<Node> detectingNodes = new HashSet<>();    // stores all unique detecting nodes
+    private Set<ConnectedNode> detectingNodes = new HashSet<>();    // stores all unique detecting nodes
     private int cutOffLinksCount = 0;
     private List<Detection> detections = new ArrayList<>();
     private long simulationTime = 0;

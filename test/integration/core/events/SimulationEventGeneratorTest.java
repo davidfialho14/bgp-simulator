@@ -4,7 +4,7 @@ import core.Engine;
 import core.State;
 import core.schedulers.FIFOScheduler;
 import core.topology.Link;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import core.topology.Topology;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class SimulationEventGeneratorTest {
         engine.simulate(state);
 
         verify(listener, times(1)).onSelected(
-                new SelectEvent(new Node(0), invalidRoute(new Node(1)), sproute(1, 1, path(1))));
+                new SelectEvent(new ConnectedNode(0), invalidRoute(new ConnectedNode(1)), sproute(1, 1, path(1))));
     }
 
     @Test

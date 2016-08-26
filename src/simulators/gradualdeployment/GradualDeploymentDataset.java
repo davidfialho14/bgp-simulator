@@ -1,6 +1,6 @@
 package simulators.gradualdeployment;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import io.reporters.Reporter;
 import simulators.Dataset;
 import simulators.Detection;
@@ -24,7 +24,7 @@ public class GradualDeploymentDataset implements Dataset {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final BasicDataset basicDataset = new BasicDataset();   // composition
-    private final List<Node> deployingNodes = new ArrayList<>();
+    private final List<ConnectedNode> deployingNodes = new ArrayList<>();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -38,7 +38,7 @@ public class GradualDeploymentDataset implements Dataset {
      *
      * @return a collection with all deploying nodes.
      */
-    public Collection<Node> getDeployingNodes() {
+    public Collection<ConnectedNode> getDeployingNodes() {
         return deployingNodes;
     }
 
@@ -71,7 +71,7 @@ public class GradualDeploymentDataset implements Dataset {
      *
      * @param node node to set as deploying node.
      */
-    public void setAsDeployingNode(Node node) {
+    public void setAsDeployingNode(ConnectedNode node) {
         deployingNodes.add(node);
     }
 

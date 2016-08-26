@@ -1,7 +1,7 @@
 package core;
 
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 
 
 /**
@@ -17,7 +17,7 @@ public interface Protocol {
      * @param attribute attribute to be extended.
      * @return extended attribute (new instance).
      */
-    Attribute extend(Node destination, Link link, Attribute attribute);
+    Attribute extend(ConnectedNode destination, Link link, Attribute attribute);
 
     /**
      * Checks if the condition to detect an oscillation is verified.

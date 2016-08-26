@@ -1,6 +1,6 @@
 package addons.protocolchangers;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import core.Protocol;
 import core.Engine;
 import core.State;
@@ -15,7 +15,7 @@ import java.util.Set;
 public class NodeSetFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
 
     private Protocol protocolToChangeTo;
-    private Set<Node> nodesToChange;
+    private Set<ConnectedNode> nodesToChange;
 
     /**
      * Creates a fixed time protocol changer with the protocol to change to and the sequence of nodes
@@ -25,7 +25,7 @@ public class NodeSetFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
      * @param protocol protocol to change to.
      * @param nodes nodes to change protocol for.
      */
-    public NodeSetFixedTimeProtocolChanger(long changeTime, Protocol protocol, Node... nodes) {
+    public NodeSetFixedTimeProtocolChanger(long changeTime, Protocol protocol, ConnectedNode... nodes) {
         super(changeTime);
         this.protocolToChangeTo = protocol;
         Collections.addAll(nodesToChange, nodes);
@@ -42,7 +42,7 @@ public class NodeSetFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
      * @param protocol protocol to change to.
      * @param nodes nodes to change protocol for.
      */
-    public NodeSetFixedTimeProtocolChanger(Engine engine, State state, long changeTime, Protocol protocol, Node... nodes) {
+    public NodeSetFixedTimeProtocolChanger(Engine engine, State state, long changeTime, Protocol protocol, ConnectedNode... nodes) {
         super(engine, state, changeTime);
         this.protocolToChangeTo = protocol;
         this.nodesToChange =  new HashSet<>(nodes.length);

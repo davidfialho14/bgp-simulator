@@ -1,7 +1,7 @@
 package core;
 
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static wrappers.StubWrapper.stubLink;
 @RunWith(MockitoJUnitRunner.class)
 public class EngineProcessTest {
 
-    private final Node destination = new Node(0);
+    private final ConnectedNode destination = new ConnectedNode(0);
     private final Link link = stubLink(1, 2);
     private final core.Route invalidRoute = core.Route.invalidRoute(destination);
     private core.Engine engine;

@@ -1,8 +1,8 @@
 package core.events;
 
 import core.Route;
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 
 /**
  * Events generated when a node learns a new route.
@@ -46,7 +46,7 @@ public class LearnEvent implements SimulationEvent {
      *
      * @return node that learned the route
      */
-    public Node getLearningNode() {
+    public ConnectedNode getLearningNode() {
         return link.getSource();
     }
 
@@ -55,7 +55,7 @@ public class LearnEvent implements SimulationEvent {
      *
      * @return node that exported the route
      */
-    public Node getExportingNode() {
+    public ConnectedNode getExportingNode() {
         return link.getDestination();
     }
 
