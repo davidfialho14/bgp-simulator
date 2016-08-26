@@ -55,4 +55,20 @@ public interface Node {
         return node.getId();
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Static factory methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Returns a simple unconnected node. Use when the connections are not necessary.
+     *
+     * @param id id to assign to the new node
+     * @return new node instance.
+     */
+    static Node newNode(int id) {
+        return new BaseNode(id);
+    }
+
 }

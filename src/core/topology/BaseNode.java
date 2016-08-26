@@ -1,9 +1,9 @@
 package core.topology;
 
 /**
- * Unconnected node is the most simple node implementation and represents a simple node with only an ID.
+ * base node is the most simple node implementation and represents a simple node with only an ID.
  */
-public class UnconnectedNode implements Node {
+public class BaseNode implements Node {
 
     private final int id;
 
@@ -12,7 +12,7 @@ public class UnconnectedNode implements Node {
      *
      * @param id id to assign to the node.
      */
-    public UnconnectedNode(int id) {
+    public BaseNode(int id) {
         this.id = id;
     }
 
@@ -34,6 +34,11 @@ public class UnconnectedNode implements Node {
     @Override
     public int hashCode() {
         return Node.hashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Node(" + id + ")";
     }
 
 }
