@@ -49,7 +49,7 @@ public class InvalidPathTest {
     }
 
     @Test
-    public void iterator_AnyNode_ThrowsUnsupportedOperationException() throws Exception {
+    public void iterator_ForInvalidPath_ThrowsUnsupportedOperationException() throws Exception {
         thrown.expect(UnsupportedOperationException.class);
         invalidPath().iterator();
     }

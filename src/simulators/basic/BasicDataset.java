@@ -16,6 +16,7 @@ import java.util.Set;
  *  - total message count
  *  - detecting nodes count
  *  - cut-off links count
+ *  - false positives count
  *  - detections
  */
 public class BasicDataset implements Dataset {
@@ -31,6 +32,7 @@ public class BasicDataset implements Dataset {
     private int cutOffLinksCount = 0;
     private List<Detection> detections = new ArrayList<>();
     private long simulationTime = 0;
+    private int falsePositiveCount = 0;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -83,6 +85,15 @@ public class BasicDataset implements Dataset {
         return simulationTime;
     }
 
+    /**
+     * Returns the number of false positives.
+     *
+     * @return number of false positives.
+     */
+    public int getFalsePositiveCount() {
+        return falsePositiveCount;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface - Methods to update the data
@@ -114,6 +125,10 @@ public class BasicDataset implements Dataset {
         detections.add(detection);
         detectingNodes.add(detection.getDetectingNode());
         cutOffLinksCount++; // every detection cuts off a new link
+
+        if (detection.isFalsePositive()) {
+            falsePositiveCount++;
+        }
     }
 
     /**
@@ -125,6 +140,7 @@ public class BasicDataset implements Dataset {
         cutOffLinksCount = 0;
         detections.clear();
         simulationTime = 0;
+        falsePositiveCount = 0;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

@@ -1,15 +1,20 @@
 package simulators.basic;
 
+import core.Attribute;
 import core.Engine;
+import core.Path;
 import core.TimeListener;
 import core.events.DetectEvent;
 import core.events.DetectListener;
 import core.events.ExportEvent;
 import core.events.ExportListener;
+import core.topology.Link;
 import registers.Registration;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.Detection;
+
+import java.util.Iterator;
 
 import static registers.Registration.noRegistration;
 import static registers.Registration.registrationFor;
@@ -128,7 +133,22 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      */
     @Override
     public void onDetected(DetectEvent event) {
-        dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), DetectEvent.getCycle(event)));
+        Path cycle = event.getCycle();
+
+        // start with the selected attribute of the first node
+        Attribute initialAttribute = event.getLearnedRoute().getSelectedAttribute(cycle.getSource());
+        Attribute attribute = initialAttribute;
+
+        // extend the attribute along the path
+        Iterator<Link> linkIterator = cycle.linksIterator();
+        while (linkIterator.hasNext()) {
+            attribute = linkIterator.next().extend(attribute);
+        }
+
+        // it's guaranteed a false positive if the extend attribute along the cycle is not better the initial attribute
+        boolean falsePositive = (attribute.compareTo(initialAttribute) >= 0);
+
+        dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), cycle, falsePositive));
     }
 
     /**
@@ -139,6 +159,16 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public void onExported(ExportEvent event) {
         dataset.addMessage();
+    }
+
+    static Attribute extendAttributeAlongACycle(Attribute initialAttribute, Iterable<Link> sequenceOfLinks) {
+        Attribute attribute = initialAttribute;
+
+        for (Link link : sequenceOfLinks) {
+            attribute = link.extend(attribute);
+        }
+
+        return attribute;
     }
 
 }
