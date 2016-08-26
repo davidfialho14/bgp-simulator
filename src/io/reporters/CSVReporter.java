@@ -177,7 +177,8 @@ public class CSVReporter implements Reporter {
      * @param simulator     simulator used for the simulation.
      */
     @Override
-    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol, Simulator simulator) throws IOException {
+    public void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay, Protocol protocol,
+                                   Simulator simulator) throws IOException {
         Network network = topology.getNetwork();
 
         try (CSVPrinter csvPrinter = getBeforeSummaryFilePrinter()) {

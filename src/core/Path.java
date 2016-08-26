@@ -200,15 +200,15 @@ public class Path implements Comparable<Path>, Iterable<ConnectedNode> {
     }
 
     /**
-     * Returns an iterator over the links in the path
+     * Returns an iterator over the out-links in the path
      *
-     * @return an Iterator of links.
+     * @return an Iterator of out-links.
      */
-    public Iterator<Link> linksIterator() {
-        return new LinkIterator();
+    public Iterator<Link> outLinksIterator() {
+        return new OutLinksIterator();
     }
 
-    private class LinkIterator implements Iterator<Link> {
+    private class OutLinksIterator implements Iterator<Link> {
 
         private Iterator<ConnectedNode> iterator = Path.this.iterator();
         private ConnectedNode currentNode = iterator.next(); // all paths have at least one node
@@ -238,8 +238,48 @@ public class Path implements Comparable<Path>, Iterable<ConnectedNode> {
 
             return nextLink;
         }
-
     }
 
+    /**
+     * Returns an iterator over the in-links in the path
+     *
+     * @return an Iterator of in-links.
+     */
+    public Iterator<Link> inLinksIterator() {
+        return new InLinksIterator();
+    }
+
+    private class InLinksIterator implements Iterator<Link> {
+
+        private Iterator<ConnectedNode> iterator = Path.this.path.descendingIterator();
+        private ConnectedNode currentNode = iterator.next(); // all paths have at least one node
+
+        /**
+         * Returns {@code true} if the iteration has more elements.
+         * (In other words, returns {@code true} if {@link #next} would
+         * return an element rather than throwing an exception.)
+         *
+         * @return {@code true} if the iteration has more elements
+         */
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return the next element in the iteration
+         */
+        @Override
+        public Link next() {
+            ConnectedNode neighbour = iterator.next();
+            Link nextLink = currentNode.getInLink(neighbour);
+            currentNode = neighbour;
+
+            return nextLink;
+        }
+
+    }
 
 }

@@ -140,7 +140,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
         Attribute attribute = initialAttribute;
 
         // extend the attribute along the path
-        Iterator<Link> linkIterator = cycle.linksIterator();
+        Iterator<Link> linkIterator = cycle.inLinksIterator();
         while (linkIterator.hasNext()) {
             attribute = linkIterator.next().extend(attribute);
         }
