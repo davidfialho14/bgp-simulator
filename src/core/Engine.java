@@ -78,7 +78,7 @@ public class Engine {
      */
     public void onBrokenLink(Link brokenLink) {
         NodeState sourceNodeState = currentState.get(brokenLink.getSource());
-        ConnectedNode destination = sourceNodeState.getTable().getDestination();
+        Node destination = sourceNodeState.getTable().getDestination();
         processSelection(sourceNodeState, brokenLink, invalidRoute(destination));
 
         // remove all routes being exported through this link
@@ -142,7 +142,7 @@ public class Engine {
         ConnectedNode learningNode = link.getSource();
 
         // select the best route learned from all out-neighbours except the exporting out-link
-        Route exclRoute = nodeState.getSelectedRoute(link);
+        Route exclRoute = nodeState.getExclRoute(link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
@@ -157,18 +157,9 @@ public class Engine {
             learnedRoute = invalidRoute(destination);
         }
 
-        Route selectedRoute;
-        if (exclRoute == null || learnedRoute.compareTo(exclRoute) < 0) {
-            selectedRoute = new Route(learnedRoute);
-        } else {
-            selectedRoute = new Route(exclRoute);
-        }
-
-        // update the node state
-        nodeState.setSelectedRoute(selectedRoute);
         nodeState.updateRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
-        return selectedRoute;
+        return nodeState.getSelectedRoute();
     }
 
     /**

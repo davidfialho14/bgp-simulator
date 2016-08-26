@@ -196,7 +196,6 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path()),  stubRoute(0, path())
         );
         Link removedOutLink = stubLink(0, 1);
-        ConnectedNode destination = new ConnectedNode(0);
 
         routeTable.removeOutLink(removedOutLink);
 
@@ -238,7 +237,6 @@ public class RouteTableTest {
                                 stubOutLink(0, 1),     stubOutLink(0, 2),
                 destination(0), stubRoute(0, path()),  stubRoute(0, path())
         );
-        ConnectedNode destination = new ConnectedNode(0);
         Link addedOutLink = stubLink(0, 1);
 
         routeTable.addOutLink(addedOutLink);
@@ -262,11 +260,11 @@ public class RouteTableTest {
 
     @Test
     public void
-    getSelectedRoute_ForDestination0OnEmptyTable_Null() throws Exception {
+    getExclRoute_ForDestination0OnEmptyTable_Null() throws Exception {
         ConnectedNode destination0 = new ConnectedNode(0);
         RouteTable routeTable = new RouteTable(destination0);
 
-        assertThat(routeTable.getSelectedRoute(anyStubLink()), is(nullValue()));
+        assertThat(routeTable.getExclRoute(anyStubLink()), is(nullValue()));
     }
 
     @Test
@@ -324,35 +322,35 @@ public class RouteTableTest {
 
     @Test
     public void
-    getSelectedRoute_IgnoringOutLink0To2ForDestination0WithRoute0ForOutLink0To1AndRoute1ForOutLink0To2_Route0()
+    getExclRoute_IgnoringOutLink0To2ForDestination0WithRoute0ForOutLink0To1AndRoute1ForOutLink0To2_Route0()
             throws Exception {
         RouteTable routeTable = table(
                                 stubOutLink(0, 1),     stubOutLink(0, 2),
                 destination(0), stubRoute(0, path()),  stubRoute(1, path())
         );
 
-        assertThat(routeTable.getSelectedRoute(stubLink(0, 2)), is(route(0, stubAttr(0), path())));
+        assertThat(routeTable.getExclRoute(stubLink(0, 2)), is(route(0, stubAttr(0), path())));
     }
 
     @Test
     public void
-    getSelectedRoute_IgnoringOutLink0To1ForDestination0OnTableWithOnlyOutLink0To1_Null() throws Exception {
+    getExclRoute_IgnoringOutLink0To1ForDestination0OnTableWithOnlyOutLink0To1_Null() throws Exception {
         RouteTable routeTable = table(
                                 stubOutLink(0, 1),
                 destination(0), stubRoute(0, path())
         );
 
-        assertThat(routeTable.getSelectedRoute(stubLink(0, 1)), is(nullValue()));
+        assertThat(routeTable.getExclRoute(stubLink(0, 1)), is(nullValue()));
     }
 
     @Test
     public void
-    getSelectedRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
+    getExclRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
         RouteTable routeTable = table(destination(0), stubOutLink(0, 1), stubOutLink(0, 2));
         routeTable.setRoute(stubLink(0, 1), route(0, stubAttr(0), path()));
         ConnectedNode destination = new ConnectedNode(0);
 
-        assertThat(routeTable.getSelectedRoute(stubLink(0, 1)), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getExclRoute(stubLink(0, 1)), is(Route.invalidRoute(destination)));
     }
 
 

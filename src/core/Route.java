@@ -12,9 +12,21 @@ import static core.InvalidPath.invalidPath;
  */
 public class Route implements Comparable<Route> {
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     private Node destination;
     private Attribute attribute;
     private Path path;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Constructs a new route assigning it a destination, attribute, and path.
@@ -41,6 +53,12 @@ public class Route implements Comparable<Route> {
         this.path = Path.copy(route.path);
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public factory methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
      * Creates a new invalid route.
      *
@@ -53,6 +71,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Creates a new self route for the given node.
+     *
      * @param node node to create self route for.
      * @param policy policy used to create a self attribute to the given node.
      * @return new self Route instance to the given node.
@@ -61,8 +80,15 @@ public class Route implements Comparable<Route> {
         return new Route(node, policy.createSelf(node), new Path());
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
      * Returns the route's destination.
+     *
      * @return destination of the route.
      */
     public Node getDestination() {
@@ -71,6 +97,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Assigns the given destination to the route.
+     *
      * @param destination node to be assigned as destination.
      */
     public void setDestination(Node destination) {
@@ -79,6 +106,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Returns the route's attribute.
+     *
      * @return attribute of the route.
      */
     public Attribute getAttribute() {
@@ -87,6 +115,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Assigns the given attribute to the route.
+     *
      * @param attribute attribute to be assigned.
      */
     public void setAttribute(Attribute attribute) {
@@ -95,6 +124,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Returns the route's path.
+     *
      * @return path of the route.
      */
     public Path getPath() {
@@ -112,12 +142,20 @@ public class Route implements Comparable<Route> {
 
     /**
      * Checks if the route is invalid. A route is considered invalid if the attribute or the path are invalid.
+     *
      * @return true if the route is invalid and false otherwise.
      */
     public boolean isInvalid() {
         return attribute == invalidAttr() || path == invalidPath();
     }
 
+    /**
+     * Compares this route with another route. The comparison considers the attribute order first and second the path
+     * order.
+     *
+     * @param other other route to compare to.
+     * @return 0 if they are equal, -1 if this route is preferable and 1 if the other route is preferable.
+     */
     @Override
     public int compareTo(Route other) {
         if (this.isInvalid() && other.isInvalid()) return 0;
@@ -133,8 +171,7 @@ public class Route implements Comparable<Route> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Route)) return false;
 
         Route route = (Route) o;
 

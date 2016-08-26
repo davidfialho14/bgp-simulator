@@ -3,15 +3,12 @@ package core;
 import core.topology.ConnectedNode;
 import core.topology.Link;
 
-import static core.Route.invalidRoute;
-
 /**
  * Aggregates all the state of one node in one unique class
  */
 public class NodeState {
 
     private RouteTable table;
-    private Route selectedRoute;
     private Protocol protocol;
 
     /**
@@ -23,7 +20,6 @@ public class NodeState {
      */
     public NodeState(ConnectedNode node, ConnectedNode destination, Protocol protocol) {
         this.table = new RouteTable(destination, node.getOutLinks());
-        this.selectedRoute = invalidRoute(destination);
         this.protocol = protocol;
     }
 
@@ -42,7 +38,7 @@ public class NodeState {
      * @return current selected route.
      */
     public Route getSelectedRoute() {
-        return selectedRoute;
+        return table.getSelectedRoute();
     }
 
     /**
@@ -51,7 +47,6 @@ public class NodeState {
      * @param route route to set as selected.
      */
     public void setSelectedRoute(Route route) {
-        selectedRoute = route;
     }
 
     /**
@@ -79,8 +74,8 @@ public class NodeState {
      * @param ignoredLink out-link to be ignored.
      * @return currently selected route.
      */
-    public Route getSelectedRoute(Link ignoredLink) {
-        return table.getSelectedRoute(ignoredLink);
+    public Route getExclRoute(Link ignoredLink) {
+        return table.getExclRoute(ignoredLink);
     }
 
     /**

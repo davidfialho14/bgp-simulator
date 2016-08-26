@@ -1,12 +1,15 @@
 package core;
 
 import core.topology.ConnectedNode;
-import dnl.utils.text.table.TextTable;
 import core.topology.Link;
+import core.topology.Node;
+import dnl.utils.text.table.TextTable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Stores the routes learned from each out-link to reach one destination.
@@ -19,8 +22,11 @@ public class RouteTable {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private ConnectedNode destination;
-    private Map<Link, Route> routes;
+    private final Node destination;
+    private final Map<Link, Route> routes;
+
+    private Route selectedRoute;
+    private Link selectedOutLink;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -33,9 +39,11 @@ public class RouteTable {
      *
      * @param destination destination of the routes to be stored.
      */
-    public RouteTable(ConnectedNode destination) {
+    public RouteTable(Node destination) {
         this.destination = destination;
         this.routes = new HashMap<>();
+        this.selectedRoute = null;
+        this.selectedOutLink = null;
     }
 
     /**
@@ -48,6 +56,8 @@ public class RouteTable {
     public RouteTable(ConnectedNode destination, Collection<Link> outLinks) {
         this.destination = destination;
         this.routes = new HashMap<>(outLinks.size());
+        this.selectedRoute = null;
+        this.selectedOutLink = null;
 
         outLinks.forEach(this::addOutLink);
     }
@@ -81,19 +91,38 @@ public class RouteTable {
      *
      * @return the destination node associated with the route table.
      */
-    public ConnectedNode getDestination() {
+    public Node getDestination() {
         return destination;
     }
 
     /**
-     * Associates a route with the given out-link. If the out-link does not exist this method will have no effect
-     * on the table. If the destination is unknown it will be added to the table.
+     * Sets the route for an out-link. If the out-link does not exist in the table, it will be added and assigned to
+     * the new route. Calling this method may update the selected route.
      *
      * @param outLink out-link to associate route with.
      * @param route route to be set.
      */
     public void setRoute(Link outLink, Route route) {
         routes.put(outLink, new Route(route));  // store a copy of the route
+
+        if (outLink.equals(selectedOutLink)) {
+            // the selected route is no longer valid
+
+            // re-select the best route
+            selectedRoute = null;
+            for (Link link : routes.keySet()) {
+                Route linkRoute = getRoute(link);
+
+                if ((selectedRoute == null || selectedRoute.compareTo(linkRoute) > 0)) {
+                    selectedRoute = linkRoute;
+                    selectedOutLink = link;
+                }
+            }
+
+        } else if (route.compareTo(selectedRoute) < 0) {
+            selectedRoute = route;
+            selectedOutLink = outLink;
+        }
     }
 
     /**
@@ -121,28 +150,27 @@ public class RouteTable {
      * @param ignoredOutLink out-link to be ignored.
      * @return currently selected route for the destination.
      */
-    public Route getSelectedRoute(Link ignoredOutLink) {
-        Route preferredRoute = null;
+    public Route getExclRoute(Link ignoredOutLink) {
 
-        for (Link outLink : routes.keySet()) {
-            Route route = getRoute(outLink);
-
-            if (!outLink.equals(ignoredOutLink) && (preferredRoute == null || preferredRoute.compareTo(route) > 0)) {
-                preferredRoute = route;
-            }
+        if (ignoredOutLink == null || !ignoredOutLink.equals(selectedOutLink)) {
+            return selectedRoute;
+        } else {
+            return getBestRoute(ignoredOutLink);
         }
-
-        return preferredRoute;
     }
 
+    /**
+     * Returns the currently selected route.
+     *
+     * @return the currently selected route.
+     */
     Route getSelectedRoute() {
-        return getSelectedRoute(null);
+        return selectedRoute;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RouteTable)) return false;
 
         RouteTable that = (RouteTable) o;
 
@@ -166,6 +194,13 @@ public class RouteTable {
         return os.toString();
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Helper Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
     private TextTable getPrintableTable() {
         String[] columns = routes.keySet().stream()
                 .map(Link::toString)
@@ -177,4 +212,26 @@ public class RouteTable {
 
         return new TextTable(columns, table);
     }
+
+    /**
+     * Returns the currently best route. If ignoredOutLink is not null it will return the best route associated
+     * with any out-link exception the ignoredOutLink.
+     *
+     * @param ignoredOutLink out-link to be ignored.
+     * @return currently best route for the destination.
+     */
+    private Route getBestRoute(Link ignoredOutLink) {
+        Route bestRoute = null;
+
+        for (Link outLink : routes.keySet()) {
+            Route route = getRoute(outLink);
+
+            if (!outLink.equals(ignoredOutLink) && (bestRoute == null || bestRoute.compareTo(route) > 0)) {
+                bestRoute = route;
+            }
+        }
+
+        return bestRoute;
+    }
+
 }
