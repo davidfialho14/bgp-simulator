@@ -1,7 +1,7 @@
 package core;
 
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class RouteTableTest {
 
     @Test
     public void setRoute_WithAttr1AndEmptyPathOnTableWithoutOutLinks_GetsRouteWithAttr1AndEmptyPath() throws Exception {
-        RouteTable routeTable = new RouteTable(new Node(0));
+        RouteTable routeTable = new RouteTable(new ConnectedNode(0));
         Link outLink = stubLink(1, 2);
 
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
@@ -42,7 +42,7 @@ public class RouteTableTest {
 
     @Test
     public void getRoute_ForOutLink1To2OnTableWithoutKnownDestinationsAndOutLinkFrom1To2_Invalid() throws Exception {
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
         RouteTable routeTable = new RouteTable(destination, links(stubLink(1, 2)));
 
         assertThat(routeTable.getRoute(stubLink(1, 2)), is(Route.invalidRoute(destination)));
@@ -51,7 +51,7 @@ public class RouteTableTest {
     @Test
     public void
     setRoute_FromOutLink1To2AndForDest0WithAttr1AndEmptyPath_GetsRouteWithAttr0AndEmptyPathForDest0() throws Exception {
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
         Link outLink = stubLink(1, 2);
         RouteTable routeTable = new RouteTable(destination, links(outLink));
 
@@ -64,7 +64,7 @@ public class RouteTableTest {
     public void
     setRoute_ForDest0WithAttr0AndEmptyPathAndAfterItChangeAttrToAttr1_GetsRouteForDest0WithAttr0AndEmptyPath()
             throws Exception {
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
         Link outLink = stubLink(1, 2);
         RouteTable routeTable = new RouteTable(destination, links(outLink));
         Route route = stubRoute(0, 0, path());
@@ -79,7 +79,7 @@ public class RouteTableTest {
     public void
     setRoute_WithAttr2AndEmptyPathForOutLinkAlreadyAssignedWithRouteWithAttr1AndEmpty_GetsRouteWithAttr2AndEmptyPath()
             throws Exception {
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
         Link outLink = stubLink(0, 1);
         RouteTable routeTable = new RouteTable(destination, links(outLink));
         routeTable.setRoute(outLink, stubRoute(0, 1, path()));
@@ -93,7 +93,7 @@ public class RouteTableTest {
     public void
     getRoute_ForDestination0AndOutLink1To2ButTheRouteForDestination0WasOnlySetForOutLink1To3_InvalidRoute()
             throws Exception {
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
         Link outLink1To2 = stubLink(1, 2);
         Link outLink1To3 = stubLink(1, 3);
         RouteTable routeTable = new RouteTable(destination, links(outLink1To2, outLink1To3));
@@ -196,7 +196,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path()),  stubRoute(0, path())
         );
         Link removedOutLink = stubLink(0, 1);
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
 
         routeTable.removeOutLink(removedOutLink);
 
@@ -238,7 +238,7 @@ public class RouteTableTest {
                                 stubOutLink(0, 1),     stubOutLink(0, 2),
                 destination(0), stubRoute(0, path()),  stubRoute(0, path())
         );
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
         Link addedOutLink = stubLink(0, 1);
 
         routeTable.addOutLink(addedOutLink);
@@ -253,7 +253,7 @@ public class RouteTableTest {
                 destination(0), stubRoute(0, path())
         );
         Link addedOutLink = stubLink(0, 1);
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
 
         routeTable.addOutLink(addedOutLink);
 
@@ -263,7 +263,7 @@ public class RouteTableTest {
     @Test
     public void
     getSelectedRoute_ForDestination0OnEmptyTable_Null() throws Exception {
-        Node destination0 = new Node(0);
+        ConnectedNode destination0 = new ConnectedNode(0);
         RouteTable routeTable = new RouteTable(destination0);
 
         assertThat(routeTable.getSelectedRoute(anyStubLink()), is(nullValue()));
@@ -272,7 +272,7 @@ public class RouteTableTest {
     @Test
     public void
     getSelectedRoute_ForDestination0OnTableWithoutKnownDestinations_InvalidRoute() throws Exception {
-        Node destination0 = new Node(0);
+        ConnectedNode destination0 = new ConnectedNode(0);
         RouteTable routeTable = new RouteTable(destination0, links(stubLink(0, 1)));
 
         assertThat(routeTable.getSelectedRoute(), is(Route.invalidRoute(destination0)));
@@ -319,7 +319,7 @@ public class RouteTableTest {
                 destination(0), invalidRoute(),     invalidRoute()
         );
 
-        assertThat(routeTable.getSelectedRoute(), is(Route.invalidRoute(new Node(0))));
+        assertThat(routeTable.getSelectedRoute(), is(Route.invalidRoute(new ConnectedNode(0))));
     }
 
     @Test
@@ -350,7 +350,7 @@ public class RouteTableTest {
     getSelectedRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
         RouteTable routeTable = table(destination(0), stubOutLink(0, 1), stubOutLink(0, 2));
         routeTable.setRoute(stubLink(0, 1), route(0, stubAttr(0), path()));
-        Node destination = new Node(0);
+        ConnectedNode destination = new ConnectedNode(0);
 
         assertThat(routeTable.getSelectedRoute(stubLink(0, 1)), is(Route.invalidRoute(destination)));
     }

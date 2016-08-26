@@ -3,7 +3,7 @@ package topologies;
 import core.Engine;
 import core.State;
 import core.schedulers.FIFOScheduler;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import core.topology.Topology;
 import factories.ShortestPathTopologyFactory;
 import org.junit.Before;
@@ -38,12 +38,12 @@ public class ShortestPathTopology0Test {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
@@ -59,7 +59,7 @@ public class ShortestPathTopology0Test {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(1)).getSelectedRoute(), is(sproute(0, 1, path(0))));
+        assertThat(state.get(new ConnectedNode(1)).getSelectedRoute(), is(sproute(0, 1, path(0))));
     }
 
     @Test(timeout = 2000)
@@ -73,12 +73,12 @@ public class ShortestPathTopology0Test {
 //
 //        engine.simulate(topology, new BGPProtocol(), 0);
 //
-//        assertThat(state.get(new Node(0)).getTable(), is( table(
+//        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
 //                                selfLink(0),
 //                destination(0), sproute(0, path())
 //        )));
 //
-//        assertThat(state.get(new Node(1)).getTable(), is( table(
+//        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
 //                                selfLink(1),    splink(1, 0, 1),     splink(1, 0, 0),
 //                destination(0), invalidRoute(), sproute(1, path(0)), sproute(0, path(0))
 //        )));
@@ -94,6 +94,6 @@ public class ShortestPathTopology0Test {
 //
 //        engine.simulate(topology, new BGPProtocol(), 0);
 //
-//        assertThat(engine.getSelectedRoute(new Node(1), new Node(0)), is(sproute(0, 0, path(0))));
+//        assertThat(engine.getSelectedRoute(new ConnectedNode(1), new ConnectedNode(0)), is(sproute(0, 0, path(0))));
     }
 }

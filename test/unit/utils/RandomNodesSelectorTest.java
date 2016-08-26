@@ -1,6 +1,6 @@
 package utils;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ public class RandomNodesSelectorTest {
     public void select0Nodes_From4AvailableNodes_Selected0Nodes() throws Exception {
 
         RandomNodesSelector nodesSelector = new RandomNodesSelector(
-                Arrays.asList(new Node(0), new Node(1), new Node(2), new Node(3)));
+                Arrays.asList(new ConnectedNode(0), new ConnectedNode(1), new ConnectedNode(2), new ConnectedNode(3)));
 
-        Collection<Node> selectedNodes = nodesSelector.selectNodes(0);
+        Collection<ConnectedNode> selectedNodes = nodesSelector.selectNodes(0);
 
         assertThat(selectedNodes.size(), is(0));
     }
@@ -29,9 +29,9 @@ public class RandomNodesSelectorTest {
     public void select2Nodes_From4AvailableNodes_Selected2Nodes() throws Exception {
 
         RandomNodesSelector nodesSelector = new RandomNodesSelector(
-                Arrays.asList(new Node(0), new Node(1), new Node(2), new Node(3)));
+                Arrays.asList(new ConnectedNode(0), new ConnectedNode(1), new ConnectedNode(2), new ConnectedNode(3)));
 
-        Collection<Node> selectedNodes = nodesSelector.selectNodes(2);
+        Collection<ConnectedNode> selectedNodes = nodesSelector.selectNodes(2);
 
         assertThat(selectedNodes.size(), is(2));
     }
@@ -40,10 +40,10 @@ public class RandomNodesSelectorTest {
     public void select1Node_AfterSelectingAll4AvailableNodes_Selected0Nodes() throws Exception {
 
         RandomNodesSelector nodesSelector = new RandomNodesSelector(
-                Arrays.asList(new Node(0), new Node(1), new Node(2), new Node(3)));
+                Arrays.asList(new ConnectedNode(0), new ConnectedNode(1), new ConnectedNode(2), new ConnectedNode(3)));
 
         nodesSelector.selectNodes(4);
-        Collection<Node> selectedNodes = nodesSelector.selectNodes(1);
+        Collection<ConnectedNode> selectedNodes = nodesSelector.selectNodes(1);
 
         assertThat(selectedNodes.size(), is(0));
     }
@@ -53,7 +53,7 @@ public class RandomNodesSelectorTest {
 
         RandomNodesSelector nodesSelector = new RandomNodesSelector(new ArrayList<>());
 
-        Collection<Node> selectedNodes = nodesSelector.selectNodes(1);
+        Collection<ConnectedNode> selectedNodes = nodesSelector.selectNodes(1);
 
         assertThat(selectedNodes.size(), is(0));
     }
@@ -61,9 +61,9 @@ public class RandomNodesSelectorTest {
     @Test
     public void select2Node_From1AvailableNode_Selected1Node() throws Exception {
 
-        RandomNodesSelector nodesSelector = new RandomNodesSelector(Collections.singletonList(new Node(0)));
+        RandomNodesSelector nodesSelector = new RandomNodesSelector(Collections.singletonList(new ConnectedNode(0)));
 
-        Collection<Node> selectedNodes = nodesSelector.selectNodes(2);
+        Collection<ConnectedNode> selectedNodes = nodesSelector.selectNodes(2);
 
         assertThat(selectedNodes.size(), is(1));
     }

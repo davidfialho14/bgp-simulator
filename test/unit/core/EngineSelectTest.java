@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class EngineSelectTest {
     @Test
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteInvalid_InvalidRoute() throws Exception {
-        Route invalidRoute = Route.invalidRoute(new Node(0));
+        Route invalidRoute = Route.invalidRoute(new ConnectedNode(0));
         when(stubNodeState.getSelectedRoute(any())).thenReturn(invalidRoute);
 
         assertThat(engine.select(stubNodeState, stubLink(1, 2), invalidRoute), is(invalidRoute));
@@ -46,7 +46,7 @@ public class EngineSelectTest {
     @Test
     public void
     select_BetweenLearnedInvalidRouteAndExclRouteWithAttr0AndEmptyPath_RouteWithAttr0AndEmptyPath() throws Exception {
-        Route learnedRoute = Route.invalidRoute(new Node(0));
+        Route learnedRoute = Route.invalidRoute(new ConnectedNode(0));
         Route exlcRoute = route(0, stubAttr(0), path());
         when(stubNodeState.getSelectedRoute(any())).thenReturn(exlcRoute);
 
@@ -57,7 +57,7 @@ public class EngineSelectTest {
     public void
     select_BetweenLearnedWithAttr0AndEmptyPathAndExclRouteInvalid_RouteWithAttr0AndEmptyPath() throws Exception {
         Route learnedRoute = route(0, stubAttr(0), path());
-        Route exlcRoute = Route.invalidRoute(new Node(0));
+        Route exlcRoute = Route.invalidRoute(new ConnectedNode(0));
         when(stubNodeState.getSelectedRoute(any())).thenReturn(exlcRoute);
 
         assertThat(engine.select(stubNodeState, stubLink(1, 2), learnedRoute), is(learnedRoute));
@@ -111,7 +111,7 @@ public class EngineSelectTest {
     public void
     select_BetweenLearnedWithAttr0AndPathWithLearningNodeAndExclRouteInvalid_InvalidRoute()
             throws Exception {
-        Route invalidRoute = Route.invalidRoute(new Node(0));
+        Route invalidRoute = Route.invalidRoute(new ConnectedNode(0));
         Route learnedRoute = route(0, stubAttr(0), path(1));
         when(stubNodeState.getSelectedRoute(any())).thenReturn(invalidRoute);
 

@@ -3,7 +3,7 @@ package simulators.gradualdeployment;
 import core.Engine;
 import core.events.DetectEvent;
 import core.events.ExportEvent;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import registers.Registration;
 import simulators.Dataset;
 import simulators.basic.BasicDataCollector;
@@ -55,7 +55,7 @@ public class GradualDeploymentDataCollector extends BasicDataCollector {
      *
      * @param node deploying node.
      */
-    public void notifyDeployment(Node node) {
+    public void notifyDeployment(ConnectedNode node) {
         gradualDeploymentDataSet.setAsDeployingNode(node);
     }
 

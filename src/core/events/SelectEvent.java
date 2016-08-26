@@ -1,14 +1,14 @@
 package core.events;
 
 import core.Route;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 /**
  * Events generated when a node selects a route.
  */
 public class SelectEvent implements SimulationEvent {
 
-    private final Node selectingNode;
+    private final ConnectedNode selectingNode;
     private final Route previousRoute;  // route previously selected
     private final Route selectedRoute;  // route selected
 
@@ -19,13 +19,13 @@ public class SelectEvent implements SimulationEvent {
      * @param previousRoute previous selected route.
      * @param selectedRoute selected route.
      */
-    public SelectEvent(Node selectingNode, Route previousRoute, Route selectedRoute) {
+    public SelectEvent(ConnectedNode selectingNode, Route previousRoute, Route selectedRoute) {
         this.selectingNode = selectingNode;
         this.previousRoute = previousRoute;
         this.selectedRoute = selectedRoute;
     }
 
-    public Node getSelectingNode() {
+    public ConnectedNode getSelectingNode() {
         return selectingNode;
     }
 

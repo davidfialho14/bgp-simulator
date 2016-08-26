@@ -1,7 +1,7 @@
 package core;
 
 import core.schedulers.FIFOScheduler;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import factories.ShortestPathTopologyFactory;
 import factories.TopologyFactory;
 import org.junit.Before;
@@ -41,12 +41,12 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
@@ -59,17 +59,17 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(0), sproute(0, path()), invalidRoute(),         invalidRoute()
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 2, 1),
                 destination(0), invalidRoute(), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),
                 destination(0), invalidRoute()
         )));
@@ -82,17 +82,17 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(1), invalidRoute(),     sproute(1, path(1)),    invalidRoute()
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),        splink(1, 2, 1),
                 destination(1), sproute(0, path()), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),
                 destination(1), invalidRoute()
         )));
@@ -105,17 +105,17 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(2), invalidRoute(),     sproute(2, path(1, 2)), sproute(0, path(2))
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),        splink(1, 2, 1),
                 destination(2), invalidRoute(),     sproute(1, path(2))
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),
                 destination(2), sproute(0, path())
         )));
@@ -128,17 +128,17 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is(table(
                                 selfLink(0),        splink(0, 1, 1),
                 destination(0), sproute(0, path()), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is(table(
                                 selfLink(1),    splink(1, 2, 1),
                 destination(0), invalidRoute(), sproute(2, path(2, 0))
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is(table(
                                 selfLink(2),    splink(2, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
@@ -160,22 +160,22 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is(table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is(table(
                                 selfLink(1),    splink(1, 0, 0),     splink(1, 2, 1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is(table(
                                 selfLink(2),    splink(2, 3, 1),
                 destination(0), invalidRoute(), sproute(2, path(3, 1, 0))
         )));
 
-        assertThat(state.get(new Node(3)).getTable(), is(table(
+        assertThat(state.get(new ConnectedNode(3)).getTable(), is(table(
                                 selfLink(3),    splink(3, 1, 1),
                 destination(0), invalidRoute(), sproute(1, path(1, 0))
         )));
@@ -188,17 +188,17 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),    splink(2, 1, 1),
                 destination(0), invalidRoute(), sproute(2, path(1, 0))
         )));
@@ -215,17 +215,17 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
 //
 //        engine.simulate(factory.topology(0), protocol, 0);
 //
-//        assertThat(state.get(new Node(0)).getTable(), is( table(
+//        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
 //                                selfLink(0),
 //                destination(0), sproute(0, path())
 //        )));
 //
-//        assertThat(state.get(new Node(1)).getTable(), is( table(
+//        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
 //                                selfLink(1),    splink(1, 0, 1),
 //                destination(0), invalidRoute(), sproute(1, path(0))
 //        )));
 //
-//        assertThat(state.get(new Node(2)).getTable(), is( table(
+//        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
 //                                selfLink(2),
 //                destination(0), invalidRoute()
 //        )));

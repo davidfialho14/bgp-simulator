@@ -1,8 +1,8 @@
 package wrappers.routetable;
 
+import core.topology.ConnectedNode;
 import core.topology.Label;
 import core.topology.Link;
-import core.topology.Node;
 import core.topology.SelfLink;
 
 /**
@@ -25,7 +25,7 @@ public class OutLinkElement implements RouteTableElement {
      * @return new out-link element instance.
      */
     public static OutLinkElement outLink(int srcId, int destId, Label label) {
-        return new OutLinkElement(new Link(new Node(srcId), new Node(destId), label));
+        return new OutLinkElement(new Link(new ConnectedNode(srcId), new ConnectedNode(destId), label));
     }
 
     /**

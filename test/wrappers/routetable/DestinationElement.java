@@ -1,15 +1,15 @@
 package wrappers.routetable;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 /**
  * Represents a node element.
  */
 public class DestinationElement implements RouteTableElement {
 
-    private Node node;
+    private ConnectedNode node;
 
-    private DestinationElement(Node node) {
+    private DestinationElement(ConnectedNode node) {
         this.node = node;
     }
 
@@ -20,7 +20,7 @@ public class DestinationElement implements RouteTableElement {
      * @return new node element instance with the given id.
      */
     public static DestinationElement destination(int id) {
-        return new DestinationElement(new Node(id));
+        return new DestinationElement(new ConnectedNode(id));
     }
 
     /**

@@ -18,6 +18,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Constructs a new route assigning it a destination, attribute, and path.
+     *
      * @param destination destination of the route.
      * @param attribute policy attribute of the route.
      * @param path path to reach the destination.
@@ -31,6 +32,7 @@ public class Route implements Comparable<Route> {
     /**
      * Copy constructor. Only the path attribute is hard copied, the destination node and attribute are both
      * only copied by reference.
+     *
      * @param route route to be copied.
      */
     public Route(Route route) {
@@ -41,6 +43,7 @@ public class Route implements Comparable<Route> {
 
     /**
      * Creates a new invalid route.
+     *
      * @param destination destination of the route.
      * @return new invalid Route instance.
      */

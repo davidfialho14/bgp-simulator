@@ -4,6 +4,7 @@ package core;
 import core.events.*;
 import core.schedulers.ScheduledRoute;
 import core.schedulers.Scheduler;
+import core.topology.ConnectedNode;
 import core.topology.Link;
 import core.topology.Node;
 import core.topology.SelfLink;
@@ -13,7 +14,7 @@ import static core.InvalidPath.invalidPath;
 import static core.Route.invalidRoute;
 
 /**
- * Engine implements the hardsimulation simulation logic.
+ * Engine implements the hard simulation simulation logic.
  */
 public class Engine {
 
@@ -24,7 +25,7 @@ public class Engine {
     private State currentState; // current state on the simulation - null if not simulating
 
     /**
-     * Constructs an engine form a pre-configured builder.
+     * Constructs new engine assigning it with the necessary scheduler.
      */
     public Engine(Scheduler scheduler) {
         this.scheduler = scheduler;
@@ -42,7 +43,7 @@ public class Engine {
     /**
      * Simulates according to the given initial state. Simulates only for one destination.
      *
-     * @param state initial state to start simulation.
+     * @param initialState initial state to start simulation.
      */
     public void simulate(State initialState) {
         currentState = initialState;
@@ -77,7 +78,7 @@ public class Engine {
      */
     public void onBrokenLink(Link brokenLink) {
         NodeState sourceNodeState = currentState.get(brokenLink.getSource());
-        Node destination = sourceNodeState.getTable().getDestination();
+        ConnectedNode destination = sourceNodeState.getTable().getDestination();
         processSelection(sourceNodeState, brokenLink, invalidRoute(destination));
 
         // remove all routes being exported through this link
@@ -138,7 +139,7 @@ public class Engine {
     Route select(NodeState nodeState, Link link, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
-        Node learningNode = link.getSource();
+        ConnectedNode learningNode = link.getSource();
 
         // select the best route learned from all out-neighbours except the exporting out-link
         Route exclRoute = nodeState.getSelectedRoute(link);
@@ -176,7 +177,7 @@ public class Engine {
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
      */
-    void exportToInNeighbours(Node exportingNode, Route route) {
+    void exportToInNeighbours(ConnectedNode exportingNode, Route route) {
         exportingNode.getInLinks()
                 .forEach(inLink -> export(inLink, route));
     }
@@ -233,7 +234,7 @@ public class Engine {
             // it is not guaranteed the scheduler has routes still since they can be removed by a link breaker
             // when updating the time
             if (scheduledRoute != null) {
-                Node learningNode = scheduledRoute.getLink().getSource();
+                ConnectedNode learningNode = scheduledRoute.getLink().getSource();
                 process(state.get(learningNode), scheduledRoute.getLink(), scheduledRoute.getRoute());
             }
         }
@@ -245,7 +246,7 @@ public class Engine {
      * @param node node to export self route.
      * @param state current state.
      */
-    private void exportSelfRoute(Node node, State state) {
+    private void exportSelfRoute(ConnectedNode node, State state) {
         NodeState nodeState = state.get(node);
         Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
 

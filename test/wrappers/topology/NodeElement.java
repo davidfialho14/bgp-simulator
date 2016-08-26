@@ -1,19 +1,19 @@
 package wrappers.topology;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 /**
  * Represents a any node of a link.
  */
 public abstract class NodeElement {
 
-    private Node node;
+    private ConnectedNode node;
 
-    protected NodeElement(Node node) {
+    protected NodeElement(ConnectedNode node) {
         this.node = node;
     }
 
-    Node getNode() {
+    ConnectedNode getNode() {
         return node;
     }
 }

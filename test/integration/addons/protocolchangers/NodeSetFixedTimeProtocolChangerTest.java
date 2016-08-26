@@ -5,7 +5,7 @@ import core.Engine;
 import core.Protocol;
 import core.State;
 import core.schedulers.FIFOScheduler;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import factories.ShortestPathTopologyFactory;
 import factories.TopologyFactory;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
      */
     private State simulate(int networkId, int destId, Protocol protocol, int nodeId, long time) {
         State state = State.create(factory.topology(networkId), destId, new BGPProtocol());
-        new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new Node(nodeId));
+        new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new ConnectedNode(nodeId));
 
         engine.simulate(state);
 

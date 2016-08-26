@@ -16,8 +16,8 @@ public class Link {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final Node source;
-    private final Node destination;
+    private final ConnectedNode source;
+    private final ConnectedNode destination;
     private final Label label;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -32,7 +32,7 @@ public class Link {
 	 * @param destination destination node of the link.
      * @param label label associated with the link.
 	 */
-	public Link(Node source, Node destination, Label label) {
+	public Link(ConnectedNode source, ConnectedNode destination, Label label) {
 		this.source = source;
         this.destination = destination;
         this.label = label;
@@ -45,8 +45,8 @@ public class Link {
      * @param label label associated with the link.
      */
     public Link(int srcId, int destId, Label label) {
-        this.source = new Node(srcId);
-        this.destination = new Node(destId);
+        this.source = new ConnectedNode(srcId);
+        this.destination = new ConnectedNode(destId);
         this.label = label;
     }
 
@@ -60,7 +60,7 @@ public class Link {
 	 * Returns the source node of the link.
 	 * @return the source node of the link.
      */
-	public Node getSource() {
+	public ConnectedNode getSource() {
 		return this.source;
 	}
 
@@ -68,7 +68,7 @@ public class Link {
 	 * Returns the destination node of the link.
 	 * @return the destination node of the link.
 	 */
-	public Node getDestination() {
+	public ConnectedNode getDestination() {
 		return this.destination;
 	}
 

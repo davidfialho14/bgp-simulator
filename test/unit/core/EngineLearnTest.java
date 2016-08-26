@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ public class EngineLearnTest {
     private Protocol stubProtocol;
 
     private Engine engine;
-    private Node destination = anyNode();
+    private ConnectedNode destination = anyNode();
 
     @Before
     public void setUp() throws Exception {

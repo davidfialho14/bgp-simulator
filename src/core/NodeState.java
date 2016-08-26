@@ -1,7 +1,7 @@
 package core;
 
+import core.topology.ConnectedNode;
 import core.topology.Link;
-import core.topology.Node;
 
 import static core.Route.invalidRoute;
 
@@ -21,7 +21,7 @@ public class NodeState {
      * @param destination destination simulating for.
      * @param protocol protocol to be used by the node.
      */
-    public NodeState(Node node, Node destination, Protocol protocol) {
+    public NodeState(ConnectedNode node, ConnectedNode destination, Protocol protocol) {
         this.table = new RouteTable(destination, node.getOutLinks());
         this.selectedRoute = invalidRoute(destination);
         this.protocol = protocol;
