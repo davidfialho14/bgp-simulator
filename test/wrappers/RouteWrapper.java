@@ -7,6 +7,7 @@ import core.topology.ConnectedNode;
 import core.topology.Node;
 import stubs.StubAttribute;
 
+import static core.Route.newRouteFrom;
 import static wrappers.PathWrapper.path;
 
 /**
@@ -18,7 +19,10 @@ public interface RouteWrapper {
      * More readable way to create a route instance.
      */
     static Route route(Node destination, Attribute attribute, Path path) {
-        return new Route(destination, attribute, path);
+        return newRouteFrom(Route.invalidRoute(destination))
+                .withAttribute(attribute)
+                .withPath(path)
+                .build();
     }
 
     /**
@@ -36,7 +40,7 @@ public interface RouteWrapper {
      * @return new route instance for the given destination.
      */
     static Route anyRoute(Node destination) {
-        return new Route(destination, new StubAttribute(), path());
+        return route(destination, new StubAttribute(), path());
     }
 
     /**

@@ -2,9 +2,9 @@ package io.reporters;
 
 import core.Path;
 import core.Protocol;
+import core.topology.ConnectedNode;
 import core.topology.Link;
 import core.topology.Network;
-import core.topology.ConnectedNode;
 import core.topology.Topology;
 import main.ExecutionStateTracker;
 import org.apache.commons.csv.CSVFormat;
@@ -37,11 +37,11 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private static final String[] BASIC_COUNTS_HEADERS =
-            { "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count" };
+            { "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count", "False Positive Count" };
     private static final String[] TIMED_DEPLOYMENT_COUNTS_HEADERS = { "Messages After Deployment Count" };
     private static final String[] GRADUAL_DEPLOYMENT_COUNTS_HEADERS = { "Deployed Nodes Count" };
     private static final String[] DETECTIONS_HEADERS =
-            { "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles" };
+            { "Simulation", "Detections", "Detecting Nodes", "Cut-Off Links", "Cycles", "False Positive" };
     private static final String[] DEPLOYMENTS_HEADERS = { "Simulation", "Deployed Nodes" };
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -153,7 +153,7 @@ public class CSVReporter implements Reporter {
         // write the deploying nodes
         try (CSVPrinter printer = getDeploymentsFilePrinter()) {
             if (!deploymentsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, BASIC_COUNTS_HEADERS);
+                printHeaders(printer, DEPLOYMENTS_HEADERS);
                 deploymentsHeadersWereAlreadyPrinted = true;
             }
 
@@ -223,6 +223,7 @@ public class CSVReporter implements Reporter {
         printer.print(dataSet.getTotalMessageCount());
         printer.print(dataSet.getDetectingNodesCount());
         printer.print(dataSet.getCutOffLinksCount());
+        printer.print(dataSet.getFalsePositiveCount());
     }
 
     private void writeDetections(BasicDataset dataSet) throws IOException {
@@ -242,7 +243,8 @@ public class CSVReporter implements Reporter {
                         detectionNumber++,
                         pretty(detection.getDetectingNode()),
                         pretty(detection.getCutOffLink()),
-                        pretty(detection.getCycle())
+                        pretty(detection.getCycle()),
+                        detection.isFalsePositive() ? "Yes" : "No"
                 );
             }
         }

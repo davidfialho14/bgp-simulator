@@ -1,6 +1,7 @@
 package core;
 
 import core.topology.ConnectedNode;
+import core.topology.Link;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -131,6 +132,24 @@ public class Path implements Comparable<Path>, Iterable<ConnectedNode> {
     }
 
     /**
+     * Returns the source node of the path. Source node is the initial node in the path.
+     *
+     * @return the source node of the path.
+     */
+    public ConnectedNode getSource() {
+        return path.getFirst();
+    }
+
+    /**
+     * Returns the destination node of the path. Source node is the initial node in the path.
+     *
+     * @return the destination node of the path.
+     */
+    public ConnectedNode getDestination() {
+        return path.getLast();
+    }
+
+    /**
      * Compares the path to another path. The comparison only takes into account the number of nodes in the path
      * the specific nodes it contains are not taken into account.
      *
@@ -179,4 +198,48 @@ public class Path implements Comparable<Path>, Iterable<ConnectedNode> {
     public Stream<ConnectedNode> stream() {
         return path.stream();
     }
+
+    /**
+     * Returns an iterator over the links in the path
+     *
+     * @return an Iterator of links.
+     */
+    public Iterator<Link> linksIterator() {
+        return new LinkIterator();
+    }
+
+    private class LinkIterator implements Iterator<Link> {
+
+        private Iterator<ConnectedNode> iterator = Path.this.iterator();
+        private ConnectedNode currentNode = iterator.next(); // all paths have at least one node
+
+        /**
+         * Returns {@code true} if the iteration has more elements.
+         * (In other words, returns {@code true} if {@link #next} would
+         * return an element rather than throwing an exception.)
+         *
+         * @return {@code true} if the iteration has more elements
+         */
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return the next element in the iteration
+         */
+        @Override
+        public Link next() {
+            ConnectedNode neighbour = iterator.next();
+            Link nextLink = currentNode.getOutLink(neighbour);
+            currentNode = neighbour;
+
+            return nextLink;
+        }
+
+    }
+
+
 }

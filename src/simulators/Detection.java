@@ -23,10 +23,6 @@ public class Detection {
         this.falsePositive = falsePositive;
     }
 
-    public Detection(ConnectedNode detectingNode, Link cutOffLink, Path cycle) {
-        this(detectingNode, cutOffLink, cycle, false);
-    }
-
     public ConnectedNode getDetectingNode() {
         return detectingNode;
     }

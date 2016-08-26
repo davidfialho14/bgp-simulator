@@ -12,6 +12,7 @@ import core.topology.SelfLink;
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
 import static core.Route.invalidRoute;
+import static core.Route.newRouteFrom;
 
 /**
  * Engine implements the hard simulation simulation logic.
@@ -121,7 +122,14 @@ public class Engine {
             path = invalidPath();
         }
 
-        Route learnedRoute = new Route(route.getDestination(), attribute, path);
+        Node neighbour = attribute != invalidAttr() ? link.getDestination() : null;
+
+        Route learnedRoute = newRouteFrom(route)
+                .withAttribute(attribute)
+                .withPath(path)
+                .andNewSelectedAttribute(neighbour, route.getAttribute())
+                .build();
+
         eventGenerator.fireLearnEvent(new LearnEvent(link, learnedRoute));
 
         return learnedRoute;
@@ -158,7 +166,7 @@ public class Engine {
             learnedRoute = invalidRoute(destination);
         }
 
-        table.setRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
+        table.setRoute(link, learnedRoute);
 
         return table.getSelectedRoute();
     }
@@ -243,7 +251,7 @@ public class Engine {
         Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
 
         // add the self route to the node's route table
-        nodeState.getTable().setRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
+        nodeState.getTable().setRoute(new SelfLink(node), selfRoute);
 
         node.getInLinks().forEach(link -> export(link, selfRoute));
     }

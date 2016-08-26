@@ -5,6 +5,8 @@ import core.Route;
 import stubs.StubAttribute;
 import stubs.StubLabel;
 
+import static wrappers.RouteWrapper.route;
+
 /**
  * Factory class to create instances necessary for abstract and interface classes necessary to build a topology.
  * The created elements are guaranteed to be able to work together.
@@ -92,7 +94,7 @@ public class Factory {
      * @return new route instance.
      */
     public static Route createRandomRoute() {
-        return new Route(createRandomNode(), new StubAttribute(), new Path());
+        return route(createRandomNode(), new StubAttribute(), new Path());
     }
 
     /**
@@ -102,7 +104,7 @@ public class Factory {
     public static Route[] createRandomRoutes(int n) {
         Route[] routes = new Route[n];
         for (int i = 0; i < n; i++) {
-            routes[i] = new Route(createRandomNode(), new StubAttribute(), new Path());
+            routes[i] = route(createRandomNode(), new StubAttribute(), new Path());
         }
 
         return routes;

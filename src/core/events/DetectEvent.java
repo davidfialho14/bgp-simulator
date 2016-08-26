@@ -1,9 +1,9 @@
 package core.events;
 
-import core.topology.ConnectedNode;
-import core.topology.Link;
 import core.Path;
 import core.Route;
+import core.topology.ConnectedNode;
+import core.topology.Link;
 
 /**
  * Events generated when a node learns a new route.
@@ -30,12 +30,11 @@ public class DetectEvent implements SimulationEvent {
     /**
      * Gets the cycle that originated a detect event.
      *
-     * @param event detect event to get cycle for.
      * @return cycle that originated detect event.
      */
-    public static Path getCycle(DetectEvent event) {
-        Path cycle = event.getLearnedRoute().getPath().getSubPathBefore(event.getDetectingNode());
-        cycle.add(event.getDetectingNode());    // include the detecting node in the start and end of the cycle path
+    public Path getCycle() {
+        Path cycle = getLearnedRoute().getPath().getSubPathBefore(getDetectingNode());
+        cycle.add(getDetectingNode());    // include the detecting node in the start and end of the cycle path
 
         return cycle;
     }
