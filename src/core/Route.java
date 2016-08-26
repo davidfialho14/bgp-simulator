@@ -5,7 +5,6 @@ import core.topology.Policy;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
@@ -294,8 +293,15 @@ public class Route implements Comparable<Route> {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public Set<Map.Entry<Node, Attribute>> getSelectedAttributes() {
-        return selectedAttributes.entrySet();
+    /**
+     * Returns the attribute selected by a node in the routes path.
+     *
+     * @param node node to get selected attribute for.
+     * @return the attribute selected by the node if the node belongs to teh rout's path or null if the given node
+     * is not part of the route's path.
+     */
+    public Attribute getSelectedAttribute(Node node) {
+        return selectedAttributes.get(node);
     }
 
 }
