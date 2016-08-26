@@ -40,7 +40,7 @@ public interface Node {
     static boolean equals(Node node, Object other) {
         if (!(other instanceof Node)) return false;
 
-        ConnectedNode otherNode = (ConnectedNode) other;
+        Node otherNode = (Node) other;
 
         return node.getId() == otherNode.getId();
     }
