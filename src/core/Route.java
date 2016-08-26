@@ -3,6 +3,9 @@ package core;
 import core.topology.Node;
 import core.topology.Policy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
 
@@ -22,24 +25,13 @@ public class Route implements Comparable<Route> {
     private Attribute attribute;
     private Path path;
 
+    private final Map<Node, Attribute> selectedAttributes;
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Constructors
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Constructs a new route assigning it a destination, attribute, and path.
-     *
-     * @param destination destination of the route.
-     * @param attribute policy attribute of the route.
-     * @param path path to reach the destination.
-     */
-    public Route(Node destination, Attribute attribute, Path path) {
-        this.destination = destination;
-        this.attribute = attribute;
-        this.path = path;
-    }
 
     /**
      * Copy constructor. Only the path attribute is hard copied, the destination node and attribute are both
@@ -51,11 +43,51 @@ public class Route implements Comparable<Route> {
         this.destination = route.destination;
         this.attribute = route.attribute;
         this.path = Path.copy(route.path);
+        this.selectedAttributes = new HashMap<>(route.selectedAttributes);
+    }
+
+    /**
+     * Constructs a new route given the necessary fields. Must be private because it show some implementation details
+     * like the container used to store selected attributes.
+     *
+     * @param destination destination of the route.
+     * @param attribute policy attribute of the route.
+     * @param path path to reach the destination.
+     * @param selectedAttributes map with the selected attributes
+     */
+    private Route(Node destination, Attribute attribute, Path path, Map<Node, Attribute> selectedAttributes) {
+        this.destination = destination;
+        this.attribute = attribute;
+        this.path = path;
+        this.selectedAttributes = selectedAttributes;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Public factory methods
+     *  Creation and Modification Methods.
+     *
+     *  Routes are created and modified using a builder class.
+     *  A route is created by modifying the attribute and/or path of another route. The created
+     *  route is always a new Route instance and never the original route modified.
+     *
+     *  To create a new route the #newRouteFrom() should be called and then the new attribute and/or
+     *  path should be specified. For example:
+     *
+     *  newRouteFrom(original)
+     *      .withAttribute(attribute)
+     *      .build()
+     *
+     *  In this case I only specified the new attribute, which means that the path will be the
+     *  same as the original. To mark the attribute as a new selected attribute the #selectedBy()
+     *  build method should be used. For example:
+     *
+     *  newRouteFrom(original)
+     *      .withAttribute(attribute)
+     *      .selectedBy(node)
+     *      .build()
+     *
+     *  Routes are always created from an original route, except invalid routes and self routes.
+     *  To create those type of routes used the respective factory methods.
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -66,7 +98,7 @@ public class Route implements Comparable<Route> {
      * @return new invalid Route instance.
      */
     public static Route invalidRoute(Node destination) {
-        return new Route(destination, invalidAttr(), invalidPath());
+        return new Route(destination, invalidAttr(), invalidPath(), new HashMap<>());
     }
 
     /**
@@ -77,7 +109,64 @@ public class Route implements Comparable<Route> {
      * @return new self Route instance to the given node.
      */
     public static Route createSelf(Node node, Policy policy) {
-        return new Route(node, policy.createSelf(node), new Path());
+        return new Route(node, policy.createSelf(node), new Path(), new HashMap<>());
+    }
+
+    /**
+     * Starts the process to create a new route from another.
+     *
+     * @param originalRoute original route to start with.
+     * @return a builder for the new Route.
+     */
+    public static Builder newRouteFrom(Route originalRoute) {
+        return new Builder(originalRoute);
+    }
+
+    public static class Builder {
+
+        private final Route originalRoute;
+
+        private Attribute attribute = null;
+        private Node selectingNode = null;
+        private Path path = null;
+
+        public Builder(Route originalRoute) {
+            this.originalRoute = originalRoute;
+        }
+
+        public Builder withAttribute(Attribute attribute) {
+            this.attribute = attribute;
+            return this;
+        }
+
+        public Builder selectedBy(Node node) {
+            this.selectingNode = node;
+            return this;
+        }
+
+        public Builder withPath(Path path) {
+            this.path = path;
+            return this;
+        }
+
+        public Route build() {
+
+            if (attribute == null) {
+                attribute = originalRoute.getAttribute();
+            } else if (path == null) {
+                path = Path.copy(originalRoute.path);
+            }
+
+            // copy the original route's selected attributes
+            Map<Node, Attribute> selectedAttributes = new HashMap<>(originalRoute.selectedAttributes);
+
+            if (selectingNode != null) {
+                selectedAttributes.put(selectingNode, attribute);
+            }
+
+            return new Route(originalRoute.destination, attribute, path, selectedAttributes);
+        }
+
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
