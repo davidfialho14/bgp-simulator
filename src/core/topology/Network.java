@@ -23,7 +23,7 @@ public class Network {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private Map<Integer, Node> nodes;   // mapping between
+    private Map<Integer, ConnectedNode> nodes;   // mapping between
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -46,7 +46,7 @@ public class Network {
     public Network(Network network) {
         this.nodes = new HashMap<>(network.nodes.size());
         // store a copy of each node
-        network.nodes.forEach((integer, node) -> this.nodes.put(integer, new Node(node)));
+        network.nodes.forEach((integer, node) -> this.nodes.put(integer, new ConnectedNode(node)));
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -69,7 +69,7 @@ public class Network {
      *
      * @return all the nodes in the topology.
      */
-    public Collection<Node> getNodes() {
+    public Collection<ConnectedNode> getNodes() {
         return nodes.values();
     }
 
@@ -79,7 +79,7 @@ public class Network {
      * @param id id of the node to get.
      * @return node with the given id.
      */
-    public Node getNode(int id) {
+    public ConnectedNode getNode(int id) {
         return nodes.get(id);
     }
 
@@ -127,7 +127,7 @@ public class Network {
      * @return true if the node was added or false if there was already a node with the same ID.
      */
 	public boolean addNode(int id) {
-        Node node = new Node(id);
+        ConnectedNode node = new ConnectedNode(id);
         if (nodes.putIfAbsent(id, node) != null) {
             return false;   // indicate the node was not added
         }
@@ -144,7 +144,7 @@ public class Network {
      * @param node node to be added to the topology.
      * @return true if the node was added or false if the node already existed.
      */
-    public boolean addNode(Node node) {
+    public boolean addNode(ConnectedNode node) {
         if (nodes.putIfAbsent(node.getId(), node) != null) {
             return false;   // indicate the node was not added
         }
@@ -166,8 +166,8 @@ public class Network {
      * @throws NodeNotFoundException if one of the ids does not correspond to an existing node.
      */
     public void addLink(int srcId, int destId, Label label) throws NodeNotFoundException {
-        Node sourceNode = nodes.get(srcId);
-        Node destinationNode = nodes.get(destId);
+        ConnectedNode sourceNode = nodes.get(srcId);
+        ConnectedNode destinationNode = nodes.get(destId);
 
         if (sourceNode == null || destinationNode == null) {
             int invalidId = sourceNode == null ? srcId : destId;
@@ -195,8 +195,8 @@ public class Network {
      * @return true if link was removed and false otherwise.
      */
     public boolean removeLink(Link link) {
-        Node source = getSource(link);
-        Node destination = getDestination(link);
+        ConnectedNode source = getSource(link);
+        ConnectedNode destination = getDestination(link);
 
         if (source == null || destination == null ) {
             // nodes do not exist which means the link does not exist!
@@ -216,7 +216,7 @@ public class Network {
     public String toString() {
         String networkStr = "Network{";
 
-        for (Node node : nodes.values()) {
+        for (ConnectedNode node : nodes.values()) {
             for (Link link : node.getInLinks()) {
                 networkStr += "\n\t" + link;
             }
@@ -237,7 +237,7 @@ public class Network {
      * @param link link to get source node from.
      * @return node in the topology corresponding to the source node of the given link.
      */
-    private Node getSource(Link link) {
+    private ConnectedNode getSource(Link link) {
         return nodes.get(link.getSource().getId());
     }
 
@@ -247,7 +247,7 @@ public class Network {
      * @param link link to get destination node from.
      * @return node in the topology corresponding to the destination node of the given link.
      */
-    private Node getDestination(Link link) {
+    private ConnectedNode getDestination(Link link) {
         return nodes.get(link.getDestination().getId());
     }
 }

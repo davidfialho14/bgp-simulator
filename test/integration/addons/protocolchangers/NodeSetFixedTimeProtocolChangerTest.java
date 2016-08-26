@@ -5,7 +5,7 @@ import core.Engine;
 import core.Protocol;
 import core.State;
 import core.schedulers.FIFOScheduler;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import factories.ShortestPathTopologyFactory;
 import factories.TopologyFactory;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class NodeSetFixedTimeProtocolChangerTest {
      */
     private State simulate(int networkId, int destId, Protocol protocol, int nodeId, long time) {
         State state = State.create(factory.topology(networkId), destId, new BGPProtocol());
-        new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new Node(nodeId));
+        new NodeSetFixedTimeProtocolChanger(engine, state, time, protocol, new ConnectedNode(nodeId));
 
         engine.simulate(state);
 
@@ -57,9 +57,9 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         State state = simulate(3, 0, new D1R1Protocol(), 2, 3L);
 
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
     }
 
     @Test(timeout = 2000)
@@ -92,9 +92,9 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         State state = simulate(3, 0, new D1R1Protocol(), 2, 15L);
 
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(0, sp(-1), path(2, 0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(0, sp(-3), path(1, 2, 0))));
     }
 
     @Test(timeout = 2000)
@@ -103,9 +103,9 @@ public class NodeSetFixedTimeProtocolChangerTest {
             throws Exception {
         State state = simulate(3, 0, new D1R1Protocol(), 1, 3L);
 
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(0, sp(0), path(0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(0, sp(-1), path(3, 1, 0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(0, sp(0), path(0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(0, sp(-1), path(3, 1, 0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(0, sp(-2), path(1, 0))));
     }
 
     @Test(timeout = 2000)

@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,9 +12,9 @@ import static core.InvalidPath.invalidPath;
 /**
  * Represents a path to a destination
  */
-public class Path implements Comparable<Path>, Iterable<Node> {
+public class Path implements Comparable<Path>, Iterable<ConnectedNode> {
 
-    private LinkedList<Node> path = null;   // must be a LinkedList in order to preserve insertion order
+    private LinkedList<ConnectedNode> path = null;   // must be a LinkedList in order to preserve insertion order
 
     /**
      * Constructs an empty path.
@@ -27,7 +27,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * Creates a new path with a single node.
      * @param node node initiate the path with.
      */
-    public Path(Node node) {
+    public Path(ConnectedNode node) {
         this.path = new LinkedList<>();
         path.add(node);
     }
@@ -37,7 +37,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * in the array.
      * @param nodes nodes to initiate the path with.
      */
-    public Path(Node[] nodes) {
+    public Path(ConnectedNode[] nodes) {
         this.path = new LinkedList<>();
         Collections.addAll(path, nodes);
     }
@@ -45,7 +45,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
     /**
      * Only to be used to create path internally.
      */
-    private Path(LinkedList<Node> path) {
+    private Path(LinkedList<ConnectedNode> path) {
         this.path = path;
     }
 
@@ -67,7 +67,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * Adds a new node to the path. If the node already exists in the path then it will no be added.
      * @param node node to be added to the path.
      */
-    public void add(Node node) {
+    public void add(ConnectedNode node) {
         path.addFirst(node);
     }
 
@@ -76,7 +76,7 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * @param node node to check if the path contains.
      * @return true if the path contains the node and false otherwise.
      */
-    public boolean contains(Node node) {
+    public boolean contains(ConnectedNode node) {
         return this != invalidPath() && path.contains(node);
     }
 
@@ -87,13 +87,13 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * @param node node to get path after.
      * @return path after the node or empty path if the node is not found or invalid if the path is invalid.
      */
-    public Path getPathAfter(Node node) {
+    public Path getPathAfter(ConnectedNode node) {
         if (this == invalidPath()) return invalidPath();
 
         // start with an empty path
         Path pathAfterNode = new Path();
 
-        Iterator<Node> nodeItr = path.iterator();
+        Iterator<ConnectedNode> nodeItr = path.iterator();
 
         // start by finding in the path the node in question
         while (nodeItr.hasNext()) {
@@ -116,10 +116,10 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * @param endingNode ending node.
      * @return sub-path until reaching the ending node or null if the ending node does not exist.
      */
-    public Path getSubPathBefore(Node endingNode) {
-        LinkedList<Node> subpath = new LinkedList<>();
+    public Path getSubPathBefore(ConnectedNode endingNode) {
+        LinkedList<ConnectedNode> subpath = new LinkedList<>();
 
-        for (Node node : path) {
+        for (ConnectedNode node : path) {
             subpath.add(node);
 
             if (node.equals(endingNode)) {
@@ -172,11 +172,11 @@ public class Path implements Comparable<Path>, Iterable<Node> {
      * @return an Iterator of nodes.
      */
     @Override
-    public Iterator<Node> iterator() {
+    public Iterator<ConnectedNode> iterator() {
         return path.iterator();
     }
 
-    public Stream<Node> stream() {
+    public Stream<ConnectedNode> stream() {
         return path.stream();
     }
 }

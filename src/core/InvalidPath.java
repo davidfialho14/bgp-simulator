@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -35,7 +35,7 @@ public class InvalidPath extends Path {
      * @return always false.
      */
     @Override
-    public boolean contains(Node node) {
+    public boolean contains(ConnectedNode node) {
         return false;
     }
 
@@ -69,27 +69,27 @@ public class InvalidPath extends Path {
     // Path's Unsupported Operations
 
     @Override
-    public void add(Node node) {
+    public void add(ConnectedNode node) {
         throw new UnsupportedOperationException("Can not add nodes to an invalid path");
     }
 
     @Override
-    public Path getPathAfter(Node node) {
+    public Path getPathAfter(ConnectedNode node) {
         throw new UnsupportedOperationException("Can not get any sub-path of an invalid path");
     }
 
     @Override
-    public Path getSubPathBefore(Node endingNode) {
+    public Path getSubPathBefore(ConnectedNode endingNode) {
         throw new UnsupportedOperationException("Can not get any sub-path of an invalid path");
     }
 
     @Override
-    public Iterator<Node> iterator() {
+    public Iterator<ConnectedNode> iterator() {
         throw new UnsupportedOperationException("Can not iterate over an invalid path");
     }
 
     @Override
-    public Stream<Node> stream() {
+    public Stream<ConnectedNode> stream() {
         throw new UnsupportedOperationException("There is not stream for an invalid path");
     }
 }

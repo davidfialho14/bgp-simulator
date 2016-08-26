@@ -4,6 +4,7 @@ package core;
 import core.events.*;
 import core.schedulers.ScheduledRoute;
 import core.schedulers.Scheduler;
+import core.topology.ConnectedNode;
 import core.topology.Link;
 import core.topology.Node;
 import core.topology.SelfLink;
@@ -13,7 +14,7 @@ import static core.InvalidPath.invalidPath;
 import static core.Route.invalidRoute;
 
 /**
- * Engine implements the hardsimulation simulation logic.
+ * Engine implements the hard simulation simulation logic.
  */
 public class Engine {
 
@@ -24,7 +25,7 @@ public class Engine {
     private State currentState; // current state on the simulation - null if not simulating
 
     /**
-     * Constructs an engine form a pre-configured builder.
+     * Constructs new engine assigning it with the necessary scheduler.
      */
     public Engine(Scheduler scheduler) {
         this.scheduler = scheduler;
@@ -42,7 +43,7 @@ public class Engine {
     /**
      * Simulates according to the given initial state. Simulates only for one destination.
      *
-     * @param state initial state to start simulation.
+     * @param initialState initial state to start simulation.
      */
     public void simulate(State initialState) {
         currentState = initialState;
@@ -138,10 +139,11 @@ public class Engine {
     Route select(NodeState nodeState, Link link, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
         Node destination = learnedRoute.getDestination();
-        Node learningNode = link.getSource();
+        ConnectedNode learningNode = link.getSource();
+        RouteTable table = nodeState.getTable();
 
         // select the best route learned from all out-neighbours except the exporting out-link
-        Route exclRoute = nodeState.getSelectedRoute(link);
+        Route exclRoute = table.getExclRoute(link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
@@ -156,18 +158,9 @@ public class Engine {
             learnedRoute = invalidRoute(destination);
         }
 
-        Route selectedRoute;
-        if (exclRoute == null || learnedRoute.compareTo(exclRoute) < 0) {
-            selectedRoute = new Route(learnedRoute);
-        } else {
-            selectedRoute = new Route(exclRoute);
-        }
+        table.setRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
 
-        // update the node state
-        nodeState.setSelectedRoute(selectedRoute);
-        nodeState.updateRoute(link, learnedRoute.getAttribute(), learnedRoute.getPath());
-
-        return selectedRoute;
+        return table.getSelectedRoute();
     }
 
     /**
@@ -176,7 +169,7 @@ public class Engine {
      * @param exportingNode node which is exporting the route.
      * @param route route to be exported.
      */
-    void exportToInNeighbours(Node exportingNode, Route route) {
+    void exportToInNeighbours(ConnectedNode exportingNode, Route route) {
         exportingNode.getInLinks()
                 .forEach(inLink -> export(inLink, route));
     }
@@ -204,7 +197,7 @@ public class Engine {
      */
     void processSelection(NodeState nodeState, Link link, Route learnedRoute) {
         // store the currently selected route
-        Route prevSelectedRoute = nodeState.getSelectedRoute();
+        Route prevSelectedRoute = nodeState.getTable().getSelectedRoute();
 
         Route selectedRoute = select(nodeState, link, learnedRoute);
         eventGenerator.fireSelectEvent(new SelectEvent(link.getSource(), prevSelectedRoute, selectedRoute));
@@ -233,7 +226,7 @@ public class Engine {
             // it is not guaranteed the scheduler has routes still since they can be removed by a link breaker
             // when updating the time
             if (scheduledRoute != null) {
-                Node learningNode = scheduledRoute.getLink().getSource();
+                ConnectedNode learningNode = scheduledRoute.getLink().getSource();
                 process(state.get(learningNode), scheduledRoute.getLink(), scheduledRoute.getRoute());
             }
         }
@@ -245,13 +238,12 @@ public class Engine {
      * @param node node to export self route.
      * @param state current state.
      */
-    private void exportSelfRoute(Node node, State state) {
+    private void exportSelfRoute(ConnectedNode node, State state) {
         NodeState nodeState = state.get(node);
         Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
 
         // add the self route to the node's route table
-        nodeState.updateRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
-        nodeState.setSelectedRoute(selfRoute);
+        nodeState.getTable().setRoute(new SelfLink(node), selfRoute.getAttribute(), selfRoute.getPath());
 
         node.getInLinks().forEach(link -> export(link, selfRoute));
     }

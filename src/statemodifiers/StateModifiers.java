@@ -2,7 +2,7 @@ package statemodifiers;
 
 import core.Protocol;
 import core.State;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 /**
  * The state modifiers interface contains a set of static methods to perform modifications to the state.
@@ -16,7 +16,7 @@ public interface StateModifiers {
      * @param node      node to deploy the new protocol.
      * @param protocol  protocol to deploy.
      */
-    static void deployProtocol(State state, Node node, Protocol protocol) {
+    static void deployProtocol(State state, ConnectedNode node, Protocol protocol) {
         state.updateProtocol(node, protocol);
     }
 

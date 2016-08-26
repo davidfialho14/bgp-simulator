@@ -1,5 +1,6 @@
 package wrappers.routetable;
 
+import core.topology.ConnectedNode;
 import core.topology.Node;
 
 /**
@@ -20,7 +21,7 @@ public class DestinationElement implements RouteTableElement {
      * @return new node element instance with the given id.
      */
     public static DestinationElement destination(int id) {
-        return new DestinationElement(new Node(id));
+        return new DestinationElement(new ConnectedNode(id));
     }
 
     /**

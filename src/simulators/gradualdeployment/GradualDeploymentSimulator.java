@@ -3,7 +3,7 @@ package simulators.gradualdeployment;
 import core.Engine;
 import core.Protocol;
 import core.State;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import simulators.Dataset;
 import simulators.Simulator;
 import statemodifiers.StateModifiers;
@@ -87,8 +87,8 @@ public class GradualDeploymentSimulator extends Simulator {
         deployPeriodicTimer = periodicTimer(engine)
                 .withPeriod(deployPeriod)
                 .doOperation(() -> {
-                    Collection<Node> selectedNodes = nodesSelector.selectNodes(deployedNodeCount);
-                    for (Node selectedNode : selectedNodes) {
+                    Collection<ConnectedNode> selectedNodes = nodesSelector.selectNodes(deployedNodeCount);
+                    for (ConnectedNode selectedNode : selectedNodes) {
                         StateModifiers.deployProtocol(state, selectedNode, deployProtocol);
                         dataCollector.notifyDeployment(selectedNode);
                     }

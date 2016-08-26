@@ -133,12 +133,12 @@ public class ShortestPathTopology6Test {
     public void simulate_BGPProtocolAndFIFOScheduler_CorrectSelectedRoutes() throws Exception {
         State state = simulateWith(new BGPProtocol());
 
-        collector.checkThat(state.get(0).getSelectedRoute(), is(route(destinationId, sp(0), path())));
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
-        collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
-        collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
+        collector.checkThat(state.get(0).getTable().getSelectedRoute(), is(route(destinationId, sp(0), path())));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
+        collector.checkThat(state.get(4).getTable().getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
+        collector.checkThat(state.get(5).getTable().getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
     }
 
     // ----- D1R1 PROTOCOL -----
@@ -159,12 +159,12 @@ public class ShortestPathTopology6Test {
     public void simulate_D1R1ProtocolAndFIFOScheduler_CorrectSelectedRoutes() throws Exception {
         State state = simulateWith(new D1R1Protocol());
 
-        collector.checkThat(state.get(0).getSelectedRoute(), is(route(destinationId, sp(0), path())));
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
-        collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
-        collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
+        collector.checkThat(state.get(0).getTable().getSelectedRoute(), is(route(destinationId, sp(0), path())));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
+        collector.checkThat(state.get(4).getTable().getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
+        collector.checkThat(state.get(5).getTable().getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
     }
 
     @Test(timeout = 2000)
@@ -195,12 +195,12 @@ public class ShortestPathTopology6Test {
     public void simulate_D2R1ProtocolAndFIFOScheduler_CorrectSelectedRoutes() throws Exception {
         State state = simulateWith(new D2R1Protocol());
 
-        collector.checkThat(state.get(0).getSelectedRoute(), is(route(destinationId, sp(0), path())));
-        collector.checkThat(state.get(1).getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
-        collector.checkThat(state.get(2).getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
-        collector.checkThat(state.get(3).getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
-        collector.checkThat(state.get(4).getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
-        collector.checkThat(state.get(5).getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
+        collector.checkThat(state.get(0).getTable().getSelectedRoute(), is(route(destinationId, sp(0), path())));
+        collector.checkThat(state.get(1).getTable().getSelectedRoute(), is(route(destinationId, sp(0), path(0))));
+        collector.checkThat(state.get(2).getTable().getSelectedRoute(), is(route(destinationId, sp(5), path(0))));
+        collector.checkThat(state.get(3).getTable().getSelectedRoute(), is(route(destinationId, sp(1), path(1, 0))));
+        collector.checkThat(state.get(4).getTable().getSelectedRoute(), is(route(destinationId, sp(3), path(5, 3, 1, 0))));
+        collector.checkThat(state.get(5).getTable().getSelectedRoute(), is(route(destinationId, sp(2), path(3, 1, 0))));
     }
 
     @Test(timeout = 2000)

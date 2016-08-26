@@ -1,7 +1,7 @@
 package core;
 
 import core.schedulers.FIFOScheduler;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import factories.ShortestPathTopologyFactory;
 import factories.TopologyFactory;
 import org.junit.Before;
@@ -33,29 +33,29 @@ public class EngineD1R1AndShortestPathTest extends SimulateEngineTest {
         protocol = new D1R1Protocol();
     }
 
-    @Test(timeout = 2000)
+    @Test//(timeout = 2000)
     public void simulate_Topology3_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(3), destinationId, protocol);
 
         engine.simulate(state);
 
-        assertThat(state.get(new Node(0)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new Node(1)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 0),     splink(1, 2, -1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(2)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),    splink(2, 0, 0),     splink(2, 3, 1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(state.get(new Node(3)).getTable(), is( table(
+        assertThat(state.get(new ConnectedNode(3)).getTable(), is( table(
                                 selfLink(3),    splink(3, 0, 0),     splink(3, 1, -2),
                 destination(0), invalidRoute(), sproute(0, path(0)), sproute(-2, path(1, 0))
         )));

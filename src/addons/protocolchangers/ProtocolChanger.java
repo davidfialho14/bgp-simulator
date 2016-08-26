@@ -3,7 +3,7 @@ package addons.protocolchangers;
 import core.Engine;
 import core.Protocol;
 import core.State;
-import core.topology.Node;
+import core.topology.ConnectedNode;
 
 /**
  * Base class that all protocol changers must extend. It implements methods to change a protocol
@@ -47,7 +47,7 @@ public abstract class ProtocolChanger {
      * @param node node to change protocol of.
      * @param protocol protocol to change to.
      */
-    protected void changeProtocol(Node node, Protocol protocol) {
+    protected void changeProtocol(ConnectedNode node, Protocol protocol) {
         state.updateProtocol(node, protocol);
     }
 

@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.Node;
+import core.topology.ConnectedNode;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -63,27 +63,27 @@ public class PathTest {
 
     @Test
     public void getPathAfter_Node1WithEmptyPath_EmptyPath() throws Exception {
-        assertThat(path().getPathAfter(new Node(1)), is(path()));
+        assertThat(path().getPathAfter(new ConnectedNode(1)), is(path()));
     }
 
     @Test
     public void getPathAfter_Node1ForPathWithNode1And0_PathWithNode0() throws Exception {
-        assertThat(path(1, 0).getPathAfter(new Node(1)), is(path(0)));
+        assertThat(path(1, 0).getPathAfter(new ConnectedNode(1)), is(path(0)));
     }
 
     @Test
     public void getPathAfter_Node1ForPathWithNode1_EmptyPath() throws Exception {
-        assertThat(path(1).getPathAfter(new Node(1)), is(path()));
+        assertThat(path(1).getPathAfter(new ConnectedNode(1)), is(path()));
     }
 
     @Test
     public void getPathAfter_Node0ForPathWithNode1_EmptyPath() throws Exception {
-        assertThat(path(1).getPathAfter(new Node(0)), is(path()));
+        assertThat(path(1).getPathAfter(new ConnectedNode(0)), is(path()));
     }
 
     @Test
     public void getPathAfter_Node1ForPathWithNode2And1And4And0_PathWithNode4And0() throws Exception {
-        assertThat(path(2, 1, 4, 0).getPathAfter(new Node(1)), is(path(4, 0)));
+        assertThat(path(2, 1, 4, 0).getPathAfter(new ConnectedNode(1)), is(path(4, 0)));
     }
 
     @Test

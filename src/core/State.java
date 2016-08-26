@@ -1,7 +1,7 @@
 package core;
 
+import core.topology.ConnectedNode;
 import core.topology.Network;
-import core.topology.Node;
 import core.topology.Topology;
 
 import java.util.HashMap;
@@ -22,9 +22,9 @@ public class State {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final Topology originalTopology;    // stores the topology
-    private final Node destination;
+    private final ConnectedNode destination;
     private final Protocol defaultProtocol;
-    private final Map<Node, NodeState> nodesStates;   // state of each nodeX
+    private final Map<ConnectedNode, NodeState> nodesStates;   // state of each nodeX
 
     // stores the current
     private Topology currentTopology;
@@ -38,8 +38,8 @@ public class State {
     /**
      * This constructor is PRIVATE: use the static create methods
      */
-    private State(Topology topology, Node destination, Protocol defaultProtocol,
-                  Map<Node, NodeState> nodesStates) {
+    private State(Topology topology, ConnectedNode destination, Protocol defaultProtocol,
+                  Map<ConnectedNode, NodeState> nodesStates) {
         this.originalTopology = topology;
         this.currentTopology = new Topology(topology); // ensure the current topology is a copy of the original
         this.destination = destination;
@@ -58,9 +58,9 @@ public class State {
         Network network = topology.getNetwork();
 
         // associate each node with an empty state
-        Map<Node, NodeState> nodesStates = new HashMap<>(network.getNodeCount());
+        Map<ConnectedNode, NodeState> nodesStates = new HashMap<>(network.getNodeCount());
 
-        Node destination = network.getNode(destId);
+        ConnectedNode destination = network.getNode(destId);
         network.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, destination, protocol)));
 
         return new State(topology, destination, protocol, nodesStates);
@@ -87,7 +87,7 @@ public class State {
      * @param node node to get state for.
      * @return state of the node.
      */
-    public NodeState get(Node node) {
+    public NodeState get(ConnectedNode node) {
         return nodesStates.get(node);
     }
 
@@ -98,7 +98,7 @@ public class State {
      * @return state of the node.
      */
     public NodeState get(int nodeId) {
-        return nodesStates.get(new Node(nodeId));
+        return nodesStates.get(new ConnectedNode(nodeId));
     }
 
     /**
@@ -106,7 +106,7 @@ public class State {
      *
      * @return the destination node for this state.
      */
-    public Node getDestination() {
+    public ConnectedNode getDestination() {
         return destination;
     }
 
@@ -115,7 +115,7 @@ public class State {
      *
      * @return a map associating each node with its current route table.
      */
-    public Map<Node, RouteTable> getRouteTables() {
+    public Map<ConnectedNode, RouteTable> getRouteTables() {
         return nodesStates.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -128,11 +128,11 @@ public class State {
      *
      * @return a map associating each node with its current selected route to reach the destination.
      */
-    public Map<Node, Route> getSelectedRoutes() {
+    public Map<ConnectedNode, Route> getSelectedRoutes() {
         return nodesStates.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getSelectedRoute()
+                        entry -> entry.getValue().getTable().getSelectedRoute()
                 ));
     }
 
@@ -164,7 +164,7 @@ public class State {
      * @param node node to update protocol.
      * @param protocol protocol to replace current one.
      */
-    public void updateProtocol(Node node, Protocol protocol) {
+    public void updateProtocol(ConnectedNode node, Protocol protocol) {
         get(node).setProtocol(protocol);
     }
 
