@@ -2,7 +2,7 @@ package policies.shortestpath;
 
 import core.Attribute;
 import core.topology.Label;
-import core.topology.ConnectedNode;
+import core.topology.Node;
 import core.topology.Policy;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 
@@ -19,7 +19,7 @@ public class ShortestPathPolicy implements Policy {
     }
 
     @Override
-    public Attribute createSelf(ConnectedNode node) {
+    public Attribute createSelf(Node node) {
         return new ShortestPathAttribute(0);
     }
 

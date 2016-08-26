@@ -1,10 +1,11 @@
 package wrappers;
 
-import core.topology.ConnectedNode;
-import stubs.StubAttribute;
 import core.Attribute;
 import core.Path;
 import core.Route;
+import core.topology.ConnectedNode;
+import core.topology.Node;
+import stubs.StubAttribute;
 
 import static wrappers.PathWrapper.path;
 
@@ -34,7 +35,7 @@ public interface RouteWrapper {
      * @param destination destination node of the route.
      * @return new route instance for the given destination.
      */
-    static Route anyRoute(ConnectedNode destination) {
+    static Route anyRoute(Node destination) {
         return new Route(destination, new StubAttribute(), path());
     }
 

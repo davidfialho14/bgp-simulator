@@ -2,7 +2,7 @@ package stubs;
 
 import core.Attribute;
 import core.topology.Label;
-import core.topology.ConnectedNode;
+import core.topology.Node;
 import core.topology.Policy;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 
@@ -14,7 +14,7 @@ public class StubPolicy implements Policy {
      * @return instance of a self attribute implementation.
      */
     @Override
-    public Attribute createSelf(ConnectedNode node) {
+    public Attribute createSelf(Node node) {
         return new StubAttribute(0);
     }
 

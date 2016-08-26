@@ -14,7 +14,7 @@ public interface Policy {
      * @param node node to create self attribute for.
      * @return instance of a self attribute implementation.
      */
-    Attribute createSelf(ConnectedNode node);
+    Attribute createSelf(Node node);
 
     /**
      * Creates a label for this policy based on the string tag given.

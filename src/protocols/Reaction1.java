@@ -3,8 +3,8 @@ package protocols;
 import core.Attribute;
 import core.InvalidAttribute;
 import core.Route;
-import core.topology.ConnectedNode;
 import core.topology.Link;
+import core.topology.Node;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,9 +17,9 @@ import java.util.Set;
  */
 class Reaction1 {
 
-    protected Map<ConnectedNode, Set<Link>> destinationCutLinks = new HashMap<>();
+    protected Map<Node, Set<Link>> destinationCutLinks = new HashMap<>();
 
-    public Attribute extend(ConnectedNode destination, Link link, Attribute attribute) {
+    public Attribute extend(Node destination, Link link, Attribute attribute) {
         Set<Link> cutLinks = destinationCutLinks.get(destination);
         if (cutLinks == null || !cutLinks.contains(link)) {
             return link.extend(attribute);

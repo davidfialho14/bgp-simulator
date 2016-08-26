@@ -1,6 +1,6 @@
 package core;
 
-import core.topology.ConnectedNode;
+import core.topology.Node;
 import core.topology.Policy;
 
 import static core.InvalidAttribute.invalidAttr;
@@ -12,17 +12,18 @@ import static core.InvalidPath.invalidPath;
  */
 public class Route implements Comparable<Route> {
 
-    private ConnectedNode destination;
+    private Node destination;
     private Attribute attribute;
     private Path path;
 
     /**
      * Constructs a new route assigning it a destination, attribute, and path.
+     *
      * @param destination destination of the route.
      * @param attribute policy attribute of the route.
      * @param path path to reach the destination.
      */
-    public Route(ConnectedNode destination, Attribute attribute, Path path) {
+    public Route(Node destination, Attribute attribute, Path path) {
         this.destination = destination;
         this.attribute = attribute;
         this.path = path;
@@ -31,6 +32,7 @@ public class Route implements Comparable<Route> {
     /**
      * Copy constructor. Only the path attribute is hard copied, the destination node and attribute are both
      * only copied by reference.
+     *
      * @param route route to be copied.
      */
     public Route(Route route) {
@@ -41,10 +43,11 @@ public class Route implements Comparable<Route> {
 
     /**
      * Creates a new invalid route.
+     *
      * @param destination destination of the route.
      * @return new invalid Route instance.
      */
-    public static Route invalidRoute(ConnectedNode destination) {
+    public static Route invalidRoute(Node destination) {
         return new Route(destination, invalidAttr(), invalidPath());
     }
 
@@ -54,7 +57,7 @@ public class Route implements Comparable<Route> {
      * @param policy policy used to create a self attribute to the given node.
      * @return new self Route instance to the given node.
      */
-    public static Route createSelf(ConnectedNode node, Policy policy) {
+    public static Route createSelf(Node node, Policy policy) {
         return new Route(node, policy.createSelf(node), new Path());
     }
 
@@ -62,7 +65,7 @@ public class Route implements Comparable<Route> {
      * Returns the route's destination.
      * @return destination of the route.
      */
-    public ConnectedNode getDestination() {
+    public Node getDestination() {
         return destination;
     }
 
@@ -70,7 +73,7 @@ public class Route implements Comparable<Route> {
      * Assigns the given destination to the route.
      * @param destination node to be assigned as destination.
      */
-    public void setDestination(ConnectedNode destination) {
+    public void setDestination(Node destination) {
         this.destination = destination;
     }
 

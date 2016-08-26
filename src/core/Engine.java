@@ -4,8 +4,9 @@ package core;
 import core.events.*;
 import core.schedulers.ScheduledRoute;
 import core.schedulers.Scheduler;
-import core.topology.Link;
 import core.topology.ConnectedNode;
+import core.topology.Link;
+import core.topology.Node;
 import core.topology.SelfLink;
 
 import static core.InvalidAttribute.invalidAttr;
@@ -137,7 +138,7 @@ public class Engine {
      */
     Route select(NodeState nodeState, Link link, Route learnedRoute) {
         // unpacking some variables to easier reading of the code
-        ConnectedNode destination = learnedRoute.getDestination();
+        Node destination = learnedRoute.getDestination();
         ConnectedNode learningNode = link.getSource();
 
         // select the best route learned from all out-neighbours except the exporting out-link
