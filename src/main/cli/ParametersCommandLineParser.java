@@ -2,6 +2,8 @@ package main.cli;
 
 import core.Protocol;
 import io.networkreaders.GraphvizReaderFactory;
+import io.networkreaders.SimpleTopologyReaderFactory;
+import io.networkreaders.TopologyReaderFactory;
 import io.reporters.CSVReporterFactory;
 import main.SimulatorParameters;
 import org.apache.commons.cli.*;
@@ -30,6 +32,7 @@ public class ParametersCommandLineParser {
     private static final String REPETITION_COUNT = "repetition_count";
     private static final String ENABLED_DETECTION2 = "detection2";
     private static final String DEPLOY_TIME = "deploy_time";
+    private static final String INPUT_FORMAT_GRAPHVIZ = "graphviz";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -47,6 +50,7 @@ public class ParametersCommandLineParser {
         options.addOption("c", REPETITION_COUNT, true, "number of repetitions");
         options.addOption("d2", ENABLED_DETECTION2, false, "use detection 2 instead of detection 1");
         options.addOption("t", DEPLOY_TIME, true, "time deploy detection");
+        options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, true, "indicate the input network file is in Graphviz format");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -74,7 +78,7 @@ public class ParametersCommandLineParser {
         File reportFile = new File(topologyFile.getParent(), reportFileName);
 
         return new SimulatorParameters.Builder(topologyFile, reportFile)
-                .readerFactory(new GraphvizReaderFactory())
+                .readerFactory(gerReader(commandLine))
                 .destinationId(destinationId)
                 .repetitionCount(getRepetitionCount(commandLine))
                 .protocol(getProtocol(commandLine))
@@ -88,6 +92,22 @@ public class ParametersCommandLineParser {
      *  Parsing methods for each parameter
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Obtains the input format of the topology file from the command line and returns the appropriate reader
+     * factory. This is an optional argument.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return reader factory instance.
+     */
+    private TopologyReaderFactory gerReader(CommandLine commandLine) {
+        if (commandLine.hasOption(INPUT_FORMAT_GRAPHVIZ)) {
+            return new GraphvizReaderFactory();
+        } else {
+            // by default use simple reader
+            return new SimpleTopologyReaderFactory();
+        }
+    }
 
     /**
      * Obtains the topology file from the command line. This is not an optional argument, which means that a
