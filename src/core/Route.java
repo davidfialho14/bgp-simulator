@@ -5,6 +5,7 @@ import core.topology.Policy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
@@ -78,12 +79,12 @@ public class Route implements Comparable<Route> {
      *      .build()
      *
      *  In this case I only specified the new attribute, which means that the path will be the
-     *  same as the original. To mark the attribute as a new selected attribute the #selectedBy()
-     *  build method should be used. For example:
+     *  same as the original. To mark the attribute as a new selected attribute the
+     *  #andNewSelectedAttribute() build method should be used. For example:
      *
      *  newRouteFrom(original)
      *      .withAttribute(attribute)
-     *      .selectedBy(node)
+     *      .andNewSelectedAttribute(node, selectedAttribute)
      *      .build()
      *
      *  Routes are always created from an original route, except invalid routes and self routes.
@@ -128,6 +129,7 @@ public class Route implements Comparable<Route> {
 
         private Attribute attribute = null;
         private Node selectingNode = null;
+        private Attribute selectedAttribute = null;
         private Path path = null;
 
         public Builder(Route originalRoute) {
@@ -139,13 +141,14 @@ public class Route implements Comparable<Route> {
             return this;
         }
 
-        public Builder selectedBy(Node node) {
-            this.selectingNode = node;
+        public Builder withPath(Path path) {
+            this.path = path;
             return this;
         }
 
-        public Builder withPath(Path path) {
-            this.path = path;
+        public Builder andNewSelectedAttribute(Node selectingNode, Attribute selectedAttribute) {
+            this.selectingNode = selectingNode;
+            this.selectedAttribute = selectedAttribute;
             return this;
         }
 
@@ -161,7 +164,7 @@ public class Route implements Comparable<Route> {
             Map<Node, Attribute> selectedAttributes = new HashMap<>(originalRoute.selectedAttributes);
 
             if (selectingNode != null) {
-                selectedAttributes.put(selectingNode, attribute);
+                selectedAttributes.put(selectingNode, selectedAttribute);
             }
 
             return new Route(originalRoute.destination, attribute, path, selectedAttributes);
@@ -284,4 +287,15 @@ public class Route implements Comparable<Route> {
                        ", " + attribute +
                        ", " + path + ')';
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface - For selected attributes
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public Set<Map.Entry<Node, Attribute>> getSelectedAttributes() {
+        return selectedAttributes.entrySet();
+    }
+
 }

@@ -122,10 +122,12 @@ public class Engine {
             path = invalidPath();
         }
 
-        // TODO change this to include selecting node
+        Node neighbour = attribute != invalidAttr() ? link.getDestination() : null;
+
         Route learnedRoute = newRouteFrom(route)
                 .withAttribute(attribute)
                 .withPath(path)
+                .andNewSelectedAttribute(neighbour, route.getAttribute())
                 .build();
 
         eventGenerator.fireLearnEvent(new LearnEvent(link, learnedRoute));
