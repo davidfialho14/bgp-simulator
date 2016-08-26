@@ -1,15 +1,16 @@
 package wrappers.routetable;
 
 import core.topology.ConnectedNode;
+import core.topology.Node;
 
 /**
  * Represents a node element.
  */
 public class DestinationElement implements RouteTableElement {
 
-    private ConnectedNode node;
+    private Node node;
 
-    private DestinationElement(ConnectedNode node) {
+    private DestinationElement(Node node) {
         this.node = node;
     }
 

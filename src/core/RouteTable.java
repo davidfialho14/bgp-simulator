@@ -1,6 +1,5 @@
 package core;
 
-import core.topology.ConnectedNode;
 import core.topology.Link;
 import core.topology.Node;
 import dnl.utils.text.table.TextTable;
@@ -55,7 +54,7 @@ public class RouteTable {
      * @param destination destination of the routes to be stored.
      * @param outLinks out out-links of the route table.
      */
-    public RouteTable(ConnectedNode destination, Collection<Link> outLinks) {
+    public RouteTable(Node destination, Collection<Link> outLinks) {
         this.destination = destination;
         this.routes = new HashMap<>(outLinks.size());
         this.selectedRoute = invalidRoute(destination);

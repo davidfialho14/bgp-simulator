@@ -1,9 +1,9 @@
 package wrappers.routetable;
 
-import core.topology.ConnectedNode;
-import core.topology.Link;
 import core.Route;
 import core.RouteTable;
+import core.topology.Link;
+import core.topology.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,7 @@ import java.util.List;
 public class RouteTableWrapper {
 
     private Collection<Link> outLinks = new ArrayList<>();
-    private ConnectedNode destination;
+    private Node destination;
     private List<Route> routes = new ArrayList<>();
 
     private RouteTableWrapper() {}  // can not be instantiated outside of the class
@@ -47,7 +47,7 @@ public class RouteTableWrapper {
         outLinks.add(outLink);
     }
 
-    void setDestination(ConnectedNode destination) {
+    void setDestination(Node destination) {
         this.destination = destination;
     }
 

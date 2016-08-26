@@ -1,10 +1,11 @@
 package core;
 
-import core.topology.ConnectedNode;
 import core.topology.Link;
+import core.topology.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -21,12 +22,15 @@ import static wrappers.StubWrapper.stubLink;
 @RunWith(MockitoJUnitRunner.class)
 public class EngineProcessTest {
 
-    private final ConnectedNode destination = new ConnectedNode(0);
+    private final Node destination = Node.newNode(0);
     private final Link link = stubLink(1, 2);
     private final Route invalidRoute = Route.invalidRoute(destination);
     private Engine engine;
-    @Mock
-    private NodeState nodeState;
+
+    @Mock private RouteTable routeTable;
+    @Mock private Protocol protocol;
+
+    @InjectMocks private NodeState nodeState = new NodeState();    // inject the route table in the node state
 
     @Before
     public void setUp() throws Exception {
@@ -42,7 +46,7 @@ public class EngineProcessTest {
      * @param path path previously selected.
      */
     private void setPreviouslySelected(Attribute attribute, Path path) {
-        when(nodeState.getTable().getSelectedRoute()).thenReturn(new Route(destination, attribute, path));
+        when(routeTable.getSelectedRoute()).thenReturn(new Route(destination, attribute, path));
     }
     
     @Test

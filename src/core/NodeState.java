@@ -1,6 +1,7 @@
 package core;
 
 import core.topology.ConnectedNode;
+import core.topology.Node;
 
 /**
  * Aggregates all the state of one node in one unique class
@@ -10,6 +11,10 @@ public class NodeState {
     private RouteTable table;
     private Protocol protocol;
 
+
+    // to be used only for mock injection in the tests
+    NodeState() {}
+
     /**
      * Initializes the state for the given node with an empty table and associates it with the given protocol.
      *
@@ -17,7 +22,7 @@ public class NodeState {
      * @param destination destination simulating for.
      * @param protocol protocol to be used by the node.
      */
-    public NodeState(ConnectedNode node, ConnectedNode destination, Protocol protocol) {
+    public NodeState(ConnectedNode node, Node destination, Protocol protocol) {
         this.table = new RouteTable(destination, node.getOutLinks());
         this.protocol = protocol;
     }

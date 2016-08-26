@@ -17,7 +17,7 @@ public interface RouteWrapper {
     /**
      * More readable way to create a route instance.
      */
-    static Route route(ConnectedNode destination, Attribute attribute, Path path) {
+    static Route route(Node destination, Attribute attribute, Path path) {
         return new Route(destination, attribute, path);
     }
 
