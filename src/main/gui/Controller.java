@@ -11,6 +11,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import main.ProgressHandler;
 import main.SimulatorLauncher;
 import main.SimulatorParameters;
 import main.gui.basics.NumberSpinner;
@@ -38,7 +39,8 @@ public class Controller implements Initializable {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(new GUIErrorHandler());
+    private final SimulatorLauncher simulatorLauncher = new SimulatorLauncher(
+            new GUIErrorHandler(), new ProgressHandler() {});   // no support for progress right now
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
