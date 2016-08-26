@@ -161,14 +161,4 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
         dataset.addMessage();
     }
 
-    static Attribute extendAttributeAlongACycle(Attribute initialAttribute, Iterable<Link> sequenceOfLinks) {
-        Attribute attribute = initialAttribute;
-
-        for (Link link : sequenceOfLinks) {
-            attribute = link.extend(attribute);
-        }
-
-        return attribute;
-    }
-
 }
