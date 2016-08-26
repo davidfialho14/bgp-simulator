@@ -6,22 +6,19 @@ import java.util.Map;
 
 
 /**
- * A node is one of the two fundamental elements of a topology. Nodes are identified by an ID which must be unique for
- * each node. Nodes with the same ID represent the same node (are equal). Nodes may be connected with other nodes
- * through links. A node stores both in and out-link with other nodes. When node U is the source of link L, L is an
- * out-link of U. If node U is the destination of L, then L is an in-link of U.
+ * A connected node is a Node implementation that stores the links between neighbours of the node. Connected nodes
+ * are used by the network. A connected node stores both in and out-link with other nodes. When node U is the source
+ * of link L, L is an out-link of U. If node U is the destination of L, then L is an in-link of U.
  * <p>
- * Nodes can not be directly copied. To copy a node its copy constructor must be used.
+ * To copy a node its copy constructor must be used.
  */
-public class ConnectedNode {
+public class ConnectedNode extends BaseNode{
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Private Fields
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    private final int id;   // unique identifier for the node
 
     // can only have one for link for each neighbour
     private Map<ConnectedNode, Link> outLinks = new HashMap<>();
@@ -39,7 +36,7 @@ public class ConnectedNode {
      * @param id id to assign to the node.
      */
     public ConnectedNode(int id) {
-        this.id = id;
+        super(id);
     }
 
     /**
@@ -49,7 +46,7 @@ public class ConnectedNode {
      * @param node node to copy.
      */
     public ConnectedNode(ConnectedNode node) {
-        this.id = node.id;
+        super(node.getId());
         this.outLinks = new HashMap<>(node.outLinks);
         this.inLinks = new HashMap<>(node.inLinks);
     }
@@ -59,15 +56,6 @@ public class ConnectedNode {
      *  Public Interface - Getters
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Returns the id of the node.
-     *
-     * @return id of the node.
-     */
-    public int getId() {
-        return this.id;
-    }
 
     /**
      * Returns a collection with all the in-links of the node.
@@ -151,36 +139,6 @@ public class ConnectedNode {
      */
     public boolean removeInLink(Link link) {
         return inLinks.remove(link.getSource()) != null;
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Operator Methods
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Two nodes are equal if and only if they have the same id.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ConnectedNode node = (ConnectedNode) o;
-
-        return id == node.id;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
-
-    @Override
-    public String toString() {
-        return "ConnectedNode(" + id + ')';
     }
 
 }
