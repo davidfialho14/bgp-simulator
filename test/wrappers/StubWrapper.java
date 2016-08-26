@@ -1,11 +1,11 @@
 package wrappers;
 
-import core.topology.ConnectedNode;
-import stubs.StubAttribute;
-import stubs.StubLabel;
-import core.topology.Link;
 import core.Path;
 import core.Route;
+import core.topology.Link;
+import core.topology.Node;
+import stubs.StubAttribute;
+import stubs.StubLabel;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 
@@ -64,6 +64,6 @@ public interface StubWrapper {
      * Wrapper around the route constructor to create a route with a stub attribute
      */
     static Route stubRoute(int destination, int value, Path path) {
-        return new Route(new ConnectedNode(destination), new StubAttribute(value), path);
+        return RouteWrapper.route(Node.newNode(destination), new StubAttribute(value), path);
     }
 }

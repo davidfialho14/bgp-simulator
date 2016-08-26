@@ -127,19 +127,6 @@ public class RouteTable {
     }
 
     /**
-     * Sets the route for an out-link. Creates a new route from the given attribute and path. If the out-link does not
-     * exist in the table, it will be added and assigned to the new route. Calling this method may update the
-     * selected route.
-     *
-     * @param outLink   out-link to associate route with.
-     * @param attribute attribute for the new route.
-     * @param path      path for the new route.
-     */
-    public void setRoute(Link outLink, Attribute attribute, Path path) {
-        setRoute(outLink, new Route(destination, attribute, path));
-    }
-
-    /**
      * Returns the route associated with the given destination and out-link pair. If the out-link does not exist in
      * the table it will be returned null.
      *

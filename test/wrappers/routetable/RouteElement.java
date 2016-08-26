@@ -9,6 +9,8 @@ import core.Route;
  */
 public class RouteElement implements RouteTableElement {
 
+    private static final Route ORIGINAL_ROUTE = Route.invalidRoute(null);
+
     private Route route;
 
     private RouteElement(Route route) {
@@ -25,7 +27,10 @@ public class RouteElement implements RouteTableElement {
     public static RouteElement route(Attribute attribute, Path path) {
         // the route destination node does not need to be specified since it will be replaced
         // when building the route table
-        return new RouteElement(new Route(null, attribute, path));
+        return new RouteElement(Route.newRouteFrom(ORIGINAL_ROUTE)
+                .withAttribute(attribute)
+                .withPath(path)
+                .build());
     }
 
     /**

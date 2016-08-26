@@ -179,7 +179,7 @@ public class EngineSelectTest {
 
         engine.select(nodeState, importLink, route(0, stubAttr(0), path(1)));
 
-        verify(stubRouteTable, times(1)).setRoute(importLink, invalidAttr(), invalidPath());
+        verify(stubRouteTable, times(1)).setRoute(importLink, route(0, invalidAttr(), invalidPath()));
     }
 
     @Test
@@ -190,6 +190,6 @@ public class EngineSelectTest {
 
         engine.select(nodeState, importLink, route(0, stubAttr(0), path()));
 
-        verify(stubRouteTable, times(1)).setRoute(importLink, stubAttr(0), path());
+        verify(stubRouteTable, times(1)).setRoute(importLink, route(0, stubAttr(0), path()));
     }
 }
