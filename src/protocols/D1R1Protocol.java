@@ -7,11 +7,11 @@ import core.topology.Link;
 /**
  * Implements the detection D1 and the reaction R1.
  */
-public class D1R1Protocol extends Reaction1 implements Protocol, Detection1 {
+public class D1R1Protocol extends Reaction1 implements Protocol {
 
     @Override
     public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
-        return Detection1.isOscillation(learnedRoute.getAttribute(), exclRoute);
+        return Detections.detection1(learnedRoute.getAttribute(), exclRoute.getAttribute());
     }
 
     @Override

@@ -11,8 +11,7 @@ public class D2R1Protocol extends Reaction1 implements Protocol, Detection2 {
 
     @Override
     public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
-        return Detection2.isOscillation(link.getSource(),
-                learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
+        return Detections.detection2(link.getSource(), learnedRoute, exclRoute);
     }
 
     @Override
