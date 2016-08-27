@@ -101,7 +101,7 @@ public class SimulatorLauncher {
                     simulator.simulate();
                     progressHandler.onFinishSimulation(i);
 
-                    progressHandler.onStartReporting(i);
+                    progressHandler.onStartReporting(i, parameters.getReportFile());
                     simulator.getData().report(reporter);
                     progressHandler.onFinishReporting(i);
                 }

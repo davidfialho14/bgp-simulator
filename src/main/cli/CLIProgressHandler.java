@@ -76,10 +76,11 @@ public class CLIProgressHandler implements ProgressHandler {
      * Invoked before starting to report a simulation instance.
      *
      * @param simulationNumber number of the simulation instance to be reported.
+     * @param reportFile       report file to be used.
      */
     @Override
-    public void onStartReporting(int simulationNumber) {
-        printTimedStartMessage("Reporting...");
+    public void onStartReporting(int simulationNumber, File reportFile) {
+        printTimedStartMessage("Reporting to " + reportFile.getName() + "...");
     }
 
     /**
