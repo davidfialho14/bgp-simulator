@@ -7,6 +7,7 @@ import io.networkreaders.TopologyReaderFactory;
 import io.reporters.CSVReporterFactory;
 import main.SimulatorParameters;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FilenameUtils;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import simulators.SimulatorFactory;
@@ -72,10 +73,9 @@ public class ParametersCommandLineParser {
         int destinationId = getDestinationId(commandLine);
         File topologyFile = getTopologyFile(commandLine);
 
-        // generate the report file name from topology filename
-        String reportFileName = topologyFile.getName().replaceFirst("\\.gv",
-                String.format("-dest%02d.csv", destinationId));
-        File reportFile = new File(topologyFile.getParent(), reportFileName);
+        // report file appends the destination to the topology file
+        File reportFile = new File(topologyFile.getParent(),
+                FilenameUtils.getBaseName(topologyFile.getName()) + String.format("-dest%02d", destinationId));
 
         return new SimulatorParameters.Builder(topologyFile, reportFile)
                 .readerFactory(gerReader(commandLine))

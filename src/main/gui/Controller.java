@@ -165,11 +165,8 @@ public class Controller implements Initializable {
             simulatorFactory = new BasicSimulatorFactory(protocol);
         }
 
-        // generate the report file name from topology filename
-        String reportFileName = topologyFile.getName().replaceFirst("\\.gv", ".csv");
-        File reportFile = new File(topologyFile.getParent(), reportFileName);
-
-        simulatorLauncher.setParameters(new SimulatorParameters.Builder(topologyFile, reportFile)
+        // report filename keeps the topology file name - the extension will be defined by the reporter
+        simulatorLauncher.setParameters(new SimulatorParameters.Builder(topologyFile, topologyFile)
                 .readerFactory(new GraphvizReaderFactory())
                 .minDelay(minDelaySpinner.getValue())
                 .maxDelay(maxDelaySpinner.getValue())
