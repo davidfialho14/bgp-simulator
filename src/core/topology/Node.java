@@ -30,31 +30,6 @@ public interface Node {
      */
     int hashCode();
 
-    /**
-     * Default equals implementation that should be used by the subclasses. Checks if the nodes IDs are the same.
-     *
-     * @param node  node calling the equals method.
-     * @param other other node being verified for equality.
-     * @return true if they have the same ID and false otherwise.
-     */
-    static boolean equals(Node node, Object other) {
-        if (!(other instanceof Node)) return false;
-
-        Node otherNode = (Node) other;
-
-        return node.getId() == otherNode.getId();
-    }
-
-    /**
-     * Default hash code implementation that should be used by subclasses. Uses the node's Id as hashcode.
-     *
-     * @param node node to get hash code for.
-     * @return node's ID.
-     */
-    static int hashCode(Node node) {
-        return node.getId();
-    }
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Static factory methods

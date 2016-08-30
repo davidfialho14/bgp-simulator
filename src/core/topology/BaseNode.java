@@ -26,14 +26,29 @@ public class BaseNode implements Node {
         return id;
     }
 
+    /**
+     * Checks if the nodes IDs are the same.
+     *
+     * @param other other node being verified for equality.
+     * @return true if they have the same ID and false otherwise.
+     */
     @Override
-    public boolean equals(Object o) {
-        return Node.equals(this, o);
+    public boolean equals(Object other) {
+        if (!(other instanceof Node)) return false;
+
+        Node otherNode = (Node) other;
+
+        return id == otherNode.getId();
     }
 
+    /**
+     * The node's Id is hashcode.
+     *
+     * @return node's ID.
+     */
     @Override
     public int hashCode() {
-        return Node.hashCode(this);
+        return id;
     }
 
     @Override
