@@ -51,7 +51,7 @@ public class ParametersCommandLineParser {
         options.addOption("c", REPETITION_COUNT, true, "number of repetitions");
         options.addOption("d2", ENABLED_DETECTION2, false, "use detection 2 instead of detection 1");
         options.addOption("t", DEPLOY_TIME, true, "time deploy detection");
-        options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, true, "indicate the input network file is in Graphviz format");
+        options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, false, "indicate the input network file is in Graphviz format");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -78,7 +78,7 @@ public class ParametersCommandLineParser {
                 FilenameUtils.getBaseName(topologyFile.getName()) + String.format("-dest%02d", destinationId));
 
         return new SimulatorParameters.Builder(topologyFile, reportFile)
-                .readerFactory(gerReader(commandLine))
+                .readerFactory(getReader(commandLine))
                 .destinationId(destinationId)
                 .repetitionCount(getRepetitionCount(commandLine))
                 .protocol(getProtocol(commandLine))
@@ -100,7 +100,7 @@ public class ParametersCommandLineParser {
      * @param commandLine command line containing the parsed options.
      * @return reader factory instance.
      */
-    private TopologyReaderFactory gerReader(CommandLine commandLine) {
+    private TopologyReaderFactory getReader(CommandLine commandLine) {
         if (commandLine.hasOption(INPUT_FORMAT_GRAPHVIZ)) {
             return new GraphvizReaderFactory();
         } else {
