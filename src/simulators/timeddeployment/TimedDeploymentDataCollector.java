@@ -68,6 +68,7 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
     @Override
     public void clear() {
         timedDeploymentDataset.clear();
+        deployed = false;
     }
 
     /**
