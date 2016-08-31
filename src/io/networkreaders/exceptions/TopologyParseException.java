@@ -1,11 +1,11 @@
 package io.networkreaders.exceptions;
 
+import io.ParseException;
+
 /**
  * Thrown when a parse error occurs while parsing a file.
  */
-public class TopologyParseException extends Exception {
-
-    private final int lineNumber;    // contains the number of the line with the error
+public class TopologyParseException extends ParseException {
 
     /**
      * Constructs a new parse exception with the specified detail message.
@@ -15,7 +15,6 @@ public class TopologyParseException extends Exception {
      */
     public TopologyParseException(String message) {
         super(message);
-        lineNumber = 1; // by default the error is in the first line
     }
 
     /**
@@ -27,27 +26,6 @@ public class TopologyParseException extends Exception {
      * @param lineNumber number of the line containing the parse error.
      */
     public TopologyParseException(String message, int lineNumber) {
-        super(message);
-        this.lineNumber = lineNumber;
-    }
-
-    /**
-     * Returns the line number of the error.
-     *
-     * @return the line number of the error
-     */
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    /**
-     * Returns the detail message string of this throwable.
-     *
-     * @return the detail message string of this {@code Throwable} instance
-     * (which may be {@code null}).
-     */
-    @Override
-    public String getMessage() {
-        return super.getMessage().concat(" (in line " + lineNumber + ")");
+        super(message, lineNumber);
     }
 }
