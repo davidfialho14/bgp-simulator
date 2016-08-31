@@ -2,12 +2,13 @@ package core;
 
 
 import core.events.*;
+import core.exporters.Exporter;
+import core.exporters.UnicastExporter;
 import core.schedulers.ScheduledRoute;
 import core.schedulers.Scheduler;
 import core.topology.ConnectedNode;
 import core.topology.Link;
 import core.topology.Node;
-import core.topology.SelfLink;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
@@ -20,16 +21,19 @@ import static core.Route.newRouteFrom;
 public class Engine {
 
     private TimeProperty timeProperty = new TimeProperty();
-    private Scheduler scheduler;
     private SimulationEventGenerator eventGenerator = new SimulationEventGenerator();
-
+    private Scheduler scheduler;
     private State currentState; // current state on the simulation - null if not simulating
+
+    // Engine operators
+    private Exporter exporter = new UnicastExporter();
 
     /**
      * Constructs new engine assigning it with the necessary scheduler.
      */
     public Engine(Scheduler scheduler) {
         this.scheduler = scheduler;
+        this.exporter.setEngine(this);
     }
 
     /**
@@ -39,6 +43,15 @@ public class Engine {
      */
     public SimulationEventGenerator getEventGenerator() {
         return eventGenerator;
+    }
+
+    /**
+     * Returns the scheduler being used by the engine.
+     *
+     * @return the scheduler being used by the engine.
+     */
+    public Scheduler getScheduler() {
+        return scheduler;
     }
 
     /**
@@ -52,7 +65,7 @@ public class Engine {
 
         eventGenerator.fireStartEvent(new StartEvent());
 
-        exportSelfRoute(initialState.getDestination(), initialState);
+        exporter.exportDestination(initialState);
         simulationLoop(initialState);
         resetTime();
 
@@ -179,20 +192,7 @@ public class Engine {
      */
     void exportToInNeighbours(ConnectedNode exportingNode, Route route) {
         exportingNode.getInLinks()
-                .forEach(inLink -> export(inLink, route));
-    }
-
-    /**
-     * Exports a route through the given link. The route is put in the topology's scheduler.
-     *
-     * @param link link to export the route to.
-     * @param route route to be exported.
-     */
-    void export(Link link, Route route) {
-        ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, timeProperty.getTime());
-        scheduler.put(scheduledRoute);
-
-        eventGenerator.fireExportEvent(new ExportEvent(link, route));
+                .forEach(inLink -> exporter.export(inLink, route));
     }
 
     /**
@@ -238,22 +238,6 @@ public class Engine {
                 process(state.get(learningNode), scheduledRoute.getLink(), scheduledRoute.getRoute());
             }
         }
-    }
-
-    /**
-     * Exports the self route of one node. It updates that state of the node to selected the self route.
-     *
-     * @param node node to export self route.
-     * @param state current state.
-     */
-    private void exportSelfRoute(ConnectedNode node, State state) {
-        NodeState nodeState = state.get(node);
-        Route selfRoute = Route.createSelf(node, state.getTopology().getPolicy());
-
-        // add the self route to the node's route table
-        nodeState.getTable().setRoute(new SelfLink(node), selfRoute);
-
-        node.getInLinks().forEach(link -> export(link, selfRoute));
     }
 
     /**
