@@ -20,13 +20,31 @@ import static core.Route.newRouteFrom;
  */
 public class Engine {
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private fields defining the engine's state
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     private TimeProperty timeProperty = new TimeProperty();
-    private SimulationEventGenerator eventGenerator = new SimulationEventGenerator();
     private Scheduler scheduler;
     private State currentState; // current state on the simulation - null if not simulating
 
-    // Engine operators
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private fields containing engine operators and the event generator
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private SimulationEventGenerator eventGenerator = new SimulationEventGenerator();
+
     private Exporter exporter = new UnicastExporter();
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Constructs new engine assigning it with the necessary scheduler.
@@ -35,6 +53,12 @@ public class Engine {
         this.scheduler = scheduler;
         this.exporter.setEngine(this);
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Returns the event generator used by the engine. Listeners can then be added to this generator.
@@ -100,6 +124,12 @@ public class Engine {
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Interface - Testable methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Processes an imported route by updating the state of the learning node.
@@ -215,7 +245,11 @@ public class Engine {
         }
     }
 
-    //------------- PRIVATE METHODS -----------------------------------------------------------------------------------
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Executes the simulation loop for the given state.
