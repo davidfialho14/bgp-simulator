@@ -54,6 +54,17 @@ public class Engine {
         this.exporter.setEngine(this);
     }
 
+    /**
+     * Creates a new engine and assigns it the given scheduler and exporter.
+     *
+     * @param scheduler scheduler used to schedule the exported routes.
+     * @param exporter  exporter used to export routes.
+     */
+    public Engine(Scheduler scheduler, Exporter exporter) {
+        this.scheduler = scheduler;
+        this.exporter = exporter;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface
