@@ -63,6 +63,7 @@ public class Engine {
     public Engine(Scheduler scheduler, Exporter exporter) {
         this.scheduler = scheduler;
         this.exporter = exporter;
+        this.exporter.setEngine(this);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
