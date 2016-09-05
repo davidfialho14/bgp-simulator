@@ -1,5 +1,6 @@
 package main;
 
+import addons.eventhandlers.DebugEventHandler;
 import core.Engine;
 import core.schedulers.RandomScheduler;
 import core.topology.Topology;
@@ -62,7 +63,69 @@ public class SimulatorLauncher {
 
         progressHandler.onStartExecution();
 
-        // Load the topology
+        // loading the topology
+        Topology topology = loadTopology();
+
+        if (topology == null) { // check if the topology was not loaded
+            // topology was not loaded correctly - exit
+            return;
+        }
+
+        // load the engine
+        Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()));
+
+        ExecutionStateTracker executionStateTracker = new ExecutionStateTracker(engine);
+
+        // use the simulator factory to get a properly configured simulator
+        Simulator simulator = parameters.getSimulatorFactory().getSimulator(
+                engine, topology, parameters.getDestinationId());
+
+        if (parameters.isDebugEnabled()) {
+            // enable debug
+            DebugEventHandler debugEventHandler = new DebugEventHandler(true);
+            debugEventHandler.register(engine.getEventGenerator());
+        }
+
+        //
+        // Execute the simulations and report the results
+        //
+        try  {
+            Reporter reporter = parameters.getReporterFactory().getReporter(
+                    parameters.getReportFile(), executionStateTracker);
+
+            reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
+                    parameters.getMaxDelay(), parameters.getProtocol(), simulator);
+
+            for (int i = 0; i < parameters.getRepetitionCount(); i++) {
+                progressHandler.onStartSimulation(i, parameters);
+                simulator.simulate();
+                progressHandler.onFinishSimulation(i);
+
+                progressHandler.onStartReporting(i, parameters.getReportFile());
+                simulator.getData().report(reporter);
+                progressHandler.onFinishReporting(i);
+            }
+
+            reporter.writeAfterSummary();
+
+        } catch (IOException e) {
+            errorHandler.onReportingIOException(e);
+        } finally {
+            executionStateTracker.unregister();
+        }
+
+        progressHandler.onFinishExecution();
+    }
+
+    /**
+     * Implements the launcher logic to load the topology. Loads the topology using the reader given by the simulator
+     * parameters, calls the progress handler when necessary and calls the error handler to handle IO and Parse
+     * exceptions.
+     *
+     * @return the loaded topology or null if the topology failed to load.
+     */
+    private Topology loadTopology() {
+
         Topology topology = null;
         try (TopologyReader topologyReader =
                      parameters.getReaderFactory().getTopologyReader(parameters.getTopologyFile())) {
@@ -78,46 +141,7 @@ public class SimulatorLauncher {
             errorHandler.onTopologyLoadParseException(e);
         }
 
-        if (topology != null) { // if the topology was loaded successfully
-
-            // load the engine
-            Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()));
-
-            ExecutionStateTracker executionStateTracker = new ExecutionStateTracker(engine);
-
-            // use the simulator factory to get a properly configured simulator
-            Simulator simulator = parameters.getSimulatorFactory().getSimulator(
-                    engine, topology, parameters.getDestinationId());
-
-            try  {
-                Reporter reporter = parameters.getReporterFactory().getReporter(
-                        parameters.getReportFile(), executionStateTracker);
-
-                reporter.writeBeforeSummary(topology, parameters.getDestinationId(), parameters.getMinDelay(),
-                        parameters.getMaxDelay(), parameters.getProtocol(), simulator);
-
-                for (int i = 0; i < parameters.getRepetitionCount(); i++) {
-                    progressHandler.onStartSimulation(i, parameters);
-                    simulator.simulate();
-                    progressHandler.onFinishSimulation(i);
-
-                    progressHandler.onStartReporting(i, parameters.getReportFile());
-                    simulator.getData().report(reporter);
-                    progressHandler.onFinishReporting(i);
-                }
-
-                reporter.writeAfterSummary();
-
-            } catch (IOException e) {
-                errorHandler.onReportingIOException(e);
-            } finally {
-                executionStateTracker.unregister();
-            }
-
-            progressHandler.onFinishExecution();
-
-        }
-
+        return topology;
     }
 
 }
