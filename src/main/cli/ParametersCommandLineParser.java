@@ -34,6 +34,7 @@ public class ParametersCommandLineParser {
     private static final String ENABLED_DETECTION2 = "detection2";
     private static final String DEPLOY_TIME = "deploy_time";
     private static final String INPUT_FORMAT_GRAPHVIZ = "graphviz";
+    private static final String DEBUG = "debug";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -52,6 +53,7 @@ public class ParametersCommandLineParser {
         options.addOption("d2", ENABLED_DETECTION2, false, "use detection 2 instead of detection 1");
         options.addOption("t", DEPLOY_TIME, true, "time deploy detection");
         options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, false, "indicate the input network file is in Graphviz format");
+        options.addOption("debug", DEBUG, false, "activate debugging");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -84,6 +86,7 @@ public class ParametersCommandLineParser {
                 .protocol(getProtocol(commandLine))
                 .simulatorFactory(getSimulatorFactory(commandLine))
                 .reporterFactory(new CSVReporterFactory())
+                .debugEnabled(isDebugEnabled(commandLine))
                 .build();
     }
 
@@ -211,6 +214,16 @@ public class ParametersCommandLineParser {
         } catch (NumberFormatException e) {
             throw new ParseException(expectedIntegerMessage("deploy time"));
         }
+    }
+
+    /**
+     * Checks if the command line contains the -debug option flag.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return true if the -debug is present and false otherwise
+     */
+    private boolean isDebugEnabled(CommandLine commandLine) {
+        return commandLine.hasOption(DEBUG);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
