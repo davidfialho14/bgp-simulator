@@ -2,25 +2,47 @@ package core.schedulers;
 
 import core.topology.Link;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayDeque;
+import java.util.Iterator;
+import java.util.Queue;
 
-public class FIFOScheduler extends AbstractScheduler {
+public class FIFOScheduler implements Scheduler {
 
-    private Map<Link, Long> lastTimes = new HashMap<>();   // stores the last times used for each link
+    private final Queue<ScheduledRoute> scheduleQueue = new ArrayDeque<>();
 
     @Override
-    protected long schedule(ScheduledRoute scheduledRoute) {
-        long scheduledTime = scheduledRoute.getTimestamp() + 1;
+    public ScheduledRoute get() {
+        return scheduleQueue.poll();
+    }
 
-        Long lastTime = lastTimes.get(scheduledRoute.getLink());
-        if (lastTime != null) {
-            scheduledTime = Long.max(scheduledTime, lastTime + 1);
+    @Override
+    public void put(ScheduledRoute scheduledRoute) {
+        scheduleQueue.offer(scheduledRoute);
+    }
+
+    @Override
+    public boolean hasRoute() {
+        return scheduleQueue.peek() != null;
+    }
+
+    @Override
+    public void removeRoutes(Link link) {
+        Iterator<ScheduledRoute> iterator = scheduleQueue.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getLink().equals(link)) {
+                iterator.remove();
+            }
         }
+    }
 
-        lastTimes.put(scheduledRoute.getLink(), scheduledTime); // update the link last time
-
-        return scheduledTime;
+    @Override
+    public long getCurrentTime() {
+        ScheduledRoute nextScheduledRoute = scheduleQueue.peek();
+        if (nextScheduledRoute == null) {
+            return Long.MAX_VALUE;
+        } else {
+            return nextScheduledRoute.getTimestamp();
+        }
     }
 
     /**
@@ -43,13 +65,13 @@ public class FIFOScheduler extends AbstractScheduler {
         throw new UnsupportedOperationException();
     }
 
+
     /**
      * Resets the scheduler.
      */
     @Override
     public void reset() {
-        super.reset();
-        lastTimes.clear();
+        scheduleQueue.clear();
     }
 
 }
