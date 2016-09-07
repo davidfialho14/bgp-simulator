@@ -32,6 +32,7 @@ public class SimulatorParameters {
     private final TopologyReaderFactory readerFactory;
     private final ReporterFactory reporterFactory;
     private final SimulatorFactory simulatorFactory;
+    private final boolean debugEnabled;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -44,7 +45,7 @@ public class SimulatorParameters {
      */
     private SimulatorParameters(File topologyFile, File reportFile, int minDelay, int maxDelay, int destinationId,
                                 int repetitionCount, Protocol protocol, TopologyReaderFactory readerFactory,
-                                ReporterFactory reporterFactory, SimulatorFactory simulatorFactory) {
+                                ReporterFactory reporterFactory, SimulatorFactory simulatorFactory, boolean debugEnabled) {
         this.topologyFile = topologyFile;
         this.reportFile = reportFile;
         this.minDelay = minDelay;
@@ -55,6 +56,7 @@ public class SimulatorParameters {
         this.readerFactory = readerFactory;
         this.reporterFactory = reporterFactory;
         this.simulatorFactory = simulatorFactory;
+        this.debugEnabled = debugEnabled;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -103,6 +105,10 @@ public class SimulatorParameters {
         return simulatorFactory;
     }
 
+    public boolean isDebugEnabled() {
+        return debugEnabled;
+    }
+
     /**
      * Builder class used to build the parameters object.
      */
@@ -126,7 +132,8 @@ public class SimulatorParameters {
         private Protocol protocol = new BGPProtocol();
         private TopologyReaderFactory readerFactory = new GraphvizReaderFactory();
         private ReporterFactory reporterFactory = new CSVReporterFactory();
-        private SimulatorFactory simulatorFactory;
+        private SimulatorFactory simulatorFactory = null;
+        private boolean debugEnabled = false;
 
         public Builder(File topologyFile, File reportFile) {
             this.topologyFile = topologyFile;
@@ -179,9 +186,14 @@ public class SimulatorParameters {
             return this;
         }
 
+        public Builder debugEnabled(boolean enabled) {
+            this.debugEnabled = enabled;
+            return this;
+        }
+
         public SimulatorParameters build() {
-            return new SimulatorParameters(topologyFile, reportFile, minDelay, maxDelay, destinationId, repetitionCount, protocol,
-                    readerFactory, reporterFactory, simulatorFactory);
+            return new SimulatorParameters(topologyFile, reportFile, minDelay, maxDelay, destinationId,
+                    repetitionCount, protocol, readerFactory, reporterFactory, simulatorFactory, debugEnabled);
         }
 
     }
