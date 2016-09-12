@@ -22,7 +22,7 @@ public class State {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final Topology originalTopology;    // stores the topology
-    private final ConnectedNode destination;
+    private final int destinationId;
     private final Protocol defaultProtocol;
     private final Map<ConnectedNode, NodeState> nodesStates;   // state of each nodeX
 
@@ -38,11 +38,11 @@ public class State {
     /**
      * This constructor is PRIVATE: use the static create methods
      */
-    private State(Topology topology, ConnectedNode destination, Protocol defaultProtocol,
+    private State(Topology topology, int destinationId, Protocol defaultProtocol,
                   Map<ConnectedNode, NodeState> nodesStates) {
         this.originalTopology = topology;
         this.currentTopology = topology; // TODO perform a copy if the topology is changed
-        this.destination = destination;
+        this.destinationId = destinationId;
         this.defaultProtocol = defaultProtocol;
         this.nodesStates = nodesStates;
     }
@@ -60,10 +60,10 @@ public class State {
         // associate each node with an empty state
         Map<ConnectedNode, NodeState> nodesStates = new HashMap<>(network.getNodeCount());
 
-        ConnectedNode destination = network.getNode(destId);
+        ConnectedNode destination = network.getNode(destId);    // FIXME this will return null in anycast
         network.getNodes().forEach(node -> nodesStates.put(node, new NodeState(node, destination, protocol)));
 
-        return new State(topology, destination, protocol, nodesStates);
+        return new State(topology, destId, protocol, nodesStates);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -107,7 +107,16 @@ public class State {
      * @return the destination node for this state.
      */
     public ConnectedNode getDestination() {
-        return destination;
+        return originalTopology.getNetwork().getNode(destinationId);
+    }
+
+    /**
+     * Returns the ID of the destination node for this state.
+     *
+     * @return the ID of the destination node for this state.
+     */
+    public int getDestinationId() {
+        return destinationId;
     }
 
     /**
@@ -176,7 +185,7 @@ public class State {
         this.nodesStates.clear();
         this.defaultProtocol.reset();
         originalTopology.getNetwork().getNodes()
-                .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
+                .forEach(node -> nodesStates.put(node, new NodeState(node, getDestination(), this.defaultProtocol)));
 
         // ensure the current topology is equal to the original
         this.currentTopology = originalTopology;    // TODO perform a copy if the topology is changed

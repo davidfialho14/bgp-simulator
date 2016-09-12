@@ -35,6 +35,7 @@ public class ParametersCommandLineParser {
     private static final String DEPLOY_TIME = "deploy_time";
     private static final String INPUT_FORMAT_GRAPHVIZ = "graphviz";
     private static final String DEBUG = "debug";
+    private static final String ANYCAST_FILE = "anycast";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -54,6 +55,7 @@ public class ParametersCommandLineParser {
         options.addOption("t", DEPLOY_TIME, true, "time deploy detection");
         options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, false, "indicate the input network file is in Graphviz format");
         options.addOption("debug", DEBUG, false, "activate debugging");
+        options.addOption("any", ANYCAST_FILE, true, "anycast file to be used");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -87,6 +89,7 @@ public class ParametersCommandLineParser {
                 .simulatorFactory(getSimulatorFactory(commandLine))
                 .reporterFactory(new CSVReporterFactory())
                 .debugEnabled(isDebugEnabled(commandLine))
+                .anycastFile(getAnycastFile(commandLine))
                 .build();
     }
 
@@ -224,6 +227,21 @@ public class ParametersCommandLineParser {
      */
     private boolean isDebugEnabled(CommandLine commandLine) {
         return commandLine.hasOption(DEBUG);
+    }
+
+    /**
+     * Obtains the anycast file from teh command line. This is an optional argument, in case it is missing null will
+     * be returned.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return the parsed anycast file or null if the argument does not exist.
+     */
+    private File getAnycastFile(CommandLine commandLine) {
+        if (commandLine.hasOption(ANYCAST_FILE)) {
+            return new File(commandLine.getOptionValue(ANYCAST_FILE));
+        } else {
+            return null;
+        }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

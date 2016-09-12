@@ -33,6 +33,7 @@ public class SimulatorParameters {
     private final ReporterFactory reporterFactory;
     private final SimulatorFactory simulatorFactory;
     private final boolean debugEnabled;
+    private final File anycastFile;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -45,7 +46,8 @@ public class SimulatorParameters {
      */
     private SimulatorParameters(File topologyFile, File reportFile, int minDelay, int maxDelay, int destinationId,
                                 int repetitionCount, Protocol protocol, TopologyReaderFactory readerFactory,
-                                ReporterFactory reporterFactory, SimulatorFactory simulatorFactory, boolean debugEnabled) {
+                                ReporterFactory reporterFactory, SimulatorFactory simulatorFactory,
+                                boolean debugEnabled, File anycastFile) {
         this.topologyFile = topologyFile;
         this.reportFile = reportFile;
         this.minDelay = minDelay;
@@ -57,6 +59,7 @@ public class SimulatorParameters {
         this.reporterFactory = reporterFactory;
         this.simulatorFactory = simulatorFactory;
         this.debugEnabled = debugEnabled;
+        this.anycastFile = anycastFile;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -109,6 +112,10 @@ public class SimulatorParameters {
         return debugEnabled;
     }
 
+    public File getAnycastFile() {
+        return anycastFile;
+    }
+
     /**
      * Builder class used to build the parameters object.
      */
@@ -134,6 +141,7 @@ public class SimulatorParameters {
         private ReporterFactory reporterFactory = new CSVReporterFactory();
         private SimulatorFactory simulatorFactory = null;
         private boolean debugEnabled = false;
+        private File anycastFile = null;
 
         public Builder(File topologyFile, File reportFile) {
             this.topologyFile = topologyFile;
@@ -191,9 +199,15 @@ public class SimulatorParameters {
             return this;
         }
 
+        public Builder anycastFile(File anycastFile) {
+            this.anycastFile = anycastFile;
+            return this;
+        }
+
         public SimulatorParameters build() {
             return new SimulatorParameters(topologyFile, reportFile, minDelay, maxDelay, destinationId,
-                    repetitionCount, protocol, readerFactory, reporterFactory, simulatorFactory, debugEnabled);
+                    repetitionCount, protocol, readerFactory, reporterFactory, simulatorFactory, debugEnabled,
+                    anycastFile);
         }
 
     }

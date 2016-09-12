@@ -2,8 +2,14 @@ package main;
 
 import addons.eventhandlers.DebugEventHandler;
 import core.Engine;
+import core.exporters.AnycastExporter;
+import core.exporters.AnycastMap;
+import core.exporters.Exporter;
+import core.exporters.UnicastExporter;
 import core.schedulers.RandomScheduler;
 import core.topology.Topology;
+import io.AnycastFileReader;
+import io.ParseException;
 import io.networkreaders.TopologyReader;
 import io.networkreaders.exceptions.TopologyParseException;
 import io.reporters.Reporter;
@@ -71,8 +77,31 @@ public class SimulatorLauncher {
             return;
         }
 
+        Exporter exporter;
+        if (parameters.getAnycastFile() == null) {
+            // anycast not activated - use the command unicast exporter
+            exporter = new UnicastExporter();
+        } else {
+
+            // TODO add progress method for starting to load any cast file
+
+            // anycast is activated - load file and use anycast exporter
+            try (AnycastFileReader reader = new AnycastFileReader(parameters.getAnycastFile(), topology)){
+
+                AnycastMap anycastMap = reader.read();
+                exporter = new AnycastExporter(anycastMap);
+
+            } catch (IOException | ParseException e) {
+                // TODO add error handle method for IO exception with anycast file
+                e.printStackTrace();
+                return;
+            }
+
+            // TODO add progress method for finishing to load any cast file
+        }
+
         // load the engine
-        Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()));
+        Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()), exporter);
 
         ExecutionStateTracker executionStateTracker = new ExecutionStateTracker(engine);
 
