@@ -1,14 +1,16 @@
 package core;
 
+import addons.eventhandlers.DebugEventHandler;
 import core.schedulers.FIFOScheduler;
 import core.topology.ConnectedNode;
 import factories.ShortestPathTopologyFactory;
 import factories.TopologyFactory;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import protocols.D2R1Protocol;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static wrappers.PathWrapper.path;
 import static wrappers.ShortestPathWrapper.splink;
@@ -25,6 +27,8 @@ import static wrappers.routetable.RouteTableWrapper.table;
 @SuppressWarnings("Duplicates")
 public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
+    @Rule
+    public ErrorCollector collector = new ErrorCollector();
     private TopologyFactory factory = new ShortestPathTopologyFactory();
 
     @Before
@@ -40,12 +44,12 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
@@ -58,17 +62,17 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(0), sproute(0, path()), invalidRoute(),         invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 2, 1),
                 destination(0), invalidRoute(), invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),
                 destination(0), invalidRoute()
         )));
@@ -81,17 +85,17 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(1), invalidRoute(),     sproute(1, path(1)),    invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),        splink(1, 2, 1),
                 destination(1), sproute(0, path()), invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),
                 destination(1), invalidRoute()
         )));
@@ -104,17 +108,17 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),        splink(0, 1, 1),        splink(0, 2, 0),
                 destination(2), invalidRoute(),     sproute(2, path(1, 2)), sproute(0, path(2))
         )));
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),        splink(1, 2, 1),
                 destination(2), invalidRoute(),     sproute(1, path(2))
         )));
 
-        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),
                 destination(2), sproute(0, path())
         )));
@@ -127,17 +131,17 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is(table(
                                 selfLink(0),        splink(0, 1, 1),
                 destination(0), sproute(0, path()), invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is(table(
                                 selfLink(1),    splink(1, 2, 1),
                 destination(0), invalidRoute(), sproute(2, path(2, 0))
         )));
 
-        assertThat(state.get(new ConnectedNode(2)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(2)).getTable(), is(table(
                                 selfLink(2),    splink(2, 0, 1),
                 destination(0), invalidRoute(), sproute(1, path(0))
         )));
@@ -147,25 +151,26 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
     public void simulate_Network3ForDestination0_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(3), destinationId, protocol);
+        new DebugEventHandler(true).register(engine.getEventGenerator());
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is( table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is( table(
                                 selfLink(1),    splink(1, 0, 0),     splink(1, 2, -1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(2)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(2)).getTable(), is( table(
                                 selfLink(2),    splink(2, 0, 0),     splink(2, 3, 1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(3)).getTable(), is( table(
+        collector.checkThat(state.get(new ConnectedNode(3)).getTable(), is( table(
                                 selfLink(3),    splink(3, 0, 0),     splink(3, 1, -2),
                 destination(0), invalidRoute(), sproute(0, path(0)), sproute(-2, path(1, 0))
         )));
@@ -178,22 +183,22 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
 
         engine.simulate(state);
 
-        assertThat(state.get(new ConnectedNode(0)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(0)).getTable(), is(table(
                                 selfLink(0),
                 destination(0), sproute(0, path())
         )));
 
-        assertThat(state.get(new ConnectedNode(1)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(1)).getTable(), is(table(
                                 selfLink(1),    splink(1, 0, 0),     splink(1, 2, 1),
                 destination(0), invalidRoute(), sproute(0, path(0)), invalidRoute()
         )));
 
-        assertThat(state.get(new ConnectedNode(2)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(2)).getTable(), is(table(
                                 selfLink(2),    splink(2, 3, 1),
                 destination(0), invalidRoute(), sproute(2, path(3, 1, 0))
         )));
 
-        assertThat(state.get(new ConnectedNode(3)).getTable(), is(table(
+        collector.checkThat(state.get(new ConnectedNode(3)).getTable(), is(table(
                                 selfLink(3),    splink(3, 1, 1),
                 destination(0), invalidRoute(), sproute(1, path(1, 0))
         )));

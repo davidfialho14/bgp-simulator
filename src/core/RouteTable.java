@@ -24,10 +24,10 @@ public class RouteTable {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final Node destination;
-    private final Map<Link, Route> routes;
+    private final Map<Node, Route> routes;
 
     private Route selectedRoute;
-    private Link selectedOutLink;
+    private Node selectedNeighbour;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -44,7 +44,7 @@ public class RouteTable {
         this.destination = destination;
         this.routes = new HashMap<>();
         this.selectedRoute = invalidRoute(destination);
-        this.selectedOutLink = null;
+        this.selectedNeighbour = null;
     }
 
     /**
@@ -58,7 +58,7 @@ public class RouteTable {
         this.destination = destination;
         this.routes = new HashMap<>(outLinks.size());
         this.selectedRoute = invalidRoute(destination);
-        this.selectedOutLink = null;
+        this.selectedNeighbour = null;
 
         outLinks.forEach(this::addOutLink);
     }
@@ -75,7 +75,7 @@ public class RouteTable {
      * @param outLink out-link to be removed.
      */
     public void removeOutLink(Link outLink) {
-        routes.remove(outLink);
+        routes.remove(outLink.getDestination());
     }
 
     /**
@@ -84,7 +84,7 @@ public class RouteTable {
      * @param outLink out-link to add to the table.
      */
     public void addOutLink(Link outLink) {
-        routes.putIfAbsent(outLink, invalidRoute(destination));
+        routes.putIfAbsent(outLink.getDestination(), invalidRoute(destination));
     }
 
     /**
@@ -104,25 +104,25 @@ public class RouteTable {
      * @param route route to be set.
      */
     public void setRoute(Link outLink, Route route) {
-        routes.put(outLink, new Route(route));  // store a copy of the route
+        routes.put(outLink.getDestination(), new Route(route));  // store a copy of the route
 
-        if (outLink.equals(selectedOutLink)) {
+        if (outLink.getDestination().equals(selectedNeighbour)) {
             // the selected route is no longer valid
 
             // re-select the best route
             selectedRoute = null;
-            for (Link link : routes.keySet()) {
-                Route linkRoute = getRoute(link);
+            for (Node neighbour : routes.keySet()) {
+                Route neighbourRoute = getRoute(neighbour);
 
-                if ((selectedRoute == null || selectedRoute.compareTo(linkRoute) > 0)) {
-                    selectedRoute = linkRoute;
-                    selectedOutLink = link;
+                if ((selectedRoute == null || selectedRoute.compareTo(neighbourRoute) > 0)) {
+                    selectedRoute = neighbourRoute;
+                    selectedNeighbour = neighbour;
                 }
             }
 
         } else if (route.compareTo(selectedRoute) < 0) {
             selectedRoute = route;
-            selectedOutLink = outLink;
+            selectedNeighbour = outLink.getDestination();
         }
     }
 
@@ -134,7 +134,18 @@ public class RouteTable {
      * @return route associated with the given pair or null if the out-link does not exist.
      */
     public Route getRoute(Link outLink) {
-        Route route = routes.get(outLink);
+        Route route = routes.get(outLink.getDestination());
+
+        if (route == null) {
+            return invalidRoute(destination);
+        } else {
+            return route;
+        }
+
+    }
+
+    public Route getRoute(Node neighbour) {
+        Route route = routes.get(neighbour);
 
         if (route == null) {
             return invalidRoute(destination);
@@ -148,7 +159,7 @@ public class RouteTable {
      * Clears all the routes and destinations from the table. It keeps the out-links.
      */
     public void clear() {
-        routes.replaceAll((link, route) -> invalidRoute(destination));
+        routes.replaceAll((neighbour, route) -> invalidRoute(destination));
     }
 
     /**
@@ -160,10 +171,10 @@ public class RouteTable {
      */
     public Route getExclRoute(Link ignoredOutLink) {
 
-        if (ignoredOutLink == null || !ignoredOutLink.equals(selectedOutLink)) {
+        if (ignoredOutLink == null || !ignoredOutLink.getDestination().equals(selectedNeighbour)) {
             return selectedRoute;
         } else {
-            return getBestRoute(ignoredOutLink);
+            return getBestRoute(ignoredOutLink.getDestination());
         }
     }
 
@@ -211,7 +222,7 @@ public class RouteTable {
 
     private TextTable getPrintableTable() {
         String[] columns = routes.keySet().stream()
-                .map(Link::toString)
+                .map(Node::toString)
                 .toArray(String[]::new);
 
         Object[] routes = this.routes.values().toArray();
@@ -225,16 +236,16 @@ public class RouteTable {
      * Returns the currently best route. If ignoredOutLink is not null it will return the best route associated
      * with any out-link exception the ignoredOutLink.
      *
-     * @param ignoredOutLink out-link to be ignored.
+     * @param ignoredNeighbour out-link to be ignored.
      * @return currently best route for the destination.
      */
-    private Route getBestRoute(Link ignoredOutLink) {
+    private Route getBestRoute(Node ignoredNeighbour) {
         Route bestRoute = null;
 
-        for (Link outLink : routes.keySet()) {
-            Route route = getRoute(outLink);
+        for (Node neighbour : routes.keySet()) {
+            Route route = getRoute(neighbour);
 
-            if (!outLink.equals(ignoredOutLink) && (bestRoute == null || bestRoute.compareTo(route) > 0)) {
+            if (!neighbour.equals(ignoredNeighbour) && (bestRoute == null || bestRoute.compareTo(route) > 0)) {
                 bestRoute = route;
             }
         }
