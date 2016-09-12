@@ -8,6 +8,7 @@ import io.reporters.CSVReporterFactory;
 import main.SimulatorParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
+import protocols.BGPProtocol;
 import protocols.D1R1Protocol;
 import protocols.D2R1Protocol;
 import simulators.SimulatorFactory;
@@ -32,6 +33,7 @@ public class ParametersCommandLineParser {
     private static final String DESTINATION = "destination";
     private static final String REPETITION_COUNT = "repetition_count";
     private static final String ENABLED_DETECTION2 = "detection2";
+    private static final String ENABLED_BGP = "bgp";
     private static final String DEPLOY_TIME = "deploy_time";
     private static final String INPUT_FORMAT_GRAPHVIZ = "graphviz";
     private static final String DEBUG = "debug";
@@ -56,6 +58,7 @@ public class ParametersCommandLineParser {
         options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, false, "indicate the input network file is in Graphviz format");
         options.addOption("debug", DEBUG, false, "activate debugging");
         options.addOption("any", ANYCAST_FILE, true, "anycast file to be used");
+        options.addOption("bgp", ENABLED_BGP, false, "use the original BGP");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -180,7 +183,9 @@ public class ParametersCommandLineParser {
      * @return a new protocol instance.
      */
     private Protocol getProtocol(CommandLine commandLine) {
-        if (commandLine.hasOption(ENABLED_DETECTION2)) {
+        if (commandLine.hasOption(ENABLED_BGP)) {
+            return new BGPProtocol();
+        } else if (commandLine.hasOption(ENABLED_DETECTION2)) {
             return new D2R1Protocol();
         } else {
             return new D1R1Protocol();
