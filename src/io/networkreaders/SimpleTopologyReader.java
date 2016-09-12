@@ -48,6 +48,11 @@ public class SimpleTopologyReader implements TopologyReader {
         String line;
         int lineCount = 2;  // stores the number of the last line read from the file
         while ((line = fileReader.readLine()) != null) {
+            if (line.isEmpty()) {
+                // ignore empty lines
+                continue;
+            }
+
             // the line format is <source>|<destination>|<relationship>
             String[] lineArgs = line.split("\\|");
 
