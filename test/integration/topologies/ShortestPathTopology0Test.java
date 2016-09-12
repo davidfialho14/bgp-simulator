@@ -30,7 +30,7 @@ public class ShortestPathTopology0Test {
         topology = new ShortestPathTopologyFactory().topology(0);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_BGPProtocolAndFIFOScheduler_Converges() throws Exception {
         engine = new Engine(new FIFOScheduler());
         int destinationId = 0;
@@ -49,7 +49,7 @@ public class ShortestPathTopology0Test {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1SelectsRouteWithAttr1AndPathWithNode0()
             throws Exception {
@@ -62,7 +62,7 @@ public class ShortestPathTopology0Test {
         assertThat(state.get(new ConnectedNode(1)).getTable().getSelectedRoute(), is(sproute(0, 1, path(0))));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1LearnsRouteFromNewLink()
             throws Exception {
@@ -84,7 +84,7 @@ public class ShortestPathTopology0Test {
 //        )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void
     simulate_BGPProtocolAndFIFOSchedulerInsertLink1To9WithLength0AtTime1_Node1PrefersNewLink() throws Exception {
         // TODO Link Inserter
