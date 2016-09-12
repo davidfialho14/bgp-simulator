@@ -104,7 +104,7 @@ public class RouteTable {
      * @param route route to be set.
      */
     public void setRoute(Link outLink, Route route) {
-        routes.put(outLink.getDestination(), new Route(route));  // store a copy of the route
+        routes.put(outLink.getDestination(), route);
 
         if (outLink.getDestination().equals(selectedNeighbour)) {
             // the selected route is no longer valid
