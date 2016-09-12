@@ -179,7 +179,7 @@ public class State {
                 .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
 
         // ensure the current topology is equal to the original
-        this.currentTopology = new Topology(originalTopology);
+        this.currentTopology = originalTopology;
     }
 
 }
