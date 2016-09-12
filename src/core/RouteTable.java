@@ -106,7 +106,7 @@ public class RouteTable {
     public void setRoute(Link outLink, Route route) {
         routes.put(outLink.getDestination(), new Route(route));  // store a copy of the route
 
-        if (outLink.equals(selectedNeighbour)) {
+        if (outLink.getDestination().equals(selectedNeighbour)) {
             // the selected route is no longer valid
 
             // re-select the best route
