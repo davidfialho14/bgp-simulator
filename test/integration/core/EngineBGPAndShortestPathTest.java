@@ -34,7 +34,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         protocol = new BGPProtocol();
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network0_Converges() throws Exception {
         int destinationId = 0;
         core.State state = core.State.create(factory.topology(0), destinationId, protocol);
@@ -52,7 +52,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network1ForDestination0_Converges() throws Exception {
         int destinationId = 0;
         core.State state = core.State.create(factory.topology(1), destinationId, protocol);
@@ -98,7 +98,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network1ForDestination2_Converges() throws Exception {
         int destinationId = 2;
         core.State state = core.State.create(factory.topology(1), destinationId, protocol);
@@ -121,7 +121,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network2_Converges() throws Exception {
         int destinationId = 0;
         core.State state = core.State.create(factory.topology(2), destinationId, protocol);
@@ -144,7 +144,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     @Ignore
     public void simulate_Network3_DoesNotConverge() throws Exception {
         int destinationId = 0;
@@ -153,7 +153,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         engine.simulate(state);
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network4_Converges() throws Exception {
         int destinationId = 0;
         core.State state = core.State.create(factory.topology(4), destinationId, protocol);
@@ -181,7 +181,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network5_Converges() throws Exception {
         int destinationId = 0;
         core.State state = core.State.create(factory.topology(5), destinationId, protocol);
@@ -204,7 +204,7 @@ public class EngineBGPAndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network5BreakingLink2To1OnInstant1_Converges() throws Exception {
         // TODO Link Breaker
 //        engine.setLinkBreaker(new FixedLinkBreaker(new Link(2, 1, new ShortestPathLabel(1)), 1L));

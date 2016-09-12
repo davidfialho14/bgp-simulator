@@ -33,7 +33,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         protocol = new D2R1Protocol();
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network0ForDestination1_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(0), destinationId, protocol);
@@ -51,7 +51,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network1ForDestination0_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(1), destinationId, protocol);
@@ -74,7 +74,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network1ForDestination1_Converges() throws Exception {
         int destinationId = 1;
         State state = State.create(factory.topology(1), destinationId, protocol);
@@ -97,7 +97,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         )));
     }
     
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network1ForDestination2_Converges() throws Exception {
         int destinationId = 2;
         State state = State.create(factory.topology(1), destinationId, protocol);
@@ -120,7 +120,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network2ForDestination0_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(2), destinationId, protocol);
@@ -143,7 +143,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network3ForDestination0_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(3), destinationId, protocol);
@@ -171,7 +171,7 @@ public class EngineD2R1AndShortestPathTest extends SimulateEngineTest {
         )));
     }
 
-    @Test(timeout = 2000)
+    @Test
     public void simulate_Network4ForDestination0_Converges() throws Exception {
         int destinationId = 0;
         State state = State.create(factory.topology(4), destinationId, protocol);
