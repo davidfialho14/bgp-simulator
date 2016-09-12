@@ -20,6 +20,13 @@ public class UnicastExporter extends AbstractExporter {
      */
     @Override
     public void exportDestination(State initialState) {
+        unicastExportDestination(this, initialState);
+    }
+
+    /**
+     * This method was created only to be used by another exporter when wanting to perform the unicast export.
+     */
+    static void unicastExportDestination(Exporter exporter, State initialState) {
         ConnectedNode destinationNode = initialState.getDestination();
         NodeState nodeState = initialState.get(destinationNode);
 
@@ -29,7 +36,7 @@ public class UnicastExporter extends AbstractExporter {
         // add the self route to the node's route table
         nodeState.getTable().setRoute(new SelfLink(destinationNode), selfRoute);
 
-        destinationNode.getInLinks().forEach(link -> export(link, selfRoute));
+        destinationNode.getInLinks().forEach(link -> exporter.export(link, selfRoute));
     }
 
 }
