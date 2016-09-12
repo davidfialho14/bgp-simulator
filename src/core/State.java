@@ -41,7 +41,7 @@ public class State {
     private State(Topology topology, ConnectedNode destination, Protocol defaultProtocol,
                   Map<ConnectedNode, NodeState> nodesStates) {
         this.originalTopology = topology;
-        this.currentTopology = new Topology(topology); // ensure the current topology is a copy of the original
+        this.currentTopology = topology; // TODO perform a copy if the topology is changed
         this.destination = destination;
         this.defaultProtocol = defaultProtocol;
         this.nodesStates = nodesStates;
@@ -179,7 +179,7 @@ public class State {
                 .forEach(node -> nodesStates.put(node, new NodeState(node, destination, this.defaultProtocol)));
 
         // ensure the current topology is equal to the original
-        this.currentTopology = originalTopology;
+        this.currentTopology = originalTopology;    // TODO perform a copy if the topology is changed
     }
 
 }
