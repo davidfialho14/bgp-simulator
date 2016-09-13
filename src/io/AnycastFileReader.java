@@ -1,6 +1,7 @@
 package io;
 
 import core.exporters.AnycastMap;
+import core.topology.ConnectedNode;
 import core.topology.Label;
 import core.topology.Topology;
 
@@ -64,7 +65,12 @@ public class AnycastFileReader implements Closeable {
                 int neighbourId = Integer.parseInt(lineArgs[1]);
                 Label label = topology.getPolicy().createLabel(lineArgs[2]);
 
-                anycastMap.put(destinationId, topology.getNetwork().getNode(neighbourId), label);
+                ConnectedNode neighbour = topology.getNetwork().getNode(neighbourId);
+                if (neighbour == null) {
+                    throw new ParseException("anycast neighbour not found in the network");
+                }
+
+                anycastMap.put(destinationId, neighbour, label);
 
             } catch (NumberFormatException e) {
                 throw new ParseException("nodes' IDs must be non-negative integer values");
