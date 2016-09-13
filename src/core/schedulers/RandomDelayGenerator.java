@@ -10,6 +10,7 @@ public class RandomDelayGenerator {
     private Random random = null;
     private int min;
     private int max;
+    private Long seed = null;
 
     /**
      * Creates a generator without any
@@ -30,6 +31,20 @@ public class RandomDelayGenerator {
         this();
         setMax(max);
         setMin(min);
+    }
+
+    /**
+     * Creates a generator that generates values between the min and max - 1 (inclusive). If max <= 0 then an
+     * IllegalArgumentException is thrown. Forces the seed of the random object to be the one given in the seed
+     * argument.
+     *
+     * @param min   minimum value.
+     * @param max   maximum value.
+     * @param seed  seed to used with the random object
+     */
+    public RandomDelayGenerator(int min, int max, long seed) {
+        this(min, max);
+        this.seed = seed;
     }
 
     public void setMin(int min) {
@@ -68,13 +83,15 @@ public class RandomDelayGenerator {
     /**
      * Returns the next seed for the random object. The first time it is called it returns the current time in
      * milliseconds. In the following calls return the sim of the next long value in the random object with the
-     * current time in milliseconds.
+     * current time in milliseconds. If the seed field is defined (not null) than it always returns the seed value.
      *
      * @return next seed for the random object.
      */
     private long nextSeed() {
 
-        if (random == null) {
+        if (this.seed != null) {
+            return this.seed;
+        } else if (random == null) {
             return System.currentTimeMillis();
         } else {
             return System.currentTimeMillis() + random.nextLong();
