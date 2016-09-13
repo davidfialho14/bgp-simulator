@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class RandomDelayGenerator {
 
-    private Random random = new Random();
+    private Random random = null;
     private int min;
     private int max;
 
@@ -17,6 +17,7 @@ public class RandomDelayGenerator {
     public RandomDelayGenerator() {
         min = Integer.MIN_VALUE;
         max = Integer.MAX_VALUE;
+        reset();
     }
 
     /**
@@ -26,6 +27,7 @@ public class RandomDelayGenerator {
      * @param max maximum value.
      */
     public RandomDelayGenerator(int min, int max) {
+        this();
         setMax(max);
         setMin(min);
     }
@@ -52,6 +54,31 @@ public class RandomDelayGenerator {
      */
     public int nextDelay() {
         return random.nextInt(max - min + 1)  + min;
+    }
+
+    /**
+     * Starts a new random with a new seed.
+     */
+    public void reset() {
+        long seed = nextSeed();
+        System.out.println("seed: " + seed);
+        random = new Random(seed);
+    }
+
+    /**
+     * Returns the next seed for the random object. The first time it is called it returns the current time in
+     * milliseconds. In the following calls return the sim of the next long value in the random object with the
+     * current time in milliseconds.
+     *
+     * @return next seed for the random object.
+     */
+    private long nextSeed() {
+
+        if (random == null) {
+            return System.currentTimeMillis();
+        } else {
+            return System.currentTimeMillis() + random.nextLong();
+        }
     }
 
 }

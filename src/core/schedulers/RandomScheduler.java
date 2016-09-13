@@ -50,6 +50,7 @@ public class RandomScheduler extends AbstractScheduler {
     public void reset() {
         super.reset();
         lastTimes.clear();
+        randomDelayGenerator.reset();
     }
 
     /**
