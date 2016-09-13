@@ -1,5 +1,6 @@
 package main.cli;
 
+import core.exporters.AnycastMap;
 import core.topology.Topology;
 import main.ProgressHandler;
 import main.SimulatorParameters;
@@ -36,7 +37,7 @@ public class CLIProgressHandler implements ProgressHandler {
      * @param topologyFile topology file to be loaded.
      */
     @Override
-    public void onStartLoading(File topologyFile) {
+    public void onStartLoadingTopology(File topologyFile) {
         printTimedStartMessage("Loading topology file: " + topologyFile.getName() + "...");
     }
 
@@ -46,9 +47,29 @@ public class CLIProgressHandler implements ProgressHandler {
      * @param topology loaded topology.
      */
     @Override
-    public void onFinishedLoading(Topology topology) {
+    public void onFinishedLoadingTopology(Topology topology) {
         printTimedFinishMessage(String.format("Loaded topology with %d nodes, %d links, and with routing policy %s",
                 topology.getNetwork().getNodeCount(), topology.getNetwork().getLinkCount(), topology.getPolicy()));
+    }
+
+    /**
+     * Invoked before starting to load the anycast file.
+     *
+     * @param anycastFile anycast file to be loaded.
+     */
+    @Override
+    public void onStartLoadingAnycast(File anycastFile) {
+        printTimedStartMessage("Loading anycast file: " + anycastFile.getName() + "...");
+    }
+
+    /**
+     * Invoked after loading the anycast file.
+     *
+     * @param anycastMap loaded anycast map.
+     */
+    @Override
+    public void onFinishedLoadingAnycast(AnycastMap anycastMap) {
+        printTimedFinishMessage("Done");
     }
 
     /**

@@ -1,5 +1,6 @@
 package main;
 
+import io.ParseException;
 import io.networkreaders.exceptions.TopologyParseException;
 
 import java.io.IOException;
@@ -39,6 +40,24 @@ public interface ErrorHandler {
      * @param exception thrown parse exception.
      */
     default void onTopologyLoadParseException(TopologyParseException exception) {
+        exception.printStackTrace();
+    }
+
+    /**
+     * Invoked when the anycast file is being loaded and an IO exception is thrown.
+     *
+     * @param exception thrown IO exception.
+     */
+    default void onAnycastLoadIOException(IOException exception) {
+        exception.printStackTrace();
+    }
+
+    /**
+     * Invoked when the anycast file is being loaded and a parse exception is thrown.
+     *
+     * @param exception thrown parse exception.
+     */
+    default void onAnycastLoadParseException(ParseException exception) {
         exception.printStackTrace();
     }
 

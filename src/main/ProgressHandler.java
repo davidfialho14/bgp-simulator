@@ -1,5 +1,6 @@
 package main;
 
+import core.exporters.AnycastMap;
 import core.topology.Topology;
 
 import java.io.File;
@@ -21,14 +22,28 @@ public interface ProgressHandler {
      *
      * @param topologyFile topology file to be loaded.
      */
-    default void onStartLoading(File topologyFile) {}
+    default void onStartLoadingTopology(File topologyFile) {}
 
     /**
      * Invoked after loading the topology file.
      *
      * @param topology loaded topology.
      */
-    default void onFinishedLoading(Topology topology) {}
+    default void onFinishedLoadingTopology(Topology topology) {}
+
+    /**
+     * Invoked before starting to load the anycast file.
+     *
+     * @param anycastFile anycast file to be loaded.
+     */
+    default void onStartLoadingAnycast(File anycastFile) {}
+
+    /**
+     * Invoked after loading the anycast file.
+     *
+     * @param anycastMap loaded anycast map.
+     */
+    default void onFinishedLoadingAnycast(AnycastMap anycastMap) {}
 
     /**
      * Invoked before starting each simulation instance.

@@ -1,5 +1,6 @@
 package main.cli;
 
+import io.ParseException;
 import io.networkreaders.exceptions.TopologyParseException;
 import main.ErrorHandler;
 
@@ -18,6 +19,16 @@ public class CLIErrorHandler implements ErrorHandler {
     @Override
     public void onTopologyLoadParseException(TopologyParseException exception) {
         System.err.println("topology file is corrupted");
+    }
+
+    @Override
+    public void onAnycastLoadIOException(IOException exception) {
+        System.err.println("failed to open/read the anycast file: " + exception.getMessage());
+    }
+
+    @Override
+    public void onAnycastLoadParseException(ParseException exception) {
+        System.err.println("anycast file is corrupted: " + exception.getMessage());
     }
 
     @Override
