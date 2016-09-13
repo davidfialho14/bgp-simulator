@@ -67,7 +67,7 @@ public class AnycastFileReader implements Closeable {
 
                 ConnectedNode neighbour = topology.getNetwork().getNode(neighbourId);
                 if (neighbour == null) {
-                    throw new ParseException("anycast neighbour not found in the network");
+                    throw new ParseException("anycast neighbour does not exist in the network", lineCount);
                 }
 
                 anycastMap.put(destinationId, neighbour, label);

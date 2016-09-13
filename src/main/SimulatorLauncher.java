@@ -92,9 +92,11 @@ public class SimulatorLauncher {
                 AnycastMap anycastMap = reader.read();
                 exporter = new AnycastExporter(anycastMap);
 
-            } catch (IOException | ParseException e) {
-                // TODO add error handle method for IO exception with anycast file
-                e.printStackTrace();
+            } catch (IOException e) {
+                errorHandler.onAnycastLoadIOException(e);
+                return;
+            } catch (ParseException e) {
+                errorHandler.onAnycastLoadParseException(e);
                 return;
             }
 
