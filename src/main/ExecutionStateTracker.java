@@ -2,15 +2,12 @@ package main;
 
 
 import core.Engine;
-import core.events.DetectEvent;
-import core.events.DetectListener;
-import core.events.EndEvent;
-import core.events.EndListener;
+import core.events.*;
 
 /**
  * Keeps track of the execution state while the execution execution evolves.
  */
-public class ExecutionStateTracker implements EndListener, DetectListener {
+public class ExecutionStateTracker implements StartListener, EndListener, DetectListener {
 
     private final Engine engine;    // stores the engine to which it is registered
 
@@ -25,6 +22,7 @@ public class ExecutionStateTracker implements EndListener, DetectListener {
 
     public ExecutionStateTracker(Engine engine) {
         this.engine = engine;
+        engine.getEventGenerator().addStartListener(this);
         engine.getEventGenerator().addEndListener(this);
         engine.getEventGenerator().addDetectListener(this);
     }
@@ -48,6 +46,16 @@ public class ExecutionStateTracker implements EndListener, DetectListener {
      *  Methods invoked during the execution process to update the state
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Invoked when a start event occurs. Prints the seed used for generating random delays.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        System.out.println("seed: " + event.getSeed());
+    }
 
     /**
      * Invoked when a simulation terminates.
