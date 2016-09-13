@@ -84,4 +84,13 @@ public class RandomScheduler extends AbstractScheduler {
     public void setMaxDelay(int delay) {
         randomDelayGenerator.setMax(delay);
     }
+
+    /**
+     * Returns the seed being currently used by the delay generator.
+     *
+     * @return the seed being currently used by the delay generator.
+     */
+    public long getSeed() {
+        return randomDelayGenerator.getSeed();
+    }
 }

@@ -10,7 +10,8 @@ public class RandomDelayGenerator {
     private Random random = null;
     private int min;
     private int max;
-    private Long seed = null;
+    private Long forcedSeed = null;
+    private long currentSeed;
 
     /**
      * Creates a generator without any
@@ -44,7 +45,7 @@ public class RandomDelayGenerator {
      */
     public RandomDelayGenerator(int min, int max, long seed) {
         this(min, max);
-        this.seed = seed;
+        this.forcedSeed = seed;
     }
 
     public void setMin(int min) {
@@ -75,9 +76,17 @@ public class RandomDelayGenerator {
      * Starts a new random with a new seed.
      */
     public void reset() {
-        long seed = nextSeed();
-        System.out.println("seed: " + seed);
-        random = new Random(seed);
+        currentSeed = nextSeed();
+        random = new Random(currentSeed);
+    }
+
+    /**
+     * Returns the seed being currently used by the delay generator.
+     *
+     * @return the seed being currently used by the delay generator.
+     */
+    public long getSeed() {
+        return currentSeed;
     }
 
     /**
@@ -89,8 +98,8 @@ public class RandomDelayGenerator {
      */
     private long nextSeed() {
 
-        if (this.seed != null) {
-            return this.seed;
+        if (this.forcedSeed != null) {
+            return this.forcedSeed;
         } else if (random == null) {
             return System.currentTimeMillis();
         } else {

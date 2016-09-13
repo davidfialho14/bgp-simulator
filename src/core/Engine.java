@@ -99,7 +99,7 @@ public class Engine {
         currentState = initialState;
         scheduler.reset();
 
-        eventGenerator.fireStartEvent(new StartEvent());
+        eventGenerator.fireStartEvent(new StartEvent(scheduler));
 
         exporter.exportDestination(initialState);
         simulationLoop(initialState);
