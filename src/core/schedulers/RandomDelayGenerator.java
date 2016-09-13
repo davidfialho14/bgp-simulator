@@ -7,9 +7,11 @@ import java.util.Random;
  */
 public class RandomDelayGenerator {
 
-    private Random random = new Random();
+    private Random random = null;
     private int min;
     private int max;
+    private Long forcedSeed = null;
+    private long currentSeed;
 
     /**
      * Creates a generator without any
@@ -17,6 +19,7 @@ public class RandomDelayGenerator {
     public RandomDelayGenerator() {
         min = Integer.MIN_VALUE;
         max = Integer.MAX_VALUE;
+        reset();
     }
 
     /**
@@ -26,8 +29,23 @@ public class RandomDelayGenerator {
      * @param max maximum value.
      */
     public RandomDelayGenerator(int min, int max) {
+        this();
         setMax(max);
         setMin(min);
+    }
+
+    /**
+     * Creates a generator that generates values between the min and max - 1 (inclusive). If max <= 0 then an
+     * IllegalArgumentException is thrown. Forces the seed of the random object to be the one given in the seed
+     * argument.
+     *
+     * @param min   minimum value.
+     * @param max   maximum value.
+     * @param seed  seed to used with the random object
+     */
+    public RandomDelayGenerator(int min, int max, long seed) {
+        this(min, max);
+        this.forcedSeed = seed;
     }
 
     public void setMin(int min) {
@@ -52,6 +70,41 @@ public class RandomDelayGenerator {
      */
     public int nextDelay() {
         return random.nextInt(max - min + 1)  + min;
+    }
+
+    /**
+     * Starts a new random with a new seed.
+     */
+    public void reset() {
+        currentSeed = nextSeed();
+        random = new Random(currentSeed);
+    }
+
+    /**
+     * Returns the seed being currently used by the delay generator.
+     *
+     * @return the seed being currently used by the delay generator.
+     */
+    public long getSeed() {
+        return currentSeed;
+    }
+
+    /**
+     * Returns the next seed for the random object. The first time it is called it returns the current time in
+     * milliseconds. In the following calls return the sim of the next long value in the random object with the
+     * current time in milliseconds. If the seed field is defined (not null) than it always returns the seed value.
+     *
+     * @return next seed for the random object.
+     */
+    private long nextSeed() {
+
+        if (this.forcedSeed != null) {
+            return this.forcedSeed;
+        } else if (random == null) {
+            return System.currentTimeMillis();
+        } else {
+            return System.currentTimeMillis() + random.nextLong();
+        }
     }
 
 }

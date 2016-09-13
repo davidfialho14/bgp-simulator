@@ -38,6 +38,7 @@ public class ParametersCommandLineParser {
     private static final String INPUT_FORMAT_GRAPHVIZ = "graphviz";
     private static final String DEBUG = "debug";
     private static final String ANYCAST_FILE = "anycast";
+    private static final String SEED = "seed";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -59,6 +60,7 @@ public class ParametersCommandLineParser {
         options.addOption("debug", DEBUG, false, "activate debugging");
         options.addOption("any", ANYCAST_FILE, true, "anycast file to be used");
         options.addOption("bgp", ENABLED_BGP, false, "use the original BGP");
+        options.addOption("s", SEED, true, "seed value to force");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -93,6 +95,7 @@ public class ParametersCommandLineParser {
                 .reporterFactory(new CSVReporterFactory())
                 .debugEnabled(isDebugEnabled(commandLine))
                 .anycastFile(getAnycastFile(commandLine))
+                .seed(getSeed(commandLine))
                 .build();
     }
 
@@ -244,6 +247,27 @@ public class ParametersCommandLineParser {
     private File getAnycastFile(CommandLine commandLine) {
         if (commandLine.hasOption(ANYCAST_FILE)) {
             return new File(commandLine.getOptionValue(ANYCAST_FILE));
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Obtains the seed value from the command line. This is an optional argument, in case it is missing null will
+     * be returned. It throws a parse exception if the option is available but the argument value is not a signed long.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return the parsed anycast file or null if the argument does not exist.
+     * @throws ParseException if the option is available but the argument value is not a signed long.
+     */
+    private Long getSeed(CommandLine commandLine) throws ParseException {
+
+        if (commandLine.hasOption(SEED)) {
+            try {
+                return Long.parseLong(commandLine.getOptionValue(SEED));
+            } catch (NumberFormatException e) {
+                throw new ParseException(expectedIntegerMessage("seed"));
+            }
         } else {
             return null;
         }

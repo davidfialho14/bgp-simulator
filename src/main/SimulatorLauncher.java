@@ -7,6 +7,7 @@ import core.exporters.AnycastMap;
 import core.exporters.Exporter;
 import core.exporters.UnicastExporter;
 import core.schedulers.RandomScheduler;
+import core.schedulers.Scheduler;
 import core.topology.Topology;
 import io.AnycastFileReader;
 import io.ParseException;
@@ -100,9 +101,20 @@ public class SimulatorLauncher {
             // TODO add progress method for finishing to load any cast file
         }
 
+        //
         // load the engine
-        Engine engine = new Engine(new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay()), exporter);
+        //
+        Scheduler scheduler;
+        if (parameters.hasSeed()) {
+            scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay(), parameters.getSeed());
+        } else {
+            scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay());
+        }
 
+        Engine engine = new Engine(scheduler, exporter);
+
+        // create an execution tracker
+        // currently being used by the reporter
         ExecutionStateTracker executionStateTracker = new ExecutionStateTracker(engine);
 
         // use the simulator factory to get a properly configured simulator

@@ -21,6 +21,18 @@ public class RandomScheduler extends AbstractScheduler {
     }
 
     /**
+     * Constructs a RandomScheduler by assigning it a minimum and maximum delay for the messages.
+     * Forces the scheduler to use a specific seed to generate delays.
+     *
+     * @param minDelay minimum message delay.
+     * @param maxDelay maximum message delay.
+     * @param seed     seed to be used by the delay generator
+     */
+    public RandomScheduler(int minDelay, int maxDelay, long seed) {
+        this.randomDelayGenerator = new RandomDelayGenerator(minDelay, maxDelay, seed);
+    }
+
+    /**
      * Returns the last time associated with the given link.
      * @param link link to get the last time of.
      * @return last time of the link or null if the link does not exist.
@@ -50,6 +62,7 @@ public class RandomScheduler extends AbstractScheduler {
     public void reset() {
         super.reset();
         lastTimes.clear();
+        randomDelayGenerator.reset();
     }
 
     /**
@@ -70,5 +83,14 @@ public class RandomScheduler extends AbstractScheduler {
     @Override
     public void setMaxDelay(int delay) {
         randomDelayGenerator.setMax(delay);
+    }
+
+    /**
+     * Returns the seed being currently used by the delay generator.
+     *
+     * @return the seed being currently used by the delay generator.
+     */
+    public long getSeed() {
+        return randomDelayGenerator.getSeed();
     }
 }

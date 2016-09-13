@@ -34,6 +34,7 @@ public class SimulatorParameters {
     private final SimulatorFactory simulatorFactory;
     private final boolean debugEnabled;
     private final File anycastFile;
+    private final Long seed;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -47,7 +48,7 @@ public class SimulatorParameters {
     private SimulatorParameters(File topologyFile, File reportFile, int minDelay, int maxDelay, int destinationId,
                                 int repetitionCount, Protocol protocol, TopologyReaderFactory readerFactory,
                                 ReporterFactory reporterFactory, SimulatorFactory simulatorFactory,
-                                boolean debugEnabled, File anycastFile) {
+                                boolean debugEnabled, File anycastFile, Long seed) {
         this.topologyFile = topologyFile;
         this.reportFile = reportFile;
         this.minDelay = minDelay;
@@ -60,6 +61,7 @@ public class SimulatorParameters {
         this.simulatorFactory = simulatorFactory;
         this.debugEnabled = debugEnabled;
         this.anycastFile = anycastFile;
+        this.seed = seed;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -116,6 +118,14 @@ public class SimulatorParameters {
         return anycastFile;
     }
 
+    public boolean hasSeed() {
+        return seed != null;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
     /**
      * Builder class used to build the parameters object.
      */
@@ -142,6 +152,7 @@ public class SimulatorParameters {
         private SimulatorFactory simulatorFactory = null;
         private boolean debugEnabled = false;
         private File anycastFile = null;
+        private Long seed = null;
 
         public Builder(File topologyFile, File reportFile) {
             this.topologyFile = topologyFile;
@@ -204,10 +215,15 @@ public class SimulatorParameters {
             return this;
         }
 
+        public Builder seed(Long seed) {
+            this.seed = seed;
+            return this;
+        }
+
         public SimulatorParameters build() {
             return new SimulatorParameters(topologyFile, reportFile, minDelay, maxDelay, destinationId,
                     repetitionCount, protocol, readerFactory, reporterFactory, simulatorFactory, debugEnabled,
-                    anycastFile);
+                    anycastFile, seed);
         }
 
     }
