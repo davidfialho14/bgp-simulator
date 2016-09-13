@@ -84,13 +84,15 @@ public class SimulatorLauncher {
             exporter = new UnicastExporter();
         } else {
 
-            // TODO add progress method for starting to load any cast file
+            progressHandler.onStartLoadingAnycast(parameters.getAnycastFile());
 
             // anycast is activated - load file and use anycast exporter
             try (AnycastFileReader reader = new AnycastFileReader(parameters.getAnycastFile(), topology)){
 
                 AnycastMap anycastMap = reader.read();
                 exporter = new AnycastExporter(anycastMap);
+
+                progressHandler.onFinishedLoadingAnycast(anycastMap);
 
             } catch (IOException e) {
                 errorHandler.onAnycastLoadIOException(e);
@@ -99,8 +101,6 @@ public class SimulatorLauncher {
                 errorHandler.onAnycastLoadParseException(e);
                 return;
             }
-
-            // TODO add progress method for finishing to load any cast file
         }
 
         //
@@ -173,9 +173,9 @@ public class SimulatorLauncher {
         try (TopologyReader topologyReader =
                      parameters.getReaderFactory().getTopologyReader(parameters.getTopologyFile())) {
 
-            progressHandler.onStartLoading(parameters.getTopologyFile());
+            progressHandler.onStartLoadingTopology(parameters.getTopologyFile());
             topology = topologyReader.read();
-            progressHandler.onFinishedLoading(topology);
+            progressHandler.onFinishedLoadingTopology(topology);
 
         } catch (IOException e) {
             errorHandler.onTopologyLoadIOException(e);
