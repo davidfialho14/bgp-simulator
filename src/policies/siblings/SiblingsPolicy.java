@@ -30,4 +30,15 @@ public class SiblingsPolicy implements Policy {
                 throw new InvalidPolicyTagException(tag, "not a valid tag for a Sibling label");
         }
     }
+
+    /**
+     * Returns a string with the name of the policy.
+     *
+     * @return string "Siblings"
+     */
+    @Override
+    public String toString() {
+        return "Siblings";
+    }
+
 }
