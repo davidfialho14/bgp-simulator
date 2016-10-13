@@ -187,6 +187,15 @@ public class RouteTable {
         return selectedRoute;
     }
 
+    /**
+     * Returns the currently selected neighbour.
+     *
+     * @return the currently selected neighbour.
+     */
+    public Node getSelectedNeighbour() {
+        return selectedNeighbour;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof RouteTable)) return false;
