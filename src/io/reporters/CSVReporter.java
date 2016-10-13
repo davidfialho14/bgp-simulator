@@ -36,8 +36,10 @@ public class CSVReporter implements Reporter {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private static final String[] BASIC_COUNTS_HEADERS =
-            { "Time", "Total Message Count", "Detecting Nodes Count", "Cut-Off Links Count", "False Positive Count" };
+    private static final String[] BASIC_COUNTS_HEADERS = {
+            "Seed", "Time", "Total Message Count", "Detecting Nodes Count",
+            "Cut-Off Links Count", "False Positive Count"
+    };
     private static final String[] TIMED_DEPLOYMENT_COUNTS_HEADERS = { "Messages After Deployment Count" };
     private static final String[] GRADUAL_DEPLOYMENT_COUNTS_HEADERS = { "Deployed Nodes Count" };
     private static final String[] DETECTIONS_HEADERS = { "Simulation", "Detections", "Detecting Nodes",
@@ -220,6 +222,7 @@ public class CSVReporter implements Reporter {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private void printCounts(CSVPrinter printer, BasicDataset dataSet) throws IOException {
+        printer.print(dataSet.getSimulationSeed());
         printer.print(dataSet.getSimulationTime());
         printer.print(dataSet.getTotalMessageCount());
         printer.print(dataSet.getDetectingNodesCount());
