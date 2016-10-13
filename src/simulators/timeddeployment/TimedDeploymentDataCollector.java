@@ -2,10 +2,7 @@ package simulators.timeddeployment;
 
 import core.Engine;
 import core.TimeListener;
-import core.events.DetectEvent;
-import core.events.DetectListener;
-import core.events.ExportEvent;
-import core.events.ExportListener;
+import core.events.*;
 import registers.Registration;
 import simulators.DataCollector;
 import simulators.Dataset;
@@ -17,7 +14,8 @@ import static registers.Registration.registrationFor;
 /**
  * Collects all data that can be stored in a timed deployment dataset.
  */
-public class TimedDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener {
+public class TimedDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener,
+        StartListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -152,5 +150,15 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
      */
     public void onDetected(DetectEvent event) {
         basicDataCollector.onDetected(event);
+    }
+
+    /**
+     * Invoked when a start event occurs.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        basicDataCollector.onStarted(event);
     }
 }
