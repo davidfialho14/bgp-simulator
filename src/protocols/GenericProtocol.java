@@ -4,7 +4,6 @@ import core.Attribute;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
-import core.topology.Node;
 
 /**
  * This is a generic implementation of a protocol that can be configured to implement any combination of
@@ -31,14 +30,13 @@ public class GenericProtocol implements Protocol {
      * Extends the attribute using the given link, while applying some modifications to the import properties
      * according to the protocol implemented.
      *
-     * @param destination the destination node
-     * @param link        link to extend the attribute.
      * @param attribute   attribute to be extended.
+     * @param link        link to extend the attribute.
      * @return extended attribute (new instance).
      */
     @Override
-    public Attribute extend(Node destination, Link link, Attribute attribute) {
-        return reaction.extend(destination, link, attribute);
+    public Attribute extend(Attribute attribute, Link link) {
+        return reaction.extend(attribute, link);
     }
 
     /**

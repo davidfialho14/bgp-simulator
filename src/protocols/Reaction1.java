@@ -4,11 +4,8 @@ import core.Attribute;
 import core.InvalidAttribute;
 import core.Route;
 import core.topology.Link;
-import core.topology.Node;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,11 +14,10 @@ import java.util.Set;
  */
 class Reaction1 {
 
-    protected Map<Node, Set<Link>> destinationCutLinks = new HashMap<>();
+    protected Set<Link> cutLinks = new HashSet<>();
 
-    public Attribute extend(Node destination, Link link, Attribute attribute) {
-        Set<Link> cutLinks = destinationCutLinks.get(destination);
-        if (cutLinks == null || !cutLinks.contains(link)) {
+    public Attribute extend(Attribute attribute, Link link) {
+        if (!cutLinks.contains(link)) {
             return link.extend(attribute);
         } else {
             return InvalidAttribute.invalidAttr();
@@ -30,20 +26,11 @@ class Reaction1 {
 
     public void setParameters(Link link, Route learnedRoute) {
         // add the link to the list of cut links for this destination
-        Set<Link> newLinkSet = new HashSet<>();
-        Set<Link> curLinkSet = destinationCutLinks.putIfAbsent(learnedRoute.getDestination(), newLinkSet);
-
-        if (curLinkSet == null) {
-            // there was not already a set of cut links for this destination
-            newLinkSet.add(link);
-        } else {
-            // there was already a set of cut links for this destination
-            curLinkSet.add(link);
-        }
+        cutLinks.add(link);
     }
 
     public void reset() {
-        destinationCutLinks.clear();
+        cutLinks.clear();
     }
 
 }

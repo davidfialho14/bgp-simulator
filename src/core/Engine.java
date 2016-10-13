@@ -167,7 +167,7 @@ public class Engine {
     Route learn(NodeState nodeState, Link link, Route route) {
         eventGenerator.fireImportEvent(new ImportEvent(route, link));
 
-        Attribute attribute = nodeState.getProtocol().extend(route.getDestination(), link, route.getAttribute());
+        Attribute attribute = nodeState.getProtocol().extend(route.getAttribute(), link);
 
         Path path;
         if (attribute != invalidAttr()) {

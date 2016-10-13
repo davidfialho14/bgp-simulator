@@ -1,7 +1,6 @@
 package core;
 
 import core.topology.Link;
-import core.topology.Node;
 
 
 /**
@@ -13,12 +12,11 @@ public interface Protocol {
      * Extends the attribute using the given link, while applying some modifications to the import properties
      * according to the protocol implemented.
      *
-     * @param destination the destination node
-     * @param link link to extend the attribute.
      * @param attribute attribute to be extended.
+     * @param link link to extend the attribute.
      * @return extended attribute (new instance).
      */
-    Attribute extend(Node destination, Link link, Attribute attribute);
+    Attribute extend(Attribute attribute, Link link);
 
     /**
      * Checks if the conditions to detect a policy-based oscillation is verified. This should called every time a new

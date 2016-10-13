@@ -3,7 +3,6 @@ package protocols;
 import core.Attribute;
 import core.Route;
 import core.topology.Link;
-import core.topology.Node;
 
 /**
  * Interface for the reaction to a policy-based oscillation. Reactions might have a state, where they keep
@@ -17,12 +16,11 @@ public interface Reaction {
      * operation of the link. However, it might implemented to apply some modifications to the simple
      * 'extend' operation, changing the import policies of the protocol.
      *
-     * @param destination the destination node
-     * @param link        link to extend the attribute.
      * @param attribute   attribute to be extended.
+     * @param link        link to extend the attribute.
      * @return extended attribute (new instance).
      */
-    default Attribute extend(Node destination, Link link, Attribute attribute) {
+    default Attribute extend(Attribute attribute, Link link) {
         return link.extend(attribute);
     }
 

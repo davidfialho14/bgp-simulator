@@ -4,7 +4,6 @@ import core.Attribute;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
-import core.topology.Node;
 
 /**
  * Implements the detection D2 and the reaction R1.
@@ -24,8 +23,8 @@ public class D2R1Protocol implements Protocol {
     }
 
     @Override
-    public Attribute extend(Node destination, Link link, Attribute attribute) {
-        return reaction.extend(destination, link, attribute);
+    public Attribute extend(Attribute attribute, Link link) {
+        return reaction.extend(attribute, link);
     }
 
     @Override

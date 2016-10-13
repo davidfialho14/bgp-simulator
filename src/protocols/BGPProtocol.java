@@ -4,7 +4,6 @@ import core.Attribute;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
-import core.topology.Node;
 
 /**
  * Implements the common BGP protocol. This means that the extend operation will be the common BGP operation without
@@ -15,13 +14,12 @@ public class BGPProtocol implements Protocol {
     /**
      * Performs the common BGP extend. This means it simply extends the attribute using the link extend operation.
      *
-     * @param destination the destination node.
-     * @param link link to extend the attribute.
      * @param attribute attribute to be extended.
+     * @param link link to extend the attribute.
      * @return the extended attribute.
      */
     @Override
-    public Attribute extend(Node destination, Link link, Attribute attribute) {
+    public Attribute extend(Attribute attribute, Link link) {
         return link.extend(attribute);
     }
 
