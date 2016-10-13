@@ -1,6 +1,11 @@
 package stubs;
 
+import core.Path;
+import core.Route;
 import core.topology.Link;
+import core.topology.Node;
+
+import static core.Route.newRouteFrom;
 
 /**
  * Provides set of static methods to create stub components.
@@ -27,6 +32,22 @@ public interface Stubs {
      */
     static Link stubLink(int srcId, int destId) {
         return new Link(srcId, destId, new StubLabel());
+    }
+
+    /**
+     * Creates a route with a stub attribute with the given value and the given path.
+     *
+     * @param destination destination node of the route.
+     * @param value value of the attribute.
+     * @param path path of the route.
+     * @return new route instance for the given destination and with a stub attribute with the given value and
+     * associated with the given path,
+     */
+    static Route stubRoute(Node destination, int value, Path path) {
+        return newRouteFrom(Route.invalidRoute(destination))
+                .withAttribute(new StubAttribute(value))
+                .withPath(path)
+                .build();
     }
 
 }
