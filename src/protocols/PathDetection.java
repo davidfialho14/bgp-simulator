@@ -1,5 +1,6 @@
 package protocols;
 
+import core.NodeState;
 import core.Route;
 import core.topology.ConnectedNode;
 import core.topology.Link;
@@ -21,10 +22,11 @@ public class PathDetection implements Detection {
      * @param link             ignored
      * @param learnedRoute     new learned route.
      * @param alternativeRoute most preferred route learned from other neighbor (not the destination node of the link)
+     * @param nodeState        ignored
      * @return true if the detection conditions are verified.
      */
     @Override
-    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute) {
+    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute, NodeState nodeState) {
         ConnectedNode learningNode = link.getSource();
 
         return learnedRoute.getAttribute().compareTo(alternativeRoute.getAttribute()) < 0

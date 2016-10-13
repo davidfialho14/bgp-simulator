@@ -25,9 +25,10 @@ public interface Protocol {
      * @param link              link from which the new route was learned.
      * @param learnedRoute      new learned route.
      * @param alternativeRoute  most preferred route learned from other neighbor (not the destination node of the link)
+     * @param nodeState         state of the node before learning the new route.
      * @return true if the detection conditions are verified and false otherwise.
      */
-    boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute);
+    boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute, NodeState nodeState);
 
     /**
      * Provides the information used to detect the policy dispute. This method must be called right after a

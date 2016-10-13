@@ -40,7 +40,7 @@ public class EngineSelectTest {
     @Before
     public void setUp() throws Exception {
         engine = new Engine(null);
-        when(stubProtocol.isPolicyDispute(any(), any(), any())).thenReturn(false);
+        when(stubProtocol.isPolicyDispute(any(), any(), any(), any())).thenReturn(false);
     }
 
     @Test
