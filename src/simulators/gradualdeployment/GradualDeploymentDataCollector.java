@@ -2,10 +2,7 @@ package simulators.gradualdeployment;
 
 import core.Engine;
 import core.TimeListener;
-import core.events.DetectEvent;
-import core.events.DetectListener;
-import core.events.ExportEvent;
-import core.events.ExportListener;
+import core.events.*;
 import core.topology.ConnectedNode;
 import registers.Registration;
 import simulators.DataCollector;
@@ -19,7 +16,8 @@ import static registers.Registration.registrationFor;
  * Adds to the basic data collector, the collection of data from a gradual deployment simulation.
  * Collects the nodes which have deployed a new protocol during one simulation instance.
  */
-public class GradualDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener {
+public class GradualDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener,
+        StartListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -143,5 +141,15 @@ public class GradualDeploymentDataCollector implements DataCollector, ExportList
     @Override
     public void onExported(ExportEvent event) {
         basicDataCollector.onExported(event);
+    }
+
+    /**
+     * Invoked when a start event occurs.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        basicDataCollector.onStarted(event);
     }
 }
