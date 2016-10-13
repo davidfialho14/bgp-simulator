@@ -4,10 +4,7 @@ import core.Attribute;
 import core.Engine;
 import core.Path;
 import core.TimeListener;
-import core.events.DetectEvent;
-import core.events.DetectListener;
-import core.events.ExportEvent;
-import core.events.ExportListener;
+import core.events.*;
 import core.topology.Link;
 import registers.Registration;
 import simulators.DataCollector;
@@ -22,7 +19,7 @@ import static registers.Registration.registrationFor;
 /**
  * Collects all data that can be stored in a basic dataset.
  */
-public class BasicDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener {
+public class BasicDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener, StartListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -78,6 +75,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
                 .exportEvents()
                 .detectEvents()
                 .timeEvents()
+                .startEvents()
                 .register();
     }
 
@@ -162,4 +160,13 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
         dataset.addMessage();
     }
 
+    /**
+     * Invoked when a start event occurs. Stores the simulation seed.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        dataset.setSimulationSeed(event.getSeed());
+    }
 }
