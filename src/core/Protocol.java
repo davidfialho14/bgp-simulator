@@ -32,14 +32,15 @@ public interface Protocol {
     boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute);
 
     /**
-     * Sets the parameters used by the extend operation. This adds more flexibility to configure the extend operation.
-     * Some of the following parameters might not be used.
+     * Provides the information used to detect the policy dispute. This method must be called right after a
+     * detection takes place to provide information about it. This allows the reaction to identify detections
+     * and to take action depending on the detection information.
      *
-     * @param link link from which the route was learned.
-     * @param learnedRoute route learned by the node.
-     * @param alternativeRoute route preferred excluding the node from which the route was learned.
+     * @param link              link from which the new route was learned.
+     * @param learnedRoute      new learned route.
+     * @param alternativeRoute  most preferred route learned from other neighbor (not the destination node of the link)
      */
-    void setParameters(Link link, Route learnedRoute, Route alternativeRoute);
+    void detectionInfo(Link link, Route learnedRoute, Route alternativeRoute);
 
     void reset();
 }

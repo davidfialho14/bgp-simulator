@@ -215,7 +215,7 @@ public class Engine {
                 // detected oscillation
                 eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, alternativeRoute));
 
-                nodeState.getProtocol().setParameters(link, learnedRoute, alternativeRoute);
+                nodeState.getProtocol().detectionInfo(link, learnedRoute, alternativeRoute);
             }
 
             learnedRoute = invalidRoute(destination);
