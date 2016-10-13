@@ -167,7 +167,7 @@ public class Engine {
     Route learn(NodeState nodeState, Link link, Route route) {
         eventGenerator.fireImportEvent(new ImportEvent(route, link));
 
-        Attribute attribute = nodeState.getProtocol().extend(route.getDestination(), link, route.getAttribute());
+        Attribute attribute = nodeState.getProtocol().extend(route.getAttribute(), link);
 
         Path path;
         if (attribute != invalidAttr()) {
@@ -206,16 +206,16 @@ public class Engine {
         RouteTable table = nodeState.getTable();
 
         // select the best route learned from all out-neighbours except the exporting out-link
-        Route exclRoute = table.getExclRoute(link);
+        Route alternativeRoute = table.getAlternativeRoute(link);
 
         if (learnedRoute.getPath().contains(learningNode)) {  // check for a loop in the path
             // there is a loop
 
-            if (nodeState.getProtocol().isOscillation(link, learnedRoute, exclRoute)) {
+            if (nodeState.getProtocol().isPolicyDispute(link, learnedRoute, alternativeRoute)) {
                 // detected oscillation
-                eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, exclRoute));
+                eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, alternativeRoute));
 
-                nodeState.getProtocol().setParameters(link, learnedRoute, exclRoute);
+                nodeState.getProtocol().detectionInfo(link, learnedRoute, alternativeRoute);
             }
 
             learnedRoute = invalidRoute(destination);

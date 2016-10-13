@@ -169,7 +169,7 @@ public class RouteTable {
      * @param ignoredOutLink out-link to be ignored.
      * @return currently selected route for the destination.
      */
-    public Route getExclRoute(Link ignoredOutLink) {
+    public Route getAlternativeRoute(Link ignoredOutLink) {
 
         if (ignoredOutLink == null || !ignoredOutLink.getDestination().equals(selectedNeighbour)) {
             return selectedRoute;

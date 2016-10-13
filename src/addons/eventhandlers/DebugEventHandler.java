@@ -130,7 +130,7 @@ public class DebugEventHandler
             printStream.println("Detect " + detectCount + ":" + event.getDetectingNode() + " detected with " +
                                         pretty(event.getLearnedRoute()) + " learned from " +
                                         pretty(event.getOutLink()) + " other option was " +
-                                        pretty(event.getExclRoute()));
+                                        pretty(event.getAlternativeRoute()));
         }
     }
 

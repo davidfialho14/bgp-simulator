@@ -1,41 +1,15 @@
 package protocols;
 
-import core.Attribute;
-import core.Protocol;
-import core.Route;
-import core.topology.Link;
-import core.topology.Node;
-
 /**
- * Implements the detection D2 and the reaction R1.
+ * Its just a wrapper around a generic protocol implementing the Path Detection and the Cut-Off Reaction.
  */
-public class D2R1Protocol implements Protocol {
+public class D2R1Protocol extends GenericProtocol {
 
-    private final Reaction1 reaction = new Reaction1();
-
-    @Override
-    public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
-        return Detections.detection2(link.getSource(), learnedRoute, exclRoute);
-    }
-
-    @Override
-    public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
-        reaction.setParameters(link, learnedRoute);
-    }
-
-    @Override
-    public Attribute extend(Node destination, Link link, Attribute attribute) {
-        return reaction.extend(destination, link, attribute);
-    }
-
-    @Override
-    public void reset() {
-        reaction.reset();
-    }
-
-    @Override
-    public String toString() {
-        return "D2R1";
+    /**
+     * Initializes the protocol given the path detection and cut-off reaction implementations.
+     */
+    public D2R1Protocol() {
+        super(new PathDetection(), new CutOffReaction());
     }
 
 }
