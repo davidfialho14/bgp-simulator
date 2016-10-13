@@ -1,10 +1,14 @@
 package simulators.gradualdeployment;
 
 import core.Engine;
+import core.TimeListener;
 import core.events.DetectEvent;
+import core.events.DetectListener;
 import core.events.ExportEvent;
+import core.events.ExportListener;
 import core.topology.ConnectedNode;
 import registers.Registration;
+import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.basic.BasicDataCollector;
 
@@ -15,7 +19,7 @@ import static registers.Registration.registrationFor;
  * Adds to the basic data collector, the collection of data from a gradual deployment simulation.
  * Collects the nodes which have deployed a new protocol during one simulation instance.
  */
-public class GradualDeploymentDataCollector extends BasicDataCollector {
+public class GradualDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
