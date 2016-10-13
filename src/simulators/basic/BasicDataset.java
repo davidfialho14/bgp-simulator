@@ -27,6 +27,7 @@ public class BasicDataset implements Dataset {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    private long simulationSeed = 0;
     private int totalMessageCount = 0;
     private Set<ConnectedNode> detectingNodes = new HashSet<>();    // stores all unique detecting nodes
     private int cutOffLinksCount = 0;
@@ -39,6 +40,15 @@ public class BasicDataset implements Dataset {
      *  Public Interface - Methods to access the stored data
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Returns the seed of the simulation which generated the current data.
+     *
+     * @return the seed of the simulation which generated the current data.
+     */
+    public long getSimulationSeed() {
+        return simulationSeed;
+    }
 
     /**
      * Returns the total message count.
@@ -101,6 +111,15 @@ public class BasicDataset implements Dataset {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
+     * Sets a new simulation seed. This should be set for each simulation.
+     *
+     * @param simulationSeed seed corresponding to the simulation to which the data belongs to.
+     */
+    public void setSimulationSeed(long simulationSeed) {
+        this.simulationSeed = simulationSeed;
+    }
+
+    /**
      * Sets the simulation time.
      *
      * @param time simulation time.
@@ -135,6 +154,7 @@ public class BasicDataset implements Dataset {
      * Clears all data from the dataset.
      */
     public void clear() {
+        simulationSeed = 0;
         totalMessageCount = 0;
         detectingNodes.clear();
         cutOffLinksCount = 0;
