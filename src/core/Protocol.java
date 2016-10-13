@@ -37,9 +37,9 @@ public interface Protocol {
      *
      * @param link link from which the route was learned.
      * @param learnedRoute route learned by the node.
-     * @param exclRoute route preferred excluding the node from which the route was learned.
+     * @param alternativeRoute route preferred excluding the node from which the route was learned.
      */
-    void setParameters(Link link, Route learnedRoute, Route exclRoute);
+    void setParameters(Link link, Route learnedRoute, Route alternativeRoute);
 
     void reset();
 }

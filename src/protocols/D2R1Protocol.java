@@ -19,7 +19,7 @@ public class D2R1Protocol implements Protocol {
     }
 
     @Override
-    public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
+    public void setParameters(Link link, Route learnedRoute, Route alternativeRoute) {
         reaction.setParameters(link, learnedRoute);
     }
 

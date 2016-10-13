@@ -39,7 +39,7 @@ public class BGPProtocol implements Protocol {
      * Does nothing.
      */
     @Override
-    public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
+    public void setParameters(Link link, Route learnedRoute, Route alternativeRoute) {
         // ignore
     }
 

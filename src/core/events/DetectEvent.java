@@ -10,21 +10,21 @@ import core.topology.Link;
  */
 public class DetectEvent implements SimulationEvent {
 
-    private final Link outLink;         // out-link from which the route was learned
-    private final Route learnedRoute;   // route learned
-    private final Route exclRoute;      // alternative route
+    private final Link outLink;             // out-link from which the route was learned
+    private final Route learnedRoute;       // route learned
+    private final Route alternativeRoute;   // alternative route
 
     /**
      * Constructs a new detect event.
      *
      * @param outLink out link from which the route was learned.
      * @param learnedRoute route learned.
-     * @param exclRoute alternative route.
+     * @param alternativeRoute alternative route.
      */
-    public DetectEvent(Link outLink, Route learnedRoute, Route exclRoute) {
+    public DetectEvent(Link outLink, Route learnedRoute, Route alternativeRoute) {
         this.outLink = outLink;
         this.learnedRoute = learnedRoute;
-        this.exclRoute = exclRoute;
+        this.alternativeRoute = alternativeRoute;
     }
 
     /**
@@ -62,8 +62,8 @@ public class DetectEvent implements SimulationEvent {
      *
      * @return alternative route.
      */
-    public Route getExclRoute() {
-        return exclRoute;
+    public Route getAlternativeRoute() {
+        return alternativeRoute;
     }
 
     /**
@@ -84,7 +84,7 @@ public class DetectEvent implements SimulationEvent {
 
         if (outLink != null ? !outLink.equals(that.outLink) : that.outLink != null) return false;
         if (learnedRoute != null ? !learnedRoute.equals(that.learnedRoute) : that.learnedRoute != null) return false;
-        return exclRoute != null ? exclRoute.equals(that.exclRoute) : that.exclRoute == null;
+        return alternativeRoute != null ? alternativeRoute.equals(that.alternativeRoute) : that.alternativeRoute == null;
 
     }
 
@@ -92,7 +92,7 @@ public class DetectEvent implements SimulationEvent {
     public int hashCode() {
         int result = outLink != null ? outLink.hashCode() : 0;
         result = 31 * result + (learnedRoute != null ? learnedRoute.hashCode() : 0);
-        result = 31 * result + (exclRoute != null ? exclRoute.hashCode() : 0);
+        result = 31 * result + (alternativeRoute != null ? alternativeRoute.hashCode() : 0);
         return result;
     }
 
@@ -100,7 +100,7 @@ public class DetectEvent implements SimulationEvent {
     public String toString() {
         return "DetectEvent{" + outLink +
                 ", learned=" + learnedRoute +
-                ", excl=" + exclRoute +
+                ", excl=" + alternativeRoute +
                 '}';
     }
 }

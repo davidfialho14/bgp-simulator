@@ -77,21 +77,6 @@ public class RouteTableTest {
 
     @Test
     public void
-    setRoute_ForDest0WithAttr0AndEmptyPathAndAfterItChangeAttrToAttr1_GetsRouteForDest0WithAttr0AndEmptyPath()
-            throws Exception {
-        Node destination = Node.newNode(0);
-        Link outLink = stubLink(1, 2);
-        RouteTable routeTable = new RouteTable(destination, links(outLink));
-        Route route = stubRoute(0, 0, path());
-
-        routeTable.setRoute(outLink, route);
-        route.setAttribute(stubAttr(1));
-
-        assertThat(routeTable.getRoute(outLink), is(stubRoute(0, 0, path())));
-    }
-
-    @Test
-    public void
     setRoute_WithAttr2AndEmptyPathForOutLinkAlreadyAssignedWithRouteWithAttr1AndEmpty_GetsRouteWithAttr2AndEmptyPath()
             throws Exception {
         Node destination = Node.newNode(0);
@@ -103,7 +88,6 @@ public class RouteTableTest {
 
         assertThat(routeTable.getRoute(outLink), is(stubRoute(0, 2, path())));
     }
-
 
     @Test
     public void
@@ -262,11 +246,11 @@ public class RouteTableTest {
 
     @Test
     public void
-    getExclRoute_ForEmptyTable_InvalidRoute() throws Exception {
+    getAltRoute_ForEmptyTable_InvalidRoute() throws Exception {
         Node destination = Node.newNode(0);
         RouteTable routeTable = new RouteTable(destination);    // maybe any destination node
 
-        assertThat(routeTable.getExclRoute(anyStubLink()), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getAlternativeRoute(anyStubLink()), is(Route.invalidRoute(destination)));
     }
 
     @Test
@@ -315,35 +299,35 @@ public class RouteTableTest {
 
     @Test
     public void
-    getExclRoute_IgnoringOutLink0To2ForDestination0WithRoute0ForOutLink0To1AndRoute1ForOutLink0To2_Route0()
+    getAltRoute_IgnoringOutLink0To2ForDestination0WithRoute0ForOutLink0To1AndRoute1ForOutLink0To2_Route0()
             throws Exception {
         RouteTable routeTable = table(
                                 stubOutLink(0, 1),     stubOutLink(0, 2),
                 destination(0), stubRoute(0, path()),  stubRoute(1, path())
         );
 
-        assertThat(routeTable.getExclRoute(stubLink(0, 2)), is(route(0, stubAttr(0), path())));
+        assertThat(routeTable.getAlternativeRoute(stubLink(0, 2)), is(route(0, stubAttr(0), path())));
     }
 
     @Test
     public void
-    getExclRoute_IgnoringOutLink0To1ForDestination0OnTableWithOnlyOutLink0To1_Null() throws Exception {
+    getAltRoute_IgnoringOutLink0To1ForDestination0OnTableWithOnlyOutLink0To1_Null() throws Exception {
         RouteTable routeTable = table(
                                 stubOutLink(0, 1),
                 destination(0), stubRoute(0, path())
         );
 
-        assertThat(routeTable.getExclRoute(stubLink(0, 1)), is(nullValue()));
+        assertThat(routeTable.getAlternativeRoute(stubLink(0, 1)), is(nullValue()));
     }
 
     @Test
     public void
-    getExclRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
+    getAltRoute_ForOutLinkWithImplicitInvalidRoute_InvalidRoute() throws Exception {
         RouteTable routeTable = table(destination(0), stubOutLink(0, 1), stubOutLink(0, 2));
         routeTable.setRoute(stubLink(0, 1), route(0, stubAttr(0), path()));
         Node destination = Node.newNode(0);
 
-        assertThat(routeTable.getExclRoute(stubLink(0, 1)), is(Route.invalidRoute(destination)));
+        assertThat(routeTable.getAlternativeRoute(stubLink(0, 1)), is(Route.invalidRoute(destination)));
     }
 
 

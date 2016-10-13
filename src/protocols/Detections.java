@@ -26,17 +26,17 @@ interface Detections {
 
     /**
      * Implementation of detection 2. Detection 2 detects if the learned route's attribute is preferred over the
-     * attribute of ExclRoute (the best route not learned from the same neighbour as the new learned route) <b>and</b>
-     * the subpath of the learned route after the learning node is equal to the ExclRoute' path.
+     * attribute of the alternative route (the best route not learned from the same neighbour as the new learned route)
+     * <b>and</b> the subpath of the learned route after the learning node is equal to the alternative route's path.
      *
      * @param learningNode  node the learned a new route.
      * @param learnedRoute  new learned route.
-     * @param exclRoute     best route learned from any other but the neighbor of the new learned route.
+     * @param alternativeRoute     best route learned from any other but the neighbor of the new learned route.
      * @return true if the detection condition is met.
      */
-    static boolean detection2(ConnectedNode learningNode, Route learnedRoute, Route exclRoute) {
-        return learnedRoute.getAttribute().compareTo(exclRoute.getAttribute()) < 0
-                && learnedRoute.getPath().getPathAfter(learningNode).equals(exclRoute.getPath());
+    static boolean detection2(ConnectedNode learningNode, Route learnedRoute, Route alternativeRoute) {
+        return learnedRoute.getAttribute().compareTo(alternativeRoute.getAttribute()) < 0
+                && learnedRoute.getPath().getPathAfter(learningNode).equals(alternativeRoute.getPath());
     }
 
 }
