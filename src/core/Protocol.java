@@ -42,5 +42,8 @@ public interface Protocol {
      */
     void detectionInfo(Link link, Route learnedRoute, Route alternativeRoute);
 
+    /**
+     * Resets the state of the protocol. Protocols must be reset before each simulation.
+     */
     void reset();
 }
