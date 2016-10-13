@@ -14,8 +14,8 @@ public class D2R1Protocol implements Protocol {
     private final Reaction1 reaction = new Reaction1();
 
     @Override
-    public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
-        return Detections.detection2(link.getSource(), learnedRoute, exclRoute);
+    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute) {
+        return Detections.detection2(link.getSource(), learnedRoute, alternativeRoute);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class BGPProtocol implements Protocol {
      * @return false
      */
     @Override
-    public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
+    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute) {
         return false;
     }
 
