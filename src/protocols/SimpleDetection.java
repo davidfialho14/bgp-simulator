@@ -22,4 +22,9 @@ public class SimpleDetection implements Detection {
         return learnedRoute.getAttribute().compareTo(alternativeRoute.getAttribute()) < 0;
     }
 
+    @Override
+    public String toString() {
+        return "D1";
+    }
+
 }

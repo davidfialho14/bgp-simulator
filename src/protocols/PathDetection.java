@@ -31,4 +31,9 @@ public class PathDetection implements Detection {
                 && learnedRoute.getPath().getPathAfter(learningNode).equals(alternativeRoute.getPath());
     }
 
+    @Override
+    public String toString() {
+        return "D2";
+    }
+
 }

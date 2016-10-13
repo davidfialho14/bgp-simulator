@@ -57,4 +57,10 @@ public class CutOffReaction implements Reaction {
     public void reset() {
         badLinks.clear();
     }
+
+    @Override
+    public String toString() {
+        return "R1";
+    }
+
 }
