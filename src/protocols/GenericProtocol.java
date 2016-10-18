@@ -1,6 +1,7 @@
 package protocols;
 
 import core.Attribute;
+import core.NodeState;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
@@ -46,11 +47,12 @@ public class GenericProtocol implements Protocol {
      * @param link              link from which the new route was learned.
      * @param learnedRoute      new learned route.
      * @param alternativeRoute  most preferred route learned from other neighbor (not the destination node of the link)
+     * @param nodeState         state of the node before learning the new route.
      * @return true if the detection conditions are verified and false otherwise.
      */
     @Override
-    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute) {
-        return detection.isPolicyDispute(link, learnedRoute, alternativeRoute);
+    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute, NodeState nodeState) {
+        return detection.isPolicyDispute(link, learnedRoute, alternativeRoute, nodeState);
     }
 
     /**

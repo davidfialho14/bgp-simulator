@@ -1,6 +1,7 @@
 package protocols;
 
 import core.Attribute;
+import core.NodeState;
 import core.Protocol;
 import core.Route;
 import core.topology.Link;
@@ -29,7 +30,7 @@ public class BGPProtocol implements Protocol {
      * @return false
      */
     @Override
-    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute) {
+    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute, NodeState nodeState) {
         return false;
     }
 

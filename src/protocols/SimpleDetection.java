@@ -1,5 +1,6 @@
 package protocols;
 
+import core.NodeState;
 import core.Route;
 import core.topology.Link;
 
@@ -15,10 +16,11 @@ public class SimpleDetection implements Detection {
      * @param link             ignored
      * @param learnedRoute     new learned route.
      * @param alternativeRoute most preferred route learned from other neighbor (not the destination node of the link)
+     * @param nodeState        ignored
      * @return true if the attribute of the learned route is preferred to the attribute of the alternative route.
      */
     @Override
-    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute) {
+    public boolean isPolicyDispute(Link link, Route learnedRoute, Route alternativeRoute, NodeState nodeState) {
         return learnedRoute.getAttribute().compareTo(alternativeRoute.getAttribute()) < 0;
     }
 

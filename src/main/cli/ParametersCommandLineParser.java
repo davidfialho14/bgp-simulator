@@ -8,9 +8,7 @@ import io.reporters.CSVReporterFactory;
 import main.SimulatorParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
-import protocols.BGPProtocol;
-import protocols.D1R1Protocol;
-import protocols.D2R1Protocol;
+import protocols.*;
 import simulators.SimulatorFactory;
 import simulators.basic.BasicSimulatorFactory;
 import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
@@ -32,7 +30,8 @@ public class ParametersCommandLineParser {
     private static final String TOPOLOGY_FILE = "topology";
     private static final String DESTINATION = "destination";
     private static final String REPETITION_COUNT = "repetition_count";
-    private static final String ENABLED_DETECTION2 = "detection2";
+    private static final String ENABLED_DETECTION = "detection";
+    private static final String ENABLED_REACTION = "reaction";
     private static final String ENABLED_BGP = "bgp";
     private static final String DEPLOY_TIME = "deploy_time";
     private static final String INPUT_FORMAT_GRAPHVIZ = "graphviz";
@@ -54,7 +53,8 @@ public class ParametersCommandLineParser {
         options.addOption("n", TOPOLOGY_FILE, true, "topology to be simulated");
         options.addOption("d", DESTINATION, true, "simulate with the given destination id");
         options.addOption("c", REPETITION_COUNT, true, "number of repetitions");
-        options.addOption("d2", ENABLED_DETECTION2, false, "use detection 2 instead of detection 1");
+        options.addOption("dt", ENABLED_DETECTION, true, "use other detection instead of detection 1");
+        options.addOption("rt", ENABLED_DETECTION, true, "use other reaction instead of reaction 1");
         options.addOption("t", DEPLOY_TIME, true, "time deploy detection");
         options.addOption("gv", INPUT_FORMAT_GRAPHVIZ, false, "indicate the input network file is in Graphviz format");
         options.addOption("debug", DEBUG, false, "activate debugging");
@@ -185,14 +185,56 @@ public class ParametersCommandLineParser {
      * @param commandLine command line containing the parsed options
      * @return a new protocol instance.
      */
-    private Protocol getProtocol(CommandLine commandLine) {
+    private Protocol getProtocol(CommandLine commandLine) throws ParseException {
         if (commandLine.hasOption(ENABLED_BGP)) {
             return new BGPProtocol();
-        } else if (commandLine.hasOption(ENABLED_DETECTION2)) {
-            return new D2R1Protocol();
-        } else {
-            return new D1R1Protocol();
         }
+
+        // By default use the simple detection and the cut-off reaction
+        Detection detection = new SimpleDetection();
+        Reaction reaction = new CutOffReaction();
+
+        if (commandLine.hasOption(ENABLED_DETECTION)) {
+            int detectionId;
+            try {
+                detectionId = Integer.parseInt(commandLine.getOptionValue(ENABLED_DETECTION));
+            } catch (NumberFormatException e) {
+                throw new ParseException(expectedIntegerMessage("detection"));
+            }
+
+            switch (detectionId) {
+                case 1:
+                    detection = new SimpleDetection();
+                    break;
+                case 2:
+                    detection = new PathDetection();
+                    break;
+                case 3:
+                    detection = new NeighborDetection();
+                    break;
+                default:
+                    throw new ParseException(String.format("Unknown detection '%d'", detectionId));
+            }
+        }
+
+        if (commandLine.hasOption(ENABLED_REACTION)) {
+            int reactionId;
+            try {
+                reactionId = Integer.parseInt(commandLine.getOptionValue(ENABLED_REACTION));
+            } catch (NumberFormatException e) {
+                throw new ParseException(expectedIntegerMessage("reaction"));
+            }
+
+            switch (reactionId) {
+                case 1:
+                    reaction = new CutOffReaction();
+                    break;
+                default:
+                    throw new ParseException(String.format("Unknown reaction '%d'", reactionId));
+            }
+        }
+
+        return new GenericProtocol(detection, reaction);
     }
 
     /**

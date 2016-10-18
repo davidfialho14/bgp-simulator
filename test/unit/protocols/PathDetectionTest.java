@@ -66,7 +66,7 @@ public class PathDetectionTest {
         Route learnedRoute = stubRoute(destination, learnedAttribute, learnedPath);
         Route alternativeRoute = stubRoute(destination, alternativeAttribute, alternativePath);
 
-        assertThat(detection.isPolicyDispute(link, learnedRoute, alternativeRoute), is(expectedResult));
+        assertThat(detection.isPolicyDispute(link, learnedRoute, alternativeRoute, null), is(expectedResult));
     }
 
 }
