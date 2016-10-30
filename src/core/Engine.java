@@ -177,12 +177,9 @@ public class Engine {
             path = invalidPath();
         }
 
-        Node neighbour = attribute != invalidAttr() ? link.getDestination() : null;
-
         Route learnedRoute = newRouteFrom(route)
                 .withAttribute(attribute)
                 .withPath(path)
-                .andNewSelectedAttribute(neighbour, route.getAttribute())
                 .build();
 
         eventGenerator.fireLearnEvent(new LearnEvent(link, learnedRoute));

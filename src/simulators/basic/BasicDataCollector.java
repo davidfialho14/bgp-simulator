@@ -125,7 +125,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     }
 
     /**
-     * Invoked when a detect event occurs.
+     * Invoked when a detect event occurs. It checks if the detection was a false positive.
      *
      * @param event detect event that occurred.
      */
@@ -133,17 +133,18 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     public void onDetected(DetectEvent event) {
         Path cycle = event.getCycle();
 
-        // start with the selected attribute of the first node
-        Attribute initialAttribute = event.getLearnedRoute().getSelectedAttribute(cycle.getSource());
-        Attribute attribute = initialAttribute;
+        // start with the alternative route's attribute
+        Attribute initialAttribute = event.getAlternativeRoute().getAttribute();
 
         // extend the attribute along the path
+        Attribute attribute = initialAttribute;
         Iterator<Link> linkIterator = cycle.inLinksIterator();
         while (linkIterator.hasNext()) {
             attribute = linkIterator.next().extend(attribute);
         }
 
-        // it's guaranteed a false positive if the extend attribute along the cycle is not better the initial attribute
+        // it is a false positive if the alternative route's attribute when extended along the cycle
+        // returns an attribute with equal or lower preference
         boolean falsePositive = (attribute.compareTo(initialAttribute) >= 0);
 
         dataset.addDetection(new Detection(event.getDetectingNode(), event.getOutLink(), cycle,
