@@ -217,6 +217,8 @@ public class SimulationEventGenerator {
      * Removes all listeners from the event generator.
      */
     public void clearAll() {
+        startListeners.clear();
+        endListeners.clear();
         importListeners.clear();
         learnListeners.clear();
         selectListeners.clear();
