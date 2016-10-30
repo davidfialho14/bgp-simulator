@@ -77,7 +77,17 @@ public class RouteTable {
      * @param outLink out-link to be removed.
      */
     public void removeOutLink(Link outLink) {
-        routes.remove(outLink.getDestination());
+        Node neighbor = outLink.getDestination();
+
+        // remove the neighbor from the table
+        routes.remove(neighbor);
+
+        if (selectedNeighbour != null && selectedNeighbour.equals(neighbor)) {
+            // node was selecting the neighbor to be removed
+            // need to re-select
+            reselect();
+        }
+
     }
 
     /**
@@ -110,17 +120,8 @@ public class RouteTable {
 
         if (outLink.getDestination().equals(selectedNeighbour)) {
             // the selected route is no longer valid
-
             // re-select the best route
-            selectedRoute = null;
-            for (Node neighbour : routes.keySet()) {
-                Route neighbourRoute = getRoute(neighbour);
-
-                if ((selectedRoute == null || selectedRoute.compareTo(neighbourRoute) > 0)) {
-                    selectedRoute = neighbourRoute;
-                    selectedNeighbour = neighbour;
-                }
-            }
+            reselect();
 
         } else if (route.compareTo(selectedRoute) < 0) {
             selectedRoute = route;
@@ -267,6 +268,25 @@ public class RouteTable {
         }
 
         return bestRoute;
+    }
+
+    /**
+     * Selects the neighbor with the best route. It updates the selected route and the selected neighbor if
+     * necessary.
+     */
+    private void reselect() {
+
+        selectedRoute = invalidRoute(destination);
+        selectedNeighbour = null;
+        for (Node neighbour : routes.keySet()) {
+            Route neighbourRoute = getRoute(neighbour);
+
+            if (selectedRoute.compareTo(neighbourRoute) > 0) {
+                // update
+                selectedRoute = neighbourRoute;
+                selectedNeighbour = neighbour;
+            }
+        }
     }
 
 }
