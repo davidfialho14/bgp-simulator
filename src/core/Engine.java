@@ -289,6 +289,10 @@ public class Engine {
                 ConnectedNode learningNode = scheduledRoute.getLink().getSource();
                 process(state.get(learningNode), scheduledRoute.getLink(), scheduledRoute.getRoute());
             }
+
+            if (!scheduler.hasRoute()) {
+                eventGenerator.fireTerminateEvent(new TerminateEvent());
+            }
         }
     }
 
