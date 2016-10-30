@@ -8,7 +8,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static core.Route.invalidRoute;
 
@@ -230,13 +232,18 @@ public class RouteTable {
 
 
     private TextTable getPrintableTable() {
-        String[] columns = routes.keySet().stream()
-                .map(Node::toString)
-                .toArray(String[]::new);
+        String[] columns = {"Neighbors", "Routes"};
 
-        Object[] routes = this.routes.values().toArray();
-        Object[][] table = new Route[1][routes.length];
-        System.arraycopy(routes, 0, table[0], 0, routes.length);
+        // create table with N rows and 2 columns
+        // N is the number of neighbors
+        String[][] table = new String[routes.size()][2];
+
+        final Iterator<Integer> entryIndex = IntStream.range(0, routes.size()).iterator();
+        routes.entrySet().forEach(entry -> {
+            Integer index = entryIndex.next();
+            table[index][0] = entry.getKey().toString();
+            table[index][1] = entry.getValue().toString();
+        });
 
         return new TextTable(columns, table);
     }
