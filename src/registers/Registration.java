@@ -157,6 +157,15 @@ public class Registration {
             return this;
         }
 
+        public Register terminateEvents() {
+            this.registrable.add(() -> engine.getEventGenerator()
+                    .addTerminateListener((TerminateListener) eventListener));
+            this.unregistrable.add(() -> engine.getEventGenerator()
+                    .removeTerminateListener((TerminateListener) eventListener));
+
+            return this;
+        }
+
         public Registration register() {
             return new Registration(engine, registrable, unregistrable);
         }
