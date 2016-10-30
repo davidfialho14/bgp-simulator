@@ -3,9 +3,6 @@ package core;
 import core.topology.Node;
 import core.topology.Policy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static core.InvalidAttribute.invalidAttr;
 import static core.InvalidPath.invalidPath;
 
@@ -25,8 +22,6 @@ public class Route implements Comparable<Route> {
     private Attribute attribute;
     private Path path;
 
-    private final Map<Node, Attribute> selectedAttributes;
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Constructors
@@ -43,23 +38,19 @@ public class Route implements Comparable<Route> {
         this.destination = route.destination;
         this.attribute = route.attribute;
         this.path = Path.copy(route.path);
-        this.selectedAttributes = new HashMap<>(route.selectedAttributes);
     }
 
     /**
      * Constructs a new route given the necessary fields. Must be private because it show some implementation details
      * like the container used to store selected attributes.
-     *
-     * @param destination destination of the route.
+     *  @param destination destination of the route.
      * @param attribute policy attribute of the route.
      * @param path path to reach the destination.
-     * @param selectedAttributes map with the selected attributes
      */
-    private Route(Node destination, Attribute attribute, Path path, Map<Node, Attribute> selectedAttributes) {
+    private Route(Node destination, Attribute attribute, Path path) {
         this.destination = destination;
         this.attribute = attribute;
         this.path = path;
-        this.selectedAttributes = selectedAttributes;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -98,7 +89,7 @@ public class Route implements Comparable<Route> {
      * @return new invalid Route instance.
      */
     public static Route invalidRoute(Node destination) {
-        return new Route(destination, invalidAttr(), invalidPath(), new HashMap<>());
+        return new Route(destination, invalidAttr(), invalidPath());
     }
 
     /**
@@ -109,7 +100,7 @@ public class Route implements Comparable<Route> {
      * @return new self Route instance to the given node.
      */
     public static Route createSelf(Node node, Policy policy) {
-        return new Route(node, policy.createSelf(node), new Path(), new HashMap<>());
+        return new Route(node, policy.createSelf(node), new Path());
     }
 
     /**
@@ -127,8 +118,6 @@ public class Route implements Comparable<Route> {
         private final Route originalRoute;
 
         private Attribute attribute = null;
-        private Node selectingNode = null;
-        private Attribute selectedAttribute = null;
         private Path path = null;
 
         public Builder(Route originalRoute) {
@@ -145,12 +134,6 @@ public class Route implements Comparable<Route> {
             return this;
         }
 
-        public Builder andNewSelectedAttribute(Node selectingNode, Attribute selectedAttribute) {
-            this.selectingNode = selectingNode;
-            this.selectedAttribute = selectedAttribute;
-            return this;
-        }
-
         public Route build() {
 
             if (attribute == null) {
@@ -159,14 +142,7 @@ public class Route implements Comparable<Route> {
                 path = Path.copy(originalRoute.path);
             }
 
-            // copy the original route's selected attributes
-            Map<Node, Attribute> selectedAttributes = new HashMap<>(originalRoute.selectedAttributes);
-
-            if (selectingNode != null) {
-                selectedAttributes.put(selectingNode, selectedAttribute);
-            }
-
-            return new Route(originalRoute.destination, attribute, path, selectedAttributes);
+            return new Route(originalRoute.destination, attribute, path);
         }
 
     }
@@ -285,23 +261,6 @@ public class Route implements Comparable<Route> {
         return "Route(" + destination +
                        ", " + attribute +
                        ", " + path + ')';
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - For selected attributes
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Returns the attribute selected by a node in the routes path.
-     *
-     * @param node node to get selected attribute for.
-     * @return the attribute selected by the node if the node belongs to teh rout's path or null if the given node
-     * is not part of the route's path.
-     */
-    public Attribute getSelectedAttribute(Node node) {
-        return selectedAttributes.get(node);
     }
 
 }
