@@ -127,12 +127,21 @@ public class Engine {
      * @param brokenLink link that was broken.
      */
     public void onBrokenLink(Link brokenLink) {
-        NodeState sourceNodeState = currentState.get(brokenLink.getSource());
-        Node destination = sourceNodeState.getTable().getDestination();
-        processSelection(sourceNodeState, brokenLink, invalidRoute(destination));
-
         // remove all routes being exported through this link
         scheduler.removeRoutes(brokenLink);
+
+        NodeState sourceNodeState = currentState.get(brokenLink.getSource());
+        Node prevSelectedNeighbor = sourceNodeState.getTable().getSelectedNeighbour();
+
+        // remove neighbor from the source node's route table
+        sourceNodeState.getTable().removeOutLink(brokenLink);
+
+        // when removing a neighbor from the route table the selected neighbor might change
+        // if that happens, the new selection must be exported
+        Node newSelectedNeighbor = sourceNodeState.getTable().getSelectedNeighbour();
+        if (prevSelectedNeighbor != null && !prevSelectedNeighbor.equals(newSelectedNeighbor)) {
+            exportToInNeighbours(brokenLink.getSource(), sourceNodeState.getTable().getSelectedRoute());
+        }
     }
 
     //------------- PACKAGE METHODS -----------------------------------------------------------------------------------
