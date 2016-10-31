@@ -31,4 +31,16 @@ public class LinkFileReaderTest {
         }
     }
 
+    @Test
+    public void readAllLinks_DirtyValidLinkFile_ReadOnlyValidLinksInTheFile() throws Exception {
+
+        UnlabelledLink[] expectedLinks = {
+                link(1, 2), link(1, 3), link(2, 3), link(10, 22)
+        };
+
+        try (LinkFileReader reader = new LinkFileReader(file("dirty_valid_link_file.txt"))) {
+            assertThat(reader.readAllLinks(), is(asList(expectedLinks)));
+        }
+    }
+
 }

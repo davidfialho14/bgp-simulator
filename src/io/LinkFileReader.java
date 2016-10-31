@@ -38,14 +38,17 @@ public class LinkFileReader implements AutoCloseable {
     private static UnlabelledLink lineToLink(String line) {
         String[] splitLine = line.split("\\|");
 
-        if (splitLine.length != 2) {
+        try {
+            int sourceId = Integer.parseInt(splitLine[0]);
+            int destinationId = Integer.parseInt(splitLine[1]);
+
+            return new UnlabelledLink(sourceId, destinationId);
+
+        } catch (NumberFormatException e) {
+            // this line is invalid
             return null;
         }
 
-        int sourceId = Integer.parseInt(splitLine[0]);
-        int destinationId = Integer.parseInt(splitLine[1]);
-
-        return new UnlabelledLink(sourceId, destinationId);
     }
 
     @Override
