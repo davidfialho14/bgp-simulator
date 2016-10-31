@@ -15,8 +15,8 @@ public class UnlabelledLink {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final ConnectedNode source;
-    private final ConnectedNode destination;
+    protected final ConnectedNode source;
+    protected final ConnectedNode destination;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
