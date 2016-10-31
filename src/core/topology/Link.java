@@ -1,6 +1,7 @@
 package core.topology;
 
 import core.Attribute;
+import core.UnlabelledLink;
 
 
 /**
@@ -8,7 +9,7 @@ import core.Attribute;
  * destination node. Each link is associated with a label modelling the relationship between the two nodes.
  * Link objects are immutable.
  */
-public class Link {
+public class Link extends UnlabelledLink {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -16,8 +17,6 @@ public class Link {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final ConnectedNode source;
-    private final ConnectedNode destination;
     private final Label label;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -33,8 +32,7 @@ public class Link {
      * @param label label associated with the link.
 	 */
 	public Link(ConnectedNode source, ConnectedNode destination, Label label) {
-		this.source = source;
-        this.destination = destination;
+		super(source, destination);
         this.label = label;
 	}
 
@@ -45,8 +43,7 @@ public class Link {
      * @param label label associated with the link.
      */
     public Link(int srcId, int destId, Label label) {
-        this.source = new ConnectedNode(srcId);
-        this.destination = new ConnectedNode(destId);
+        super(srcId, destId);
         this.label = label;
     }
 
@@ -55,22 +52,6 @@ public class Link {
      *  Public Interface
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-	/**
-	 * Returns the source node of the link.
-	 * @return the source node of the link.
-     */
-	public ConnectedNode getSource() {
-		return this.source;
-	}
-
-	/**
-	 * Returns the destination node of the link.
-	 * @return the destination node of the link.
-	 */
-	public ConnectedNode getDestination() {
-		return this.destination;
-	}
 
     /**
      * Returns the label associated with the link.
