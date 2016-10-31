@@ -28,13 +28,30 @@ public class LinkFileReader implements AutoCloseable {
         reader = new BufferedReader(new FileReader(linkFile));
     }
 
+    /**
+     * Reads all links available in the link file. Invalid lines in the file will be ignored.
+     *
+     * @return list containing the links in the same order that they were found in the link file
+     * @throws IOException if an IO error occurs
+     */
     public List<UnlabelledLink> readAllLinks() throws IOException {
         return Files.lines(Paths.get(linkFile.getPath()))
-                    .map(LinkFileReader::lineToLink)
-                    .filter(link -> link != null)
+                    .map(LinkFileReader::lineToLink)    // convert line to link
+                    .filter(link -> link != null)       // filter out invalid lines
                     .collect(Collectors.toList());
     }
 
+    @Override
+    public void close() throws Exception {
+        reader.close();
+    }
+
+    /**
+     * Converts a line from a link file to a link. If the line is invalid it return null.
+     *
+     * @param line line to parse
+     * @return link corresponding to the link or null if the line format is invalid
+     */
     private static UnlabelledLink lineToLink(String line) {
         String[] splitLine = line.split("\\|");
 
@@ -49,11 +66,6 @@ public class LinkFileReader implements AutoCloseable {
             return null;
         }
 
-    }
-
-    @Override
-    public void close() throws Exception {
-        reader.close();
     }
 
 }

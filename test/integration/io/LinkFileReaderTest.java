@@ -11,10 +11,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LinkFileReaderTest {
 
+    /**
+     * Readable way to access the test file. Takes the name of the test file and returns a file object with
+     * for the corresponding test file. It includes as the parent directory the directory containing all
+     * test files for this test case.
+     */
     private static File file(String filename) {
         return new File("test/integration/io/link_file_reader", filename);
     }
 
+    /**
+     * Readable way to create an Unlabelled link.
+     */
     private static UnlabelledLink link(int srcId, int destId) {
         return new UnlabelledLink(srcId, destId);
     }
