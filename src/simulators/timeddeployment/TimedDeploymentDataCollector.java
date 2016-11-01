@@ -1,8 +1,8 @@
 package simulators.timeddeployment;
 
 import core.Engine;
-import core.TimeListener;
-import core.events.*;
+import core.events.ExportEvent;
+import core.events.ExportListener;
 import registers.Registration;
 import simulators.DataCollector;
 import simulators.Dataset;
@@ -14,8 +14,7 @@ import static registers.Registration.registrationFor;
 /**
  * Collects all data that can be stored in a timed deployment dataset.
  */
-public class TimedDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener,
-        StartListener {
+public class TimedDeploymentDataCollector implements DataCollector, ExportListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -87,14 +86,14 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
      */
     @Override
     public void register(Engine engine) throws IllegalStateException {
+
         if (registration.isRegistered()) {
             throw new IllegalStateException("can not register collector that is already registered");
         }
 
+        basicDataCollector.register(engine);
         registration = registrationFor(engine, this)
                 .exportEvents()
-                .detectEvents()
-                .timeEvents()
                 .register();
     }
 
@@ -105,6 +104,7 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
     @Override
     public void unregister() {
         registration.cancel();
+        basicDataCollector.unregister();
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -128,37 +128,4 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
         }
     }
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Delegate methods for basic dataset (unchanged)
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Invoked the time property of the engine changes
-     *
-     * @param newTime the new time value
-     */
-    public void onTimeChange(long newTime) {
-        basicDataCollector.onTimeChange(newTime);
-    }
-
-    /**
-     * Invoked when a detect event occurs.
-     *
-     * @param event detect event that occurred.
-     */
-    public void onDetected(DetectEvent event) {
-        basicDataCollector.onDetected(event);
-    }
-
-    /**
-     * Invoked when a start event occurs.
-     *
-     * @param event start event that occurred.
-     */
-    @Override
-    public void onStarted(StartEvent event) {
-        basicDataCollector.onStarted(event);
-    }
 }
