@@ -348,25 +348,6 @@ public class CSVReporter implements Reporter {
     }
 
     /**
-     * Prints multiple groups of headers.
-     *
-     * @param printer       printer used to print.
-     * @param headerGroups  groups of headers to print.
-     * @throws IOException
-     */
-    private void printHeaders(CSVPrinter printer, String[]... headerGroups) throws IOException {
-
-        for (String[] headers : headerGroups) {
-            for (String header : headers) {
-                printer.print(header);
-            }
-        }
-
-        printer.println();
-
-    }
-
-    /**
      * Returns the headers for the basic dataset.
      *
      * @param dataset data set to get headers for
