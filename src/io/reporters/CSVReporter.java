@@ -105,6 +105,14 @@ public class CSVReporter implements Reporter {
         writeDetections(dataSet);
     }
 
+    /**
+     * The difference from the version with a basic data is set is that: Adds the number of messages after
+     * deployment to the counts file.
+     *
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param timedDeploymentDataset timed deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
     @Override
     public void writeData(BasicDataset basicDataset, TimedDeploymentDataset timedDeploymentDataset)
             throws IOException {
@@ -123,6 +131,14 @@ public class CSVReporter implements Reporter {
         writeDetections(basicDataset);
     }
 
+    /**
+     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment
+     * dataset report method.
+     *
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param gradualDeploymentDataset gradual deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
+     */
     @Override
     public void writeData(BasicDataset basicDataset, GradualDeploymentDataset gradualDeploymentDataset)
             throws IOException {
