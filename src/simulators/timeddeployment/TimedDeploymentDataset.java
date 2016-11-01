@@ -31,6 +31,15 @@ public class TimedDeploymentDataset implements Dataset {
         return messageCountAfterDeployment;
     }
 
+    /**
+     * Returns the label for the data property Messages After Deployment Count.
+     *
+     * @return the label for the data property Messages After Deployment Count
+     */
+    public String getMessageCountAfterDeploymentLabel() {
+        return "Messages After Deployment Count";
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface - Methods to update the data specific to timed deployment simulations

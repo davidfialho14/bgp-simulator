@@ -46,6 +46,15 @@ public class GradualDeploymentDataset implements Dataset {
         return this.deployingNodes.size();
     }
 
+    /**
+     * Returns the label for the data property Deploying Nodes Count.
+     *
+     * @return the label for the data property Deploying Nodes Count
+     */
+    public String getDeployingNodesCountLabel() {
+        return "Deploying Nodes Count";
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface - Methods to update the data
