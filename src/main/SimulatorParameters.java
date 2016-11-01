@@ -7,6 +7,9 @@ import io.reporters.CSVReporterFactory;
 import io.reporters.ReporterFactory;
 import protocols.BGPProtocol;
 import simulators.SimulatorFactory;
+import simulators.basic.BasicSimulatorFactory;
+import simulators.gradualdeployment.GradualDeploymentSimulatorFactory;
+import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 
@@ -149,10 +152,12 @@ public class SimulatorParameters {
         private Protocol protocol = new BGPProtocol();
         private TopologyReaderFactory readerFactory = new GraphvizReaderFactory();
         private ReporterFactory reporterFactory = new CSVReporterFactory();
-        private SimulatorFactory simulatorFactory = null;
+        private Integer deployTime = null;
         private boolean debugEnabled = false;
         private File anycastFile = null;
         private Long seed = null;
+        private Integer deployPeriod = null;
+        private Integer deployPercentage = null;
 
         public Builder(File topologyFile, File reportFile) {
             this.topologyFile = topologyFile;
@@ -200,8 +205,14 @@ public class SimulatorParameters {
             return this;
         }
 
-        public Builder simulatorFactory(SimulatorFactory simulatorFactory) {
-            this.simulatorFactory = simulatorFactory;
+        public Builder timedDeployment(Integer deployTime) {
+            this.deployTime = deployTime;
+            return this;
+        }
+
+        public Builder gradualDeployment(Integer deployPeriod, Integer deployPercentage) {
+            this.deployPeriod = deployPeriod;
+            this.deployPercentage = deployPercentage;
             return this;
         }
 
@@ -221,9 +232,21 @@ public class SimulatorParameters {
         }
 
         public SimulatorParameters build() {
+
+            SimulatorFactory simulatorFactory;
+
+            if (deployTime != null) {
+                simulatorFactory = new TimedDeploymentSimulatorFactory(protocol, deployTime);
+            } else if (deployPeriod != null && deployPercentage != null) {
+                simulatorFactory = new GradualDeploymentSimulatorFactory(
+                        protocol, deployPeriod, deployPercentage);
+            } else {
+                simulatorFactory = new BasicSimulatorFactory(protocol);
+            }
+
             return new SimulatorParameters(topologyFile, reportFile, minDelay, maxDelay, destinationId,
-                    repetitionCount, protocol, readerFactory, reporterFactory, simulatorFactory, debugEnabled,
-                    anycastFile, seed);
+                    repetitionCount, protocol, readerFactory, reporterFactory, simulatorFactory,
+                    debugEnabled, anycastFile, seed);
         }
 
     }

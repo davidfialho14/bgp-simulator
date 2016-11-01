@@ -9,9 +9,6 @@ import main.SimulatorParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import protocols.*;
-import simulators.SimulatorFactory;
-import simulators.basic.BasicSimulatorFactory;
-import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 
@@ -91,7 +88,7 @@ public class ParametersCommandLineParser {
                 .destinationId(destinationId)
                 .repetitionCount(getRepetitionCount(commandLine))
                 .protocol(getProtocol(commandLine))
-                .simulatorFactory(getSimulatorFactory(commandLine))
+                .timedDeployment(getDeployTime(commandLine))
                 .reporterFactory(new CSVReporterFactory())
                 .debugEnabled(isDebugEnabled(commandLine))
                 .anycastFile(getAnycastFile(commandLine))
@@ -238,29 +235,17 @@ public class ParametersCommandLineParser {
     }
 
     /**
-     * Obtains the simulator factory implementation based on the available options in the command line.
-     *
-     * @param commandLine command line containing the parsed options.
-     * @return a new simulator factory instance.
-     * @throws ParseException if the deploy time is not an integer value.
-     */
-    private SimulatorFactory getSimulatorFactory(CommandLine commandLine) throws ParseException {
-
-        if (commandLine.hasOption(DEPLOY_TIME)) {
-            return new TimedDeploymentSimulatorFactory(getProtocol(commandLine), getDeployTime(commandLine));
-        } else {
-            return new BasicSimulatorFactory(getProtocol(commandLine));
-        }
-    }
-
-    /**
      * Obtains the deploy time argument from the command line in integer format.
      *
      * @param commandLine command line containing the parsed options.
-     * @return a new simulator factory instance.
+     * @return the deploy time if available or null if not
      * @throws ParseException if the deploy time is not an integer.
      */
-    private int getDeployTime(CommandLine commandLine) throws ParseException {
+    private Integer getDeployTime(CommandLine commandLine) throws ParseException {
+
+        if (!commandLine.hasOption(DEPLOY_TIME)) {
+            return null;
+        }
 
         try {
             return Integer.parseInt(commandLine.getOptionValue(DEPLOY_TIME));
