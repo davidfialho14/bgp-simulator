@@ -4,7 +4,7 @@ import core.Engine;
 import core.Protocol;
 import core.State;
 import core.topology.ConnectedNode;
-import simulators.Dataset;
+import simulators.DataCollector;
 import simulators.Simulator;
 import statemodifiers.StateModifiers;
 import utils.PeriodicTimer;
@@ -60,13 +60,14 @@ public class GradualDeploymentSimulator extends Simulator {
     }
 
     /**
-     * Gives access to the data collected during the last simulation.
+     * Gives access to the data collector used during the last simulation. The data collector will contain
+     * the data collected.
      *
-     * @return a dataset with the data collected in the last simulation.
+     * @return the data collector used to collect data in the last simulation.
      */
     @Override
-    public Dataset getData() {
-        return dataCollector.getDataset();
+    public DataCollector getDataCollector() {
+        return dataCollector;
     }
 
     /**

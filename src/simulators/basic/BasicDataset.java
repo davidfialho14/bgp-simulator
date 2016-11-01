@@ -1,11 +1,9 @@
 package simulators.basic;
 
 import core.topology.ConnectedNode;
-import io.reporters.Reporter;
 import simulators.Dataset;
 import simulators.Detection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -161,22 +159,6 @@ public class BasicDataset implements Dataset {
         detections.clear();
         simulationTime = 0;
         falsePositiveCount = 0;
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Visited report method
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Reports the current collected data using the given reporter implementation.
-     *
-     * @param reporter reporter implementation to be used.
-     */
-    @Override
-    public void report(Reporter reporter) throws IOException {
-        reporter.writeData(this);
     }
 
 }

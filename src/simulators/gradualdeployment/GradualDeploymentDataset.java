@@ -1,12 +1,10 @@
 package simulators.gradualdeployment;
 
 import core.topology.ConnectedNode;
-import io.reporters.Reporter;
 import simulators.Dataset;
 import simulators.Detection;
 import simulators.basic.BasicDataset;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -157,22 +155,6 @@ public class GradualDeploymentDataset implements Dataset {
      */
     public void addDetection(Detection detection) {
         basicDataset.addDetection(detection);
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Visited report method
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Reports the current collected data using the given reporter implementation.
-     *
-     * @param reporter reporter implementation to be used.
-     */
-    @Override
-    public void report(Reporter reporter) throws IOException {
-        reporter.writeData(this);
     }
 
 }
