@@ -105,6 +105,56 @@ public class CSVReporter implements Reporter {
         writeDetections(dataSet);
     }
 
+    @Override
+    public void writeData(BasicDataset basicDataset, TimedDeploymentDataset timedDeploymentDataset)
+            throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            if (!countsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, BASIC_COUNTS_HEADERS, TIMED_DEPLOYMENT_COUNTS_HEADERS);
+                countsHeadersWereAlreadyPrinted = true;
+            }
+
+            printCounts(printer, basicDataset);
+            printer.print(timedDeploymentDataset.getMessageCountAfterDeployment());
+            printer.println();
+        }
+
+        writeDetections(basicDataset);
+    }
+
+    @Override
+    public void writeData(BasicDataset basicDataset, GradualDeploymentDataset gradualDeploymentDataset)
+            throws IOException {
+
+        try (CSVPrinter printer = getCountsFilePrinter()) {
+            if (!countsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, BASIC_COUNTS_HEADERS, GRADUAL_DEPLOYMENT_COUNTS_HEADERS);
+                countsHeadersWereAlreadyPrinted = true;
+            }
+
+            printCounts(printer, basicDataset);
+            printer.print(gradualDeploymentDataset.getDeployingNodesCount());
+            printer.println();
+        }
+
+        writeDetections(basicDataset);
+
+        // write the deploying nodes
+        try (CSVPrinter printer = getDeploymentsFilePrinter()) {
+            if (!deploymentsHeadersWereAlreadyPrinted) {
+                printHeaders(printer, DEPLOYMENTS_HEADERS);
+                deploymentsHeadersWereAlreadyPrinted = true;
+            }
+
+            printer.print(currentSimulationNumber());
+            for (ConnectedNode node : gradualDeploymentDataset.getDeployingNodes()) {
+                printer.print(node);
+            }
+            printer.println();
+        }
+    }
+
     /**
      * The difference from the version with a basic data is set is that: Adds the number of messages after deployment
      * to the counts file.
