@@ -2,8 +2,6 @@ package simulators.gradualdeployment;
 
 import core.topology.ConnectedNode;
 import simulators.Dataset;
-import simulators.Detection;
-import simulators.basic.BasicDataset;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +19,6 @@ public class GradualDeploymentDataset implements Dataset {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final BasicDataset basicDataset = new BasicDataset();   // composition
     private final List<ConnectedNode> deployingNodes = new ArrayList<>();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -49,15 +46,6 @@ public class GradualDeploymentDataset implements Dataset {
         return this.deployingNodes.size();
     }
 
-    /**
-     * Gives access to the underlying basic dataset.
-     *
-     * @return the basic dataset storing the basic data.
-     */
-    public BasicDataset getBasicDataset() {
-        return basicDataset;
-    }
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface - Methods to update the data
@@ -77,84 +65,7 @@ public class GradualDeploymentDataset implements Dataset {
      * Clears all data from the dataset.
      */
     public void clear() {
-        basicDataset.clear();
         deployingNodes.clear();
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Delegate methods for basic dataset (unchanged)
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Returns the total message count.
-     *
-     * @return total message count.
-     */
-    public int getTotalMessageCount() {
-        return basicDataset.getTotalMessageCount();
-    }
-
-    /**
-     * Returns the number of distinct nodes that detected at least once.
-     *
-     * @return number of distinct nodes with one detection.
-     */
-    public int getDetectingNodesCount() {
-        return basicDataset.getDetectingNodesCount();
-    }
-
-    /**
-     * Returns the number of cut-off links.
-     *
-     * @return number of cut-off links.
-     */
-    public int getCutOffLinksCount() {
-        return basicDataset.getCutOffLinksCount();
-    }
-
-    /**
-     * Returns a list with all the detections.
-     *
-     * @return a list with all the detections.
-     */
-    public List<Detection> getDetections() {
-        return basicDataset.getDetections();
-    }
-
-    /**
-     * Returns the total simulation time.
-     *
-     * @return total simulation time.
-     */
-    public long getSimulationTime() {
-        return basicDataset.getSimulationTime();
-    }
-
-    /**
-     * Sets the simulation time.
-     *
-     * @param time simulation time.
-     */
-    public void setSimulationTime(long time) {
-        basicDataset.setSimulationTime(time);
-    }
-
-    /**
-     * Counts a new message.
-     */
-    public void addMessage() {
-        basicDataset.addMessage();
-    }
-
-    /**
-     * Adds a new detection.
-     *
-     * @param detection detection to add.
-     */
-    public void addDetection(Detection detection) {
-        basicDataset.addDetection(detection);
     }
 
 }

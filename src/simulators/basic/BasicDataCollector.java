@@ -29,31 +29,8 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected final BasicDataset dataset;
+    protected final BasicDataset dataset = new BasicDataset();
     private Registration registration = noRegistration();
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates new basic data collector with an empty basic dataset.
-     */
-    public BasicDataCollector() {
-        dataset = new BasicDataset();
-    }
-
-    /**
-     * Creates a new basic dataset with the given basic dataset. The collector will store the collected data in the
-     * given dataset. This can be used by subclasses to define their own basic dataset
-     *
-     * @param basicDataset basic dataset to store the collected data.
-     */
-    public BasicDataCollector(BasicDataset basicDataset) {
-        dataset = basicDataset;
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *

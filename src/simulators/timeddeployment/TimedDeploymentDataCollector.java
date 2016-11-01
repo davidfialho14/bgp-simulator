@@ -26,27 +26,11 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final TimedDeploymentDataset timedDeploymentDataset;
-    private final BasicDataCollector basicDataCollector;
+    private final TimedDeploymentDataset timedDeploymentDataset = new TimedDeploymentDataset();
+    private final BasicDataCollector basicDataCollector = new BasicDataCollector();
 
     private Registration registration = noRegistration();
     private boolean deployed = false;   // flag to indicate if the deployment already took place
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates new timed deployment data collector with an empty dataset.
-     */
-    public TimedDeploymentDataCollector() {
-        timedDeploymentDataset = new TimedDeploymentDataset();
-
-        // basic data collector stores data to the underlying basic dataset of the timed deployment dataset
-        basicDataCollector = new BasicDataCollector(timedDeploymentDataset.getBasicDataset());
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *

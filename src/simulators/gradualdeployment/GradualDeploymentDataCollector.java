@@ -22,24 +22,8 @@ public class GradualDeploymentDataCollector implements DataCollector {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final GradualDeploymentDataset gradualDeploymentDataSet;
-    private final BasicDataCollector basicDataCollector;
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates new gradual deployment data collector with an empty dataset.
-     */
-    public GradualDeploymentDataCollector() {
-        gradualDeploymentDataSet = new GradualDeploymentDataset();
-
-        // basic data collector stores data to the underlying basic dataset of the timed deployment dataset
-        basicDataCollector = new BasicDataCollector(gradualDeploymentDataSet.getBasicDataset());
-    }
+    private final GradualDeploymentDataset gradualDeploymentDataSet = new GradualDeploymentDataset();
+    private final BasicDataCollector basicDataCollector = new BasicDataCollector();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *

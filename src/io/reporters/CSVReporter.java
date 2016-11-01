@@ -156,68 +156,6 @@ public class CSVReporter implements Reporter {
     }
 
     /**
-     * The difference from the version with a basic data is set is that: Adds the number of messages after deployment
-     * to the counts file.
-     *
-     * @param dataSet timed deployment data set containing the data to write in the report.
-     * @throws IOException if it fails to write to the report resource.
-     */
-    @Override
-    public void writeData(TimedDeploymentDataset dataSet) throws IOException {
-
-        try (CSVPrinter printer = getCountsFilePrinter()) {
-            if (!countsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, BASIC_COUNTS_HEADERS, TIMED_DEPLOYMENT_COUNTS_HEADERS);
-                countsHeadersWereAlreadyPrinted = true;
-            }
-
-            printCounts(printer, dataSet.getBasicDataset());
-            printer.print(dataSet.getMessageCountAfterDeployment());
-            printer.println();
-        }
-
-        writeDetections(dataSet.getBasicDataset());
-    }
-
-    /**
-     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
-     * method.
-     *
-     * @param dataSet gradual deployment data set containing the data to write in the report.
-     * @throws IOException if it fails to write to the report resource.
-     */
-    @Override
-    public void writeData(GradualDeploymentDataset dataSet) throws IOException {
-
-        try (CSVPrinter printer = getCountsFilePrinter()) {
-            if (!countsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, BASIC_COUNTS_HEADERS, GRADUAL_DEPLOYMENT_COUNTS_HEADERS);
-                countsHeadersWereAlreadyPrinted = true;
-            }
-
-            printCounts(printer, dataSet.getBasicDataset());
-            printer.print(dataSet.getDeployingNodesCount());
-            printer.println();
-        }
-
-        writeDetections(dataSet.getBasicDataset());
-
-        // write the deploying nodes
-        try (CSVPrinter printer = getDeploymentsFilePrinter()) {
-            if (!deploymentsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, DEPLOYMENTS_HEADERS);
-                deploymentsHeadersWereAlreadyPrinted = true;
-            }
-
-            printer.print(currentSimulationNumber());
-            for (ConnectedNode node : dataSet.getDeployingNodes()) {
-                printer.print(node);
-            }
-            printer.println();
-        }
-    }
-
-    /**
      * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
      * simulation parameters.
      *
