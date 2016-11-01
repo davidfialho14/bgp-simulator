@@ -2,9 +2,13 @@ package simulators.gradualdeployment;
 
 import core.Engine;
 import core.topology.ConnectedNode;
+import io.reporters.Reporter;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.basic.BasicDataCollector;
+import simulators.basic.BasicDataset;
+
+import java.io.IOException;
 
 /**
  * Adds to the basic data collector, the collection of data from a gradual deployment simulation.
@@ -69,6 +73,17 @@ public class GradualDeploymentDataCollector implements DataCollector {
     @Override
     public Dataset getDataset() {
         return gradualDeploymentDataSet;
+    }
+
+    /**
+     * Reports the current collected data using the given reporter implementation. Calls the reporter's
+     * writeData(BasicDataset, GradualDeploymentDataset).
+     *
+     * @param reporter reporter implementation to be used.
+     */
+    @Override
+    public void report(Reporter reporter) throws IOException {
+        reporter.writeData((BasicDataset) basicDataCollector.getDataset(), gradualDeploymentDataSet);
     }
 
     /**

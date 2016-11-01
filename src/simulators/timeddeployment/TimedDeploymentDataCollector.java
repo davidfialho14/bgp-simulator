@@ -3,10 +3,14 @@ package simulators.timeddeployment;
 import core.Engine;
 import core.events.ExportEvent;
 import core.events.ExportListener;
+import io.reporters.Reporter;
 import registers.Registration;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.basic.BasicDataCollector;
+import simulators.basic.BasicDataset;
+
+import java.io.IOException;
 
 import static registers.Registration.noRegistration;
 import static registers.Registration.registrationFor;
@@ -76,6 +80,17 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
     @Override
     public Dataset getDataset() {
         return timedDeploymentDataset;
+    }
+
+    /**
+     * Reports the current collected data using the given reporter implementation. Calls the reporter's
+     * writeData(BasicDataset, TimedDeploymentDataset).
+     *
+     * @param reporter reporter implementation to be used.
+     */
+    @Override
+    public void report(Reporter reporter) throws IOException {
+        reporter.writeData((BasicDataset) basicDataCollector.getDataset(), timedDeploymentDataset);
     }
 
     /**
