@@ -1,12 +1,16 @@
 package simulators.timeddeployment;
 
 import core.Engine;
-import core.TimeListener;
-import core.events.*;
+import core.events.ExportEvent;
+import core.events.ExportListener;
+import io.reporters.Reporter;
 import registers.Registration;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.basic.BasicDataCollector;
+import simulators.basic.BasicDataset;
+
+import java.io.IOException;
 
 import static registers.Registration.noRegistration;
 import static registers.Registration.registrationFor;
@@ -14,8 +18,7 @@ import static registers.Registration.registrationFor;
 /**
  * Collects all data that can be stored in a timed deployment dataset.
  */
-public class TimedDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener,
-        StartListener {
+public class TimedDeploymentDataCollector implements DataCollector, ExportListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -23,27 +26,11 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final TimedDeploymentDataset timedDeploymentDataset;
-    private final BasicDataCollector basicDataCollector;
+    private final TimedDeploymentDataset timedDeploymentDataset = new TimedDeploymentDataset();
+    private final BasicDataCollector basicDataCollector = new BasicDataCollector();
 
     private Registration registration = noRegistration();
     private boolean deployed = false;   // flag to indicate if the deployment already took place
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates new timed deployment data collector with an empty dataset.
-     */
-    public TimedDeploymentDataCollector() {
-        timedDeploymentDataset = new TimedDeploymentDataset();
-
-        // basic data collector stores data to the underlying basic dataset of the timed deployment dataset
-        basicDataCollector = new BasicDataCollector(timedDeploymentDataset.getBasicDataset());
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -80,6 +67,17 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
     }
 
     /**
+     * Reports the current collected data using the given reporter implementation. Calls the reporter's
+     * writeData(BasicDataset, TimedDeploymentDataset).
+     *
+     * @param reporter reporter implementation to be used.
+     */
+    @Override
+    public void report(Reporter reporter) throws IOException {
+        reporter.writeData((BasicDataset) basicDataCollector.getDataset(), timedDeploymentDataset);
+    }
+
+    /**
      * Registers the collector as an export, detect, and time listener of the engine.
      *
      * @param engine engine used for simulating.
@@ -87,14 +85,14 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
      */
     @Override
     public void register(Engine engine) throws IllegalStateException {
+
         if (registration.isRegistered()) {
             throw new IllegalStateException("can not register collector that is already registered");
         }
 
+        basicDataCollector.register(engine);
         registration = registrationFor(engine, this)
                 .exportEvents()
-                .detectEvents()
-                .timeEvents()
                 .register();
     }
 
@@ -105,6 +103,7 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
     @Override
     public void unregister() {
         registration.cancel();
+        basicDataCollector.unregister();
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -128,37 +127,4 @@ public class TimedDeploymentDataCollector implements DataCollector, ExportListen
         }
     }
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Delegate methods for basic dataset (unchanged)
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Invoked the time property of the engine changes
-     *
-     * @param newTime the new time value
-     */
-    public void onTimeChange(long newTime) {
-        basicDataCollector.onTimeChange(newTime);
-    }
-
-    /**
-     * Invoked when a detect event occurs.
-     *
-     * @param event detect event that occurred.
-     */
-    public void onDetected(DetectEvent event) {
-        basicDataCollector.onDetected(event);
-    }
-
-    /**
-     * Invoked when a start event occurs.
-     *
-     * @param event start event that occurred.
-     */
-    @Override
-    public void onStarted(StartEvent event) {
-        basicDataCollector.onStarted(event);
-    }
 }

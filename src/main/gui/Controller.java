@@ -18,10 +18,6 @@ import main.gui.basics.NumberSpinner;
 import main.gui.fulldeployment.FullDeploymentController;
 import main.gui.gradualdeployment.GradualDeploymentController;
 import main.gui.radiobuttons.ProtocolToggleGroup;
-import simulators.SimulatorFactory;
-import simulators.basic.BasicSimulatorFactory;
-import simulators.gradualdeployment.GradualDeploymentSimulatorFactory;
-import simulators.timeddeployment.TimedDeploymentSimulatorFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -147,22 +143,19 @@ public class Controller implements Initializable {
 
         Protocol protocol = detectionGroup.getSelectedProtocol();
 
+        Integer deployPeriod = null;
+        Integer deployPercentage = null;
+        Integer deployTime = null;
+
         //
         // Choose the correct simulator factory based on the user input
         //
-        SimulatorFactory simulatorFactory;
         if (fullDeploymentFormController.activateToggle.isSelected()) {
-            int deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
-            simulatorFactory = new TimedDeploymentSimulatorFactory(protocol, deployTime);
+            deployTime = fullDeploymentFormController.detectingTimeSpinner.getValue();
 
         } else if (gradualDeploymentFormController.activateToggle.isSelected()) {
-            int deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
-            int deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
-
-            simulatorFactory = new GradualDeploymentSimulatorFactory(protocol, deployPeriod, deployPercentage);
-
-        } else {
-            simulatorFactory = new BasicSimulatorFactory(protocol);
+            deployPeriod = gradualDeploymentFormController.deployPeriodSpinner.getValue();
+            deployPercentage = gradualDeploymentFormController.deployPercentageSpinner.getValue();
         }
 
         // report filename keeps the topology file name - the extension will be defined by the reporter
@@ -173,7 +166,8 @@ public class Controller implements Initializable {
                 .destinationId(destinationIdSpinner.getValue())
                 .repetitionCount(repetitionsSpinner.getValue())
                 .protocol(protocol)
-                .simulatorFactory(simulatorFactory)
+                .timedDeployment(deployTime)
+                .gradualDeployment(deployPeriod, deployPercentage)
                 .reporterFactory(new CSVReporterFactory())
                 .build());
 

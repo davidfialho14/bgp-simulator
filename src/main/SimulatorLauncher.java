@@ -145,7 +145,7 @@ public class SimulatorLauncher {
                 progressHandler.onFinishSimulation(i);
 
                 progressHandler.onStartReporting(i, parameters.getReportFile());
-                simulator.getData().report(reporter);
+                simulator.getDataCollector().report(reporter);
                 progressHandler.onFinishReporting(i);
             }
 

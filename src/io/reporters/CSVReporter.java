@@ -10,6 +10,7 @@ import main.ExecutionStateTracker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import simulators.Detection;
 import simulators.Simulator;
@@ -29,22 +30,6 @@ import java.util.stream.Collectors;
 public class CSVReporter implements Reporter {
 
     private static final char DELIMITER = ';';
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Set of headers
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    private static final String[] BASIC_COUNTS_HEADERS = {
-            "Seed", "Time", "Total Message Count", "Detecting Nodes Count",
-            "Cut-Off Links Count", "False Positive Count"
-    };
-    private static final String[] TIMED_DEPLOYMENT_COUNTS_HEADERS = { "Messages After Deployment Count" };
-    private static final String[] GRADUAL_DEPLOYMENT_COUNTS_HEADERS = { "Deployed Nodes Count" };
-    private static final String[] DETECTIONS_HEADERS = { "Simulation", "Detections", "Detecting Nodes",
-            "Cut-Off Links", "Cycles", "Initial Attribute", "False Positive" };
-    private static final String[] DEPLOYMENTS_HEADERS = { "Simulation", "Deployed Nodes" };
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -94,7 +79,7 @@ public class CSVReporter implements Reporter {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
             if (!countsHeadersWereAlreadyPrinted) {
-                printer.printRecord((Object[]) BASIC_COUNTS_HEADERS);
+                printer.printRecord((Object[]) getHeaders(dataSet));
                 countsHeadersWereAlreadyPrinted = true;
             }
 
@@ -106,61 +91,68 @@ public class CSVReporter implements Reporter {
     }
 
     /**
-     * The difference from the version with a basic data is set is that: Adds the number of messages after deployment
-     * to the counts file.
+     * The difference from the version with a basic data is set is that: Adds the number of messages after
+     * deployment to the counts file.
      *
-     * @param dataSet timed deployment data set containing the data to write in the report.
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param timedDeploymentDataset timed deployment data set containing the data to write in the report.
      * @throws IOException if it fails to write to the report resource.
      */
     @Override
-    public void writeData(TimedDeploymentDataset dataSet) throws IOException {
+    public void writeData(BasicDataset basicDataset, TimedDeploymentDataset timedDeploymentDataset)
+            throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
             if (!countsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, BASIC_COUNTS_HEADERS, TIMED_DEPLOYMENT_COUNTS_HEADERS);
+                printer.printRecord((Object[]) getHeaders(basicDataset, timedDeploymentDataset));
                 countsHeadersWereAlreadyPrinted = true;
             }
 
-            printCounts(printer, dataSet.getBasicDataset());
-            printer.print(dataSet.getMessageCountAfterDeployment());
+            printCounts(printer, basicDataset);
+            printer.print(timedDeploymentDataset.getMessageCountAfterDeployment());
             printer.println();
         }
 
-        writeDetections(dataSet.getBasicDataset());
+        writeDetections(basicDataset);
     }
 
     /**
-     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
-     * method.
+     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment
+     * dataset report method.
      *
-     * @param dataSet gradual deployment data set containing the data to write in the report.
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param gradualDeploymentDataset gradual deployment data set containing the data to write in the report.
      * @throws IOException if it fails to write to the report resource.
      */
     @Override
-    public void writeData(GradualDeploymentDataset dataSet) throws IOException {
+    public void writeData(BasicDataset basicDataset, GradualDeploymentDataset gradualDeploymentDataset)
+            throws IOException {
 
         try (CSVPrinter printer = getCountsFilePrinter()) {
             if (!countsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, BASIC_COUNTS_HEADERS, GRADUAL_DEPLOYMENT_COUNTS_HEADERS);
+                printer.printRecord((Object[]) getHeaders(basicDataset, gradualDeploymentDataset));
                 countsHeadersWereAlreadyPrinted = true;
             }
 
-            printCounts(printer, dataSet.getBasicDataset());
-            printer.print(dataSet.getDeployingNodesCount());
+            printCounts(printer, basicDataset);
+            printer.print(gradualDeploymentDataset.getDeployingNodesCount());
             printer.println();
         }
 
-        writeDetections(dataSet.getBasicDataset());
+        writeDetections(basicDataset);
 
         // write the deploying nodes
         try (CSVPrinter printer = getDeploymentsFilePrinter()) {
             if (!deploymentsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, DEPLOYMENTS_HEADERS);
+
+                final String[] deploymentsHeaders = { "Simulation", "Deployed Nodes" };
+
+                printer.printRecord((Object[]) deploymentsHeaders);
                 deploymentsHeadersWereAlreadyPrinted = true;
             }
 
             printer.print(currentSimulationNumber());
-            for (ConnectedNode node : dataSet.getDeployingNodes()) {
+            for (ConnectedNode node : gradualDeploymentDataset.getDeployingNodes()) {
                 printer.print(node);
             }
             printer.println();
@@ -235,7 +227,13 @@ public class CSVReporter implements Reporter {
         try (CSVPrinter printer = getDetectionsFilePrinter()) {
 
             if (!detectionsHeadersWereAlreadyPrinted) {
-                printHeaders(printer, DETECTIONS_HEADERS);
+
+                final String[] detectionsHeaders = {
+                        "Simulation", "Detections", "Detecting Nodes",
+                        "Cut-Off Links", "Cycles", "Initial Attribute", "False Positive"
+                };
+
+                printer.printRecord((Object[]) detectionsHeaders);
                 detectionsHeadersWereAlreadyPrinted = true;
             }
 
@@ -254,8 +252,6 @@ public class CSVReporter implements Reporter {
             }
         }
     }
-
-
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -352,22 +348,59 @@ public class CSVReporter implements Reporter {
     }
 
     /**
-     * Prints multiple groups of headers.
+     * Returns the headers for the basic dataset.
      *
-     * @param printer       printer used to print.
-     * @param headerGroups  groups of headers to print.
-     * @throws IOException
+     * @param dataset data set to get headers for
+     * @return string array containing the headers in the correct order
      */
-    private void printHeaders(CSVPrinter printer, String[]... headerGroups) throws IOException {
+    private String[] getHeaders(BasicDataset dataset) {
 
-        for (String[] headers : headerGroups) {
-            for (String header : headers) {
-                printer.print(header);
-            }
-        }
+        return new String[]{
+                dataset.getSimulationSeedLabel(),
+                dataset.getSimulationTimeLabel(),
+                dataset.getTotalMessageCountLabel(),
+                dataset.getDetectingNodesCountLabel(),
+                dataset.getCutOffLinksCountLabel(),
+                dataset.getFalsePositiveCountLabel()
+        };
+    }
 
-        printer.println();
+    /**
+     * Returns the headers for the basic dataset and the timed deployment dataset.
+     *
+     * @param basicDataset basic data set to get headers for
+     * @param timedDeploymentDataset timed deployment data set to get headers for
+     * @return string array containing the headers in the correct order
+     */
+    private String[] getHeaders(BasicDataset basicDataset, TimedDeploymentDataset timedDeploymentDataset) {
 
+        String[] timedDeploymentHeaders = {
+                timedDeploymentDataset.getMessageCountAfterDeploymentLabel()
+        };
+
+        return (String[]) ArrayUtils.addAll(
+                getHeaders(basicDataset),
+                timedDeploymentHeaders
+        );
+    }
+
+    /**
+     * Returns the headers for the basic dataset and the gradual deployment dataset.
+     *
+     * @param basicDataset basic data set to get headers for
+     * @param gradualDeploymentDataset gradual deployment data set to get headers for
+     * @return string array containing the headers in the correct order
+     */
+    private String[] getHeaders(BasicDataset basicDataset, GradualDeploymentDataset gradualDeploymentDataset) {
+
+        String[] gradualDeploymentHeaders = {
+                gradualDeploymentDataset.getDeployingNodesCountLabel()
+        };
+
+        return (String[]) ArrayUtils.addAll(
+                getHeaders(basicDataset),
+                gradualDeploymentHeaders
+        );
     }
 
 }

@@ -10,12 +10,13 @@ import java.util.List;
 public class SimulationEventGenerator {
 
     private List<StartListener> startListeners = new ArrayList<>();     // stores all registered start listeners
-    private List<EndListener> endListeners = new ArrayList<>();     // stores all registered end listeners
+    private List<EndListener> endListeners = new ArrayList<>();         // stores all registered end listeners
     private List<LearnListener> learnListeners = new ArrayList<>();     // stores all registered learn listeners
     private List<ImportListener> importListeners = new ArrayList<>();   // stores all registered import listeners
     private List<SelectListener> selectListeners = new ArrayList<>();   // stores all registered select listeners
     private List<ExportListener> exportListeners = new ArrayList<>();   // stores all registered export listeners
     private List<DetectListener> detectListeners = new ArrayList<>();   // stores all registered detect listeners
+    private List<TerminateListener> terminateListeners = new ArrayList<>();   // stores all registered terminate listeners
 
     /**
      * Registers a new start listener.
@@ -214,6 +215,34 @@ public class SimulationEventGenerator {
     }
 
     /**
+     * Registers a new terminate listener.
+     *
+     * @param listener terminate listener to register.
+     */
+    public void addTerminateListener(TerminateListener listener) {
+        terminateListeners.add(listener);
+    }
+
+    /**
+     * Unregisters a new terminate listener.
+     *
+     * @param listener terminate listener to unregister.
+     */
+    public void removeTerminateListener(TerminateListener listener) {
+        terminateListeners.remove(listener);
+    }
+
+    /**
+     * Fires a terminate event, notifying all registered listeners by invoking their onTerminated() method.
+     *
+     * @param event event to fire.
+     */
+    public void fireTerminateEvent(TerminateEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        terminateListeners.forEach(listener -> listener.onTerminated(event));
+    }
+
+    /**
      * Removes all listeners from the event generator.
      */
     public void clearAll() {
@@ -224,5 +253,6 @@ public class SimulationEventGenerator {
         selectListeners.clear();
         exportListeners.clear();
         detectListeners.clear();
+        terminateListeners.clear();
     }
 }

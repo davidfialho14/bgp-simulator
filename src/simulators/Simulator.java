@@ -59,11 +59,12 @@ public abstract class Simulator {
     }
 
     /**
-     * Gives access to the data collected during the last simulation.
+     * Gives access to the data collector used during the last simulation. The data collector will contain
+     * the data collected.
      *
-     * @return a dataset with the data collected in the last simulation.
+     * @return the data collector used to collect data in the last simulation.
      */
-    public abstract Dataset getData();
+    public abstract DataCollector getDataCollector();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *

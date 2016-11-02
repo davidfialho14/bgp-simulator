@@ -1,11 +1,9 @@
 package simulators.basic;
 
 import core.topology.ConnectedNode;
-import io.reporters.Reporter;
 import simulators.Dataset;
 import simulators.Detection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,12 +49,30 @@ public class BasicDataset implements Dataset {
     }
 
     /**
+     * Returns the label for the data property Seed.
+     *
+     * @return the label for the data property Seed
+     */
+    public String getSimulationSeedLabel() {
+        return "Seed";
+    }
+
+    /**
      * Returns the total message count.
      *
      * @return total message count.
      */
     public int getTotalMessageCount() {
         return totalMessageCount;
+    }
+
+    /**
+     * Returns the label for the data property Total Message Count.
+     *
+     * @return the label for the data property Total Message Count
+     */
+    public String getTotalMessageCountLabel() {
+        return "Total Message Count";
     }
 
     /**
@@ -69,12 +85,30 @@ public class BasicDataset implements Dataset {
     }
 
     /**
+     * Returns the label for the data property Detecting Nodes Count.
+     *
+     * @return the label for the data property Detecting Nodes Count
+     */
+    public String getDetectingNodesCountLabel() {
+        return "Detecting Nodes Count";
+    }
+
+    /**
      * Returns the number of cut-off links.
      *
      * @return number of cut-off links.
      */
     public int getCutOffLinksCount() {
         return cutOffLinksCount;
+    }
+
+    /**
+     * Returns the label for the data property Cut-Off Links Count.
+     *
+     * @return the label for the data property Cut-Off Links Count
+     */
+    public String getCutOffLinksCountLabel() {
+        return "Cut-Off Links Count";
     }
 
     /**
@@ -96,6 +130,15 @@ public class BasicDataset implements Dataset {
     }
 
     /**
+     * Returns the label for the data property Time.
+     *
+     * @return the label for the data property Time
+     */
+    public String getSimulationTimeLabel() {
+        return "Time";
+    }
+
+    /**
      * Returns the number of false positives.
      *
      * @return number of false positives.
@@ -103,6 +146,15 @@ public class BasicDataset implements Dataset {
     public int getFalsePositiveCount() {
         return falsePositiveCount;
     }
+
+    /**
+     * Returns the label for the data property False Positive Count.
+     *
+     * @return the label for the data property False Positive Count
+     */
+    public String getFalsePositiveCountLabel() {
+        return "False Positive Count";
+    } 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -161,22 +213,6 @@ public class BasicDataset implements Dataset {
         detections.clear();
         simulationTime = 0;
         falsePositiveCount = 0;
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Visited report method
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Reports the current collected data using the given reporter implementation.
-     *
-     * @param reporter reporter implementation to be used.
-     */
-    @Override
-    public void report(Reporter reporter) throws IOException {
-        reporter.writeData(this);
     }
 
 }

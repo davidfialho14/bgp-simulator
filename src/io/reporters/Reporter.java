@@ -23,7 +23,7 @@ public interface Reporter {
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Writes the data in a basic dataset to the report. Called by the basic dataset report method.
+     * Writes the data in a basic dataset to the report. Called by the basic collector report method.
      *
      * @param dataSet basic data set containing the data to write in the report.
      * @throws IOException if it fails to write to the report resource.
@@ -31,22 +31,26 @@ public interface Reporter {
     void writeData(BasicDataset dataSet) throws IOException;
 
     /**
-     * Writes the data in a timed deployment dataset to the report. Called by the timed deployment dataset report
-     * method.
+     * Writes the data from a basic dataset and a timed deployment dataset to the report. Called by the basic
+     * timed deployment collector report method.
      *
-     * @param dataSet timed deployment data set containing the data to write in the report.
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param timedDeploymentDataset timed deployment data set containing the data to write in the report.
      * @throws IOException if it fails to write to the report resource.
      */
-    void writeData(TimedDeploymentDataset dataSet) throws IOException;
+    void writeData(BasicDataset basicDataset,
+                   TimedDeploymentDataset timedDeploymentDataset) throws IOException;
 
     /**
-     * Writes the data in a gradual deployment dataset to the report. Called by the gradual deployment dataset report
-     * method.
+     * Writes the data from a basic dataset and a gradual deployment dataset to the report. Called by the
+     * basic gradual deployment collector report method.
      *
-     * @param dataSet gradual deployment data set containing the data to write in the report.
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param gradualDeploymentDataset gradual deployment data set containing the data to write in the report.
      * @throws IOException if it fails to write to the report resource.
      */
-    void writeData(GradualDeploymentDataset dataSet) throws IOException;
+    void writeData(BasicDataset basicDataset,
+                   GradualDeploymentDataset gradualDeploymentDataset) throws IOException;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *

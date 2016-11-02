@@ -1,23 +1,20 @@
 package simulators.gradualdeployment;
 
 import core.Engine;
-import core.TimeListener;
-import core.events.*;
 import core.topology.ConnectedNode;
-import registers.Registration;
+import io.reporters.Reporter;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.basic.BasicDataCollector;
+import simulators.basic.BasicDataset;
 
-import static registers.Registration.noRegistration;
-import static registers.Registration.registrationFor;
+import java.io.IOException;
 
 /**
  * Adds to the basic data collector, the collection of data from a gradual deployment simulation.
  * Collects the nodes which have deployed a new protocol during one simulation instance.
  */
-public class GradualDeploymentDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener,
-        StartListener {
+public class GradualDeploymentDataCollector implements DataCollector {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -25,25 +22,8 @@ public class GradualDeploymentDataCollector implements DataCollector, ExportList
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final GradualDeploymentDataset gradualDeploymentDataSet;
-    private final BasicDataCollector basicDataCollector;
-    private Registration registration = noRegistration();
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates new gradual deployment data collector with an empty dataset.
-     */
-    public GradualDeploymentDataCollector() {
-        gradualDeploymentDataSet = new GradualDeploymentDataset();
-
-        // basic data collector stores data to the underlying basic dataset of the timed deployment dataset
-        basicDataCollector = new BasicDataCollector(gradualDeploymentDataSet.getBasicDataset());
-    }
+    private final GradualDeploymentDataset gradualDeploymentDataSet = new GradualDeploymentDataset();
+    private final BasicDataCollector basicDataCollector = new BasicDataCollector();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -80,6 +60,17 @@ public class GradualDeploymentDataCollector implements DataCollector, ExportList
     }
 
     /**
+     * Reports the current collected data using the given reporter implementation. Calls the reporter's
+     * writeData(BasicDataset, GradualDeploymentDataset).
+     *
+     * @param reporter reporter implementation to be used.
+     */
+    @Override
+    public void report(Reporter reporter) throws IOException {
+        reporter.writeData((BasicDataset) basicDataCollector.getDataset(), gradualDeploymentDataSet);
+    }
+
+    /**
      * Registers the collector as an export, detect, and time listener of the engine.
      *
      * @param engine engine used for simulating.
@@ -87,15 +78,7 @@ public class GradualDeploymentDataCollector implements DataCollector, ExportList
      */
     @Override
     public void register(Engine engine) throws IllegalStateException {
-        if (registration.isRegistered()) {
-            throw new IllegalStateException("can not register collector that is already registered");
-        }
-
-        registration = registrationFor(engine, this)
-                .exportEvents()
-                .detectEvents()
-                .timeEvents()
-                .register();
+        basicDataCollector.register(engine);
     }
 
     /**
@@ -104,52 +87,7 @@ public class GradualDeploymentDataCollector implements DataCollector, ExportList
      */
     @Override
     public void unregister() {
-        registration.cancel();
+        basicDataCollector.unregister();
     }
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Public Interface - Delegate methods for basic dataset (unchanged)
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Invoked the time property of the engine changes
-     *
-     * @param newTime the new time value
-     */
-    @Override
-    public void onTimeChange(long newTime) {
-        basicDataCollector.onTimeChange(newTime);
-    }
-
-    /**
-     * Invoked when a detect event occurs.
-     *
-     * @param event detect event that occurred.
-     */
-    @Override
-    public void onDetected(DetectEvent event) {
-        basicDataCollector.onDetected(event);
-    }
-
-    /**
-     * Invoked when a export event occurs.
-     *
-     * @param event export event that occurred.
-     */
-    @Override
-    public void onExported(ExportEvent event) {
-        basicDataCollector.onExported(event);
-    }
-
-    /**
-     * Invoked when a start event occurs.
-     *
-     * @param event start event that occurred.
-     */
-    @Override
-    public void onStarted(StartEvent event) {
-        basicDataCollector.onStarted(event);
-    }
 }

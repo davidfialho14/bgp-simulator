@@ -6,11 +6,13 @@ import core.Path;
 import core.TimeListener;
 import core.events.*;
 import core.topology.Link;
+import io.reporters.Reporter;
 import registers.Registration;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.Detection;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 import static registers.Registration.noRegistration;
@@ -27,31 +29,8 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected final BasicDataset dataset;
+    protected final BasicDataset dataset = new BasicDataset();
     private Registration registration = noRegistration();
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates new basic data collector with an empty basic dataset.
-     */
-    public BasicDataCollector() {
-        dataset = new BasicDataset();
-    }
-
-    /**
-     * Creates a new basic dataset with the given basic dataset. The collector will store the collected data in the
-     * given dataset. This can be used by subclasses to define their own basic dataset
-     *
-     * @param basicDataset basic dataset to store the collected data.
-     */
-    public BasicDataCollector(BasicDataset basicDataset) {
-        dataset = basicDataset;
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -105,6 +84,17 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public Dataset getDataset() {
         return dataset;
+    }
+
+    /**
+     * Reports the current collected data using the given reporter implementation. Calls the reporter's
+     * writeData(BasicDataset).
+     *
+     * @param reporter reporter implementation to be used.
+     */
+    @Override
+    public void report(Reporter reporter) throws IOException {
+        reporter.writeData(dataset);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
