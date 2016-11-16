@@ -4,6 +4,7 @@ import core.Engine;
 import core.Route;
 import core.State;
 import core.events.ExportEvent;
+import core.schedulers.RouteReference;
 import core.schedulers.ScheduledRoute;
 import core.topology.Link;
 
@@ -33,8 +34,8 @@ public abstract class AbstractExporter implements Exporter {
      */
     @Override
     public void export(Link link, Route route) {
-        ScheduledRoute scheduledRoute = new ScheduledRoute(route, link, engine.timeProperty().getTime());
-        engine.getScheduler().put(scheduledRoute);
+        engine.getScheduler().put(new ScheduledRoute(
+                new RouteReference(route), link, engine.timeProperty().getTime()));
 
         engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
     }
