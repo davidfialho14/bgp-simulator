@@ -2,10 +2,7 @@ package io.reporters;
 
 import core.Path;
 import core.Protocol;
-import core.topology.ConnectedNode;
-import core.topology.Link;
-import core.topology.Network;
-import core.topology.Topology;
+import core.topology.*;
 import main.ExecutionStateTracker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -22,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +41,7 @@ public class CSVReporter implements Reporter {
     private boolean countsHeadersWereAlreadyPrinted = false;
     private boolean detectionsHeadersWereAlreadyPrinted = false;
     private boolean deploymentsHeadersWereAlreadyPrinted = false;
+    private boolean timesHeadersWereAlreadyPrinted = false;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -88,6 +87,7 @@ public class CSVReporter implements Reporter {
         }
 
         writeDetections(dataSet);
+        writeTimes(dataSet);
     }
 
     /**
@@ -114,6 +114,7 @@ public class CSVReporter implements Reporter {
         }
 
         writeDetections(basicDataset);
+        writeTimes(basicDataset);
     }
 
     /**
@@ -140,6 +141,7 @@ public class CSVReporter implements Reporter {
         }
 
         writeDetections(basicDataset);
+        writeTimes(basicDataset);
 
         // write the deploying nodes
         try (CSVPrinter printer = getDeploymentsFilePrinter()) {
@@ -253,6 +255,29 @@ public class CSVReporter implements Reporter {
         }
     }
 
+    private void writeTimes(BasicDataset dataSet) throws IOException {
+
+        try (CSVPrinter printer = getTimesFilePrinter()) {
+
+            if (!timesHeadersWereAlreadyPrinted) {
+
+                final String[] timesHeaders = { "Simulation", "Node", "Last Message Times" };
+
+                printer.printRecord((Object[]) timesHeaders);
+                timesHeadersWereAlreadyPrinted = true;
+            }
+
+            for (Map.Entry<Node, Long> nodeLastMessageTime : dataSet.getLastMessageTimes().entrySet()) {
+                printer.printRecord(
+                        currentSimulationNumber(),
+                        pretty(nodeLastMessageTime.getKey()),
+                        nodeLastMessageTime.getValue()
+                );
+            }
+
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Private Helper Methods to get a CSV printer for each type of output file
@@ -279,6 +304,10 @@ public class CSVReporter implements Reporter {
 
     private CSVPrinter getDeploymentsFilePrinter() throws IOException {
         return getFilePrinter(getFile("deployments"), true);
+    }
+
+    private CSVPrinter getTimesFilePrinter() throws IOException {
+        return getFilePrinter(getFile("times"), true);
     }
 
     /**
@@ -316,7 +345,7 @@ public class CSVReporter implements Reporter {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private static String pretty(ConnectedNode node) {
+    private static String pretty(Node node) {
         return String.valueOf(node.getId());
     }
 
