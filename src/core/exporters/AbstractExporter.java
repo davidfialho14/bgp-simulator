@@ -9,6 +9,8 @@ import core.schedulers.ScheduledRoute;
 import core.topology.ConnectedNode;
 import core.topology.Link;
 
+import static core.InvalidAttribute.invalidAttr;
+
 /**
  * This class provides a skeleton implementation of the Exporter interface. Implements the association of an
  * exporter with an engine and provides a base implementation of the export() method.
@@ -56,9 +58,18 @@ public abstract class AbstractExporter implements Exporter {
             mraTimer.resetNodeTimer(exportingNode, currentTime, route);
 
             for (Link link : exportingNode.getInLinks()) {
+
+                long exportTime;
+                if (link.extend(route.getAttribute()) == invalidAttr()) {
+                    // export withdrawals immediately
+                    exportTime = currentTime;
+                } else {
+                    // advertisements that are not withdrawals must wait for the timer to expire
+                    exportTime = mraTimer.getExpirationTime(exportingNode);
+                }
+
                 engine.getScheduler().put(new ScheduledRoute(
-                        mraTimer.getExportRouteReference(exportingNode), link,
-                        mraTimer.getExpirationTime(exportingNode)));
+                        mraTimer.getExportRouteReference(exportingNode), link, exportTime));
 
                 engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
             }
