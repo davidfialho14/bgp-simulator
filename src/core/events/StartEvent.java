@@ -6,7 +6,7 @@ import core.schedulers.Scheduler;
 /**
  * Events generated when the simulation starts.
  */
-public class StartEvent implements SimulationEvent {
+public class StartEvent extends AbstractSimulationEvent  {
 
     private final Long seed;
 
@@ -15,7 +15,8 @@ public class StartEvent implements SimulationEvent {
      *
      * @param scheduler scheduler being used for the simulation
      */
-    public StartEvent(Scheduler scheduler) {
+    public StartEvent(long time, Scheduler scheduler) {
+        super(time);
 
         if (scheduler instanceof RandomScheduler) {
             seed = ((RandomScheduler) scheduler).getSeed();

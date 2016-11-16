@@ -3,6 +3,7 @@ package core.exporters;
 import core.Engine;
 import core.Route;
 import core.State;
+import core.events.AdvertisementEvent;
 import core.events.ExportEvent;
 import core.schedulers.RouteReference;
 import core.schedulers.ScheduledRoute;
@@ -38,10 +39,15 @@ public abstract class AbstractExporter implements Exporter {
      */
     @Override
     public void export(Link link, Route route) {
-        engine.getScheduler().put(new ScheduledRoute(
-                new RouteReference(route), link, engine.timeProperty().getTime()));
+        export(link, new RouteReference(route), engine.timeProperty().getTime());
+    }
 
-        engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
+    public void export(Link link, RouteReference routeReference, long exportTime) {
+        // add the route to the scheduler with the given export time
+        engine.getScheduler().put(new ScheduledRoute(routeReference, link, exportTime));
+
+        engine.getEventGenerator().fireExportEvent(
+                new ExportEvent(exportTime, link, routeReference.getRoute()));
     }
 
     /**
@@ -57,21 +63,35 @@ public abstract class AbstractExporter implements Exporter {
         if (mraTimer.hasExpired(exportingNode, currentTime)) {
             mraTimer.resetNodeTimer(exportingNode, currentTime, route);
 
+            long expirationTime = mraTimer.getExpirationTime(exportingNode);
+            boolean advertisedUpdate = false;   // flags if a route other than an withdrawal was advertised
+
+            // export the route to each in-neighbor
             for (Link link : exportingNode.getInLinks()) {
 
                 long exportTime;
                 if (link.extend(route.getAttribute()) == invalidAttr()) {
-                    // export withdrawals immediately
+                    // withdrawals are exported immediately
                     exportTime = currentTime;
+
+                    engine.getEventGenerator().fireAdvertisementEvent(
+                            new AdvertisementEvent(currentTime, exportingNode, route));
                 } else {
                     // advertisements that are not withdrawals must wait for the timer to expire
-                    exportTime = mraTimer.getExpirationTime(exportingNode);
+                    exportTime = expirationTime;
+                    advertisedUpdate = true;
                 }
 
-                engine.getScheduler().put(new ScheduledRoute(
-                        mraTimer.getExportRouteReference(exportingNode), link, exportTime));
+                export(link, mraTimer.getExportRouteReference(exportingNode), exportTime);
+            }
 
-                engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
+            if (advertisedUpdate) {
+                // only fire this event if there was an advertisement that was not an withdrawal
+
+                // fire an Advertisement Event with the time corresponding to the expiration time
+                // the expiration time is the time when the event actually occurs
+                engine.getEventGenerator().fireAdvertisementEvent(
+                        new AdvertisementEvent(expirationTime, exportingNode, route));
             }
 
         } else {

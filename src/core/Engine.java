@@ -100,7 +100,7 @@ public class Engine {
         scheduler.reset();
         exporter.reset();
 
-        eventGenerator.fireStartEvent(new StartEvent(scheduler));
+        eventGenerator.fireStartEvent(new StartEvent(timeProperty.getTime(), scheduler));
 
         exporter.exportDestination(initialState);
         simulationLoop(initialState);
@@ -108,7 +108,7 @@ public class Engine {
 
         currentState = null; // no longer simulating
 
-        eventGenerator.fireEndEvent(new EndEvent());
+        eventGenerator.fireEndEvent(new EndEvent(timeProperty.getTime()));
     }
 
     //------------- PROPERTIES ----------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ public class Engine {
      * @return route after the attribute has been exported and included the out-neighbour in the path.
      */
     Route learn(NodeState nodeState, Link link, Route route) {
-        eventGenerator.fireImportEvent(new ImportEvent(route, link));
+        eventGenerator.fireImportEvent(new ImportEvent(timeProperty.getTime(), route, link));
 
         Attribute attribute = nodeState.getProtocol().extend(route.getAttribute(), link);
 
@@ -192,7 +192,7 @@ public class Engine {
                 .withPath(path)
                 .build();
 
-        eventGenerator.fireLearnEvent(new LearnEvent(link, learnedRoute));
+        eventGenerator.fireLearnEvent(new LearnEvent(timeProperty.getTime(), link, learnedRoute));
 
         return learnedRoute;
     }
@@ -220,7 +220,8 @@ public class Engine {
 
             if (nodeState.getProtocol().isPolicyDispute(link, learnedRoute, alternativeRoute, nodeState)) {
                 // detected oscillation
-                eventGenerator.fireDetectEvent(new DetectEvent(link, learnedRoute, alternativeRoute));
+                eventGenerator.fireDetectEvent(
+                        new DetectEvent(timeProperty.getTime(), link, learnedRoute, alternativeRoute));
 
                 nodeState.getProtocol().detectionInfo(link, learnedRoute, alternativeRoute);
             }
@@ -241,8 +242,6 @@ public class Engine {
      */
     void exportToInNeighbours(ConnectedNode exportingNode, Route route) {
         exporter.exportToNeighbors(exportingNode, route);
-
-        eventGenerator.fireAdvertisementEvent(new AdvertisementEvent(exportingNode, route));
     }
 
     /**
@@ -258,7 +257,8 @@ public class Engine {
         Route prevSelectedRoute = nodeState.getTable().getSelectedRoute();
 
         Route selectedRoute = select(nodeState, link, learnedRoute);
-        eventGenerator.fireSelectEvent(new SelectEvent(link.getSource(), prevSelectedRoute, selectedRoute));
+        eventGenerator.fireSelectEvent(
+                new SelectEvent(timeProperty.getTime(), link.getSource(), prevSelectedRoute, selectedRoute));
 
         if (!prevSelectedRoute.equals(selectedRoute)) {
             exportToInNeighbours(link.getSource(), selectedRoute);
@@ -293,7 +293,7 @@ public class Engine {
             }
 
             if (!scheduler.hasRoute()) {
-                eventGenerator.fireTerminateEvent(new TerminateEvent());
+                eventGenerator.fireTerminateEvent(new TerminateEvent(timeProperty.getTime()));
             }
         }
     }

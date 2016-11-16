@@ -7,7 +7,7 @@ import core.topology.Link;
 /**
  * Events generated when a node imports a route.
  */
-public class ImportEvent implements SimulationEvent {
+public class ImportEvent extends AbstractSimulationEvent  {
 
     private Route route;    // imported route
     private Link link;      // link from which the route was imported
@@ -18,7 +18,8 @@ public class ImportEvent implements SimulationEvent {
      * @param importedRoute route imported.
      * @param importLink link from which the route was imported.
      */
-    public ImportEvent(Route importedRoute, Link importLink) {
+    public ImportEvent(long time, Route importedRoute, Link importLink) {
+        super(time);
         this.route = importedRoute;
         this.link = importLink;
     }

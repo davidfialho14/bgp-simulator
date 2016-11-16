@@ -6,7 +6,7 @@ import core.topology.ConnectedNode;
 /**
  * Events generated when a node selects a route.
  */
-public class SelectEvent implements SimulationEvent {
+public class SelectEvent extends AbstractSimulationEvent  {
 
     private final ConnectedNode selectingNode;
     private final Route previousRoute;  // route previously selected
@@ -19,7 +19,8 @@ public class SelectEvent implements SimulationEvent {
      * @param previousRoute previous selected route.
      * @param selectedRoute selected route.
      */
-    public SelectEvent(ConnectedNode selectingNode, Route previousRoute, Route selectedRoute) {
+    public SelectEvent(long time, ConnectedNode selectingNode, Route previousRoute, Route selectedRoute) {
+        super(time);
         this.selectingNode = selectingNode;
         this.previousRoute = previousRoute;
         this.selectedRoute = selectedRoute;

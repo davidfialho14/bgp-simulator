@@ -1,13 +1,11 @@
 package simulators.basic;
 
 import core.topology.ConnectedNode;
+import core.topology.Node;
 import simulators.Dataset;
 import simulators.Detection;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Stores the following data:
@@ -16,6 +14,7 @@ import java.util.Set;
  *  - cut-off links count
  *  - false positives count
  *  - detections
+ *  - last message times
  */
 public class BasicDataset implements Dataset {
 
@@ -32,6 +31,8 @@ public class BasicDataset implements Dataset {
     private List<Detection> detections = new ArrayList<>();
     private long simulationTime = 0;
     private int falsePositiveCount = 0;
+    // stores the times of the last message of each  node
+    private Map<Node, Long> lastMessageTimes = new HashMap<>();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -154,7 +155,16 @@ public class BasicDataset implements Dataset {
      */
     public String getFalsePositiveCountLabel() {
         return "False Positive Count";
-    } 
+    }
+
+    /**
+     * Returns the last message times for each node.
+     *
+     * @return the last message times for each node
+     */
+    public Map<Node, Long> getLastMessageTimes() {
+        return lastMessageTimes;
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -203,6 +213,16 @@ public class BasicDataset implements Dataset {
     }
 
     /**
+     * Sets the last message time of the given node to the given time.
+     *
+     * @param node  node to set last message time for
+     * @param time  new time to set
+     */
+    public void setLastMessageTime(Node node, long time) {
+        lastMessageTimes.put(node, time);
+    }
+
+    /**
      * Clears all data from the dataset.
      */
     public void clear() {
@@ -213,6 +233,7 @@ public class BasicDataset implements Dataset {
         detections.clear();
         simulationTime = 0;
         falsePositiveCount = 0;
+        lastMessageTimes.clear();
     }
 
 }
