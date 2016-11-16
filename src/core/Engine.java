@@ -98,6 +98,7 @@ public class Engine {
     public void simulate(State initialState) {
         currentState = initialState;
         scheduler.reset();
+        exporter.reset();
 
         eventGenerator.fireStartEvent(new StartEvent(scheduler));
 
@@ -239,8 +240,7 @@ public class Engine {
      * @param route route to be exported.
      */
     void exportToInNeighbours(ConnectedNode exportingNode, Route route) {
-        exportingNode.getInLinks()
-                .forEach(inLink -> exporter.export(inLink, route));
+        exporter.exportToNeighbors(exportingNode, route);
     }
 
     /**

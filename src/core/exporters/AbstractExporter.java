@@ -6,15 +6,17 @@ import core.State;
 import core.events.ExportEvent;
 import core.schedulers.RouteReference;
 import core.schedulers.ScheduledRoute;
+import core.topology.ConnectedNode;
 import core.topology.Link;
 
 /**
- * This class provides a skeletal implementation of the Exporter interface. Implements the association of an exporter
- * with an engine and provides a base implementation of the export() method.
+ * This class provides a skeleton implementation of the Exporter interface. Implements the association of an
+ * exporter with an engine and provides a base implementation of the export() method.
  */
 public abstract class AbstractExporter implements Exporter {
 
     private Engine engine;  // engine using the exporter
+    private final MinimumRouteAdvertisementTimer mraTimer = new MinimumRouteAdvertisementTimer();
 
     /**
      * Associates an engine with the operator.
@@ -41,6 +43,34 @@ public abstract class AbstractExporter implements Exporter {
     }
 
     /**
+     * Exports the route to all of the exporting node's in-neighbors.
+     *
+     * @param exportingNode node exporting the route
+     * @param route         route to be exported
+     */
+    @Override
+    public void exportToNeighbors(ConnectedNode exportingNode, Route route) {
+        long currentTime = engine.timeProperty().getTime();
+
+        if (mraTimer.hasExpired(exportingNode, currentTime)) {
+            mraTimer.resetNodeTimer(exportingNode, currentTime, route);
+
+            for (Link link : exportingNode.getInLinks()) {
+                engine.getScheduler().put(new ScheduledRoute(
+                        mraTimer.getExportRouteReference(exportingNode), link,
+                        mraTimer.getExpirationTime(exportingNode)));
+
+                engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
+            }
+
+        } else {
+            // update the export route for the current timer
+            mraTimer.updateExportRoute(exportingNode, route);
+        }
+
+    }
+
+    /**
      * Exports the initial route(s) from the destination. The simulation engine calls this method to start the
      * simulation process.
      *
@@ -48,4 +78,14 @@ public abstract class AbstractExporter implements Exporter {
      */
     @Override
     public abstract void exportDestination(State initialState);
+
+    /**
+     * Clears any state that an exporter might be storing. Should be called before each simulation.
+     */
+    @Override
+    public void reset() {
+        // clear all timers for all nodes
+        mraTimer.reset();
+    }
+
 }
