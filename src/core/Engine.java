@@ -241,6 +241,8 @@ public class Engine {
      */
     void exportToInNeighbours(ConnectedNode exportingNode, Route route) {
         exporter.exportToNeighbors(exportingNode, route);
+
+        eventGenerator.fireAdvertisementEvent(new AdvertisementEvent(exportingNode, route));
     }
 
     /**
