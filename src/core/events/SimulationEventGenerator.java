@@ -15,6 +15,7 @@ public class SimulationEventGenerator {
     private List<ImportListener> importListeners = new ArrayList<>();   // stores all registered import listeners
     private List<SelectListener> selectListeners = new ArrayList<>();   // stores all registered select listeners
     private List<ExportListener> exportListeners = new ArrayList<>();   // stores all registered export listeners
+    private List<AdvertisementListener> advertisementListeners = new ArrayList<>();
     private List<DetectListener> detectListeners = new ArrayList<>();   // stores all registered detect listeners
     private List<TerminateListener> terminateListeners = new ArrayList<>();   // stores all registered terminate listeners
 
@@ -187,6 +188,35 @@ public class SimulationEventGenerator {
     }
 
     /**
+     * Registers a new advertisement listener.
+     *
+     * @param listener advertisement listener to register.
+     */
+    public void addAdvertisementListener(AdvertisementListener listener) {
+        advertisementListeners.add(listener);
+    }
+
+    /**
+     * Unregisters a new advertisement listener.
+     *
+     * @param listener advertisement listener to unregister.
+     */
+    public void removeAdvertisementListener(AdvertisementListener listener) {
+        advertisementListeners.remove(listener);
+    }
+
+    /**
+     * Fires a advertisement event, notifying all registered listeners by invoking their onAdvertised()
+     * method.
+     *
+     * @param event event to fire.
+     */
+    public void fireAdvertisementEvent(AdvertisementEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        advertisementListeners.forEach(listener -> listener.onAdvertised(event));
+    }
+
+    /**
      * Registers a new detect listener.
      *
      * @param listener detect listener to register.
@@ -252,6 +282,7 @@ public class SimulationEventGenerator {
         learnListeners.clear();
         selectListeners.clear();
         exportListeners.clear();
+        advertisementListeners.clear();
         detectListeners.clear();
         terminateListeners.clear();
     }
