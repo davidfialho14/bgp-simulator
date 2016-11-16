@@ -21,7 +21,8 @@ import static registers.Registration.registrationFor;
 /**
  * Collects all data that can be stored in a basic dataset.
  */
-public class BasicDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener, StartListener {
+public class BasicDataCollector implements DataCollector, ExportListener, DetectListener, TimeListener,
+                                           StartListener, AdvertisementListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -55,6 +56,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
                 .detectEvents()
                 .timeEvents()
                 .startEvents()
+                .advertisementEvents()
                 .register();
     }
 
@@ -159,5 +161,15 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public void onStarted(StartEvent event) {
         dataset.setSimulationSeed(event.getSeed());
+    }
+
+    /**
+     * Invoked when a advertisement event occurs.
+     *
+     * @param event advertisement event that occurred.
+     */
+    @Override
+    public void onAdvertised(AdvertisementEvent event) {
+        dataset.setLastMessageTime(event.getAdvertisingNode(), event.getTimeInstant());
     }
 }
