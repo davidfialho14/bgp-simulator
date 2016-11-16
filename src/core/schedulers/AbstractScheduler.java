@@ -11,7 +11,7 @@ public abstract class AbstractScheduler implements Scheduler {
         Defines the order in which the routes will be scheduled based on the timestamps associated
         with the routes.
      */
-    private PriorityQueue<ScheduledRoute> queue = new PriorityQueue<>();
+    private final PriorityQueue<ScheduledRoute> queue = new PriorityQueue<>();
 
     /**
      * Returns the next scheduled route.
