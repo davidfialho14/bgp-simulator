@@ -7,7 +7,7 @@ import core.topology.Link;
 /**
  * Events generated when a node learns a new route.
  */
-public class LearnEvent implements SimulationEvent {
+public class LearnEvent extends AbstractSimulationEvent  {
 
     private final Link link;    // link from which the route was learned
     private final Route route;  // route learned
@@ -18,7 +18,8 @@ public class LearnEvent implements SimulationEvent {
      * @param learnLink link from which the new route was learned.
      * @param learnedRoute route learned.
      */
-    public LearnEvent(Link learnLink, Route learnedRoute) {
+    public LearnEvent(long time, Link learnLink, Route learnedRoute) {
+        super(time);
         this.link = learnLink;
         this.route = learnedRoute;
     }

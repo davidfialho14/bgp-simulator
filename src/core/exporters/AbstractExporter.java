@@ -38,10 +38,10 @@ public abstract class AbstractExporter implements Exporter {
      */
     @Override
     public void export(Link link, Route route) {
-        engine.getScheduler().put(new ScheduledRoute(
-                new RouteReference(route), link, engine.timeProperty().getTime()));
+        long currentTime = engine.timeProperty().getTime();
+        engine.getScheduler().put(new ScheduledRoute(new RouteReference(route), link, currentTime));
 
-        engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
+        engine.getEventGenerator().fireExportEvent(new ExportEvent(currentTime, link, route));
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class AbstractExporter implements Exporter {
                 engine.getScheduler().put(new ScheduledRoute(
                         mraTimer.getExportRouteReference(exportingNode), link, exportTime));
 
-                engine.getEventGenerator().fireExportEvent(new ExportEvent(link, route));
+                engine.getEventGenerator().fireExportEvent(new ExportEvent(exportTime, link, route));
             }
 
         } else {

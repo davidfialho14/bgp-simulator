@@ -3,8 +3,8 @@ package core.events;
 import core.Engine;
 import core.State;
 import core.schedulers.FIFOScheduler;
-import core.topology.Link;
 import core.topology.ConnectedNode;
+import core.topology.Link;
 import core.topology.Topology;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,8 @@ public class SimulationEventGeneratorTest {
 
         engine.simulate(state);
 
-        verify(listener, times(1)).onLearned(new LearnEvent(new Link(0, 1, splabel(1)), sproute(1, 1, path(1))));
+        verify(listener, times(1)).onLearned(
+                new LearnEvent(0, new Link(0, 1, splabel(1)), sproute(1, 1, path(1))));
     }
 
     @Test
@@ -59,7 +60,8 @@ public class SimulationEventGeneratorTest {
 
         engine.simulate(state);
 
-        verify(listener, times(1)).onImported(new ImportEvent(sproute(1, 0, path()), new Link(0, 1, splabel(1))));
+        verify(listener, times(1)).onImported(
+                new ImportEvent(0, sproute(1, 0, path()), new Link(0, 1, splabel(1))));
     }
 
     @Test
@@ -75,8 +77,8 @@ public class SimulationEventGeneratorTest {
 
         engine.simulate(state);
 
-        verify(listener, times(1)).onSelected(
-                new SelectEvent(new ConnectedNode(0), invalidRoute(new ConnectedNode(1)), sproute(1, 1, path(1))));
+        verify(listener, times(1)).onSelected(new SelectEvent(0,
+                new ConnectedNode(0), invalidRoute(new ConnectedNode(1)), sproute(1, 1, path(1))));
     }
 
     @Test
@@ -92,6 +94,7 @@ public class SimulationEventGeneratorTest {
 
         engine.simulate(state);
 
-        verify(listener, times(1)).onExported(new ExportEvent(new Link(0, 1, splabel(1)), sproute(1, 0, path())));
+        verify(listener, times(1)).onExported(
+                new ExportEvent(0, new Link(0, 1, splabel(1)), sproute(1, 0, path())));
     }
 }

@@ -8,7 +8,7 @@ import core.topology.ConnectedNode;
  * in that advertisement events only happen once per selection. It also differs from the Select Events in
  * that, if an MRAI timer is active an advertisement event only occurs when the timer expires.
  */
-public class AdvertisementEvent implements SimulationEvent {
+public class AdvertisementEvent extends AbstractSimulationEvent {
 
     private final Route route;  // route advertised
     private final ConnectedNode advertisingNode;
@@ -19,7 +19,8 @@ public class AdvertisementEvent implements SimulationEvent {
      * @param advertisingNode   node which advertised the route
      * @param advertisedRoute     advertised route
      */
-    public AdvertisementEvent(ConnectedNode advertisingNode, Route advertisedRoute) {
+    public AdvertisementEvent(long time, ConnectedNode advertisingNode, Route advertisedRoute) {
+        super(time);
         this.advertisingNode = advertisingNode;
         this.route = advertisedRoute;
     }

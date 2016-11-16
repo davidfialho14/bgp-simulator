@@ -7,7 +7,7 @@ import core.topology.Link;
 /**
  * Events generated when a node exports a new route.
  */
-public class ExportEvent implements SimulationEvent {
+public class ExportEvent extends AbstractSimulationEvent  {
 
     private final Route route;  // route exported
     private final Link link;    // link through which the route was exported
@@ -18,7 +18,8 @@ public class ExportEvent implements SimulationEvent {
      * @param exportLink link from which the new route was exported.
      * @param exportedRoute route exported.
      */
-    public ExportEvent(Link exportLink, Route exportedRoute) {
+    public ExportEvent(long time, Link exportLink, Route exportedRoute) {
+        super(time);
         this.link = exportLink;
         this.route = exportedRoute;
     }
