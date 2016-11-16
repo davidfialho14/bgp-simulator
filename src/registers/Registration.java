@@ -131,6 +131,16 @@ public class Registration {
             return this;
         }
 
+        public Register advertisementEvents() {
+            this.registrable.add(() -> engine.getEventGenerator()
+                    .addAdvertisementListener((AdvertisementListener) eventListener));
+
+            this.unregistrable.add(() -> engine.getEventGenerator()
+                    .removeAdvertisementListener((AdvertisementListener) eventListener));
+
+            return this;
+        }
+
         public Register importEvents() {
             this.registrable.add(() -> engine.getEventGenerator().addImportListener((ImportListener) eventListener));
             this.unregistrable.add(() -> engine.getEventGenerator().removeImportListener((ImportListener)

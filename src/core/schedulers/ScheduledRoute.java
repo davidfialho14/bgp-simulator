@@ -4,23 +4,23 @@ import core.Route;
 import core.topology.Link;
 
 /**
- * Implements the representation of a route that has been scheduled. It associates the exportation link and a
- * timestamp with the route. All scheduled route instances are read only outside the package.
+ * Implements the representation of a routeReference that has been scheduled. It associates the exportation link and a
+ * timestamp with the routeReference. All scheduled routeReference instances are read only outside the package.
  */
 public class ScheduledRoute implements Comparable<ScheduledRoute> {
 
-    private Route route;
+    private RouteReference routeReference;
     private Link link;
     private long timestamp;
 
-    public ScheduledRoute(Route route, Link link, long timestamp) {
-        this.route = route;
+    public ScheduledRoute(RouteReference route, Link link, long timestamp) {
+        this.routeReference = route;
         this.link = link;
         this.timestamp = timestamp;
     }
 
     public Route getRoute() {
-        return route;
+        return routeReference.getRoute();
     }
 
     public Link getLink() {
@@ -40,5 +40,11 @@ public class ScheduledRoute implements Comparable<ScheduledRoute> {
         return (int) (this.timestamp - scheduledRoute.timestamp);
     }
 
+    @Override
+    public String toString() {
+        return "SR(" + timestamp +
+                ", " + routeReference +
+                ", " + link +
+                ")";
+    }
 }
-
