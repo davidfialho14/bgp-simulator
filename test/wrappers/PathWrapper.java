@@ -1,7 +1,7 @@
 package wrappers;
 
-import network.Node;
-import policies.Path;
+import core.topology.ConnectedNode;
+import core.Path;
 
 /**
  * Implements wrapper methods to create paths in a more readable way.
@@ -15,9 +15,9 @@ public interface PathWrapper {
      * @return new initialized path instance.
      */
     static Path path(int... nodeIds) {
-        Node[] nodes = new Node[nodeIds.length];
+        ConnectedNode[] nodes = new ConnectedNode[nodeIds.length];
         for (int i = 0; i < nodeIds.length; i++) {
-            nodes[i] = new Node(nodeIds[i]);
+            nodes[i] = new ConnectedNode(nodeIds[i]);
         }
 
         return new Path(nodes);

@@ -1,55 +1,93 @@
 package simulators;
 
-import io.reporters.Reporter;
-import network.Network;
-import simulation.Engine;
-import simulation.State;
-import simulation.schedulers.RandomScheduler;
 
-import java.io.IOException;
+import core.Engine;
+import core.State;
 
 /**
- * This is the base class for all simulators.
- * A simulator simulates a network according to a predefined configuration. This gives the possibility to have
- * different types of simulations. Each simulator implementation simulates specific things and for this reason it
- * holds a specific stats collector.
+ * Simulators execute one simulation instance through the {@link #simulate()}. Simulators might have different
+ * behaviours during the simulation and might collect different sets of data. Simulators have two components: the
+ * data collection and simulation behaviour. Data collection is delegated to a data collectors, which means the
+ * simulator only implements the behaviour of the simulation.
+ *
+ * The Simulator class is a template class for simulator with two template methods {@link #setup()} and
+ * {@link #cleanup()} called before and after the simulation, respectively.
  */
 public abstract class Simulator {
 
-    protected Engine engine = new Engine(new RandomScheduler());    // engine used for simulation
-    protected State state;                                          // state to be simulated
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Private Fields
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    protected final Engine engine;  // engine used for the simulation
+    protected final State state;    // current state of the simulation
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Constructors
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Constructs a simulator by creating an initial state to be simulated. For this it calls the protected
-     * method createInitialState().
+     * Creates a new simulator given an engine and initial state.
      *
-     * @param network network to simulate.
-     * @param destinationId id of the destination node.
+     * @param engine        engine used for the simulation.
+     * @param initialState  initial state.
      */
-    public Simulator(Network network, int destinationId) {
-        this.state = createInitialState(network, destinationId);
+    public Simulator(Engine engine, State initialState) {
+        this.engine = engine;
+        this.state = initialState;
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Public Interface
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Executes a simulation using the provided engine. It always starts the simulation with the initial state
+     * provided in the constructor (it calls the state reset() method to make sure of that.
+     */
+    public void simulate() {
+        setup();
+        state.reset();
+        engine.simulate(state);
+        cleanup();
     }
 
     /**
-     * Creates the initial state. Each subclass must implement this method according to its configurations.
+     * Gives access to the data collector used during the last simulation. The data collector will contain
+     * the data collected.
      *
-     * @param network network to simulate.
-     * @param destinationId id of the destination node.
-     * @return created state.
+     * @return the data collector used to collect data in the last simulation.
      */
-    protected abstract State createInitialState(Network network, int destinationId);
+    public abstract DataCollector getDataCollector();
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Template Methods
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Executes one simulation. Stats are stored for each simulation, no stat is ever discarded.
+     * (Template Method)
+     *
+     * Called before starting a simulations instance (before running {@link #simulate()}).
+     * Subclasses should use this method to implement any necessary initial setup before a
+     * simulation starts.
      */
-    public abstract void simulate();
+    protected abstract void setup();
 
     /**
-     * Calls the reporter generate() method to generate a report with the collected stats.
+     * (Template Method)
      *
-     * @param reporter reporter to generate report.
-     * @throws IOException if an error with the output file occurs.
+     * Called after finishing a simulation instance (after running {@link #simulate()}).
+     * Subclasses should use this method to implement any necessary final cleanup after a
+     * simulation finishes.
      */
-    public abstract void report(Reporter reporter) throws IOException;
+    protected abstract void cleanup();
 
 }

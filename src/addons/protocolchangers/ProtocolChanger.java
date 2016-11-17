@@ -1,13 +1,13 @@
 package addons.protocolchangers;
 
-import network.Node;
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Engine;
+import core.Protocol;
+import core.State;
+import core.topology.ConnectedNode;
 
 /**
  * Base class that all protocol changers must extend. It implements methods to change a protocol
- * for a node and for all nodes of the network. This method can and should be used by subclasses.
+ * for a node and for all nodes of the topology. This method can and should be used by subclasses.
  */
 public abstract class ProtocolChanger {
 
@@ -47,17 +47,17 @@ public abstract class ProtocolChanger {
      * @param node node to change protocol of.
      * @param protocol protocol to change to.
      */
-    protected void changeProtocol(Node node, Protocol protocol) {
+    protected void changeProtocol(ConnectedNode node, Protocol protocol) {
         state.updateProtocol(node, protocol);
     }
 
     /**
-     * Changes the protocol of all the nodes in the network of the state assigned to the changer.
+     * Changes the protocol of all the nodes in the topology of the state assigned to the changer.
      *
      * @param protocol protocol to change to.
      */
     protected void changeAllProtocols(Protocol protocol) {
-        state.getNetwork().getNodes().forEach(node -> changeProtocol(node, protocol));
+        state.getTopology().getNetwork().getNodes().forEach(node -> changeProtocol(node, protocol));
     }
 
 }

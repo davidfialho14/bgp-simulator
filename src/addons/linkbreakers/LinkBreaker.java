@@ -1,11 +1,11 @@
 package addons.linkbreakers;
 
-import network.Link;
-import simulation.Engine;
-import simulation.State;
+import core.Engine;
+import core.State;
+import core.topology.Link;
 
 /**
- * A link breaker is assigned to a an engine and a state and will break links of the state's network depending on the
+ * A link breaker is assigned to a an engine and a state and will break links of the state's topology depending on the
  * information provided by the engine and the state.
  */
 public abstract class LinkBreaker {
@@ -49,7 +49,7 @@ public abstract class LinkBreaker {
      * @param link link to break.
      */
     protected void breakLink(Link link) {
-        state.getNetwork().removeLink(link);
+        state.getTopology().getNetwork().removeLink(link);
         engine.onBrokenLink(link);
         state.get(link.getSource()).getTable().removeOutLink(link);
     }

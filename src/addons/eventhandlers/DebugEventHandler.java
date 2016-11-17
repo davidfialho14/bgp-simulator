@@ -1,15 +1,18 @@
 package addons.eventhandlers;
 
-import network.Link;
-import simulation.Route;
-import simulation.events.*;
+import core.Route;
+import core.events.*;
+import core.topology.Link;
 
 import java.io.PrintStream;
 
 public class DebugEventHandler
-        implements ImportListener, LearnListener, SelectListener, ExportListener, DetectListener {
+        implements StartListener, EndListener, ImportListener, LearnListener, SelectListener, ExportListener,
+        DetectListener {
 
     private PrintStream printStream;    // print stream to print debug messages
+    private int simulationCount = 0;    // counts the data
+    private int detectCount = 0;        // counts detections for each simulation
 
     // listen to all events by default
     private boolean importEventsEnabled;
@@ -24,8 +27,7 @@ public class DebugEventHandler
      * @param enabled sets all events as enabled or disabled.
      */
     public DebugEventHandler(boolean enabled) {
-        this.printStream = System.out;
-        setAllEnabled(enabled);
+        this(System.out, enabled);
     }
 
     /**
@@ -36,6 +38,14 @@ public class DebugEventHandler
     public DebugEventHandler(PrintStream printStream, boolean enabled) {
         this.printStream = printStream;
         setAllEnabled(enabled);
+    }
+
+    private static String pretty(Route route) {
+        return String.format("route (%s, %s)", route.getAttribute(), route.getPath());
+    }
+
+    private static String pretty(Link link) {
+        return String.format("link (%s->%s, %s)", link.getSource(), link.getDestination(), link.getLabel());
     }
 
     public void setAllEnabled(boolean enabled) {
@@ -67,11 +77,45 @@ public class DebugEventHandler
     }
 
     public void register(SimulationEventGenerator eventGenerator) {
+        eventGenerator.addStartListener(this);
+        eventGenerator.addEndListener(this);
         eventGenerator.addImportListener(this);
         eventGenerator.addLearnListener(this);
         eventGenerator.addSelectListener(this);
         eventGenerator.addExportListener(this);
         eventGenerator.addDetectListener(this);
+    }
+
+    public void unregister(SimulationEventGenerator eventGenerator) {
+        eventGenerator.removeStartListener(this);
+        eventGenerator.removeEndListener(this);
+        eventGenerator.removeImportListener(this);
+        eventGenerator.removeLearnListener(this);
+        eventGenerator.removeSelectListener(this);
+        eventGenerator.removeExportListener(this);
+        eventGenerator.removeDetectListener(this);
+    }
+
+    /**
+     * Invoked when a start event occurs.
+     *
+     * @param event start event that occurred.
+     */
+    @Override
+    public void onStarted(StartEvent event) {
+        detectCount = 0;
+        printStream.println("Started Simulation " + (simulationCount + 1));
+    }
+
+    /**
+     * Invoked when a end event occurs.
+     *
+     * @param event end event that occurred.
+     */
+    @Override
+    public void onEnded(EndEvent event) {
+        printStream.println("Ended Simulation " + (simulationCount + 1));
+        simulationCount++;
     }
 
     /**
@@ -82,10 +126,11 @@ public class DebugEventHandler
     @Override
     public void onDetected(DetectEvent event) {
         if (detectEventsEnabled) {
-            printStream.println("Detect:\t" + event.getDetectingNode() + " detected with " +
+            detectCount++;
+            printStream.println("Detect " + detectCount + ":" + event.getDetectingNode() + " detected with " +
                                         pretty(event.getLearnedRoute()) + " learned from " +
                                         pretty(event.getOutLink()) + " other option was " +
-                                        pretty(event.getExclRoute()));
+                                        pretty(event.getAlternativeRoute()));
         }
     }
 
@@ -114,6 +159,10 @@ public class DebugEventHandler
                                         " " + pretty(event.getRoute()));
         }
     }
+
+    /*
+        Set of methods to print components in a prettier way.
+     */
 
     /**
      * Invoked when a learn event occurs.
@@ -145,17 +194,5 @@ public class DebugEventHandler
                                             pretty(event.getPreviousRoute()));
             }
         }
-    }
-
-    /*
-        Set of methods to print components in a prettier way.
-     */
-
-    private static String pretty(Route route) {
-        return String.format("route (%s, %s)", route.getAttribute(), route.getPath());
-    }
-
-    private static String pretty(Link link) {
-        return String.format("link (%s->%s, %s)", link.getSource(), link.getDestination(), link.getLabel());
     }
 }

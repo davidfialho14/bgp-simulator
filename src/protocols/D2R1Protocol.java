@@ -1,27 +1,15 @@
 package protocols;
 
-import network.Link;
-import simulation.Route;
-
 /**
- * Implements the detection D2 and the reaction R1.
+ * Its just a wrapper around a generic protocol implementing the Path Detection and the Cut-Off Reaction.
  */
-public class D2R1Protocol extends Reaction1 implements Protocol, Detection2 {
+public class D2R1Protocol extends GenericProtocol {
 
-    @Override
-    public boolean isOscillation(Link link, Route learnedRoute, Route exclRoute) {
-        return Detection2.isOscillation(link.getSource(),
-                learnedRoute.getAttribute(), learnedRoute.getPath(), exclRoute);
-    }
-
-    @Override
-    public void setParameters(Link link, Route learnedRoute, Route exclRoute) {
-        setParameters(link, learnedRoute);
-    }
-
-    @Override
-    public void reset() {
-        destinationCutLinks.clear();
+    /**
+     * Initializes the protocol given the path detection and cut-off reaction implementations.
+     */
+    public D2R1Protocol() {
+        super(new PathDetection(), new CutOffReaction());
     }
 
 }

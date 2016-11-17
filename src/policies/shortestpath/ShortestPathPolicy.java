@@ -1,10 +1,10 @@
 package policies.shortestpath;
 
-import io.InvalidTagException;
-import network.Node;
-import policies.Attribute;
-import policies.Label;
-import policies.Policy;
+import core.Attribute;
+import core.topology.Label;
+import core.topology.Node;
+import core.topology.Policy;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 
 public class ShortestPathPolicy implements Policy {
 
@@ -24,12 +24,12 @@ public class ShortestPathPolicy implements Policy {
     }
 
     @Override
-    public Label createLabel(String tag) throws InvalidTagException {
+    public Label createLabel(String tag) throws InvalidPolicyTagException {
         try {
             return new ShortestPathLabel(Integer.parseInt(tag));
         } catch (NumberFormatException e) {
             // tag is not an integer
-            throw new InvalidTagException(tag, "the ShortestPath policy's label tags must be integers");
+            throw new InvalidPolicyTagException(tag, "the ShortestPath policy's label tags must be integers");
         }
     }
 
@@ -42,4 +42,15 @@ public class ShortestPathPolicy implements Policy {
     public int hashCode() {
         return 31;
     }
+
+    /**
+     * Returns a string with the name of the policy.
+     *
+     * @return string "Shortest Path"
+     */
+    @Override
+    public String toString() {
+        return "Shortest Path";
+    }
+
 }

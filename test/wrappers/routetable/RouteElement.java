@@ -1,28 +1,20 @@
 package wrappers.routetable;
 
-import policies.Attribute;
-import policies.Path;
-import simulation.Route;
+import core.Attribute;
+import core.Path;
+import core.Route;
 
 /**
  * Represents a route element.
  */
 public class RouteElement implements RouteTableElement {
 
+    private static final Route ORIGINAL_ROUTE = Route.invalidRoute(null);
+
     private Route route;
 
     private RouteElement(Route route) {
         this.route = route;
-    }
-
-    /**
-     * Adds the route as a destination to the route table.
-     *
-     * @param tableWrapper table to insert element in.
-     */
-    @Override
-    public void insert(RouteTableWrapper tableWrapper) {
-        tableWrapper.addRoute(route);
     }
 
     /**
@@ -35,7 +27,10 @@ public class RouteElement implements RouteTableElement {
     public static RouteElement route(Attribute attribute, Path path) {
         // the route destination node does not need to be specified since it will be replaced
         // when building the route table
-        return new RouteElement(new Route(null, attribute, path));
+        return new RouteElement(Route.newRouteFrom(ORIGINAL_ROUTE)
+                .withAttribute(attribute)
+                .withPath(path)
+                .build());
     }
 
     /**
@@ -47,5 +42,15 @@ public class RouteElement implements RouteTableElement {
         // the route destination node does not need to be specified since it will be replaced
         // when building the route table
         return new RouteElement(Route.invalidRoute(null));
+    }
+
+    /**
+     * Adds the route as a destination to the route table.
+     *
+     * @param tableWrapper table to insert element in.
+     */
+    @Override
+    public void insert(RouteTableWrapper tableWrapper) {
+        tableWrapper.addRoute(route);
     }
 }

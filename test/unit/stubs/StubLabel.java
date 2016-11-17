@@ -1,8 +1,8 @@
 package stubs;
 
-import network.Link;
-import policies.Attribute;
-import policies.Label;
+import core.Attribute;
+import core.topology.Label;
+import core.topology.Link;
 
 public class StubLabel implements Label {
 
@@ -16,8 +16,14 @@ public class StubLabel implements Label {
         return 31;
     }
 
+    /**
+     * Always returns a stub attribute with the its value incremented.
+     *
+     * @return a stub attribute with the its value incremented.
+     */
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        throw new UnsupportedOperationException();
+        StubAttribute stubAttribute = (StubAttribute) attribute;
+        return new StubAttribute(stubAttribute.value + 1);
     }
 }

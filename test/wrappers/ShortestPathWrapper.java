@@ -1,10 +1,10 @@
 package wrappers;
 
-import network.Node;
+import core.Path;
+import core.Route;
+import core.topology.Node;
 import policies.shortestpath.ShortestPathAttribute;
 import policies.shortestpath.ShortestPathLabel;
-import policies.Path;
-import simulation.Route;
 import wrappers.routetable.OutLinkElement;
 import wrappers.routetable.RouteElement;
 
@@ -50,7 +50,7 @@ public interface ShortestPathWrapper {
      * @return a new route instance with shortest path attribute.
      */
     static Route sproute(int destId, int length, Path path) {
-        return new Route(new Node(destId), new ShortestPathAttribute(length), path);
+        return RouteWrapper.route(Node.newNode(destId), new ShortestPathAttribute(length), path);
     }
 
     /**

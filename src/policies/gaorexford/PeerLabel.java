@@ -1,10 +1,10 @@
 package policies.gaorexford;
 
-import network.Link;
-import policies.Attribute;
-import policies.Label;
+import core.Attribute;
+import core.topology.Label;
+import core.topology.Link;
 
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 import static policies.gaorexford.PeerAttribute.peer;
 
 /**
@@ -16,12 +16,12 @@ public class PeerLabel implements Label {
      * Table gives the result of extending each type of attribute.
      */
     private static final Attribute[] extendTable = {
-            peer(), peer(),   invalid(),  invalid()
+            peer(), peer(), invalidAttr(), invalidAttr()
     };
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute.isInvalid()) return invalid();
+        if (attribute == invalidAttr()) return invalidAttr();
 
         GaoRexfordAttribute gaoRexfordAttribute = (GaoRexfordAttribute) attribute;
         return extendTable[gaoRexfordAttribute.getType().ordinal()];

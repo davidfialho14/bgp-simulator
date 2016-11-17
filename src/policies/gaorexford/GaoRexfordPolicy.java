@@ -1,10 +1,10 @@
 package policies.gaorexford;
 
-import io.InvalidTagException;
-import network.Node;
-import policies.Attribute;
-import policies.Label;
-import policies.Policy;
+import core.Attribute;
+import core.topology.Label;
+import core.topology.Node;
+import core.topology.Policy;
+import io.networkreaders.exceptions.InvalidPolicyTagException;
 
 import static policies.gaorexford.SelfAttribute.self;
 
@@ -16,7 +16,7 @@ public class GaoRexfordPolicy implements Policy {
     }
 
     @Override
-    public Label createLabel(String tag) throws InvalidTagException {
+    public Label createLabel(String tag) throws InvalidPolicyTagException {
         switch (tag) {
             case "C":
                 return new CustomerLabel();
@@ -25,7 +25,18 @@ public class GaoRexfordPolicy implements Policy {
             case "P":
                 return new ProviderLabel();
             default:
-                throw new InvalidTagException(tag, "not a valid tag for a Gao Rexford label");
+                throw new InvalidPolicyTagException(tag, "not a valid tag for a Gao Rexford label");
         }
     }
+
+    /**
+     * Returns a string with the name of the policy.
+     *
+     * @return string "Gao-Rexford"
+     */
+    @Override
+    public String toString() {
+        return "Gao-Rexford";
+    }
+
 }

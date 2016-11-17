@@ -1,8 +1,8 @@
 package addons.protocolchangers;
 
-import protocols.Protocol;
-import simulation.Engine;
-import simulation.State;
+import core.Protocol;
+import core.Engine;
+import core.State;
 
 public class ChangeAllFixedTimeProtocolChanger extends FixedTimeProtocolChanger {
     private Protocol protocol;
@@ -21,10 +21,12 @@ public class ChangeAllFixedTimeProtocolChanger extends FixedTimeProtocolChanger 
         this.protocol = protocol;
     }
 
+    /**
+     * Invoked only once when the time to change is reached.
+     */
     @Override
-    public void onTimeChange(long newTime) {
-        if (isTimeToChange(newTime)) {
-            changeAllProtocols(protocol);
-        }
+    public void onTimeToChange() {
+        changeAllProtocols(protocol);
     }
+
 }

@@ -1,10 +1,10 @@
 package policies.shortestpath;
 
-import network.Link;
-import policies.Attribute;
-import policies.Label;
+import core.Attribute;
+import core.topology.Label;
+import core.topology.Link;
 
-import static policies.InvalidAttribute.invalid;
+import static core.InvalidAttribute.invalidAttr;
 
 public class ShortestPathLabel implements Label {
 
@@ -32,8 +32,8 @@ public class ShortestPathLabel implements Label {
      */
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute.isInvalid()) {
-            return invalid();
+        if (attribute == invalidAttr()) {
+            return invalidAttr();
         } else {
             ShortestPathAttribute shortestPathAttribute = (ShortestPathAttribute) attribute;
             return new ShortestPathAttribute(length + shortestPathAttribute.getLength());

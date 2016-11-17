@@ -1,9 +1,9 @@
 package wrappers.routetable;
 
-import network.Link;
-import network.Node;
-import simulation.Route;
-import simulation.RouteTable;
+import core.Route;
+import core.RouteTable;
+import core.topology.Link;
+import core.topology.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;

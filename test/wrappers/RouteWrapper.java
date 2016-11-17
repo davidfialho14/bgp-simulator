@@ -1,11 +1,13 @@
 package wrappers;
 
+import core.Attribute;
+import core.Path;
+import core.Route;
+import core.topology.ConnectedNode;
+import core.topology.Node;
 import stubs.StubAttribute;
-import network.Node;
-import policies.Attribute;
-import policies.Path;
-import simulation.Route;
 
+import static core.Route.newRouteFrom;
 import static wrappers.PathWrapper.path;
 
 /**
@@ -17,14 +19,17 @@ public interface RouteWrapper {
      * More readable way to create a route instance.
      */
     static Route route(Node destination, Attribute attribute, Path path) {
-        return new Route(destination, attribute, path);
+        return newRouteFrom(Route.invalidRoute(destination))
+                .withAttribute(attribute)
+                .withPath(path)
+                .build();
     }
 
     /**
      * More readable way to create a route instance.
      */
     static Route route(int destId, Attribute attribute, Path path) {
-        return route(new Node(destId), attribute, path);
+        return route(new ConnectedNode(destId), attribute, path);
     }
 
     /**
@@ -35,7 +40,7 @@ public interface RouteWrapper {
      * @return new route instance for the given destination.
      */
     static Route anyRoute(Node destination) {
-        return new Route(destination, new StubAttribute(), path());
+        return route(destination, new StubAttribute(), path());
     }
 
     /**
@@ -46,6 +51,16 @@ public interface RouteWrapper {
      * @return new route instance for the given destination.
      */
     static Route anyRoute(int destId) {
-        return anyRoute(new Node(destId));
+        return anyRoute(new ConnectedNode(destId));
+    }
+
+    /**
+     * Creates an invalid route from an integer ID instead of a node.
+     *
+     * @param destId id for the destination.
+     * @return new invalid route for a destianiton with the given id.
+     */
+    static Route invalidRoute(int destId) {
+        return Route.invalidRoute(Node.newNode(destId));
     }
 }

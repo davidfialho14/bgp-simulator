@@ -1,41 +1,81 @@
 package io.reporters;
 
-import simulators.statscollectors.BasicStatsCollector;
-import simulators.statscollectors.FullDeploymentStatsCollector;
-import simulators.statscollectors.SPPolicyBasicStatsCollector;
+import core.Protocol;
+import core.topology.Topology;
+import simulators.Simulator;
+import simulators.basic.BasicDataset;
+import simulators.gradualdeployment.GradualDeploymentDataset;
+import simulators.timeddeployment.TimedDeploymentDataset;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
- * Base class that all reports must extend.
- * A reporter generates reports depending on the given stats collector.
+ * Reporter is used to report the data in a dataset. Reporting is implemented using the visitor design pattern, where
+ * the reporter is the visitor class and the dataset is the visited class. This allows adding new report formats
+ * without changing the datasets interfaces.
  */
-public abstract class Reporter {
+public interface Reporter {
 
-    protected File outputFile;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *
+    *  Visitor Methods to Write Data from different datasets
+    *
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Constructs a reporter associating the output file.
+     * Writes the data in a basic dataset to the report. Called by the basic collector report method.
      *
-     * @param outputFile file to output report to.
+     * @param dataSet basic data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
      */
-    public Reporter(File outputFile) {
-        this.outputFile = outputFile;
-    }
+    void writeData(BasicDataset dataSet) throws IOException;
 
     /**
-     * Generates report for a basic stats collector.
+     * Writes the data from a basic dataset and a timed deployment dataset to the report. Called by the basic
+     * timed deployment collector report method.
+     *
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param timedDeploymentDataset timed deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
      */
-    public abstract void generate(BasicStatsCollector statsCollector) throws IOException;
+    void writeData(BasicDataset basicDataset,
+                   TimedDeploymentDataset timedDeploymentDataset) throws IOException;
 
     /**
-     * Generates report for a full deployment stats collector.
+     * Writes the data from a basic dataset and a gradual deployment dataset to the report. Called by the
+     * basic gradual deployment collector report method.
+     *
+     * @param basicDataset basic data set containing the data to write in the report.
+     * @param gradualDeploymentDataset gradual deployment data set containing the data to write in the report.
+     * @throws IOException if it fails to write to the report resource.
      */
-    public abstract void generate(FullDeploymentStatsCollector statsCollector) throws IOException;
+    void writeData(BasicDataset basicDataset,
+                   GradualDeploymentDataset gradualDeploymentDataset) throws IOException;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *
+    *  Methods to write summaries
+    *
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Generates report for a basic stats collector for the SP policy.
+     * Writes a summary of the simulation before it starts. Writes basic information about the topology and the
+     * simulation parameters.
+     *
+     * @param topology      original topology.
+     * @param destinationId ID of the destination.
+     * @param minDelay      minimum delay for an exported message.
+     * @param maxDelay      maximum delay for an exported message.
+     * @param protocol      protocol being analysed.
+     * @param simulator     simulator used for the simulation.
      */
-    public abstract void generate(SPPolicyBasicStatsCollector statsCollector) throws IOException;
+    void writeBeforeSummary(Topology topology, int destinationId, int minDelay, int maxDelay,
+                            Protocol protocol, Simulator simulator) throws IOException;
+
+    /**
+     * Writes a summary of the simulation after it finishes. Writes basic information abouts the total results of
+     * the simulation.
+     */
+    void writeAfterSummary() throws IOException;
+
 }
