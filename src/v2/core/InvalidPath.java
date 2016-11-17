@@ -45,16 +45,13 @@ public class InvalidPath extends Path {
      */
     @Override
     public int compareTo(Path path) {
-        if (path instanceof InvalidPath) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return path == invalidPath() ? 0 : 1;
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
-    public boolean equals(Object o) {
-        return o instanceof InvalidPath;
+    public boolean equals(Object other) {
+        return other == invalidPath();
     }
 
     // HASHCODE - Since there is only one object the default hashCode() implementation is sufficient

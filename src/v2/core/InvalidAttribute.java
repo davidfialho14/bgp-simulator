@@ -35,9 +35,10 @@ public class InvalidAttribute implements Attribute {
         return attribute == invalidAttr() ? 0 : 1;
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
-    public boolean equals(Object o) {
-        return o instanceof InvalidAttribute;
+    public boolean equals(Object other) {
+        return other == invalidAttr();
     }
 
     // HASHCODE - Since there is only one object the default hashCode() implementation is sufficient

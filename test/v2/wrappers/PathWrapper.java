@@ -1,0 +1,28 @@
+package v2.wrappers;
+
+
+import v2.core.Path;
+import v2.core.Router;
+
+/**
+ * Implements wrapper methods to create paths in a more readable way.
+ */
+public interface PathWrapper {
+
+    /**
+     * Builds a path of routers given a sequence of IDs.
+     *
+     * @param routerIds sequence of router ids to add to the path.
+     * @return new initialized path instance.
+     */
+    static Path path(int... routerIds) {
+        Router[] routers = new Router[routerIds.length];
+
+        for (int i = 0; i < routerIds.length; i++) {
+            routers[i] = new Router(routerIds[i]);
+        }
+
+        return new Path(routers);
+    }
+
+}
