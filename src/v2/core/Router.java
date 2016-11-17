@@ -21,7 +21,8 @@ public class Router extends Node {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     
-    private Map<Router, Link> inLinks = new HashMap<>();
+    private final Map<Router, Link> inLinks;
+    private RouteTable table = null;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -36,6 +37,7 @@ public class Router extends Node {
      */
     public Router(int id) {
         super(id);
+        inLinks = new HashMap<>();
     }
 
     // TODO create constructors to configure the MRAI timer and the protocol
@@ -53,7 +55,7 @@ public class Router extends Node {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
-     *  Public Interface - Getters
+     *  Public Interface
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -96,6 +98,15 @@ public class Router extends Node {
     public void addInNeighbor(Router neighbor, Label label) {
         // adds a new in-link to the router
         inLinks.put(neighbor, new Link(neighbor, this, label));
+    }
+
+    /**
+     * Returns the route table of the router in its current state.
+     *
+     * @return the route table of the router in its current state.
+     */
+    public RouteTable getTable() {
+        return table;
     }
 
     @Override
