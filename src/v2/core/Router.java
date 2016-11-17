@@ -76,4 +76,26 @@ public class Router extends Node {
         return inLinks.get(neighbour);
     }
 
+    /**
+     * Returns the number of in-neighbors the router has.
+     *
+     * @return the number of in-neighbors the router has.
+     */
+    public int getInNeighborCount() {
+        return inLinks.size();
+    }
+
+    /**
+     * Adds a new in-neighbor to the router. It associates the neighbor with the given label. If this
+     * router already has the given router as a neighbor then the given label replaces the previous one. It
+     * creates a new link with the neighbor.
+     *
+     * @param neighbor  router to add as neighbor.
+     * @param label     label to model the relationship with the neighbor or the cost of the link to it.
+     */
+    public void addInNeighbor(Router neighbor, Label label) {
+        // adds a new in-link to the router
+        inLinks.put(neighbor, new Link(neighbor, this, label));
+    }
+
 }
