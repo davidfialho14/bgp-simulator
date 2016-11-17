@@ -1,6 +1,5 @@
 package v2.core;
 
-import core.Attribute;
 
 /**
  * Label is an abstraction of a relationship between two routers/ASes or the cost of the link connecting
