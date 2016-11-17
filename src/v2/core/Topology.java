@@ -3,6 +3,7 @@ package v2.core;
 
 import v2.core.exceptions.RouterNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,6 +107,21 @@ public final class Topology {
         return linkCount;
     }
 
+    /**
+     * Returns a collection containing all the links in the topology.
+     *
+     * @return collection containing all the links in the topology.
+     */
+    public Collection<Link> getLinks() {
+        Collection<Link> links = new ArrayList<>();
+
+        for (Router router : routers.values()) {
+            links.addAll(router.getInLinks());
+        }
+
+        return links;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface - Modifiers
@@ -120,7 +136,7 @@ public final class Topology {
      * @return true if the router was added or false if the router already existed.
      */
     public boolean addRouter(Router router) {
-        return routers.putIfAbsent(router.getId(), router) != null;
+        return routers.putIfAbsent(router.getId(), router) == null;
     }
 
     /**
