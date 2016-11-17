@@ -1,6 +1,5 @@
 package v2.core;
 
-import core.Attribute;
 import io.networkreaders.exceptions.InvalidPolicyTagException;
 
 /**
@@ -10,14 +9,15 @@ import io.networkreaders.exceptions.InvalidPolicyTagException;
 public interface Policy {
 
     /**
-     * Creates a self attribute corresponding to the given node.
-     * @param node node to create self attribute for.
+     * Creates a self attribute.
+     *
      * @return instance of a self attribute implementation.
      */
-    Attribute createSelf(Node node);
+    Attribute createSelf();
 
     /**
      * Creates a label for this policy based on the string tag given.
+     *
      * @param tag tag that defines the label to be created.
      * @return label instance according to the string tag.
      */
