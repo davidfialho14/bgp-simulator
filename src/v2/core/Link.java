@@ -17,6 +17,11 @@ public class Link extends DirectedEdge {
 
     private final Label label;
 
+    // when active routes exported through this link are considered invalid
+    // this flag is checked by the protocol in the "import" phase.
+    // by default all links are turned on
+    private boolean turnedOff = false;
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Constructors
@@ -47,6 +52,24 @@ public class Link extends DirectedEdge {
      */
     public Label getLabel() {
         return label;
+    }
+
+    /**
+     * Checks if the link is turned off.
+     *
+     * @return true if the link is turned off and false otherwise.
+     */
+    public boolean isTurnedOff() {
+        return turnedOff;
+    }
+
+    /**
+     * Turns on or off the link.
+     *
+     * @param turnedOff true to turn off and false to turn on.
+     */
+    public void setTurnedOff(boolean turnedOff) {
+        this.turnedOff = turnedOff;
     }
 
     /**
