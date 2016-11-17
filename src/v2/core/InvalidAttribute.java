@@ -32,11 +32,7 @@ public class InvalidAttribute implements Attribute {
      */
     @Override
     public int compareTo(Attribute attribute) {
-        if (attribute instanceof InvalidAttribute) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return attribute == invalidAttr() ? 0 : 1;
     }
 
     @Override
