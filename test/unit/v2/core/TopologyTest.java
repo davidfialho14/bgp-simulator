@@ -9,6 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static v2.stubs.Stubs.stubLabel;
 import static v2.stubs.Stubs.stubLink;
+import static v2.wrappers.TopologyWrapper.router;
 
 
 public class TopologyTest {
@@ -17,16 +18,6 @@ public class TopologyTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private Topology topology;
-
-    /**
-     * Creates a new router with the given ID. Use this factory method instead of the regular router
-     * constructor.
-     *
-     * @param routerID id to assign to the new router.
-     */
-    private static Router router(int routerID) {
-        return new Router(routerID);
-    }
 
     @Before
     public void setUp() throws Exception {
