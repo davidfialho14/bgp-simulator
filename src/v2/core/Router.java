@@ -98,4 +98,9 @@ public class Router extends Node {
         inLinks.put(neighbor, new Link(neighbor, this, label));
     }
 
+    @Override
+    public String toString() {
+        return "Router(" + id + ")";
+    }
+
 }

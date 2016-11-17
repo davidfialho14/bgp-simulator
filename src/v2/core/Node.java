@@ -7,7 +7,7 @@ package v2.core;
 public class Node {
 
     // the node's ID is its main identification and should be unique for every node in a topology
-    private final int id;
+    protected final int id;
 
     /**
      * Creates a new node with an ID.
