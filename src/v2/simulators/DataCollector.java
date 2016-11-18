@@ -13,6 +13,19 @@ import java.io.IOException;
 public interface DataCollector {
 
     /**
+     * Gives access to the data set storing the collected data. The dataset implementation returned depends on the
+     * collector implementation
+     *
+     * @return a dataset instance with the collected data.
+     */
+    Dataset getDataset();
+
+    /**
+     * Clears all data that has been collected
+     */
+    void clear();
+
+    /**
      * Reports the current collected data using the given reporter implementation.
      *
      * @param reporter reporter implementation to be used.
