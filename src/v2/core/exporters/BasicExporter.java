@@ -37,13 +37,12 @@ public class BasicExporter implements Exporter {
     /**
      * Exports the given message. The message arrival time must be the current time.
      *
-     * @param exportLink    link to export route through.
-     * @param route         route to export.
-     * @param currentTime   current simulation time.
+     * @param exportingRouter   router exporting the route.
+     * @param route             route to export.
+     * @param currentTime       current simulation time.
      */
     @Override
-    public void export(Link exportLink, Route route, int currentTime) {
-        Router exportingRouter = exportLink.getSource();
+    public void export(Router exportingRouter, Route route, int currentTime) {
         MRAITimer timer = exportingRouter.getMRAITimer();
 
         if (!timer.hasExpired(currentTime)) {
@@ -72,7 +71,7 @@ public class BasicExporter implements Exporter {
                     exportedUpdate = true;
                 }
 
-                export(exportLink, timer.getExportRouteReference(), exportTime);
+                export(link, timer.getExportRouteReference(), exportTime);
             }
 
             if (exportedUpdate) {

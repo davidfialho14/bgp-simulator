@@ -1,5 +1,7 @@
 package v2.core;
 
+import v2.core.exporters.Exporter;
+
 /**
  * Base interface for any protocol implementation. All protocol implementations must implement this interface.
  */

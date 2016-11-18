@@ -1,6 +1,7 @@
 package v2.core.protocols;
 
 import v2.core.*;
+import v2.core.exporters.Exporter;
 
 import static v2.core.InvalidAttribute.invalidAttr;
 import static v2.core.InvalidRoute.invalidRoute;
@@ -38,7 +39,8 @@ public class SSBGPProtocol implements Protocol {
         learningRouter.getTable().setRoute(link.getTarget(), learnedRoute);
 
         if (learningRouter.getTable().selectedNewRoute()) { // checks if the selected route changed
-            exporter.exportToNeighbors(learningRouter, learningRouter.getTable().getSelectedRoute());
+            exporter.export(learningRouter, learningRouter.getTable().getSelectedRoute(),
+                            message.getArrivalTime());
         }
 
     }
