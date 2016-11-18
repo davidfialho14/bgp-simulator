@@ -33,4 +33,11 @@ public interface Destination {
      */
     void addInNeighbor(Router neighbor, Label label);
 
+    /**
+     * Sets the self route for the destination router.
+     *
+     * @param selfRoute  self route to set.
+     */
+    void setSelfRoute(Route selfRoute);
+
 }

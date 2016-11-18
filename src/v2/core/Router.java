@@ -133,6 +133,16 @@ public class Router extends Node implements Destination {
         return table;
     }
 
+    /**
+     * Sets the self route for the destination router.
+     *
+     * @param selfRoute  self route to set.
+     */
+    @Override
+    public void setSelfRoute(Route selfRoute) {
+        table.setRoute(this, selfRoute);
+    }
+
     @Override
     public String toString() {
         return "Router(" + id + ")";

@@ -79,6 +79,7 @@ public class RouteTable {
      * @param route route to be set.
      */
     public void setRoute(Router neighbor, Route route) {
+        selectedNewRoute = false;   // mark no change by default - it is update if there is a new selection
         routes.put(neighbor, route);
 
         if (neighbor.equals(selectedNeighbour)) {
@@ -96,18 +97,12 @@ public class RouteTable {
     }
 
     /**
-     * Checks the the selected route was changed after the last time this method was called.
+     * Checks the the selected route was changed after the last update to the table.
      *
-     * @return true if the route was selected after the last time this method was called and false if
-     *         otherwise.
+     * @return true if the route was selected after the last update to the table and false if otherwise.
      */
     public boolean selectedNewRoute() {
-        boolean copyOfSelectedNewRoute = selectedNewRoute;
-
-        // turn off flag!
-        selectedNewRoute = false;
-
-        return copyOfSelectedNewRoute;  // return the value that was in th flag before reseting it
+        return selectedNewRoute;
     }
 
     /**
