@@ -1,7 +1,10 @@
 package v2.main;
 
+import v2.io.reporters.CSVReporterFactory;
 import v2.io.reporters.ReporterFactory;
+import v2.io.topologyreaders.SimpleTopologyReaderFactory;
 import v2.io.topologyreaders.TopologyReaderFactory;
+import v2.simulators.BasicSetupFactory;
 import v2.simulators.SetupFactory;
 
 import java.io.File;
@@ -132,10 +135,8 @@ public class Parameters {
         private final File reportDestination;
 
         // optional parameters
-//        private TopologyReaderFactory readerFactory = new SimpleTopologyReaderFactory();
-        private TopologyReaderFactory readerFactory = null; // TODO replace with Simple
-//        private ReporterFactory reporterFactory = new CSVReporterFactory();
-        private ReporterFactory reporterFactory = null; // TODO replace with CSV
+        private TopologyReaderFactory readerFactory = new SimpleTopologyReaderFactory();
+        private ReporterFactory reporterFactory = null;
         private File anycastFile = null;
         private int minDelay = 0;
         private int maxDelay = 10;
@@ -213,9 +214,12 @@ public class Parameters {
 //        }
 
         public Parameters build() {
-            SetupFactory setupFactory = null;
+
+            // use by default the CSV reporter
+            if (reporterFactory == null) reporterFactory = new CSVReporterFactory(topologyFile, destinationId);
 
             // TODO implement the selection of the setup factory
+            SetupFactory setupFactory = new BasicSetupFactory();
 
             return new Parameters(topologyFile, readerFactory, reportDestination, reporterFactory,
                     anycastFile, minDelay, maxDelay, destinationId, repetitionCount, setupFactory, seed);
