@@ -43,4 +43,12 @@ public interface Scheduler {
      */
     void clear();
 
+    /**
+     * Resets the scheduler. Although the scheduler should not have state, it stores the messages to be
+     * scheduled and might have some information to generate the delays that needs to be refreshed for
+     * every new simulation. Therefore, this method should be called once before each simulation and should
+     * be used to clear all messages from the scheduler and refresh any fields used to generate the delays.
+     */
+    void reset();
+
 }

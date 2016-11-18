@@ -81,6 +81,14 @@ public abstract class AbstractScheduler implements Scheduler {
     }
 
     /**
+     * Clears all messages from the scheduler.
+     */
+    @Override
+    public void reset() {
+        clear();
+    }
+
+    /**
      * Method used to introduce delay in the messages. All subclasses should implement this method to
      * provide delay to the messages. The method is called every time a new message is added to the scheduler.
      *
