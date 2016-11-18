@@ -32,6 +32,15 @@ public class Message {
     }
 
     /**
+     * Returns the target router of the message. This is the source router of the message's link.
+     *
+     * @return the target router of the message.
+     */
+    public Router getTarget() {
+        return traversedLink.getSource();
+    }
+
+    /**
      * Sets the arrival time of the message.
      *
      * @param time the time value to set as the arrival time of the message.

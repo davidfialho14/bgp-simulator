@@ -143,6 +143,10 @@ public class Router extends Node implements Destination {
         table.setRoute(this, selfRoute);
     }
 
+    public void process(Message message) {
+
+    }
+
     @Override
     public String toString() {
         return "Router(" + id + ")";
