@@ -7,7 +7,7 @@ import v2.core.schedulers.RouteReference;
  * and the time of arrival to the the source node of the link. Messages are always sent from the target
  * node to the source node.
  */
-public class Message {
+public class Message implements Comparable<Message> {
 
     private int arrivalTime;
     private final Link traversedLink;
@@ -49,4 +49,11 @@ public class Message {
         this.arrivalTime = time;
     }
 
+    /**
+     * Compares both messages arrival times.
+     */
+    @Override
+    public int compareTo(Message o) {
+        return arrivalTime - o.getArrivalTime();
+    }
 }
