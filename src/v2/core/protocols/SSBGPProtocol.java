@@ -1,10 +1,14 @@
 package v2.core.protocols;
 
 import v2.core.*;
+import v2.core.events.ImportEvent;
+import v2.core.events.LearnEvent;
+import v2.core.events.SelectEvent;
 import v2.core.exporters.Exporter;
 
 import static v2.core.InvalidAttribute.invalidAttr;
 import static v2.core.InvalidRoute.invalidRoute;
+import static v2.core.events.EventNotifier.eventNotifier;
 
 /**
  * Implementation of the SS-BGP Protocol. The protocol can be configured to use any detection implementation.
@@ -33,17 +37,29 @@ public class SSBGPProtocol implements Protocol {
      */
     @Override
     public final void process(Message message, Exporter exporter) {
+        int time = message.getArrivalTime();
         Link link = message.getTraversedLink();
 
         Route importedRoute = importRoute(message.getRoute(), link);
+        eventNotifier().notifyImportEvent(new ImportEvent(time, importedRoute, link));
+
         Route learnedRoute = learn(importedRoute, link);
+        eventNotifier().notifyLearnEvent(new LearnEvent(time, link, learnedRoute));
 
-        Router learningRouter = link.getSource();
-        learningRouter.getTable().setRoute(link.getTarget(), learnedRoute);
+        Router router = link.getSource();
 
-        if (learningRouter.getTable().selectedNewRoute()) { // checks if the selected route changed
-            exporter.export(learningRouter, learningRouter.getTable().getSelectedRoute(),
-                            message.getArrivalTime());
+        // store the previously selected route
+        Route previousSelectedRoute = router.getTable().getSelectedRoute();
+
+        router.getTable().setRoute(link.getTarget(), learnedRoute);
+
+        if (router.getTable().selectedNewRoute()) { // checks if the selected route changed
+            Route newSelectedRoute = router.getTable().getSelectedRoute();
+
+            eventNotifier().notifySelectEvent(
+                    new SelectEvent(time, router, previousSelectedRoute, newSelectedRoute));
+
+            exporter.export(router, newSelectedRoute, time);
         }
 
     }
