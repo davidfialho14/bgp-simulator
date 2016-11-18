@@ -13,7 +13,7 @@ import java.util.Map;
  * connections, storing the links with all of its neighbors. Each router is associated with a protocol that
  * is used to process incoming messages. 
  */
-public class Router extends Node {
+public class Router extends Node implements Destination {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
