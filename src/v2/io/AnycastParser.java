@@ -19,6 +19,8 @@ import static v2.core.protocols.DummyDetection.dummyDetection;
  */
 public class AnycastParser {
 
+    private AnycastParser() { } // should not be instantiated
+
     /**
      * Parses the given anycast file to find relevant information to construct a destination router.
      *
@@ -28,7 +30,7 @@ public class AnycastParser {
      * @return destination router parsed from the file.
      * @throws DestinationNotFoundException if the destination ID is not found in the anycast file.
      */
-    public Destination parseDestination(String anycastFile, Topology topology, int destinationID)
+    public static Destination parseDestination(String anycastFile, Topology topology, int destinationID)
             throws DestinationNotFoundException, IOException {
 
         // create fake destination router
@@ -61,7 +63,7 @@ public class AnycastParser {
      * Parsed line contains the information obtain when the line is parsed. It works as a simple named tuple
      * like in python!
      */
-    private class ParsedLine {
+    private static class ParsedLine {
         private final Router neighbor;
         private final Label label;
 
@@ -79,7 +81,7 @@ public class AnycastParser {
      * @param topology  topology to which the neighbor should belong to.
      * @return null if the line is invalid or a parsed line containing the parsed neighbor and label.
      */
-    private ParsedLine parseDestinationLine(String line, Topology topology) {
+    private static ParsedLine parseDestinationLine(String line, Topology topology) {
         // the line format is <destination>|<neighbour>|<label>
         String[] lineArgs = line.split("\\|");
 
