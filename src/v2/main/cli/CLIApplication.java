@@ -1,4 +1,4 @@
-package v2.io.cli;
+package v2.main.cli;
 
 import org.apache.commons.cli.ParseException;
 import v2.main.Parameters;
