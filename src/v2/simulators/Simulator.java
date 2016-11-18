@@ -51,11 +51,12 @@ public class Simulator {
     /**
      * Reports the results of the last simulation.
      *
-     * @param reporter  reporter implementation to report data.
+     * @param reporter          reporter implementation to report data.
+     * @param simulationNumber  number of the simulation being reported.
      * @throws IOException if there is an IO error while reporting.
      */
-    public void report(Reporter reporter) throws IOException {
-        setup.getDataCollector().report(reporter);
+    public void report(Reporter reporter, int simulationNumber) throws IOException {
+        setup.getDataCollector().report(reporter, simulationNumber);
     }
 
 }

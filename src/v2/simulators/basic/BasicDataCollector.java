@@ -86,11 +86,12 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     /**
      * Reports the current collected data using the given reporter implementation.
      *
-     * @param reporter reporter implementation to be used.
+     * @param reporter          reporter implementation to be used.
+     * @param simulationNumber  number of the simulation being reported.
      */
     @Override
-    public void report(Reporter reporter) throws IOException {
-        reporter.report(dataset);
+    public void report(Reporter reporter, int simulationNumber) throws IOException {
+        reporter.report(simulationNumber, dataset);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

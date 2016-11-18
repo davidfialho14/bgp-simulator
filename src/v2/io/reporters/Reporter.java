@@ -27,7 +27,7 @@ public interface Reporter {
     *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    void report(BasicDataset dataset);
+    void report(int simulationNumber, BasicDataset dataset);
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *

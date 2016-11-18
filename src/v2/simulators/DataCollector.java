@@ -34,8 +34,9 @@ public interface DataCollector {
     /**
      * Reports the current collected data using the given reporter implementation.
      *
-     * @param reporter reporter implementation to be used.
+     * @param reporter          reporter implementation to be used.
+     * @param simulationNumber  number of the simulation to report.
      */
-    void report(Reporter reporter) throws IOException;
+    void report(Reporter reporter, int simulationNumber) throws IOException;
 
 }
