@@ -44,7 +44,9 @@ public class SimpleTopologyReader implements TopologyReader {
     public Topology read() throws IOException, TopologyParseException {
 
         // policy is specified in the first line
-        Policy policy = PolicyTagger.getPolicy(fileReader.readLine());
+        LineEntry policyEntry = parseLine(fileReader.readLine(), 1);
+        Policy policy = PolicyTagger.getPolicy(policyEntry.values[0]);
+
         Topology topology = new Topology(policy, ssBGPProtocol());
 
         //
@@ -52,7 +54,7 @@ public class SimpleTopologyReader implements TopologyReader {
         //
 
         String line;
-        int lineCount = 0;
+        int lineCount = 1;
 
         while ((line = fileReader.readLine()) != null) {
             lineCount++;
@@ -121,7 +123,7 @@ public class SimpleTopologyReader implements TopologyReader {
     }
 
     private LineEntry parseLine(String line, int lineNumber) throws TopologyParseException {
-        line.replaceAll("\\s", "");    // remove all whitespaces
+        line = line.replaceAll("\\s", "");    // remove all whitespaces
 
         // split key from values
         String[] splitKeyAndValues = line.split("=");
