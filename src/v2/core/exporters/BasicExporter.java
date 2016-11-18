@@ -1,11 +1,14 @@
 package v2.core.exporters;
 
 import v2.core.*;
+import v2.core.events.AdvertisementEvent;
+import v2.core.events.ExportEvent;
 import v2.core.schedulers.RouteReference;
 import v2.core.schedulers.Scheduler;
 
 import static v2.core.InvalidAttribute.invalidAttr;
 import static v2.core.Route.newSelfRoute;
+import static v2.core.events.EventNotifier.eventNotifier;
 
 
 /**
@@ -64,7 +67,9 @@ public class BasicExporter implements Exporter {
                     // withdrawals are exported immediately
                     exportTime = currentTime;
 
-                    // FIXME fire advertisement event here
+                    eventNotifier().notifyAdvertisementEvent(
+                            new AdvertisementEvent(exportTime, exportingRouter, route));
+
                 } else {
                     // advertisements that are not withdrawals must wait for the timer to expire
                     exportTime = expirationTime;
@@ -79,7 +84,8 @@ public class BasicExporter implements Exporter {
 
                 // fire an Advertisement Event with the time corresponding to the expiration time
                 // the expiration time is the time when the event actually occurs
-                // FIXME fire advertisement event here
+                eventNotifier().notifyAdvertisementEvent(
+                        new AdvertisementEvent(expirationTime, exportingRouter, route));
             }
         }
 
@@ -104,7 +110,7 @@ public class BasicExporter implements Exporter {
         // add the route to the scheduler with the given export time
         scheduler.schedule(new Message(exportTime, exportLink, routeReference));
 
-        // FIXME fire export event here
+        eventNotifier().notifyExportEvent(new ExportEvent(exportTime, exportLink, routeReference.getRoute()));
     }
 
 }
