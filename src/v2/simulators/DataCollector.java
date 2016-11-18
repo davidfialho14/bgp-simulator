@@ -5,10 +5,11 @@ import v2.io.reporters.Reporter;
 import java.io.IOException;
 
 /**
- * Data collector is the class responsible for collecting data during a simulation. Simulators delegate on data
- * collectors the data collection logic. To collect data from a simulation a data collector must be registered with a
- * simulation engine. After finishing the data collection the collector should be unregistered. The data
- * collector can be visited by a reporter to report its data.
+ * Data collector is the class responsible for collecting data during a simulation. Simulation setups delegate
+ * on data collectors the data collection logic. To collect data from a simulation a data collector
+ * registers with the event notifier during the construction process. A data collector can also unregister.
+ * After finishing the data collection the collector should unregister. The data collector can be visited
+ * by a reporter to report its data.
  */
 public interface DataCollector {
 
@@ -19,6 +20,11 @@ public interface DataCollector {
      * @return a dataset instance with the collected data.
      */
     Dataset getDataset();
+
+    /**
+     * Unregisters from the event notifier for all events.
+     */
+    void unregister();
 
     /**
      * Clears all data that has been collected

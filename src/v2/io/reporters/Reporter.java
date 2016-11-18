@@ -1,5 +1,9 @@
 package v2.io.reporters;
 
+import v2.main.Parameters;
+import v2.simulators.basic.BasicDataset;
+import v2.simulators.basic.BasicSetup;
+
 import java.io.IOException;
 
 /**
@@ -11,9 +15,19 @@ public interface Reporter {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *
+    *  Visitor Methods to Report simulation Setups
+    *
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    void reportSetup(BasicSetup basicSetup, Parameters parameters);
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *
     *  Visitor Methods to Write Data from different datasets
     *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    void report(BasicDataset dataset);
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *
