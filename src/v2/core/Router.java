@@ -29,24 +29,13 @@ public class Router extends Node implements Destination {
     private RouteTable table = null;
 
     private final MRAITimer mraiTimer;
-    private Detection detection = null;    // detection method deployed by the router
+    private Detection detection;    // detection method deployed by the router
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Constructors
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Creates a new router with the given ID.
-     *
-     * @param id id to assign to the router.
-     */
-    public Router(int id) {
-        super(id);
-        inLinks = new HashMap<>();
-        mraiTimer = new MRAITimer();   // use the default timer
-    }
 
     /**
      * Creates a new router and sets the MRAI value for the timer.

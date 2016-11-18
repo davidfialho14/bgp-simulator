@@ -6,6 +6,7 @@ import v2.core.Destination;
 import v2.core.Label;
 import v2.core.Router;
 import v2.core.Topology;
+import v2.core.protocols.DummyDetection;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +31,7 @@ public class AnycastParser {
             throws DestinationNotFoundException, IOException {
 
         // create fake destination router
-        Destination destination = new Router(destinationID);
+        Destination destination = new Router(destinationID, 0, new DummyDetection());
 
         try( Stream<String> lines = Files.lines(Paths.get(anycastFile)) ) {
 

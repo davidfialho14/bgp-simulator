@@ -4,6 +4,8 @@ package v2.wrappers;
 import v2.core.Path;
 import v2.core.Router;
 
+import static v2.wrappers.TopologyWrapper.router;
+
 /**
  * Implements wrapper methods to create paths in a more readable way.
  */
@@ -19,7 +21,7 @@ public interface PathWrapper {
         Router[] routers = new Router[routerIds.length];
 
         for (int i = 0; i < routerIds.length; i++) {
-            routers[i] = new Router(routerIds[i]);
+            routers[i] = router(routerIds[i]);
         }
 
         return new Path(routers);
