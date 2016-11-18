@@ -10,6 +10,13 @@ import java.util.Collection;
 public interface Destination {
 
     /**
+     * Returns the destination's ID.
+     *
+     * @return the destination's ID.
+     */
+    int getId();
+
+    /**
      * Returns a collection with all the in-links of the destination router.
      *
      * @return collection with all the in-links of the destination router.
