@@ -156,7 +156,10 @@ public final class Topology {
      * @return true if the router was added or false if the router already existed.
      */
     public boolean addRouter(Router router) {
-        return routers.putIfAbsent(router.getId(), router) == null;
+        boolean added = routers.putIfAbsent(router.getId(), router) == null;
+        if (added) router.setTopology(this);
+
+        return added;
     }
 
     /**
