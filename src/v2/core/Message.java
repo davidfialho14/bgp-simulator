@@ -7,7 +7,7 @@ package v2.core;
  */
 public class Message {
 
-    private final int arrivalTime;
+    private int arrivalTime;
     private final Link traversedLink;
     private final Route route;
 
@@ -28,5 +28,15 @@ public class Message {
     public Route getRoute() {
         return route;
     }
-    
+
+    /**
+     * Adds to the message's current arrival time "time" units of time. The resulting time of arrivel of
+     * the message corresponds to its current arrival time summed with the given extra time.
+     *
+     * @param time extra time to add to the message's current arrival time.
+     */
+    public void addToArrivalTime(int time) {
+        this.arrivalTime += time;
+    }
+
 }

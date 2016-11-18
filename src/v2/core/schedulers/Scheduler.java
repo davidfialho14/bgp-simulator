@@ -38,4 +38,9 @@ public interface Scheduler {
      */
     int getTime();
 
+    /**
+     * Clears all messages from the scheduler.
+     */
+    void clear();
+
 }
