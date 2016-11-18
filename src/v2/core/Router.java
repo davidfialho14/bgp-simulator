@@ -23,6 +23,7 @@ public class Router extends Node implements Destination {
     
     private final Map<Router, Link> inLinks;
     private RouteTable table = null;
+    private final MRAITimer mraiTimer;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -38,6 +39,19 @@ public class Router extends Node implements Destination {
     public Router(int id) {
         super(id);
         inLinks = new HashMap<>();
+        mraiTimer = new MRAITimer();   // use the default timer
+    }
+
+    /**
+     * Creates a new router and sets the MRAI value for the timer.
+     *
+     * @param id    ID to assign to the router.
+     * @param MRAI  value for the MRAI.
+     */
+    public Router(int id, int MRAI) {
+        super(id);
+        inLinks = new HashMap<>();
+        this.mraiTimer = new MRAITimer(MRAI);
     }
 
     // TODO create constructors to configure the MRAI timer and the protocol
@@ -51,6 +65,7 @@ public class Router extends Node implements Destination {
     public Router(Router router) {
         super(router.getId());
         this.inLinks = new HashMap<>(router.inLinks);
+        this.mraiTimer = new MRAITimer(router.getMRAITimer().getMRAI());
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -85,6 +100,15 @@ public class Router extends Node implements Destination {
      */
     public int getInNeighborCount() {
         return inLinks.size();
+    }
+
+    /**
+     * Returns the MRAI timer associated with the router.
+     *
+     * @return the MRAI timer associated with the router.
+     */
+    public MRAITimer getMRAITimer() {
+        return mraiTimer;
     }
 
     /**
