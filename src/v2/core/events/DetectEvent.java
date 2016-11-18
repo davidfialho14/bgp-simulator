@@ -1,12 +1,13 @@
 package v2.core.events;
 
-import core.Path;
-import core.Route;
-import core.topology.ConnectedNode;
-import core.topology.Link;
+
+import v2.core.Link;
+import v2.core.Path;
+import v2.core.Route;
+import v2.core.Router;
 
 /**
- * Events generated when a node learns a new route.
+ * Events generated when a router learns a new route.
  */
 public class DetectEvent extends AbstractSimulationEvent {
 
@@ -34,8 +35,8 @@ public class DetectEvent extends AbstractSimulationEvent {
      * @return cycle that originated detect event.
      */
     public Path getCycle() {
-        Path cycle = getLearnedRoute().getPath().getSubPathBefore(getDetectingNode());
-        cycle.add(getDetectingNode());    // include the detecting node in the start and end of the cycle path
+        Path cycle = getLearnedRoute().getPath().getSubPathBefore(getDetectingRouter());
+        cycle.add(getDetectingRouter());    // include the detecting router in the start and end of the cycle path
 
         return cycle;
     }
@@ -68,11 +69,11 @@ public class DetectEvent extends AbstractSimulationEvent {
     }
 
     /**
-     * Returns the node that detected.
+     * Returns the router that detected.
      *
-     * @return node that detected.
+     * @return router that detected.
      */
-    public ConnectedNode getDetectingNode() {
+    public Router getDetectingRouter() {
         return outLink.getSource();
     }
 

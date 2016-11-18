@@ -1,11 +1,12 @@
 package v2.core.events;
 
-import core.Route;
-import core.topology.ConnectedNode;
-import core.topology.Link;
+
+import v2.core.Link;
+import v2.core.Route;
+import v2.core.Router;
 
 /**
- * Events generated when a node imports a route.
+ * Events generated when a router imports a route.
  */
 public class ImportEvent extends AbstractSimulationEvent {
 
@@ -43,21 +44,21 @@ public class ImportEvent extends AbstractSimulationEvent {
     }
 
     /**
-     * Returns the node that imported the route.
+     * Returns the router that imported the route.
      *
-     * @return node that imported the route
+     * @return router that imported the route
      */
-    public ConnectedNode getImportingNode() {
+    public Router getImportingRouter() {
         return link.getSource();
     }
 
     /**
-     * Returns the node that exported the route.
+     * Returns the router that exported the route.
      *
-     * @return node that exported the route
+     * @return router that exported the route
      */
-    public ConnectedNode getExportingNode() {
-        return link.getDestination();
+    public Router getExportingRouter() {
+        return link.getTarget();
     }
 
     @Override

@@ -1,33 +1,38 @@
 package v2.core.events;
 
-import core.Route;
-import core.topology.ConnectedNode;
+import v2.core.Route;
+import v2.core.Router;
 
 /**
- * Events generated when a node selects a route.
+ * Events generated when a router selects a route.
  */
 public class SelectEvent extends AbstractSimulationEvent {
 
-    private final ConnectedNode selectingNode;
+    private final Router selectingRouter;
     private final Route previousRoute;  // route previously selected
     private final Route selectedRoute;  // route selected
 
     /**
      * Constructs a new select event. The previous route and selected route can be the same.
      *
-     * @param selectingNode node that selected route.
+     * @param selectingRouter router that selected route.
      * @param previousRoute previous selected route.
      * @param selectedRoute selected route.
      */
-    public SelectEvent(long time, ConnectedNode selectingNode, Route previousRoute, Route selectedRoute) {
+    public SelectEvent(long time, Router selectingRouter, Route previousRoute, Route selectedRoute) {
         super(time);
-        this.selectingNode = selectingNode;
+        this.selectingRouter = selectingRouter;
         this.previousRoute = previousRoute;
         this.selectedRoute = selectedRoute;
     }
 
-    public ConnectedNode getSelectingNode() {
-        return selectingNode;
+    /**
+     * Returns the router which selected a new route.
+     *
+     * @return the router which selected a new route.
+     */
+    public Router getSelectingRouter() {
+        return selectingRouter;
     }
 
     /**

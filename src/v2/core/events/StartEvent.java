@@ -1,7 +1,7 @@
 package v2.core.events;
 
-import core.schedulers.RandomScheduler;
-import core.schedulers.Scheduler;
+import v2.core.schedulers.RandomScheduler;
+import v2.core.schedulers.Scheduler;
 
 /**
  * Events generated when the simulation starts.
