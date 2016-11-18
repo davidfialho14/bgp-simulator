@@ -24,28 +24,13 @@ public class RouteTable {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final Map<Router, Route> routes;
+    private final Map<Router, Route> routes = new HashMap<>();
 
-    private Route selectedRoute;
-    private Router selectedNeighbour;
+    private Route selectedRoute = invalidRoute();
+    private Router selectedNeighbour = null;
 
     // flag to indicate if a new route was selected after the last time it is checked
     private boolean selectedNewRoute = false;
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *
-     *  Constructors
-     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Constructs a new empty route table with no out-neighbors.
-     */
-    public RouteTable() {
-        this.routes = new HashMap<>();
-        this.selectedRoute = invalidRoute();
-        this.selectedNeighbour = null;
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -132,6 +117,16 @@ public class RouteTable {
         } else {
             return getBestRoute(ignoredNeighbor);
         }
+    }
+
+    /**
+     * Resets the route table to the initial conditions.
+     */
+    public void reset() {
+        routes.clear();
+        selectedNewRoute = false;
+        selectedNeighbour = null;
+        selectedRoute = invalidRoute();
     }
 
     @Override

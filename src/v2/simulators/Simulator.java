@@ -1,5 +1,7 @@
 package v2.simulators;
 
+import v2.core.Link;
+import v2.core.Router;
 import v2.io.reporters.Reporter;
 
 import java.io.IOException;
@@ -46,6 +48,21 @@ public class Simulator {
         setup.setup();
         setup.start();
         setup.cleanup();
+
+        // reset the routers
+        for (Router router : setup.getTopology().getRouters()) {
+
+            router.getTable().reset();
+            router.getMRAITimer().reset();
+
+            // reset router's links
+            for (Link link : router.getInLinks()) {
+                link.setTurnedOff(false);
+                link.setLastArrivalTime(0);
+            }
+
+        }
+
     }
 
     /**
