@@ -1,6 +1,5 @@
 package v2.core.events;
 
-import v2.core.schedulers.RandomScheduler;
 import v2.core.schedulers.Scheduler;
 
 /**
@@ -17,12 +16,7 @@ public class StartEvent extends AbstractSimulationEvent {
      */
     public StartEvent(long time, Scheduler scheduler) {
         super(time);
-
-        if (scheduler instanceof RandomScheduler) {
-            seed = ((RandomScheduler) scheduler).getSeed();
-        } else {
-            seed = null;
-        }
+        seed = scheduler.getSeed();
     }
 
     /**

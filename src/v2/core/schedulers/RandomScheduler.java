@@ -49,6 +49,24 @@ public class RandomScheduler extends AbstractScheduler {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
+     * Returns the minimum delay (inclusive).
+     *
+     * @return the minimum delay (inclusive).
+     */
+    public int getMinDelay() {
+        return randomDelayGenerator.getMin();
+    }
+
+    /**
+     * Returns the maximum delay (inclusive).
+     *
+     * @return the maximum delay (inclusive).
+     */
+    public int getMaxDelay() {
+        return randomDelayGenerator.getMax();
+    }
+
+    /**
      * Returns the seed used to generate the delays.
      *
      * @return the seed used to generate the delays.

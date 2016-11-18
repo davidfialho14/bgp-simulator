@@ -39,6 +39,27 @@ public interface Scheduler {
     int getTime();
 
     /**
+     * Returns the seed used to generate the delays.
+     *
+     * @return the seed used to generate the delays.
+     */
+    long getSeed();
+
+    /**
+     * Returns the minimum delay (inclusive).
+     *
+     * @return the minimum delay (inclusive).
+     */
+    int getMinDelay();
+
+    /**
+     * Returns the maximum delay (inclusive).
+     *
+     * @return the maximum delay (inclusive).
+     */
+    int getMaxDelay();
+
+    /**
      * Clears all messages from the scheduler.
      */
     void clear();

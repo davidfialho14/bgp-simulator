@@ -50,6 +50,24 @@ public class RandomDelayGenerator {
     }
 
     /**
+     * Returns the minimum delay (inclusive).
+     *
+     * @return the minimum delay (inclusive).
+     */
+    public int getMin() {
+        return min;
+    }
+
+    /**
+     * Returns the maximum delay (inclusive).
+     *
+     * @return the maximum delay (inclusive).
+     */
+    public int getMax() {
+        return max;
+    }
+
+    /**
      * Sets the minimum delay (inclusive)
      *
      * @param min vlaue for the minimum delay.
