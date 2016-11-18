@@ -22,6 +22,9 @@ public class Link extends DirectedEdge {
     // by default all links are turned on
     private boolean turnedOff = false;
 
+    // stores the arrival time of the last message sent through this link
+    private int lastArrivalTime = 0;
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Constructors
@@ -70,6 +73,25 @@ public class Link extends DirectedEdge {
      */
     public void setTurnedOff(boolean turnedOff) {
         this.turnedOff = turnedOff;
+    }
+
+    /**
+     * Returns the link's last arrival time. Corresponds the to arrival time of the last message sent
+     * through this link.
+     *
+     * @return the link's last arrival time.
+     */
+    public int getLastArrivalTime() {
+        return lastArrivalTime;
+    }
+
+    /**
+     * Sets a new value for the link's last arrival time.
+     *
+     * @param lastArrivalTime value to set as the link's last arrival time.
+     */
+    public void setLastArrivalTime(int lastArrivalTime) {
+        this.lastArrivalTime = lastArrivalTime;
     }
 
     /**

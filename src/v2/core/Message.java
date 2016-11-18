@@ -30,13 +30,12 @@ public class Message {
     }
 
     /**
-     * Adds to the message's current arrival time "time" units of time. The resulting time of arrivel of
-     * the message corresponds to its current arrival time summed with the given extra time.
+     * Sets the arrival time of the message.
      *
-     * @param time extra time to add to the message's current arrival time.
+     * @param time the time value to set as the arrival time of the message.
      */
-    public void addToArrivalTime(int time) {
-        this.arrivalTime += time;
+    public void setArrivalTime(int time) {
+        this.arrivalTime = time;
     }
 
 }

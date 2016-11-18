@@ -1,6 +1,5 @@
 package v2.core.schedulers;
 
-import v2.core.Link;
 import v2.core.Message;
 
 import java.util.PriorityQueue;
@@ -26,7 +25,13 @@ public abstract class AbstractScheduler implements Scheduler {
      */
     @Override
     public void schedule(Message message) {
-        message.addToArrivalTime(delay(message.getTraversedLink()));
+        int arrivalTimeWithDelay = message.getArrivalTime() + delay();
+        int lastMessageArrivalTime = message.getTraversedLink().getLastArrivalTime();
+
+        // the message must arrive after the last message sent through the same link
+        int messagesArrivalTime = Integer.max(arrivalTimeWithDelay, lastMessageArrivalTime + 1);
+        message.setArrivalTime(messagesArrivalTime);
+
         queue.offer(message);
     }
 
@@ -92,9 +97,8 @@ public abstract class AbstractScheduler implements Scheduler {
      * Method used to introduce delay in the messages. All subclasses should implement this method to
      * provide delay to the messages. The method is called every time a new message is added to the scheduler.
      *
-     * @param link  link used to send the message.
      * @return delay value.
      */
-    protected abstract int delay(Link link);
+    protected abstract int delay();
 
 }
