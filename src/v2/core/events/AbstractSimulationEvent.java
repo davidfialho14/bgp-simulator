@@ -5,9 +5,9 @@ package v2.core.events;
  */
 public class AbstractSimulationEvent implements SimulationEvent {
 
-    private final long time;
+    private final int time;
 
-    public AbstractSimulationEvent(long time) {
+    public AbstractSimulationEvent(int time) {
         this.time = time;
     }
 

@@ -19,7 +19,7 @@ public class SelectEvent extends AbstractSimulationEvent {
      * @param previousRoute previous selected route.
      * @param selectedRoute selected route.
      */
-    public SelectEvent(long time, Router selectingRouter, Route previousRoute, Route selectedRoute) {
+    public SelectEvent(int time, Router selectingRouter, Route previousRoute, Route selectedRoute) {
         super(time);
         this.selectingRouter = selectingRouter;
         this.previousRoute = previousRoute;

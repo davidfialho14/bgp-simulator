@@ -22,7 +22,7 @@ public class DetectEvent extends AbstractSimulationEvent {
      * @param learnedRoute route learned.
      * @param alternativeRoute alternative route.
      */
-    public DetectEvent(long time, Link outLink, Route learnedRoute, Route alternativeRoute) {
+    public DetectEvent(int time, Link outLink, Route learnedRoute, Route alternativeRoute) {
         super(time);
         this.outLink = outLink;
         this.learnedRoute = learnedRoute;

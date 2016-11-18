@@ -18,7 +18,7 @@ public class LearnEvent extends AbstractSimulationEvent {
      * @param learnLink link from which the new route was learned.
      * @param learnedRoute route learned.
      */
-    public LearnEvent(long time, Link learnLink, Route learnedRoute) {
+    public LearnEvent(int time, Link learnLink, Route learnedRoute) {
         super(time);
         this.link = learnLink;
         this.route = learnedRoute;

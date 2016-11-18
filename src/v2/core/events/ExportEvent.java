@@ -19,7 +19,7 @@ public class ExportEvent extends AbstractSimulationEvent {
      * @param exportLink link from which the new route was exported.
      * @param exportedRoute route exported.
      */
-    public ExportEvent(long time, Link exportLink, Route exportedRoute) {
+    public ExportEvent(int time, Link exportLink, Route exportedRoute) {
         super(time);
         this.link = exportLink;
         this.route = exportedRoute;

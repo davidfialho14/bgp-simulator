@@ -14,7 +14,7 @@ public class StartEvent extends AbstractSimulationEvent {
      *
      * @param scheduler scheduler being used for the simulation
      */
-    public StartEvent(long time, Scheduler scheduler) {
+    public StartEvent(int time, Scheduler scheduler) {
         super(time);
         seed = scheduler.getSeed();
     }

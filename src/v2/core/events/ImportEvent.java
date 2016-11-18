@@ -19,7 +19,7 @@ public class ImportEvent extends AbstractSimulationEvent {
      * @param importedRoute route imported.
      * @param importLink link from which the route was imported.
      */
-    public ImportEvent(long time, Route importedRoute, Link importLink) {
+    public ImportEvent(int time, Route importedRoute, Link importLink) {
         super(time);
         this.route = importedRoute;
         this.link = importLink;

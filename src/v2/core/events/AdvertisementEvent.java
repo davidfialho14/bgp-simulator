@@ -20,7 +20,7 @@ public class AdvertisementEvent extends AbstractSimulationEvent {
      * @param advertisingRouter   router which advertised the route
      * @param advertisedRoute     advertised route
      */
-    public AdvertisementEvent(long time, Router advertisingRouter, Route advertisedRoute) {
+    public AdvertisementEvent(int time, Router advertisingRouter, Route advertisedRoute) {
         super(time);
         this.advertisingRouter = advertisingRouter;
         this.route = advertisedRoute;

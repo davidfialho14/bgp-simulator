@@ -5,7 +5,7 @@ package v2.core.events;
  */
 public class TerminateEvent extends AbstractSimulationEvent {
 
-    public TerminateEvent(long time) {
+    public TerminateEvent(int time) {
         super(time);
     }
 

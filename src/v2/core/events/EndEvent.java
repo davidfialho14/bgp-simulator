@@ -5,7 +5,7 @@ package v2.core.events;
  */
 public class EndEvent extends AbstractSimulationEvent {
 
-    public EndEvent(long time) {
+    public EndEvent(int time) {
         super(time);
     }
 
