@@ -1,8 +1,13 @@
 package v2.core;
 
 
+import v2.core.events.EndEvent;
+import v2.core.events.StartEvent;
+import v2.core.events.TerminateEvent;
 import v2.core.exporters.Exporter;
 import v2.core.schedulers.Scheduler;
+
+import static v2.core.events.EventNotifier.eventNotifier;
 
 /**
  * Engine implements the hard simulation simulation logic.
@@ -60,24 +65,27 @@ public class Engine {
     public void simulate(Topology topology, Destination destination) {
         scheduler.reset();
 
-        // FIXME fire start even here
+        eventNotifier().notifyStartEvent(new StartEvent(0, scheduler));
 
         // start the simulation by having the destination export its self route to its neighbors
         exporter.export(destination, topology.getPolicy());
 
+        int time = 0;
         while (scheduler.hasMessages()) {
 
             Message message = scheduler.nextMessage();
+            time = message.getArrivalTime();
+
             message.getTarget().process(message, exporter);
 
             if (!scheduler.hasMessages()) {
                 // a terminate even is fired here to allow external components to add more messages if
                 // necessary to the scheduler
-                // FIXME fire terminate even here
+                eventNotifier().notifyTerminateEvent(new TerminateEvent(time));
             }
         }
 
-        // FIXME fire end even here
+        eventNotifier().notifyEndEvent(new EndEvent(time));
     }
 
 }
