@@ -19,7 +19,7 @@ public interface Reporter {
     *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    void reportSetup(BasicSetup basicSetup, Parameters parameters);
+    void reportSetup(BasicSetup basicSetup, Parameters parameters) throws IOException;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *
@@ -27,7 +27,7 @@ public interface Reporter {
     *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    void report(int simulationNumber, BasicDataset dataset);
+    void report(int simulationNumber, BasicDataset dataset) throws IOException;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *

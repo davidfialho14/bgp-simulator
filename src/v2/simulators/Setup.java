@@ -29,6 +29,33 @@ public abstract class Setup {
     }
 
     /**
+     * Returns the engine of the setup.
+     *
+     * @return the engine of the setup.
+     */
+    public Engine getEngine() {
+        return engine;
+    }
+
+    /**
+     * Returns the topology of the setup.
+     *
+     * @return the topology of the setup.
+     */
+    public Topology getTopology() {
+        return topology;
+    }
+
+    /**
+     * Returns the destination of the setup.
+     *
+     * @return the destination of the setup.
+     */
+    public Destination getDestination() {
+        return destination;
+    }
+
+    /**
      * Returns the data collector used to collect simulation data.
      *
      * @return the data collector used to collect simulation data.
