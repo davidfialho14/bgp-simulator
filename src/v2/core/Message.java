@@ -13,10 +13,10 @@ public class Message {
     private final Link traversedLink;
     private final RouteReference routeReference;
 
-    public Message(int time, Link traversedLink, Route route) {
+    public Message(int time, Link traversedLink, RouteReference routeReference) {
         this.arrivalTime = time;
         this.traversedLink = traversedLink;
-        this.routeReference = new RouteReference(route);
+        this.routeReference = routeReference;
     }
 
     public int getArrivalTime() {
@@ -29,10 +29,6 @@ public class Message {
 
     public Route getRoute() {
         return routeReference.getRoute();
-    }
-
-    public RouteReference getRouteReference() {
-        return routeReference;
     }
 
     /**

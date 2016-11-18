@@ -1,16 +1,17 @@
 package v2.core.exporters;
 
 import v2.core.*;
+import v2.core.schedulers.RouteReference;
 import v2.core.schedulers.Scheduler;
 
 import static v2.core.InvalidAttribute.invalidAttr;
+import static v2.core.Route.newSelfRoute;
 
 
 /**
- * This class provides a skeleton implementation of the Exporter interface. Implements the association of an
- * exporter with an engine and provides a base implementation of the export() methods.
+ * Basic implementation of an exporter.
  */
-public abstract class AbstractExporter implements Exporter {
+public class BasicExporter implements Exporter {
 
     private final Scheduler scheduler;
 
@@ -19,28 +20,28 @@ public abstract class AbstractExporter implements Exporter {
      *
      * @param scheduler scheduler where the messages are pushed to.
      */
-    protected AbstractExporter(Scheduler scheduler) {
+    protected BasicExporter(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
 
     /**
      * Exports the given message. The message arrival time must be the current time.
      *
-     * @param message message to export.
+     * @param exportLink    link to export route through.
+     * @param route         route to export.
+     * @param currentTime   current simulation time.
      */
     @Override
-    public void export(Message message) {
-        Router exportingRouter = message.getTraversedLink().getSource();
+    public void export(Link exportLink, Route route, int currentTime) {
+        Router exportingRouter = exportLink.getSource();
         MRAITimer timer = exportingRouter.getMRAITimer();
-
-        int currentTime = message.getArrivalTime();
 
         if (!timer.hasExpired(currentTime)) {
             // update the export route for the current timer
-            timer.updateExportRoute(message.getRoute());
+            timer.updateExportRoute(route);
 
         } else {
-            timer.reset(currentTime, message.getRouteReference());
+            timer.reset(currentTime, route);
 
             int expirationTime = timer.getExpirationTime();
             boolean exportedUpdate = false; // indicates if a message other than an withdrawal was exported
@@ -49,7 +50,7 @@ public abstract class AbstractExporter implements Exporter {
             for (Link link : exportingRouter.getInLinks()) {
 
                 int exportTime;
-                Attribute extendedAttribute = link.getLabel().extend(link, message.getRoute().getAttribute());
+                Attribute extendedAttribute = link.getLabel().extend(link, route.getAttribute());
                 if (extendedAttribute == invalidAttr()) {
                     // withdrawals are exported immediately
                     exportTime = currentTime;
@@ -61,7 +62,7 @@ public abstract class AbstractExporter implements Exporter {
                     exportedUpdate = true;
                 }
 
-                export(message, exportTime);
+                export(exportLink, timer.getExportRouteReference(), exportTime);
             }
 
             if (exportedUpdate) {
@@ -75,10 +76,24 @@ public abstract class AbstractExporter implements Exporter {
 
     }
 
-    protected void export(Message message, int exportTime) {
+    /**
+     * Exports the self route for the given destination to all of its in-neighbors.
+     *
+     * @param destination destination to export self routes for.
+     * @param policy      policy used to get the self route.
+     */
+    @Override
+    public void export(Destination destination, Policy policy) {
+        Route selfRoute = newSelfRoute(policy);
+        destination.setSelfRoute(selfRoute);
+        RouteReference selfRouteReference = new RouteReference(selfRoute);
+
+        destination.getInLinks().forEach(link -> export(link, selfRouteReference, 0));
+    }
+
+    protected void export(Link exportLink, RouteReference routeReference, int exportTime) {
         // add the route to the scheduler with the given export time
-        message.setArrivalTime(exportTime);
-        scheduler.schedule(message);
+        scheduler.schedule(new Message(exportTime, exportLink, routeReference));
 
         // FIXME fire export event here
     }

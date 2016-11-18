@@ -80,9 +80,9 @@ public class MRAITimer {
     /**
      * Resets the timer to expire MRAI units of time after the current time.
      */
-    public void reset(int currentTime, RouteReference exportedRouteReference) {
+    public void reset(int currentTime, Route exportedRoute) {
         expirationTime = currentTime + MRAI;
-        this.exportedRouteReference = exportedRouteReference;
+        this.exportedRouteReference = new RouteReference(exportedRoute);
     }
 
     /**
