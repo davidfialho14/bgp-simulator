@@ -5,9 +5,22 @@ import v2.core.Route;
 
 
 /**
- * Implements a dummy detection method. This implementation never detects a policy conflict
+ * Implements a dummy detection method. This implementation never detects a policy conflict. Singleton class!
  */
 public class DummyDetection implements Detection {
+
+    private static final DummyDetection DETECTION = new DummyDetection();
+
+    private DummyDetection() {} // use factory method
+
+    /**
+     * Returns a dummy detection instance.
+     *
+     * @return a dummy detection instance.
+     */
+    public static DummyDetection dummyDetection() {
+        return DETECTION;
+    }
 
     /**
      * Returns always false.

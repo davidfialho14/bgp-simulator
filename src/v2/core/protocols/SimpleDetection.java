@@ -7,8 +7,23 @@ import v2.core.Route;
 /**
  * Implementation of the simple detection which requires only one conditions:
  *  - the attribute of the learned route must be preferred to the attribute of the alternative route
+ *
+ *  Singleton Class!
  */
 public class SimpleDetection implements Detection {
+
+    private static final SimpleDetection DETECTION = new SimpleDetection();
+
+    private SimpleDetection() {} // use factory method
+
+    /**
+     * Returns a simple detection instance.
+     *
+     * @return a simple detection instance.
+     */
+    public static SimpleDetection simpleDetection() {
+        return DETECTION;
+    }
 
     /**
      * Checks if the attribute of the learned route is preferred to the attribute of the alternative route.

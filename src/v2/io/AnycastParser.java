@@ -6,12 +6,13 @@ import v2.core.Destination;
 import v2.core.Label;
 import v2.core.Router;
 import v2.core.Topology;
-import v2.core.protocols.DummyDetection;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+
+import static v2.core.protocols.DummyDetection.dummyDetection;
 
 /**
  * Parser for anycast files. It parses an anycast file to find information for a specific destination ID
@@ -31,7 +32,7 @@ public class AnycastParser {
             throws DestinationNotFoundException, IOException {
 
         // create fake destination router
-        Destination destination = new Router(destinationID, 0, new DummyDetection());
+        Destination destination = new Router(destinationID, 0, dummyDetection());
 
         try( Stream<String> lines = Files.lines(Paths.get(anycastFile)) ) {
 
