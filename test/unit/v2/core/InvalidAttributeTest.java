@@ -1,4 +1,4 @@
-package v2.core.policies;
+package v2.core;
 
 import org.junit.Test;
 
