@@ -4,7 +4,7 @@ import v2.core.Route;
 import v2.core.Router;
 
 /**
- * Events generated when a router selects a route.
+ * Events generated when a router selects a NEW route.
  */
 public class SelectEvent extends AbstractSimulationEvent {
 
@@ -13,7 +13,7 @@ public class SelectEvent extends AbstractSimulationEvent {
     private final Route selectedRoute;  // route selected
 
     /**
-     * Constructs a new select event. The previous route and selected route can be the same.
+     * Constructs a new select event. The previous route and selected route should not be the same.
      *
      * @param selectingRouter router that selected route.
      * @param previousRoute previous selected route.
