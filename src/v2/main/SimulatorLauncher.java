@@ -118,28 +118,28 @@ public class SimulatorLauncher {
 
     private Destination getDestination(File anycastFile, Topology topology, int destinationID) {
 
-        Destination destination;
+        // first try to find destination in the topology
+        Destination destination = topology.getRouter(destinationID);
+
+        if (destination != null) return destination;
+
         if (anycastFile == null) {
-            destination = topology.getRouter(destinationID);
+            errorHandler.onUnknownDestination(destinationID);
+            return null;
+        }
 
-            if (destination == null) {
-                errorHandler.onUnknownDestination(destinationID);
-                return null;
-            }
+        // not in the topology lets look in the anycast file
 
-        } else {
+        try {
+            destination = AnycastParser.parseDestination(anycastFile.getPath(), topology, destinationID);
 
-            try {
-                destination = AnycastParser.parseDestination(anycastFile.getPath(), topology, destinationID);
+        } catch (DestinationNotFoundException e) {
+            errorHandler.onDestinationNotFoundOnAnycastFile(e, anycastFile, destinationID);
+            return null;
 
-            } catch (DestinationNotFoundException e) {
-                errorHandler.onDestinationNotFoundOnAnycastFile(e, anycastFile, destinationID);
-                return null;
-
-            } catch (IOException e) {
-                errorHandler.onAnycastLoadIOException(e);
-                return null;
-            }
+        } catch (IOException e) {
+            errorHandler.onAnycastLoadIOException(e);
+            return null;
         }
 
         return destination;
