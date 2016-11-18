@@ -1,11 +1,11 @@
 package v2.io;
 
 
-import io.networkreaders.exceptions.InvalidPolicyTagException;
 import v2.core.Destination;
 import v2.core.Label;
 import v2.core.Router;
 import v2.core.Topology;
+import v2.io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 import java.io.IOException;
 import java.nio.file.Files;

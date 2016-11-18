@@ -1,10 +1,10 @@
 package v2.core.policies.shortestpath;
 
 
-import io.networkreaders.exceptions.InvalidPolicyTagException;
 import v2.core.Attribute;
 import v2.core.Label;
 import v2.core.Policy;
+import v2.io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 public class ShortestPathPolicy implements Policy {
 

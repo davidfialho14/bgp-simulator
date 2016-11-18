@@ -8,6 +8,8 @@ import v2.main.Parameters;
 import v2.simulators.DataCollector;
 import v2.simulators.Setup;
 
+import java.io.IOException;
+
 /**
  * In a basic setup the topology is not changed. Is equivalent to the advertisement of a new prefix. It
  * uses a basic data collector to collect the data.
@@ -62,7 +64,7 @@ public class BasicSetup extends Setup {
      * @param parameters    parameters of the simulator.
      */
     @Override
-    public void report(Reporter reporter, Parameters parameters) {
+    public void report(Reporter reporter, Parameters parameters) throws IOException {
         reporter.reportSetup(this, parameters);
     }
 

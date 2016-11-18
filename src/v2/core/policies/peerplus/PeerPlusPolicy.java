@@ -1,9 +1,9 @@
 package v2.core.policies.peerplus;
 
-import io.networkreaders.exceptions.InvalidPolicyTagException;
 import v2.core.Attribute;
 import v2.core.Label;
 import v2.core.Policy;
+import v2.io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 import static v2.core.policies.peerplus.SelfAttribute.self;
 

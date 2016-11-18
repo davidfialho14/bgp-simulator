@@ -6,6 +6,8 @@ import v2.core.Topology;
 import v2.io.reporters.Reporter;
 import v2.main.Parameters;
 
+import java.io.IOException;
+
 /**
  * A simulation setup defines the behaviour of the simulation.
  */
@@ -91,6 +93,6 @@ public abstract class Setup {
      * @param reporter      reporter used to report (Visitor)
      * @param parameters    parameters of the simulator.
      */
-    public abstract void report(Reporter reporter, Parameters parameters);
+    public abstract void report(Reporter reporter, Parameters parameters) throws IOException;
 
 }
