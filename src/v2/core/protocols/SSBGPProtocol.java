@@ -8,8 +8,22 @@ import static v2.core.InvalidRoute.invalidRoute;
 
 /**
  * Implementation of the SS-BGP Protocol. The protocol can be configured to use any detection implementation.
+ * Singleton Class!
  */
 public class SSBGPProtocol implements Protocol {
+
+    private static final SSBGPProtocol PROTOCOL = new SSBGPProtocol();
+
+    private SSBGPProtocol() { } // use factory method!
+
+    /**
+     * Returns an SS-BGP protocol instance.
+     *
+     * @return an SS-BGP protocol instance.
+     */
+    public static SSBGPProtocol ssBGPProtocol() {
+        return PROTOCOL;
+    }
 
     /**
      * Processes a message that arrives at the given router.
