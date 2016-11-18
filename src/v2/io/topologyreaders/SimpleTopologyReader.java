@@ -5,6 +5,7 @@ import v2.core.Label;
 import v2.core.Policy;
 import v2.core.Router;
 import v2.core.Topology;
+import v2.core.exceptions.RouterNotFoundException;
 import v2.core.protocols.Detection;
 import v2.io.topologyreaders.exceptions.InvalidPolicyTagException;
 import v2.io.topologyreaders.exceptions.TopologyParseException;
@@ -18,7 +19,7 @@ import static v2.core.protocols.SSBGPProtocol.ssBGPProtocol;
  *
  * The simple topology starts with a line containing the routing policy: "policy=(policy_tag)"
  * Followed by multiple router lines: "router=(routerID)|(MRAI)|(Detection)"
- * Followed by multiple link lines: "link=(neighbor)|(label)"
+ * Followed by multiple link lines: "link=(sourceID)|(targetID)|(label)"
  */
 public class SimpleTopologyReader implements TopologyReader {
 
@@ -52,7 +53,6 @@ public class SimpleTopologyReader implements TopologyReader {
 
         String line;
         int lineCount = 0;
-        Router currentRouter = null;
 
         while ((line = fileReader.readLine()) != null) {
             lineCount++;
@@ -64,13 +64,18 @@ public class SimpleTopologyReader implements TopologyReader {
 
             switch (lineEntry.key) {
                 case "router":
-                    currentRouter = parseRouter(lineEntry, lineCount);
-                    topology.addRouter(currentRouter);
+                    topology.addRouter(parseRouter(lineEntry, lineCount));
                     break;
 
                 case "link":
-                    LinkEntry linkEntry = parseLink(lineEntry, topology, currentRouter, lineCount);
-                    topology.link(currentRouter, linkEntry.neighbor, linkEntry.label);
+                    LinkEntry linkEntry = parseLink(lineEntry, topology, lineCount);
+
+                    try {
+                        topology.link(linkEntry.sourceID, linkEntry.targetID, linkEntry.label);
+                    } catch (RouterNotFoundException e) {
+                        throw new TopologyParseException(e.getMessage(), lineCount);
+                    }
+
                     break;
 
                 default:
@@ -104,11 +109,13 @@ public class SimpleTopologyReader implements TopologyReader {
     }
 
     private static class LinkEntry {
-        private final Router neighbor;
+        private final int sourceID;
+        private final int targetID;
         private final Label label;
 
-        private LinkEntry(Router neighbor, Label label) {
-            this.neighbor = neighbor;
+        public LinkEntry(int sourceID, int targetID, Label label) {
+            this.sourceID = sourceID;
+            this.targetID = targetID;
             this.label = label;
         }
     }
@@ -145,23 +152,19 @@ public class SimpleTopologyReader implements TopologyReader {
         }
     }
 
-    private LinkEntry parseLink(LineEntry lineEntry, Topology currentTopology, Router currentRouter,
-                                int lineNumber) throws TopologyParseException {
+    private LinkEntry parseLink(LineEntry lineEntry, Topology currentTopology, int lineNumber)
+            throws TopologyParseException {
 
-        if (lineEntry.values.length != 2) {
+        if (lineEntry.values.length != 3) {
             throw new TopologyParseException("Invalid missing some link key values", lineNumber);
         }
 
         try {
-            int neighborID = Integer.parseInt(lineEntry.values[0]);
+            int sourceID = Integer.parseInt(lineEntry.values[0]);
+            int targetID = Integer.parseInt(lineEntry.values[1]);
             Label label = currentTopology.getPolicy().createLabel(lineEntry.values[1]);
 
-            Router neighbor = currentTopology.getRouter(neighborID);
-            if (neighbor == null) {
-                throw new TopologyParseException("Invalid router " + neighborID, lineNumber);
-            }
-
-            return new LinkEntry(neighbor, label);
+            return new LinkEntry(sourceID, targetID, label);
 
         } catch (NumberFormatException | InvalidPolicyTagException e) {
             throw new TopologyParseException("Invalid link value", lineNumber);
