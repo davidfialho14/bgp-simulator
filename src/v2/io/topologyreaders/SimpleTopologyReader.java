@@ -164,7 +164,7 @@ public class SimpleTopologyReader implements TopologyReader {
         try {
             int sourceID = Integer.parseInt(lineEntry.values[0]);
             int targetID = Integer.parseInt(lineEntry.values[1]);
-            Label label = currentTopology.getPolicy().createLabel(lineEntry.values[1]);
+            Label label = currentTopology.getPolicy().createLabel(lineEntry.values[2]);
 
             return new LinkEntry(sourceID, targetID, label);
 
