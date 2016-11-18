@@ -26,7 +26,7 @@ public class Router extends Node implements Destination {
 
     private Topology topology = null;    // topology to which the router belongs to
     private final Map<Router, Link> inLinks;
-    private RouteTable table = null;
+    private RouteTable table = new RouteTable();
 
     private final MRAITimer mraiTimer;
     private Detection detection;    // detection method deployed by the router
