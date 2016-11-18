@@ -11,17 +11,6 @@ import static v2.core.InvalidRoute.invalidRoute;
  */
 public class SSBGPProtocol implements Protocol {
 
-    private final Detection detection;
-
-    /**
-     * Pre-configures the SS-BGP protocol with the given detection implementation.
-     *
-     * @param detection detection implementation to use to detect policy conflicts.
-     */
-    public SSBGPProtocol(Detection detection) {
-        this.detection = detection;
-    }
-
     /**
      * Processes a message that arrives at the given router.
      *
@@ -89,7 +78,7 @@ public class SSBGPProtocol implements Protocol {
             // select the best route learned from all out-neighbours except the exporting neighbors
             Route alternativeRoute = learningRouter.getTable().getAlternativeRoute(link.getTarget());
 
-            if (detection.isPolicyConflict(link, importedRoute, alternativeRoute)) {
+            if (learningRouter.getDetection().isPolicyConflict(link, importedRoute, alternativeRoute)) {
                 link.setTurnedOff(true);
             }
 

@@ -1,5 +1,8 @@
 package v2.core;
 
+import v2.core.exporters.Exporter;
+import v2.core.protocols.Detection;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +23,13 @@ public class Router extends Node implements Destination {
      *  Private Fields
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    
+
+    private Topology topology = null;    // topology to which the router belongs to
     private final Map<Router, Link> inLinks;
     private RouteTable table = null;
+
     private final MRAITimer mraiTimer;
+    private Detection detection = null;    // detection method deployed by the router
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -45,20 +51,20 @@ public class Router extends Node implements Destination {
     /**
      * Creates a new router and sets the MRAI value for the timer.
      *
-     * @param id    ID to assign to the router.
-     * @param MRAI  value for the MRAI.
+     * @param id        ID to assign to the router.
+     * @param MRAI      value for the MRAI.
+     * @param detection detection method deployed by the router.
      */
-    public Router(int id, int MRAI) {
+    public Router(int id, int MRAI, Detection detection) {
         super(id);
         inLinks = new HashMap<>();
         this.mraiTimer = new MRAITimer(MRAI);
+        this.detection = detection;
     }
 
-    // TODO create constructors to configure the MRAI timer and the protocol
-
     /**
-     * Copy constructor. Nodes can only be copied safely using this constructor, otherwise it might result in undefined
-     * behaviour.
+     * Copy constructor. Nodes can only be copied safely using this constructor, otherwise it might result
+     * in undefined behaviour.
      *
      * @param router router to copy.
      */
@@ -66,6 +72,7 @@ public class Router extends Node implements Destination {
         super(router.getId());
         this.inLinks = new HashMap<>(router.inLinks);
         this.mraiTimer = new MRAITimer(router.getMRAITimer().getMRAI());
+        this.detection = router.getDetection();
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -73,6 +80,33 @@ public class Router extends Node implements Destination {
      *  Public Interface
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Sets the topology of the router. The router will use the topology to get configurations of it.
+     *
+     * @param topology  topology to set.
+     */
+    public void setTopology(Topology topology) {
+        this.topology = topology;
+    }
+
+    /**
+     * Returns the detection method deployed by the router.
+     *
+     * @return the detection method deployed by the router.
+     */
+    public Detection getDetection() {
+        return detection;
+    }
+
+    /**
+     * Sets the detection method to be deployed by the router.
+     *
+     * @param detection detection method to be deployed.
+     */
+    public void setDetection(Detection detection) {
+        this.detection = detection;
+    }
 
     /**
      * Returns a collection with all the in-links of the router.
@@ -143,8 +177,14 @@ public class Router extends Node implements Destination {
         table.setRoute(this, selfRoute);
     }
 
-    public void process(Message message) {
-
+    /**
+     * Calls the routers protocol process method to process the incoming message.
+     *
+     * @param message   message to be processed.
+     * @param exporter  exporter used to export a message if necessary.
+     */
+    public void process(Message message, Exporter exporter) {
+        topology.getProtocol().process(message, exporter);
     }
 
     @Override

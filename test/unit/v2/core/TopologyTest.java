@@ -21,7 +21,7 @@ public class TopologyTest {
 
     @Before
     public void setUp() throws Exception {
-        topology = new Topology(null);  // the policy is not important for this test suite
+        topology = new Topology(null, null);  // the policy is not important for this test suite
     }
 
     @Test

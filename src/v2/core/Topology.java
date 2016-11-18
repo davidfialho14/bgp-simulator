@@ -23,6 +23,7 @@ public final class Topology {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     private final Policy policy;
+    private Protocol protocol;
     private final Map<Integer, Router> routers = new HashMap<>();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -36,8 +37,9 @@ public final class Topology {
      *
      * @param policy  topology policy model.
      */
-    public Topology(Policy policy) {
+    public Topology(Policy policy, Protocol protocol) {
         this.policy = policy;
+        this.protocol = protocol;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -53,6 +55,15 @@ public final class Topology {
      */
     public Policy getPolicy() {
         return policy;
+    }
+
+    /**
+     * Returns the protocol deployed by the topology's routers.
+     *
+     * @return the protocol deployed by the topology's routers.
+     */
+    public Protocol getProtocol() {
+        return protocol;
     }
 
     /**
@@ -127,6 +138,15 @@ public final class Topology {
      *  Public Interface - Modifiers
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Sets the protocol to be deployed by the routers of the topology.
+     *
+     * @param protocol protocol to be deployed.
+     */
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
+    }
 
     /**
      * Adds a router to the topology. If the router already exists in the topology it returns false,

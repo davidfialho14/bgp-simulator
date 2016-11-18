@@ -68,7 +68,7 @@ public class Engine {
         while (scheduler.hasMessages()) {
 
             Message message = scheduler.nextMessage();
-            message.getTarget().process(message);
+            message.getTarget().process(message, exporter);
 
             if (!scheduler.hasMessages()) {
                 // a terminate even is fired here to allow external components to add more messages if
