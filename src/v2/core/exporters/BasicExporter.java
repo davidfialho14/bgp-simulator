@@ -20,8 +20,18 @@ public class BasicExporter implements Exporter {
      *
      * @param scheduler scheduler where the messages are pushed to.
      */
-    protected BasicExporter(Scheduler scheduler) {
+    public BasicExporter(Scheduler scheduler) {
         this.scheduler = scheduler;
+    }
+
+    /**
+     * Returns the scheduler used by the exporter to put the messages.
+     *
+     * @return the scheduler used by the exporter to put the messages.
+     */
+    @Override
+    public Scheduler getScheduler() {
+        return scheduler;
     }
 
     /**

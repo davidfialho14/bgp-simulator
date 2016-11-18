@@ -4,12 +4,20 @@ import v2.core.Destination;
 import v2.core.Link;
 import v2.core.Policy;
 import v2.core.Route;
+import v2.core.schedulers.Scheduler;
 
 /**
  * An exporter is responsible for the export operation of the simulation engine. Performs two different
  * operations: the generic exporting of one message and the exporting of the destination router's self-route.
  */
 public interface Exporter {
+
+    /**
+     * Returns the scheduler used by the exporter to put the messages.
+     *
+     * @return the scheduler used by the exporter to put the messages.
+     */
+    Scheduler getScheduler();
 
     /**
      * Exports the given message. This consists of exporting a message to all of the in-neighbors of the
