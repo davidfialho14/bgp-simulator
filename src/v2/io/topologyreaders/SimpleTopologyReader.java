@@ -132,7 +132,7 @@ public class SimpleTopologyReader implements TopologyReader {
             throw new TopologyParseException("Invalid key/value pair", lineNumber);
         }
 
-        return new LineEntry(splitKeyAndValues[0], splitKeyAndValues[1].split(":"));
+        return new LineEntry(splitKeyAndValues[0], splitKeyAndValues[1].split("\\|"));
     }
 
     private Router parseRouter(LineEntry lineEntry, int lineNumber)
