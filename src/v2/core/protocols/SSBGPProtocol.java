@@ -1,6 +1,7 @@
 package v2.core.protocols;
 
 import v2.core.*;
+import v2.core.events.DetectEvent;
 import v2.core.events.ImportEvent;
 import v2.core.events.LearnEvent;
 import v2.core.events.SelectEvent;
@@ -43,7 +44,7 @@ public class SSBGPProtocol implements Protocol {
         Route importedRoute = importRoute(message.getRoute(), link);
         eventNotifier().notifyImportEvent(new ImportEvent(time, importedRoute, link));
 
-        Route learnedRoute = learn(importedRoute, link);
+        Route learnedRoute = learn(link, importedRoute, time);
         eventNotifier().notifyLearnEvent(new LearnEvent(time, link, learnedRoute));
 
         Router router = link.getSource();
@@ -94,11 +95,12 @@ public class SSBGPProtocol implements Protocol {
      * If so, then it turns the link off. If the route does not constitute a loop then it returns the same
      * route as the imported route.
      *
-     * @param importedRoute imported route.
      * @param link          link from which the route was received.
+     * @param importedRoute imported route.
+     * @param currentTime   arrival time of the processed message.
      * @return an invalid route if detected a loop or the imported route if did not detect a loop.
      */
-    public Route learn(Route importedRoute, Link link) {
+    public Route learn(Link link, Route importedRoute, int currentTime) {
         Router learningRouter = link.getSource();
         Route learnedRoute = importedRoute;
 
@@ -110,6 +112,9 @@ public class SSBGPProtocol implements Protocol {
 
             if (learningRouter.getDetection().isPolicyConflict(link, importedRoute, alternativeRoute)) {
                 link.setTurnedOff(true);
+
+                eventNotifier().notifyDetectEvent(
+                        new DetectEvent(currentTime, link, importedRoute, alternativeRoute));
             }
 
             learnedRoute = invalidRoute();
