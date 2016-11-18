@@ -1,6 +1,7 @@
 package v2.core;
 
-import io.networkreaders.exceptions.InvalidPolicyTagException;
+
+import v2.io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 /**
  * The policy interface provides the necessary methods to define a routing policy. Policy must be immutable classes
