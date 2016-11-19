@@ -14,6 +14,11 @@ import static v2.core.InvalidPath.invalidPath;
  */
 public class Path implements Comparable<Path>, Iterable<Router> {
 
+    /*
+     * Note: I've already tested using an LinkedHashSet to improve the 'contains' operation. However, this
+     * solution showed to be slower due to a VERY slow 'copy' operation.
+     */
+
     private LinkedList<Router> path = null;   // must be a LinkedList in order to preserve insertion order
 
     /**
