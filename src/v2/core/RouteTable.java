@@ -24,10 +24,10 @@ public class RouteTable {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private final Map<Router, Route> routes = new HashMap<>();
+    private final Map<Node, Route> routes = new HashMap<>();
 
     private Route selectedRoute = invalidRoute();
-    private Router selectedNeighbour = null;
+    private Node selectedNeighbour = null;
 
     // flag to indicate if a new route was selected after the last time it is checked
     private boolean selectedNewRoute = false;
@@ -52,7 +52,7 @@ public class RouteTable {
      *
      * @return the currently selected neighbour.
      */
-    public Router getSelectedNeighbour() {
+    public Node getSelectedNeighbour() {
         return selectedNeighbour;
     }
 
@@ -63,7 +63,7 @@ public class RouteTable {
      * @param neighbor out-neighbor to update route for.
      * @param route route to be set.
      */
-    public void setRoute(Router neighbor, Route route) {
+    public void setRoute(Node neighbor, Route route) {
         selectedNewRoute = false;   // mark no change by default - it is update if there is a new selection
         routes.put(neighbor, route);
 
@@ -97,7 +97,7 @@ public class RouteTable {
      * @param neighbor out-neighbor to get route.
      * @return route associated with the given neighbor.
      */
-    public Route getRoute(Router neighbor) {
+    public Route getRoute(Node neighbor) {
         Route route = routes.get(neighbor);
 
         return route == null ? invalidRoute() : route;
@@ -110,7 +110,7 @@ public class RouteTable {
      * @param ignoredNeighbor out-neighbor to be ignored.
      * @return currently selected route for the destination.
      */
-    public Route getAlternativeRoute(Router ignoredNeighbor) {
+    public Route getAlternativeRoute(Node ignoredNeighbor) {
 
         if (ignoredNeighbor == null || !ignoredNeighbor.equals(selectedNeighbour)) {
             return selectedRoute;
@@ -132,17 +132,17 @@ public class RouteTable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RouteTable)) return false;
 
         RouteTable that = (RouteTable) o;
 
-        return routes != null ? routes.equals(that.routes) : that.routes == null;
+        return routes.equals(that.routes);
 
     }
 
     @Override
     public int hashCode() {
-        return routes != null ? routes.hashCode() : 0;
+        return routes.hashCode();
     }
 
     @Override
@@ -184,10 +184,10 @@ public class RouteTable {
      * @param ignoredNeighbour out-neighbor to be ignored.
      * @return currently best route for the destination.
      */
-    private Route getBestRoute(Router ignoredNeighbour) {
+    private Route getBestRoute(Node ignoredNeighbour) {
         Route bestRoute = null;
 
-        for (Router neighbour : routes.keySet()) {
+        for (Node neighbour : routes.keySet()) {
             Route route = getRoute(neighbour);
 
             if (!neighbour.equals(ignoredNeighbour) && (bestRoute == null || bestRoute.compareTo(route) > 0)) {
@@ -206,7 +206,7 @@ public class RouteTable {
 
         selectedRoute = invalidRoute();
         selectedNeighbour = null;
-        for (Router neighbour : routes.keySet()) {
+        for (Node neighbour : routes.keySet()) {
             Route neighbourRoute = getRoute(neighbour);
 
             if (selectedRoute.compareTo(neighbourRoute) > 0) {
