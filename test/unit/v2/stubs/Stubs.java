@@ -1,7 +1,11 @@
 package v2.stubs;
 
 import v2.core.Link;
+import v2.core.Path;
+import v2.core.Route;
 import v2.core.Router;
+
+import static v2.wrappers.RouteWrapper.route;
 
 /**
  * Provides set of static methods to create stub components.
@@ -37,6 +41,17 @@ public interface Stubs {
      */
     static Link stubLink(Router source, Router target) {
         return new Link(source, target, stubLabel());
+    }
+
+    /**
+     * Creates a route with a stub attribute assigned the given value.
+     *
+     * @param attrValue value for the stub attribute.
+     * @param path      path to assign to the route.
+     * @return route with the given path and a stub attribute with the given value.
+     */
+    static Route stubRoute(int attrValue, Path path) {
+        return route(stubAttr(attrValue), path);
     }
 
 }

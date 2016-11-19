@@ -1,6 +1,7 @@
 package v2.wrappers;
 
 
+import v2.core.Node;
 import v2.core.Router;
 
 import static v2.core.protocols.DummyDetection.dummyDetection;
@@ -18,6 +19,16 @@ public interface TopologyWrapper {
      */
     static Router router(int routerID) {
         return new Router(routerID, 0, dummyDetection());
+    }
+
+    /**
+     * More readable way to create a node instance.
+     *
+     * @param nodeID id to assigning to the new node.
+     * @return new instance of a node with the given ID.
+     */
+    static Node node(int nodeID) {
+        return new Node(nodeID);
     }
 
 }
