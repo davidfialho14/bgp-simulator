@@ -104,8 +104,8 @@ public class RouteTable {
     }
 
     /**
-     * Returns the currently selected route. If ignoredOutLink is not null it will select the best route
-     * associated with any out-neighbor exception the ignoredOutLink.
+     * Returns the currently selected route. If ignore neighbor is not null it will select the best route
+     * associated with any out-neighbor exception the ignored neighbor.
      *
      * @param ignoredNeighbor out-neighbor to be ignored.
      * @return currently selected route for the destination.
@@ -178,19 +178,19 @@ public class RouteTable {
     }
 
     /**
-     * Returns the currently best route. If ignoredOutLink is not null it will return the best route associated
-     * with any out-neighbor exception the ignoredOutLink.
+     * Returns the currently best route. If ignored neighbor is not null it will return the best route
+     * associated with any out-neighbor exception the ignored neighbor.
      *
      * @param ignoredNeighbour out-neighbor to be ignored.
      * @return currently best route for the destination.
      */
     private Route getBestRoute(Node ignoredNeighbour) {
-        Route bestRoute = null;
+        Route bestRoute = invalidRoute();
 
         for (Node neighbour : routes.keySet()) {
             Route route = getRoute(neighbour);
 
-            if (!neighbour.equals(ignoredNeighbour) && (bestRoute == null || bestRoute.compareTo(route) > 0)) {
+            if (!neighbour.equals(ignoredNeighbour) && bestRoute.compareTo(route) > 0) {
                 bestRoute = route;
             }
         }
