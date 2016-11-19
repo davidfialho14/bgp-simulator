@@ -27,4 +27,23 @@ public interface PathWrapper {
         return new Path(routers);
     }
 
+    /**
+     * Builds a path of routers given a sequence of routers.
+     *
+     * @param routers sequence of routers to add to the path.
+     * @return new initialized path instance.
+     */
+    static Path path(Router... routers) {
+        return new Path(routers);
+    }
+
+    /**
+     * Builds an empty path of routers.
+     *
+     * @return new initialized path instance.
+     */
+    static Path path() {
+        return new Path();
+    }
+
 }

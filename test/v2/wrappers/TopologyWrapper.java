@@ -1,6 +1,8 @@
 package v2.wrappers;
 
 
+import v2.core.Label;
+import v2.core.Link;
 import v2.core.Node;
 import v2.core.Router;
 
@@ -29,6 +31,18 @@ public interface TopologyWrapper {
      */
     static Node node(int nodeID) {
         return new Node(nodeID);
+    }
+
+    /**
+     * More readable way to create a link between two routers with a custom label.
+     *
+     * @param sourceID  ID of the link's source router.
+     * @param targetID  ID of the link's target router.
+     * @param label     label to assign the link.
+     * @return new instance of a node with the given ID.
+     */
+    static Link link(int sourceID, int targetID, Label label) {
+        return new Link(router(sourceID), router(targetID), label);
     }
 
 }
