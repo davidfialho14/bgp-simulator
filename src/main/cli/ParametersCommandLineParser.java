@@ -28,6 +28,7 @@ public class ParametersCommandLineParser {
     private static final String MIN_DELAY = "min_delay";
     private static final String MAX_DELAY = "max_delay";
     private static final String SEED = "seed";
+    private static final String MRAI = "MRAI";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -48,6 +49,7 @@ public class ParametersCommandLineParser {
         options.addOption("min", MIN_DELAY, true, "minimum delay (inclusive)");
         options.addOption("max", MAX_DELAY, true, "maximum delay (inclusive)");
         options.addOption("seed", SEED, true, "seed value to force");
+        options.addOption("MRAI", MRAI, true, "MRAI value to force");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -79,6 +81,7 @@ public class ParametersCommandLineParser {
                 .minDelay(getMinDelay(commandLine))
                 .maxDelay(getMaxDelay(commandLine))
                 .seed(getSeed(commandLine))
+                .forcedMRAI(getForcedMRAI(commandLine))
                 .build();
     }
 
@@ -247,6 +250,29 @@ public class ParametersCommandLineParser {
             } catch (NumberFormatException e) {
                 throw new ParseException(expectedIntegerMessage("seed"));
             }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Obtains the forced MRAI value from the command line. This is an optional argument, in case it is
+     * missing null will be returned. It throws a parse exception if the option is available but the
+     * argument value is not a signed long.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return the parsed forced MRAI or null if the argument does not exist.
+     * @throws ParseException if the option is available but the argument value is not a signed integer.
+     */
+    private Integer getForcedMRAI(CommandLine commandLine) throws ParseException {
+
+        if (commandLine.hasOption(MRAI)) {
+            try {
+                return Integer.parseInt(commandLine.getOptionValue(MRAI));
+            } catch (NumberFormatException e) {
+                throw new ParseException(expectedIntegerMessage("forced MRAI"));
+            }
+
         } else {
             return null;
         }

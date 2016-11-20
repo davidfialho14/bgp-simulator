@@ -2,6 +2,7 @@ package main;
 
 import core.Destination;
 import core.Engine;
+import core.Router;
 import core.Topology;
 import core.exporters.BasicExporter;
 import core.schedulers.RandomScheduler;
@@ -105,6 +106,12 @@ public class SimulatorLauncher {
             progressHandler.onStartLoadingTopology(parameters.getTopologyFile());
             topology = topologyReader.read();
             progressHandler.onFinishedLoadingTopology(topology);
+
+            if (parameters.hasForcedMRAI()) {
+                for (Router router : topology.getRouters()) {
+                    router.getMRAITimer().setMRAI(parameters.forcedMRAI());
+                }
+            }
 
         } catch (IOException e) {
             errorHandler.onTopologyLoadIOException(e);
