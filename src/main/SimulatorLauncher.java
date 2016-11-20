@@ -113,6 +113,12 @@ public class SimulatorLauncher {
                 }
             }
 
+            if (parameters.hasForcedDetection()) {
+                for (Router router : topology.getRouters()) {
+                    router.setDetection(parameters.forcedDetection());
+                }
+            }
+
         } catch (IOException e) {
             errorHandler.onTopologyLoadIOException(e);
 

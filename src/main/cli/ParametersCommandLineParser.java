@@ -1,8 +1,10 @@
 package main.cli;
 
 
+import core.protocols.Detection;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
+import io.topologyreaders.exceptions.TopologyParseException;
 import main.Parameters;
 import org.apache.commons.cli.*;
 
@@ -29,6 +31,7 @@ public class ParametersCommandLineParser {
     private static final String MAX_DELAY = "max_delay";
     private static final String SEED = "seed";
     private static final String MRAI = "MRAI";
+    private static final String DETECTION = "detection";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -50,6 +53,7 @@ public class ParametersCommandLineParser {
         options.addOption("max", MAX_DELAY, true, "maximum delay (inclusive)");
         options.addOption("seed", SEED, true, "seed value to force");
         options.addOption("MRAI", MRAI, true, "MRAI value to force");
+        options.addOption("d", DETECTION, true, "detection method to force (D0 | D1 | D2)");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -82,6 +86,7 @@ public class ParametersCommandLineParser {
                 .maxDelay(getMaxDelay(commandLine))
                 .seed(getSeed(commandLine))
                 .forcedMRAI(getForcedMRAI(commandLine))
+                .forcedDetection(getForcedDetection(commandLine))
                 .build();
     }
 
@@ -271,6 +276,30 @@ public class ParametersCommandLineParser {
                 return Integer.parseInt(commandLine.getOptionValue(MRAI));
             } catch (NumberFormatException e) {
                 throw new ParseException(expectedIntegerMessage("forced MRAI"));
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Obtains the detection value from the command line. This is an optional argument, in case it is
+     * missing null will be returned. It throws a parse exception if the option is available but the
+     * argument value is not a signed long.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return the parsed detection or null if the argument does not exist.
+     * @throws ParseException if the option is available but the argument value is not a valid detection tag.
+     */
+    private Detection getForcedDetection(CommandLine commandLine) throws ParseException {
+
+        if (commandLine.hasOption(DETECTION)) {
+            try {
+                return Detection.parseDetection(commandLine.getOptionValue(DETECTION));
+            } catch (TopologyParseException e) {
+                throw new ParseException(String.format("'%s' is not a valid detection tag",
+                        commandLine.getOptionValue(DETECTION)));
             }
 
         } else {
