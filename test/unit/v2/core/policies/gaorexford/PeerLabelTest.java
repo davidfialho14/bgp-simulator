@@ -1,17 +1,16 @@
 package v2.core.policies.gaorexford;
 
-import core.topology.Label;
 import org.junit.Before;
 import org.junit.Test;
-import policies.gaorexford.PeerLabel;
+import v2.core.Label;
 
-import static core.InvalidAttribute.invalidAttr;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static policies.gaorexford.CustomerAttribute.customer;
-import static policies.gaorexford.PeerAttribute.peer;
-import static policies.gaorexford.ProviderAttribute.provider;
-import static policies.gaorexford.SelfAttribute.self;
+import static v2.core.InvalidAttribute.invalidAttr;
+import static v2.core.policies.gaorexford.CustomerAttribute.customer;
+import static v2.core.policies.gaorexford.PeerAttribute.peer;
+import static v2.core.policies.gaorexford.ProviderAttribute.provider;
+import static v2.core.policies.gaorexford.SelfAttribute.self;
 
 public class PeerLabelTest {
 
