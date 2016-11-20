@@ -8,7 +8,7 @@ import core.schedulers.RouteReference;
 public class MRAITimer {
 
     // Minimum Route Advertisement Interval
-    private final int MRAI;
+    private int MRAI;
     private int expirationTime = 0;
     private RouteReference exportedRouteReference = null;
 
@@ -33,6 +33,15 @@ public class MRAITimer {
      */
     public int getMRAI() {
         return MRAI;
+    }
+
+    /**
+     * Sets a new value for the MRAI.
+     *
+     * @param MRAI vale to set as MRAI.
+     */
+    public void setMRAI(int MRAI) {
+        this.MRAI = MRAI;
     }
 
     /**

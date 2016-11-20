@@ -1,5 +1,6 @@
 package main;
 
+import core.protocols.Detection;
 import io.reporters.CSVReporterFactory;
 import io.reporters.ReporterFactory;
 import io.topologyreaders.SimpleTopologyReaderFactory;
@@ -32,6 +33,8 @@ public class Parameters {
     private final int repetitionCount;
     private final SetupFactory setupFactory;
     private final Long seed;
+    private final Integer forcedMRAI;
+    private final Detection forcedDetection;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -43,8 +46,9 @@ public class Parameters {
      * Creates a new parameters object with all the necessary parameters set.
      */
     private Parameters(File topologyFile, TopologyReaderFactory readerFactory, File reportDestination,
-                      ReporterFactory reporterFactory, File anycastFile, int minDelay, int maxDelay,
-                      int destinationId, int repetitionCount, SetupFactory setupFactory, Long seed) {
+                       ReporterFactory reporterFactory, File anycastFile, int minDelay, int maxDelay,
+                       int destinationId, int repetitionCount, SetupFactory setupFactory, Long seed,
+                       Integer forcedMRAI, Detection forcedDetection) {
 
         this.topologyFile = topologyFile;
         this.readerFactory = readerFactory;
@@ -57,6 +61,8 @@ public class Parameters {
         this.repetitionCount = repetitionCount;
         this.setupFactory = setupFactory;
         this.seed = seed;
+        this.forcedMRAI = forcedMRAI;
+        this.forcedDetection = forcedDetection;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -113,6 +119,22 @@ public class Parameters {
         return seed != null;
     }
 
+    public Integer forcedMRAI() {
+        return forcedMRAI;
+    }
+
+    public boolean hasForcedMRAI() {
+        return forcedMRAI != null;
+    }
+
+    public Detection forcedDetection() {
+        return forcedDetection;
+    }
+
+    public boolean hasForcedDetection() {
+        return forcedDetection != null;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Builder
@@ -143,6 +165,8 @@ public class Parameters {
         private int destinationId = 0;
         private int repetitionCount = 1;
         private Long seed = null;
+        private Integer forcedMRAI = null;
+        private Detection forcedDetection = null;
 
         // parameters for the setup
 //        private Integer deployTime = null;
@@ -200,6 +224,16 @@ public class Parameters {
             return this;
         }
 
+        public Builder forcedMRAI(Integer forcedMRAI) {
+            this.forcedMRAI = forcedMRAI;
+            return this;
+        }
+
+        public Builder forcedDetection(Detection forcedDetection) {
+            this.forcedDetection = forcedDetection;
+            return this;
+        }
+
         // parameters for the setup
 //
 //        public Builder timedDeployment(Integer deployTime) {
@@ -222,7 +256,8 @@ public class Parameters {
             SetupFactory setupFactory = new BasicSetupFactory();
 
             return new Parameters(topologyFile, readerFactory, reportDestination, reporterFactory,
-                    anycastFile, minDelay, maxDelay, destinationId, repetitionCount, setupFactory, seed);
+                    anycastFile, minDelay, maxDelay, destinationId, repetitionCount, setupFactory, seed,
+                    forcedMRAI, forcedDetection);
         }
 
     }
