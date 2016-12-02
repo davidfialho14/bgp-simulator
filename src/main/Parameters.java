@@ -35,6 +35,7 @@ public class Parameters {
     private final Long seed;
     private final Integer forcedMRAI;
     private final Detection forcedDetection;
+    private final int threshold;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -48,7 +49,7 @@ public class Parameters {
     private Parameters(File topologyFile, TopologyReaderFactory readerFactory, File reportDestination,
                        ReporterFactory reporterFactory, File anycastFile, int minDelay, int maxDelay,
                        int destinationId, int repetitionCount, SetupFactory setupFactory, Long seed,
-                       Integer forcedMRAI, Detection forcedDetection) {
+                       Integer forcedMRAI, Detection forcedDetection, int threshold) {
 
         this.topologyFile = topologyFile;
         this.readerFactory = readerFactory;
@@ -63,6 +64,7 @@ public class Parameters {
         this.seed = seed;
         this.forcedMRAI = forcedMRAI;
         this.forcedDetection = forcedDetection;
+        this.threshold = threshold;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -135,6 +137,10 @@ public class Parameters {
         return forcedDetection != null;
     }
 
+    public int getThreshold() {
+        return threshold;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Builder
@@ -167,6 +173,7 @@ public class Parameters {
         private Long seed = null;
         private Integer forcedMRAI = null;
         private Detection forcedDetection = null;
+        private int threshold = Integer.MAX_VALUE;
 
         // parameters for the setup
 //        private Integer deployTime = null;
@@ -234,6 +241,13 @@ public class Parameters {
             return this;
         }
 
+        public Builder threshold(Integer threshold) {
+            if (threshold != null)
+                this.threshold = threshold;
+
+            return this;
+        }
+
         // parameters for the setup
 //
 //        public Builder timedDeployment(Integer deployTime) {
@@ -257,7 +271,7 @@ public class Parameters {
 
             return new Parameters(topologyFile, readerFactory, reportDestination, reporterFactory,
                     anycastFile, minDelay, maxDelay, destinationId, repetitionCount, setupFactory, seed,
-                    forcedMRAI, forcedDetection);
+                    forcedMRAI, forcedDetection, threshold);
         }
 
     }
