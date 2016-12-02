@@ -147,6 +147,7 @@ public class CSVReporter implements Reporter {
         printer.print(dataSet.getDetectingRoutersCount());
         printer.print(dataSet.getCutOffLinksCount());
         printer.print(dataSet.getFalsePositiveCount());
+        printer.print(dataSet.didProtocolTerminate() ? "Yes" : "No");
     }
 
     private void writeDetections(int simulationNumber, BasicDataset dataSet) throws IOException {
@@ -298,7 +299,8 @@ public class CSVReporter implements Reporter {
                 dataset.getTotalMessageCountLabel(),
                 dataset.getDetectingRoutersCountLabel(),
                 dataset.getCutOffLinksCountLabel(),
-                dataset.getFalsePositiveCountLabel()
+                dataset.getFalsePositiveCountLabel(),
+                dataset.getDidProtocolTerminateLabel()
         };
     }
 

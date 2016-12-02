@@ -32,6 +32,7 @@ public class ParametersCommandLineParser {
     private static final String SEED = "seed";
     private static final String MRAI = "MRAI";
     private static final String DETECTION = "detection";
+    private static final String THRESHOLD = "threshold";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -54,6 +55,7 @@ public class ParametersCommandLineParser {
         options.addOption("seed", SEED, true, "seed value to force");
         options.addOption("MRAI", MRAI, true, "MRAI value to force");
         options.addOption("d", DETECTION, true, "detection method to force (D0 | D1 | D2)");
+        options.addOption("th", THRESHOLD, true, "value for the threshold");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -87,6 +89,7 @@ public class ParametersCommandLineParser {
                 .seed(getSeed(commandLine))
                 .forcedMRAI(getForcedMRAI(commandLine))
                 .forcedDetection(getForcedDetection(commandLine))
+                .threshold(getThreshold(commandLine))
                 .build();
     }
 
@@ -270,17 +273,7 @@ public class ParametersCommandLineParser {
      * @throws ParseException if the option is available but the argument value is not a signed integer.
      */
     private Integer getForcedMRAI(CommandLine commandLine) throws ParseException {
-
-        if (commandLine.hasOption(MRAI)) {
-            try {
-                return Integer.parseInt(commandLine.getOptionValue(MRAI));
-            } catch (NumberFormatException e) {
-                throw new ParseException(expectedIntegerMessage("forced MRAI"));
-            }
-
-        } else {
-            return null;
-        }
+        return getOptionalIntegerParameter(commandLine, MRAI, "forced MRAI");
     }
 
     /**
@@ -307,11 +300,40 @@ public class ParametersCommandLineParser {
         }
     }
 
+    /**
+     * Obtains the threshold value from the command line. This is an optional argument, in case it is
+     * missing null will be returned. It throws a parse exception if the option is available but the
+     * argument value is not a signed long.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return the parsed detection or null if the argument does not exist.
+     * @throws ParseException if the option is available but the argument value is not a valid detection tag.
+     */
+    private Integer getThreshold(CommandLine commandLine) throws ParseException {
+        return getOptionalIntegerParameter(commandLine, THRESHOLD, "threshold");
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Helper method to create common error messages
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private Integer getOptionalIntegerParameter(CommandLine commandLine, String parameter, String optionName)
+            throws ParseException {
+
+        if (commandLine.hasOption(parameter)) {
+            try {
+                return Integer.parseInt(commandLine.getOptionValue(parameter));
+            } catch (NumberFormatException e) {
+                throw new ParseException(expectedIntegerMessage(optionName));
+            }
+
+        } else {
+            return null;
+        }
+
+    }
 
     /**
      * Returns the formatted message for missing non-optional arguments.

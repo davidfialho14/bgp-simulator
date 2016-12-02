@@ -80,7 +80,7 @@ public class SimulatorLauncher {
         }
 
         // Setup the engine
-        Engine engine = new Engine(new BasicExporter(scheduler));
+        Engine engine = new Engine(new BasicExporter(scheduler), parameters.getThreshold());
 
         // use the simulator factory to get a properly configured simulator
         Simulator simulator = new Simulator(parameters.getSetupFactory().getSetup(engine, topology, destination));
