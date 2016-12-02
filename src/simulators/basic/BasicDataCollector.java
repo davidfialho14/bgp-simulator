@@ -16,7 +16,7 @@ import java.util.Iterator;
  * Collects all data that can be stored in a basic dataset.
  */
 public class BasicDataCollector implements DataCollector, ExportListener, DetectListener,
-        StartListener, AdvertisementListener, EndListener {
+        StartListener, AdvertisementListener, EndListener, ThresholdReachedListener {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -165,6 +165,16 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public void onEnded(EndEvent event) {
         dataset.setSimulationTime(event.getTimeInstant());
+    }
+
+    /**
+     * Invoked when a threshold reached event occurs.
+     *
+     * @param event threshold reached event that occurred.
+     */
+    @Override
+    public void onThresholdReached(ThresholdReachedEvent event) {
+        dataset.setProtocolTerminated(false);
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.*;
  *  - false positives count
  *  - detections
  *  - last message times
+ *  - protocol terminated
  */
 public class BasicDataset implements Dataset {
 
@@ -33,6 +34,7 @@ public class BasicDataset implements Dataset {
     private int falsePositiveCount = 0;
     // stores the times of the last message of each router
     private Map<Router, Long> lastMessageTimes = new HashMap<>();
+    private boolean protocolTerminated = true;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -166,6 +168,25 @@ public class BasicDataset implements Dataset {
         return lastMessageTimes;
     }
 
+    /**
+     * Returns true if the protocol terminated or false if otherwise.
+     *
+     * @return true if the protocol terminated or false if otherwise
+     */
+    public boolean didProtocolTerminate() {
+        return protocolTerminated;
+    }
+
+    /**
+     * Returns the label for the data property 'did protocol terminate'.
+     *
+     * @return the label for the data property 'did protocol terminate'
+     */
+    public String getDidProtocolTerminateLabel() {
+        return "Terminated";
+    }
+
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
      *  Public Interface - Methods to update the data
@@ -223,6 +244,15 @@ public class BasicDataset implements Dataset {
     }
 
     /**
+     * Sets teh flag to indicate if the protocol terminated.
+     *
+     * @param terminated  true to terminated and false otherwise.
+     */
+    public void setProtocolTerminated(boolean terminated) {
+        this.protocolTerminated = terminated;
+    }
+
+    /**
      * Clears all data from the dataset.
      */
     public void clear() {
@@ -234,6 +264,7 @@ public class BasicDataset implements Dataset {
         simulationTime = 0;
         falsePositiveCount = 0;
         lastMessageTimes.clear();
+        protocolTerminated = true;
     }
 
 }
