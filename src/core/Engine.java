@@ -93,6 +93,7 @@ public class Engine {
 
             if (time >= threshold) {
                 eventNotifier().notifyThresholdReachedEvent(new ThresholdReachedEvent(time, threshold));
+                break;
             }
 
             message.getTarget().process(message, exporter);
