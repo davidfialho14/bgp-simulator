@@ -2,11 +2,13 @@ package core;
 
 
 import core.events.EndEvent;
-import core.events.EventNotifier;
 import core.events.StartEvent;
 import core.events.TerminateEvent;
+import core.events.ThresholdReachedEvent;
 import core.exporters.Exporter;
 import core.schedulers.Scheduler;
+
+import static core.events.EventNotifier.eventNotifier;
 
 /**
  * Engine implements the hard simulation simulation logic.
@@ -21,6 +23,7 @@ public class Engine {
 
     private final Exporter exporter;
     private final Scheduler scheduler;
+    private final int threshold;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -37,6 +40,19 @@ public class Engine {
     public Engine(Exporter exporter) {
         this.exporter = exporter;
         this.scheduler = exporter.getScheduler();
+        this.threshold = Integer.MAX_VALUE;
+    }
+
+    /**
+     * Creates a new engine and assigns it the given exporter. The exporter already include the scheduler
+     * that is gonna be used by the engine.
+     *
+     * @param exporter  exporter used to export routes.
+     */
+    public Engine(Exporter exporter, int threshold) {
+        this.exporter = exporter;
+        this.scheduler = exporter.getScheduler();
+        this.threshold = threshold;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -64,7 +80,7 @@ public class Engine {
     public void simulate(Topology topology, Destination destination) {
         scheduler.reset();
 
-        EventNotifier.eventNotifier().notifyStartEvent(new StartEvent(0, scheduler));
+        eventNotifier().notifyStartEvent(new StartEvent(0, scheduler));
 
         // start the simulation by having the destination export its self route to its neighbors
         exporter.export(destination, topology.getPolicy());
@@ -75,16 +91,20 @@ public class Engine {
             Message message = scheduler.nextMessage();
             time = message.getArrivalTime();
 
+            if (time >= threshold) {
+                eventNotifier().notifyThresholdReachedEvent(new ThresholdReachedEvent(time, threshold));
+            }
+
             message.getTarget().process(message, exporter);
 
             if (!scheduler.hasMessages()) {
                 // a terminate even is fired here to allow external components to add more messages if
                 // necessary to the scheduler
-                EventNotifier.eventNotifier().notifyTerminateEvent(new TerminateEvent(time));
+                eventNotifier().notifyTerminateEvent(new TerminateEvent(time));
             }
         }
 
-        EventNotifier.eventNotifier().notifyEndEvent(new EndEvent(time));
+        eventNotifier().notifyEndEvent(new EndEvent(time));
     }
 
 }

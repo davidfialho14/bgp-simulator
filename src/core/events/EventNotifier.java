@@ -29,6 +29,7 @@ public class EventNotifier {
     private List<AdvertisementListener> advertisementListeners = new ArrayList<>();
     private List<DetectListener> detectListeners = new ArrayList<>();
     private List<TerminateListener> terminateListeners = new ArrayList<>();
+    private List<ThresholdReachedListener> thresholdReachedListeners = new ArrayList<>();
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -367,6 +368,40 @@ public class EventNotifier {
         terminateListeners.forEach(listener -> listener.onTerminated(event));
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  ThresholdReached Event
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Registers a new threshold reached listener.
+     *
+     * @param listener threshold reached listener to register.
+     */
+    public void addThresholdReachedListener(ThresholdReachedListener listener) {
+        add(thresholdReachedListeners, listener);
+    }
+
+    /**
+     * Unregisters a new threshold reached listener.
+     *
+     * @param listener threshold reached listener to unregister.
+     */
+    public void removeThresholdReachedListener(ThresholdReachedListener listener) {
+        remove(thresholdReachedListeners, listener);
+    }
+
+    /**
+     * Notifies all registered listeners of a threshold reached event  by invoking their onThresholdReached() method.
+     *
+     * @param event event to notify.
+     */
+    public void notifyThresholdReachedEvent(ThresholdReachedEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        thresholdReachedListeners.forEach(listener -> listener.onThresholdReached(event));
+    }
+
     /**
      * Removes all listeners from the event notifier.
      */
@@ -380,6 +415,7 @@ public class EventNotifier {
         advertisementListeners.clear();
         detectListeners.clear();
         terminateListeners.clear();
+        thresholdReachedListeners.clear();
     }
 
 }
