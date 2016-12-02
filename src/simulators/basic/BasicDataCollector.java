@@ -42,6 +42,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
         EventNotifier.eventNotifier().addStartListener(this);
         EventNotifier.eventNotifier().addAdvertisementListener(this);
         EventNotifier.eventNotifier().addEndListener(this);
+        EventNotifier.eventNotifier().addThresholdReachedListener(this);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -71,6 +72,7 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
         EventNotifier.eventNotifier().removeStartListener(this);
         EventNotifier.eventNotifier().removeAdvertisementListener(this);
         EventNotifier.eventNotifier().removeEndListener(this);
+        EventNotifier.eventNotifier().removeThresholdReachedListener(this);
     }
 
     /**
