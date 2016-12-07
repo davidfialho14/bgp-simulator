@@ -2,6 +2,9 @@ package main.cli;
 
 
 import core.protocols.Detection;
+import io.reporters.CSVReporterFactory;
+import io.reporters.LiteCSVReporterFactory;
+import io.reporters.ReporterFactory;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
 import io.topologyreaders.exceptions.TopologyParseException;
@@ -33,6 +36,7 @@ public class ParametersCommandLineParser {
     private static final String MRAI = "MRAI";
     private static final String DETECTION = "detection";
     private static final String THRESHOLD = "threshold";
+    private static final String LITE_REPORT = "lite";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -56,6 +60,7 @@ public class ParametersCommandLineParser {
         options.addOption("MRAI", MRAI, true, "MRAI value to force");
         options.addOption("d", DETECTION, true, "detection method to force (D0 | D1 | D2)");
         options.addOption("th", THRESHOLD, true, "value for the threshold");
+        options.addOption("lite", LITE_REPORT, false, "use the lite version of the reporters");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -81,6 +86,7 @@ public class ParametersCommandLineParser {
 
         return new Parameters.Builder(topologyFile, reportDestination)
                 .readerFactory(getReader(commandLine))
+                .reporterFactory(getReporter(commandLine))
                 .anycastFile(getAnycastFile(commandLine))
                 .destinationId(getDestinationId(commandLine))
                 .repetitionCount(getRepetitionCount(commandLine))
@@ -140,6 +146,22 @@ public class ParametersCommandLineParser {
      */
     private TopologyReaderFactory getReader(CommandLine commandLine) {
         return new SimpleTopologyReaderFactory();
+    }
+
+    /**
+     * Obtains the reporter type from the command line and returns the appropriate reporter factory.
+     * This is an optional argument, by default returns the full CSV Reporter.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return reader factory instance.
+     */
+    private ReporterFactory getReporter(CommandLine commandLine) throws ParseException {
+
+        if (commandLine.hasOption(LITE_REPORT)) {
+            return new LiteCSVReporterFactory(getTopologyFile(commandLine), getDestinationId(commandLine));
+        } else {
+            return new CSVReporterFactory(getTopologyFile(commandLine), getDestinationId(commandLine));
+        }
     }
 
     /**
