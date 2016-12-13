@@ -31,6 +31,7 @@ public abstract class AbstractScheduler implements Scheduler {
         // the message must arrive after the last message sent through the same link
         int messagesArrivalTime = Integer.max(arrivalTimeWithDelay, lastMessageArrivalTime + 1);
         message.setArrivalTime(messagesArrivalTime);
+        message.getTraversedLink().setLastArrivalTime(messagesArrivalTime);
 
         queue.offer(message);
     }
