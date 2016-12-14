@@ -82,6 +82,6 @@ public class ExportEvent extends AbstractSimulationEvent {
 
     @Override
     public String toString() {
-        return "ExportEvent{" + link + ", " + route + '}';
+        return "ExportEvent{" + getTimeInstant() + ", " + route + ", " + link + '}';
     }
 }

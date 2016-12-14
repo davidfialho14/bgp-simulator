@@ -34,6 +34,8 @@ public class SSBGPProtocol implements Protocol {
         int time = message.getArrivalTime();
         Link link = message.getTraversedLink();
 
+        EventNotifier.eventNotifier().notifyArrivalEvent(new ArrivalEvent(time, message.getRoute(), link));
+
         Route importedRoute = importRoute(message.getRoute(), link);
         EventNotifier.eventNotifier().notifyImportEvent(new ImportEvent(time, importedRoute, link));
 
