@@ -54,7 +54,7 @@ public class MRAITimer {
         // the timer only expires if the expiration time is lower then the current time
         // the timer can not be expired if the expiration time is equal to the current time since that can
         // lead to scheduling errors!!
-        return exportedRouteReference == null || expirationTime < currentTime;
+        return exportedRouteReference == null || expirationTime <= currentTime;
     }
 
     /**
