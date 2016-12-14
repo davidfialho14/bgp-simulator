@@ -51,39 +51,17 @@ public class BasicExporter implements Exporter {
 
         } else {
             timer.reset(currentTime, route);
-
             int expirationTime = timer.getExpirationTime();
-            boolean exportedUpdate = false; // indicates if a message other than an withdrawal was exported
 
             // export the route to each in-neighbor
             for (Link link : exportingRouter.getInLinks()) {
-
-                int exportTime;
-                Attribute extendedAttribute = link.getLabel().extend(link, route.getAttribute());
-                if (extendedAttribute == InvalidAttribute.invalidAttr()) {
-                    // withdrawals are exported immediately
-                    exportTime = currentTime;
-
-                    EventNotifier.eventNotifier().notifyAdvertisementEvent(
-                            new AdvertisementEvent(exportTime, exportingRouter, route));
-
-                } else {
-                    // advertisements that are not withdrawals must wait for the timer to expire
-                    exportTime = expirationTime;
-                    exportedUpdate = true;
-                }
-
-                export(link, timer.getExportRouteReference(), exportTime);
+                export(link, timer.getExportRouteReference(), expirationTime);
             }
 
-            if (exportedUpdate) {
-                // only fire this event if there was an advertisement that was not an withdrawal
-
-                // fire an Advertisement Event with the time corresponding to the expiration time
-                // the expiration time is the time when the event actually occurs
-                EventNotifier.eventNotifier().notifyAdvertisementEvent(
-                        new AdvertisementEvent(expirationTime, exportingRouter, route));
-            }
+            // fire an Advertisement Event with the time corresponding to the expiration time
+            // the expiration time is the time when the event actually occurs
+            EventNotifier.eventNotifier().notifyAdvertisementEvent(
+                    new AdvertisementEvent(expirationTime, exportingRouter, route));
         }
 
     }
