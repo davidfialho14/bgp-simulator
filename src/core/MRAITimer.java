@@ -62,11 +62,11 @@ public class MRAITimer {
      * @param currentTime   current time to compare with the expiration time of the current timer.
      * @return true if the timer is active, and false otherwise.
      */
-    public boolean hasExpired(long currentTime) {
+    public boolean hasExpired(int currentTime) {
         // the timer only expires if the expiration time is lower then the current time
         // the timer can not be expired if the expiration time is equal to the current time since
         // that can lead to scheduling errors!!
-        return isEnabled() && (exportRoute == null || expirationTime <= currentTime);
+        return isEnabled() && expirationTime <= currentTime;
     }
 
     /**
