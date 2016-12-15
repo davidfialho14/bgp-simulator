@@ -23,6 +23,7 @@ public class EventNotifier {
     private List<StartListener> startListeners = new ArrayList<>();
     private List<EndListener> endListeners = new ArrayList<>();
     private List<LearnListener> learnListeners = new ArrayList<>();
+    private List<ArrivalListener> arrivalListeners = new ArrayList<>();
     private List<ImportListener> importListeners = new ArrayList<>();
     private List<SelectListener> selectListeners = new ArrayList<>();
     private List<ExportListener> exportListeners = new ArrayList<>();
@@ -128,6 +129,40 @@ public class EventNotifier {
     public void notifyEndEvent(EndEvent event) {
         // events are immutable so the same event object can be passed to all listeners
         endListeners.forEach(listener -> listener.onEnded(event));
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Import Event
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Registers a new import listener.
+     *
+     * @param listener import listener to register.
+     */
+    public void addArrivalListener(ArrivalListener listener) {
+        add(arrivalListeners, listener);
+    }
+
+    /**
+     * Unregisters a new import listener.
+     *
+     * @param listener import listener to unregister.
+     */
+    public void removeArrivalListener(ArrivalListener listener) {
+        remove(arrivalListeners, listener);
+    }
+
+    /**
+     * Notifies all registered listeners of a import event  by invoking their onArrival() method.
+     *
+     * @param event event to notify.
+     */
+    public void notifyArrivalEvent(ArrivalEvent event) {
+        // events are immutable so the same event object can be passed to all listeners
+        arrivalListeners.forEach(listener -> listener.onArrival(event));
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -408,6 +443,7 @@ public class EventNotifier {
     public void clearAll() {
         startListeners.clear();
         endListeners.clear();
+        arrivalListeners.clear();
         importListeners.clear();
         learnListeners.clear();
         selectListeners.clear();
