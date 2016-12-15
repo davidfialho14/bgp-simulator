@@ -88,12 +88,6 @@ public class Engine {
         int time = 0;
         while (scheduler.hasMessages()) {
 
-            // check there is expired timers and if so export the routes associated with the
-            // timers right now.
-            // this MUST be called before getting the next message, since an expired timer can
-            // export a route message that can become the next message in the scheduler
-            exporter.export(scheduler.getExpiredTimers());
-
             Message message = scheduler.nextMessage();
             time = message.getArrivalTime();
 
@@ -103,6 +97,12 @@ public class Engine {
             }
 
             message.getTarget().process(message, exporter);
+
+            // check there is expired timers and if so export the routes associated with the
+            // timers right now.
+            // this MUST be called after processing each message!
+            // calling this method might generate new messages to be added to the scheduler!
+            exporter.export(scheduler.getExpiredTimers());
 
             if (!scheduler.hasMessages()) {
                 // a terminate even is fired here to allow external components to add more messages if
