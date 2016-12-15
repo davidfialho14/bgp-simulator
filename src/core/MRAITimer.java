@@ -10,6 +10,7 @@ public class MRAITimer {
     // Minimum Route Advertisement Interval
     private int MRAI;
     private int expirationTime = 0;
+    private boolean enabled = false;
     private RouteReference exportedRouteReference = null;
 
     /**
@@ -52,9 +53,9 @@ public class MRAITimer {
      */
     public boolean hasExpired(long currentTime) {
         // the timer only expires if the expiration time is lower then the current time
-        // the timer can not be expired if the expiration time is equal to the current time since that can
-        // lead to scheduling errors!!
-        return exportedRouteReference == null || expirationTime <= currentTime;
+        // the timer can not be expired if the expiration time is equal to the current time since
+        // that can lead to scheduling errors!!
+        return isEnabled() && (exportedRouteReference == null || expirationTime <= currentTime);
     }
 
     /**
@@ -92,14 +93,34 @@ public class MRAITimer {
     public void reset(int currentTime, Route exportedRoute) {
         expirationTime = currentTime + MRAI;
         this.exportedRouteReference = new RouteReference(exportedRoute);
+        setEnabled(true);
     }
 
     /**
-     * Resets the timer to 0.
+     * Resets the timer. Disables the timer and sets the expiration time to 0.
      */
     public void reset() {
         expirationTime = 0;
         exportedRouteReference = null;
+        setEnabled(false);
+    }
+
+    /**
+     * Checks if the timer is enabled.
+     *
+     * @return true if the timer is enabled and false if otherwise.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Enables or disables the timer.
+     *
+     * @param enabled true to enable the timer and false to disable.
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }
