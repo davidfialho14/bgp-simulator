@@ -45,11 +45,17 @@ public class BasicExporter implements Exporter {
     public void export(Router exportingRouter, Route route, int currentTime) {
         MRAITimer timer = exportingRouter.getMRAITimer();
 
-//        if (!timer.isEnabled()) {
-//            timer.reset(currentTime, route);
-//
-//            exportToNeighbors(exportingRouter, timer);
-//        }
+        if (timer.isEnabled()) {
+            timer.setExportRoute(route);
+
+        } else {
+            exportToNeighbors(exportingRouter, route, currentTime);
+
+            // set a timer
+            timer.reset(currentTime);
+            scheduler.schedule(timer);
+        }
+
     }
 
     /**
@@ -76,9 +82,11 @@ public class BasicExporter implements Exporter {
     public void export(Collection<MRAITimer> timers) {
 
         for (MRAITimer timer : timers) {
+            // after expiring, the timer is disabled
+            timer.setEnabled(false);
+
             if (timer.hasExportableRoute()) {
-                exportToNeighbors(timer.getOwner(), timer.getExportRoute(),
-                        timer.getExpirationTime());
+                export(timer.getOwner(), timer.getExportRoute(), timer.getExpirationTime());
             }
         }
     }
