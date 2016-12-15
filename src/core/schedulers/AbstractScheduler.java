@@ -3,7 +3,10 @@ package core.schedulers;
 import core.MRAITimer;
 import core.Message;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Implements some of the common operations of the scheduler that are the same for most scheduler
@@ -16,8 +19,14 @@ public abstract class AbstractScheduler implements Scheduler {
     private final PriorityQueue<Message> queue = new PriorityQueue<>();
 
     // priority queue to schedule timers - timers are scheduled based on their expiration time
-    private final PriorityQueue<MRAITimer> timerQueue = new PriorityQueue<>(
-            Comparator.comparingInt(MRAITimer::getExpirationTime));
+    private final PriorityQueue<MRAITimer> timerQueue = new PriorityQueue<>((o1, o2) -> {
+        int comparison = o1.getExpirationTime() - o2.getExpirationTime();
+        if (comparison == 0) {
+            comparison = o1.getOwner().getId() - o2.getOwner().getId();
+        }
+
+        return comparison;
+    });
 
     /**
      * Adds a new message to the scheduler. The time of the message should correspond to the time at which
