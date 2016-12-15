@@ -79,6 +79,16 @@ public class MRAITimer {
     }
 
     /**
+     * Checks if the timer has a route to export. If it returns false it means that the owner of
+     * the route did not select/export any route while the timer was active.
+     *
+     * @return true if there is a route to export and false if not.
+     */
+    public boolean hasExportableRoute() {
+        return exportRoute != null;
+    }
+
+    /**
      * Returns the expiration time of the timer.
      *
      * @return the expiration time of the timer.
@@ -99,11 +109,12 @@ public class MRAITimer {
     }
 
     /**
-     * Resets the timer to expire MRAI units of time after the current time.
+     * Resets the timer to expire MRAI units of time after the current time. By default the timer
+     * is initialized with no route to export.
      */
-    public void reset(int currentTime, Route route) {
+    public void reset(int currentTime) {
         expirationTime = currentTime + MRAI;
-        exportRoute = route;
+        exportRoute = null;
         setEnabled(true);
     }
 

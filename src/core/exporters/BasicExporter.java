@@ -76,7 +76,10 @@ public class BasicExporter implements Exporter {
     public void export(Collection<MRAITimer> timers) {
 
         for (MRAITimer timer : timers) {
-            exportToNeighbors(timer.getOwner(), timer.getExportRoute(), timer.getExpirationTime());
+            if (timer.hasExportableRoute()) {
+                exportToNeighbors(timer.getOwner(), timer.getExportRoute(),
+                        timer.getExpirationTime());
+            }
         }
     }
 
