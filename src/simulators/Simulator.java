@@ -63,6 +63,11 @@ public class Simulator {
 
         }
 
+        // guarantee the arrival times of the destination's in-links are reset to 0
+        for (Link link : setup.destination.getInLinks()) {
+            link.setLastArrivalTime(0);
+        }
+
     }
 
     /**
