@@ -8,7 +8,7 @@ import core.Router;
 /**
  * Events generated when a messages arrives at a router.
  */
-public class ArrivalEvent extends AbstractSimulationEvent {
+public class ArrivalEvent extends AbstractSimulationEvent implements LinkEvent {
 
     private Route route;    // imported route
     private Link link;      // link from which the route was imported

@@ -8,7 +8,7 @@ import core.Router;
 /**
  * Events generated when a router exports a new route.
  */
-public class ExportEvent extends AbstractSimulationEvent {
+public class ExportEvent extends AbstractSimulationEvent implements LinkEvent {
 
     private final Route route;  // route exported
     private final Link link;    // link through which the route was exported
