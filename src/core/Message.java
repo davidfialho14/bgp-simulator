@@ -1,7 +1,5 @@
 package core;
 
-import core.schedulers.RouteReference;
-
 /**
  * Message is an abstraction of a BGP message. A message contains the link trough which is sent, the route,
  * and the time of arrival to the the source node of the link. Messages are always sent from the target
@@ -11,12 +9,12 @@ public class Message implements Comparable<Message> {
 
     private int arrivalTime;
     private final Link traversedLink;
-    private final RouteReference routeReference;
+    private final Route route;
 
-    public Message(int time, Link traversedLink, RouteReference routeReference) {
+    public Message(int time, Link traversedLink, Route route) {
         this.arrivalTime = time;
         this.traversedLink = traversedLink;
-        this.routeReference = routeReference;
+        this.route = route;
     }
 
     public int getArrivalTime() {
@@ -28,7 +26,7 @@ public class Message implements Comparable<Message> {
     }
 
     public Route getRoute() {
-        return routeReference.getRoute();
+        return route;
     }
 
     /**
