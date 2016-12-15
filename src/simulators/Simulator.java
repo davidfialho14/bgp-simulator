@@ -53,7 +53,7 @@ public class Simulator {
         for (Router router : setup.getTopology().getRouters()) {
 
             router.getTable().reset();
-            router.getMRAITimer().reset();
+            router.getMRAITimer().clear();
 
             // reset router's links
             for (Link link : router.getInLinks()) {

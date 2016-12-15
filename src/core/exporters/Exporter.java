@@ -1,10 +1,9 @@
 package core.exporters;
 
-import core.Destination;
-import core.Policy;
-import core.Route;
-import core.Router;
+import core.*;
 import core.schedulers.Scheduler;
+
+import java.util.Collection;
 
 /**
  * An exporter is responsible for the export operation of the simulation engine. Performs two different
@@ -37,4 +36,11 @@ public interface Exporter {
      */
     void export(Destination destination, Policy policy);
 
+    /**
+     * Takes a collection of timers and exports the route associated with the timer to all
+     * neighbors of the owner of the timer.
+     *
+     * @param timers collection with the timers to export.
+     */
+    void export(Collection<MRAITimer> timers);
 }
