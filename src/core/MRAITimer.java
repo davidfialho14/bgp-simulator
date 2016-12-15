@@ -1,7 +1,5 @@
 package core;
 
-import core.schedulers.RouteReference;
-
 /**
  * Implementation of a MRAI timer.
  */
@@ -13,7 +11,7 @@ public class MRAITimer {
     private int MRAI;
     private int expirationTime = 0;
     private boolean enabled = false;
-    private RouteReference exportedRouteReference = null;
+    private Route exportRoute = null;
 
     /**
      * Creates a MRAI timer with the default MRAI set to 20.
@@ -68,16 +66,16 @@ public class MRAITimer {
         // the timer only expires if the expiration time is lower then the current time
         // the timer can not be expired if the expiration time is equal to the current time since
         // that can lead to scheduling errors!!
-        return isEnabled() && (exportedRouteReference == null || expirationTime <= currentTime);
+        return isEnabled() && (exportRoute == null || expirationTime <= currentTime);
     }
 
     /**
-     * Returns the reference for the export route.
+     * Returns the route to be exported when the timer expires.
      *
-     * @return the reference for the export route.
+     * @return the route to be exported when the timer expires.
      */
-    public RouteReference getExportRouteReference() {
-        return exportedRouteReference;
+    public Route getExportRoute() {
+        return exportRoute;
     }
 
     /**
@@ -96,16 +94,16 @@ public class MRAITimer {
      *
      * @param route route to update to.
      */
-    public void updateExportRoute(Route route) {
-        exportedRouteReference.setRoute(route);
+    public void setExportRoute(Route route) {
+        this.exportRoute = route;
     }
 
     /**
      * Resets the timer to expire MRAI units of time after the current time.
      */
-    public void reset(int currentTime, Route exportedRoute) {
+    public void reset(int currentTime, Route route) {
         expirationTime = currentTime + MRAI;
-        this.exportedRouteReference = new RouteReference(exportedRoute);
+        exportRoute = route;
         setEnabled(true);
     }
 
@@ -114,7 +112,7 @@ public class MRAITimer {
      */
     public void clear() {
         expirationTime = 0;
-        exportedRouteReference = null;
+        exportRoute = null;
         setEnabled(false);
     }
 

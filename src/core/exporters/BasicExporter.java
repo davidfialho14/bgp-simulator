@@ -1,11 +1,11 @@
 package core.exporters;
 
 import core.*;
-import core.events.AdvertisementEvent;
 import core.events.EventNotifier;
 import core.events.ExportEvent;
-import core.schedulers.RouteReference;
 import core.schedulers.Scheduler;
+
+import java.util.Collection;
 
 
 /**
@@ -45,25 +45,11 @@ public class BasicExporter implements Exporter {
     public void export(Router exportingRouter, Route route, int currentTime) {
         MRAITimer timer = exportingRouter.getMRAITimer();
 
-        if (!timer.hasExpired(currentTime)) {
-            // update the export route for the current timer
-            timer.updateExportRoute(route);
-
-        } else {
-            timer.reset(currentTime, route);
-            int expirationTime = timer.getExpirationTime();
-
-            // export the route to each in-neighbor
-            for (Link link : exportingRouter.getInLinks()) {
-                export(link, timer.getExportRouteReference(), expirationTime);
-            }
-
-            // fire an Advertisement Event with the time corresponding to the expiration time
-            // the expiration time is the time when the event actually occurs
-            EventNotifier.eventNotifier().notifyAdvertisementEvent(
-                    new AdvertisementEvent(expirationTime, exportingRouter, route));
-        }
-
+//        if (!timer.isEnabled()) {
+//            timer.reset(currentTime, route);
+//
+//            exportToNeighbors(exportingRouter, timer);
+//        }
     }
 
     /**
@@ -76,9 +62,8 @@ public class BasicExporter implements Exporter {
     public void export(Destination destination, Policy policy) {
         Route selfRoute = Route.newSelfRoute(policy);
         destination.setSelfRoute(selfRoute);
-        RouteReference selfRouteReference = new RouteReference(selfRoute);
 
-        destination.getInLinks().forEach(link -> export(link, selfRouteReference, 0));
+        destination.getInLinks().forEach(link -> export(link, selfRoute, 0));
     }
 
     /**
@@ -91,22 +76,22 @@ public class BasicExporter implements Exporter {
     public void export(Collection<MRAITimer> timers) {
 
         for (MRAITimer timer : timers) {
-            exportToNeighbors(timer.getOwner(), timer.getExportRouteReference(), timer.getExpirationTime());
+            exportToNeighbors(timer.getOwner(), timer.getExportRoute(), timer.getExpirationTime());
         }
     }
 
-    protected void exportToNeighbors(Router exportingRouter, RouteReference route, int exportTime) {
+    protected void exportToNeighbors(Router exportingRouter, Route route, int exportTime) {
 
         for (Link link : exportingRouter.getInLinks()) {
             export(link, route, exportTime);
         }
     }
 
-    protected void export(Link exportLink, RouteReference routeReference, int exportTime) {
+    protected void export(Link exportLink, Route route, int exportTime) {
         // add the route to the scheduler with the given export time
-        scheduler.schedule(new Message(exportTime, exportLink, routeReference));
+        scheduler.schedule(new Message(exportTime, exportLink, route));
 
-        EventNotifier.eventNotifier().notifyExportEvent(new ExportEvent(exportTime, exportLink, routeReference.getRoute()));
+        EventNotifier.eventNotifier().notifyExportEvent(new ExportEvent(exportTime, exportLink, route));
     }
 
 }
