@@ -1,11 +1,13 @@
 package core.exporters;
 
 import core.*;
-import core.events.EventNotifier;
+import core.events.AdvertisementEvent;
 import core.events.ExportEvent;
 import core.schedulers.Scheduler;
 
 import java.util.Collection;
+
+import static core.events.EventNotifier.eventNotifier;
 
 
 /**
@@ -96,13 +98,16 @@ public class BasicExporter implements Exporter {
         for (Link link : exportingRouter.getInLinks()) {
             export(link, route, exportTime);
         }
+
+        eventNotifier().notifyAdvertisementEvent(new AdvertisementEvent(exportTime,
+                exportingRouter, route));
     }
 
     protected void export(Link exportLink, Route route, int exportTime) {
         // add the route to the scheduler with the given export time
         scheduler.schedule(new Message(exportTime, exportLink, route));
 
-        EventNotifier.eventNotifier().notifyExportEvent(new ExportEvent(exportTime, exportLink, route));
+        eventNotifier().notifyExportEvent(new ExportEvent(exportTime, exportLink, route));
     }
 
 }
