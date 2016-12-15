@@ -22,8 +22,8 @@ public class SiblingLabelTest {
     }
 
     @Test
-    public void extend_SelfAttribute_ReturnsCustomerWith0HopsAttribute() throws Exception {
-        assertThat(label.extend(null, self()), is(customer(0)));
+    public void extend_SelfAttribute_ReturnsCustomerWith1HopAttribute() throws Exception {
+        assertThat(label.extend(null, self()), is(customer(1)));
     }
 
     @Test

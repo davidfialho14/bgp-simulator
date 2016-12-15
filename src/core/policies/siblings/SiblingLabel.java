@@ -15,7 +15,7 @@ public class SiblingLabel implements Label {
     public Attribute extend(Link link, Attribute attribute) {
         if (attribute == InvalidAttribute.invalidAttr()) return InvalidAttribute.invalidAttr();
         if (attribute instanceof SelfAttribute) {
-            return CustomerAttribute.customer(0);
+            return CustomerAttribute.customer(1);
         }
 
         SiblingAttribute siblingAttribute = (SiblingAttribute) attribute;
