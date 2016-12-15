@@ -47,7 +47,7 @@ public class Router extends Node implements Destination {
     public Router(int id, int MRAI, Detection detection) {
         super(id);
         inLinks = new HashMap<>();
-        this.mraiTimer = new MRAITimer(MRAI);
+        this.mraiTimer = new MRAITimer(this, MRAI);
         this.detection = detection;
     }
 
@@ -60,7 +60,7 @@ public class Router extends Node implements Destination {
     public Router(Router router) {
         super(router.getId());
         this.inLinks = new HashMap<>(router.inLinks);
-        this.mraiTimer = new MRAITimer(router.getMRAITimer().getMRAI());
+        this.mraiTimer = new MRAITimer(this, router.getMRAITimer().getMRAI());
         this.detection = router.getDetection();
     }
 

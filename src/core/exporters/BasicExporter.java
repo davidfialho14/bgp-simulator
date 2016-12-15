@@ -81,6 +81,27 @@ public class BasicExporter implements Exporter {
         destination.getInLinks().forEach(link -> export(link, selfRouteReference, 0));
     }
 
+    /**
+     * Takes a collection of timers and exports the route associated with the timer to all
+     * neighbors of the owner of the timer.
+     *
+     * @param timers collection with the timers to export.
+     */
+    @Override
+    public void export(Collection<MRAITimer> timers) {
+
+        for (MRAITimer timer : timers) {
+            exportToNeighbors(timer.getOwner(), timer.getExportRouteReference(), timer.getExpirationTime());
+        }
+    }
+
+    protected void exportToNeighbors(Router exportingRouter, RouteReference route, int exportTime) {
+
+        for (Link link : exportingRouter.getInLinks()) {
+            export(link, route, exportTime);
+        }
+    }
+
     protected void export(Link exportLink, RouteReference routeReference, int exportTime) {
         // add the route to the scheduler with the given export time
         scheduler.schedule(new Message(exportTime, exportLink, routeReference));

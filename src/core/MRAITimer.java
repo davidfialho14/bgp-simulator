@@ -7,6 +7,8 @@ import core.schedulers.RouteReference;
  */
 public class MRAITimer {
 
+    private final Router owner; // owner associated with the timer
+
     // Minimum Route Advertisement Interval
     private int MRAI;
     private int expirationTime = 0;
@@ -16,15 +18,26 @@ public class MRAITimer {
     /**
      * Creates a MRAI timer with the default MRAI set to 20.
      */
-    public MRAITimer() {
+    public MRAITimer(Router owner) {
+        this.owner = owner;
         this.MRAI = 20;
     }
 
     /**
      * Creates a MRAI timer with the given MRAI value.
      */
-    public MRAITimer(int MRAI) {
+    public MRAITimer(Router owner, int MRAI) {
+        this.owner = owner;
         this.MRAI = MRAI;
+    }
+
+    /**
+     * Returns the owner of the MRAI timer.
+     *
+     * @return the owner of the MRAI timer.
+     */
+    public Router getOwner() {
+        return owner;
     }
 
     /**
