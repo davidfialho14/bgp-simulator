@@ -1,8 +1,9 @@
 package core.schedulers;
 
+import core.MRAITimer;
 import core.Message;
 
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Implements some of the common operations of the scheduler that are the same for most scheduler
@@ -10,9 +11,13 @@ import java.util.PriorityQueue;
  */
 public abstract class AbstractScheduler implements Scheduler {
 
-    // The priority queue is used to schedule the messages using their arrival times to define the priority
-    // of the messages. Messages with lower arrival times have higher priority.
+    // The priority queue is used to schedule the messages using their arrival times to
+    // define the priority of the messages. Messages with lower arrival times have higher priority.
     private final PriorityQueue<Message> queue = new PriorityQueue<>();
+
+    // priority queue to schedule timers - timers are scheduled based on their expiration time
+    private final PriorityQueue<MRAITimer> timerQueue = new PriorityQueue<>(
+            Comparator.comparingInt(MRAITimer::getExpirationTime));
 
     /**
      * Adds a new message to the scheduler. The time of the message should correspond to the time at which
@@ -37,6 +42,17 @@ public abstract class AbstractScheduler implements Scheduler {
     }
 
     /**
+     * Schedules an MRAI timer in the scheduler. When the MRAI timer expires it stored in a list
+     * of expired timers that can be obtained when calling the getExpiredTimers() method.
+     *
+     * @param timer timer to schedule.
+     */
+    @Override
+    public void schedule(MRAITimer timer) {
+        timerQueue.offer(timer);
+    }
+
+    /**
      * Returns the next message in the scheduler. If the scheduler contains no more message then null is
      * returned.
      *
@@ -55,6 +71,33 @@ public abstract class AbstractScheduler implements Scheduler {
     @Override
     public boolean hasMessages() {
         return !queue.isEmpty();
+    }
+
+    /**
+     * Returns a collection with all the timers that have expired since the construction of the
+     * scheduler or the last time this method was called.
+     * <p>
+     * The scheduler keeps a list of all timers that expire while time progresses. When the
+     * current time reaches the expiration time of a timer, this timer is put on a list. This
+     * list is the one returned by this method. After calling this method the list is cleared.
+     *
+     * @return collection with all the timers that have expired since the construction of the
+     * scheduler or the last time this method was called.
+     */
+    @Override
+    public Collection<MRAITimer> getExpiredTimers() {
+        List<MRAITimer> expiredTimers = new ArrayList<>();
+
+        int currentTime = getTime();
+
+        MRAITimer timer = timerQueue.peek();
+        while (timer != null && timer.hasExpired(currentTime)) {
+            expiredTimers.add(timer);
+            timerQueue.poll();  // remove the expired timer from the queue
+            timer = timerQueue.peek();  // move to the next timer in the queue
+        }
+
+        return expiredTimers;
     }
 
     /**

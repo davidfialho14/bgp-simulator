@@ -1,7 +1,10 @@
 package core.schedulers;
 
 
+import core.MRAITimer;
 import core.Message;
+
+import java.util.Collection;
 
 public interface Scheduler {
 
@@ -14,6 +17,14 @@ public interface Scheduler {
      * @param message   message to schedule.
      */
     void schedule(Message message);
+
+    /**
+     * Schedules an MRAI timer in the scheduler. When the MRAI timer expires it stored in a list
+     * of expired timers that can be obtained when calling the getExpiredTimers() method.
+     *
+     * @param timer timer to schedule.
+     */
+    void schedule(MRAITimer timer);
 
     /**
      * Returns the next message in the scheduler. If the scheduler contains no more message then null is
@@ -37,6 +48,19 @@ public interface Scheduler {
      * @return the current time of the scheduler.
      */
     int getTime();
+
+    /**
+     * Returns a collection with all the timers that have expired since the construction of the
+     * scheduler or the last time this method was called.
+     *
+     * The scheduler keeps a list of all timers that expire while time progresses. When the
+     * current time reaches the expiration time of a timer, this timer is put on a list. This
+     * list is the one returned by this method. After calling this method the list is cleared.
+     *
+     * @return collection with all the timers that have expired since the construction of the
+     * scheduler or the last time this method was called.
+     */
+    Collection<MRAITimer> getExpiredTimers();
 
     /**
      * Returns the seed used to generate the delays.
