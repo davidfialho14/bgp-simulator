@@ -110,9 +110,9 @@ public class MRAITimer {
     }
 
     /**
-     * Resets the timer. Disables the timer and sets the expiration time to 0.
+     * Clears the timer. Disables the timer and sets the expiration time to 0.
      */
-    public void reset() {
+    public void clear() {
         expirationTime = 0;
         exportedRouteReference = null;
         setEnabled(false);
