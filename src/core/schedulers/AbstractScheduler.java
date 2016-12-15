@@ -136,6 +136,7 @@ public abstract class AbstractScheduler implements Scheduler {
     @Override
     public void clear() {
         queue.clear();
+        timerQueue.clear();
     }
 
     /**
