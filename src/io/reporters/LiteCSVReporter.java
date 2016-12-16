@@ -133,6 +133,7 @@ public class LiteCSVReporter implements Reporter {
     private void printCounts(CSVPrinter printer, BasicDataset dataSet) throws IOException {
 
         printer.print(dataSet.getSimulationSeed());
+        printer.print(dataSet.getSimulationTime());
         printer.print(averageLastTimes(dataSet.getLastMessageTimes()));
         printer.print(dataSet.getTotalMessageCount());
         printer.print(dataSet.getDetectingRoutersCount());
@@ -212,7 +213,8 @@ public class LiteCSVReporter implements Reporter {
 
         return new String[]{
                 dataset.getSimulationSeedLabel(),
-                dataset.getSimulationTimeLabel(),
+                "Time",
+                "Avg Time",
                 "Messages",
                 "Detecting Nodes",
                 "Detections",
