@@ -47,6 +47,7 @@ public class RandomDelayGenerator {
     public RandomDelayGenerator(int min, int max, long seed) {
         this(min, max);
         this.forcedSeed = seed;
+        reset();
     }
 
     /**
