@@ -6,6 +6,7 @@ import main.Parameters;
 import main.ProgressHandler;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Implements the handling of progress by the CLI application.
@@ -92,6 +93,26 @@ public class CLIProgressHandler implements ProgressHandler {
     @Override
     public void onFinishReporting(int simulationNumber) {
         printTimedFinishMessage("Finished reporting");
+    }
+
+    /**
+     * Invoked before starting to load the seeds file.
+     *
+     * @param seedFile seeds file to be loaded.
+     */
+    @Override
+    public void onStartLoadingSeedsFile(File seedFile) {
+        printTimedStartMessage("Loading seeds file: " + seedFile.getName() + "...");
+    }
+
+    /**
+     * Invoked after loading the topology file.
+     *
+     * @param seeds loaded seeds.
+     */
+    @Override
+    public void onFinishedLoadingSeedsFile(List<Long> seeds) {
+        printTimedFinishMessage(String.format("Loaded %d seeds", seeds.size()));
     }
 
     private void printTimedStartMessage(String message) {

@@ -45,4 +45,15 @@ public class CLIErrorHandler implements ErrorHandler {
                 destinationID, anycastFile));
     }
 
+    @Override
+    public void onSeedsFileLoadIOException(IOException exception) {
+        System.err.println("Can not open the seeds file: " + exception.getMessage());
+    }
+
+    @Override
+    public void onSeedsCountDoesNotMatchRepetitionCount(int seedCount, int repetitionCount) {
+        System.err.println(String.format("Number of seeds (%d) and number of " +
+                "repetitions (%d) does not match", seedCount, repetitionCount));
+    }
+
 }

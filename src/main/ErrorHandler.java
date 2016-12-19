@@ -83,4 +83,21 @@ public interface ErrorHandler {
         System.err.println("Failed to find destination " + destinationID + " in anycast file" + anycastFile);
         exception.printStackTrace();
     }
+
+    /**
+     * Invoked when the seeds are being loaded and an IO exception is thrown.
+     *
+     * @param exception thrown IO exception.
+     */
+    default void onSeedsFileLoadIOException(IOException exception) {
+        exception.printStackTrace();
+    }
+
+    /**
+     * Invoked when the number of seeds does not match the number of repetitions.
+     *
+     * @param seedCount         number of seeds.
+     * @param repetitionCount   number of repetitions.
+     */
+    default void onSeedsCountDoesNotMatchRepetitionCount(int seedCount, int repetitionCount) {}
 }

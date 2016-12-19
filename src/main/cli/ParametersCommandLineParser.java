@@ -33,6 +33,7 @@ public class ParametersCommandLineParser {
     private static final String MIN_DELAY = "min_delay";
     private static final String MAX_DELAY = "max_delay";
     private static final String SEED = "seed";
+    private static final String SEEDS = "seeds";
     private static final String MRAI = "MRAI";
     private static final String DETECTION = "detection";
     private static final String THRESHOLD = "threshold";
@@ -57,6 +58,7 @@ public class ParametersCommandLineParser {
         options.addOption("min", MIN_DELAY, true, "minimum delay (inclusive)");
         options.addOption("max", MAX_DELAY, true, "maximum delay (inclusive)");
         options.addOption("seed", SEED, true, "seed value to force");
+        options.addOption("seeds", SEEDS, true, "path to a file with seeds to use");
         options.addOption("MRAI", MRAI, true, "MRAI value to force");
         options.addOption("d", DETECTION, true, "detection method to force (D0 | D1 | D2)");
         options.addOption("th", THRESHOLD, true, "value for the threshold");
@@ -93,6 +95,7 @@ public class ParametersCommandLineParser {
                 .minDelay(getMinDelay(commandLine))
                 .maxDelay(getMaxDelay(commandLine))
                 .seed(getSeed(commandLine))
+                .seedFile(getSeedFile(commandLine))
                 .forcedMRAI(getForcedMRAI(commandLine))
                 .forcedDetection(getForcedDetection(commandLine))
                 .threshold(getThreshold(commandLine))
@@ -270,16 +273,47 @@ public class ParametersCommandLineParser {
      *
      * @param commandLine command line containing the parsed options.
      * @return the parsed anycast file or null if the argument does not exist.
-     * @throws ParseException if the option is available but the argument value is not a signed long.
+     * @throws ParseException if the option is available but the argument value is not a signed
+     * long or if both the "SEED" and "SEEDS" options are enabled.
      */
     private Long getSeed(CommandLine commandLine) throws ParseException {
 
         if (commandLine.hasOption(SEED)) {
+            if (commandLine.hasOption(SEEDS)) {
+                throw new ParseException("options '-seed' and '-seeds' can not both be used: use " +
+                        "'-seed' to force one specific seed and '-seeds' to provide a file with a" +
+                        " list of seeds to use");
+            }
+
             try {
                 return Long.parseLong(commandLine.getOptionValue(SEED));
             } catch (NumberFormatException e) {
                 throw new ParseException(expectedIntegerMessage("seed"));
             }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Obtains the seed file from the command line. This is an optional argument, in case it
+     * is missing null will be returned. It throws a parse exception if the "SEED" option is
+     * given too since this is a conflict.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return the parsed anycast file or null if the argument does not exist.
+     * @throws ParseException if the "SEED" option is given too since this is a conflict.
+     */
+    private File getSeedFile(CommandLine commandLine) throws ParseException {
+        if (commandLine.hasOption(SEEDS)) {
+            if (commandLine.hasOption(SEED)) {
+                throw new ParseException("options '-seed' and '-seeds' can not both be used: use " +
+                        "'-seed' to force one specific seed and '-seeds' to provide a file with a" +
+                        " list of seeds to use");
+            }
+
+            return new File(commandLine.getOptionValue(SEEDS));
+
         } else {
             return null;
         }
