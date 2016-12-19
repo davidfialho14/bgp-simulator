@@ -4,6 +4,7 @@ package main;
 import core.Topology;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * A progress handler manages how progress events are handled. The CLI or GUI applications can use progress handlers
@@ -65,5 +66,19 @@ public interface ProgressHandler {
      * Invoked in the end of the execution.
      */
     default void onFinishExecution() {}
+
+    /**
+     * Invoked before starting to load the seeds file.
+     *
+     * @param seedFile seeds file to be loaded.
+     */
+    default void onStartLoadingSeedsFile(File seedFile) {}
+
+    /**
+     * Invoked after loading the topology file.
+     *
+     * @param seeds loaded seeds.
+     */
+    default void onFinishedLoadingSeedsFile(List<Long> seeds) {}
 
 }

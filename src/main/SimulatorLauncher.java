@@ -17,6 +17,11 @@ import simulators.Simulator;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -72,7 +77,10 @@ public class SimulatorLauncher {
         // Setup scheduler
         //
         Scheduler scheduler;
-        if (parameters.hasSeed()) {
+        if (parameters.hasSeedsFile()) {
+            scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay(),
+                                            loadSeeds(parameters.getSeedFile()));
+        } else if (parameters.hasSeed()) {
             scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay(),
                                             parameters.getSeed());
         } else {
@@ -156,6 +164,26 @@ public class SimulatorLauncher {
         }
 
         return destination;
+    }
+
+    private List<Long> loadSeeds(File seedFile) {
+
+        progressHandler.onStartLoadingSeedsFile(seedFile);
+        try (Stream<String> stream = Files.lines(Paths.get(seedFile.getPath()))) {
+            List<Long> seeds = stream
+                    .filter(line -> !line.isEmpty())
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+
+            progressHandler.onFinishedLoadingSeedsFile(seeds);
+
+            return seeds;
+
+        } catch (IOException e) {
+            errorHandler.onSeedsFileLoadIOException(e);
+            return null;
+        }
+
     }
 
     private void simulate(Simulator simulator, Parameters parameters) {

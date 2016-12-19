@@ -83,4 +83,14 @@ public interface ErrorHandler {
         System.err.println("Failed to find destination " + destinationID + " in anycast file" + anycastFile);
         exception.printStackTrace();
     }
+
+    /**
+     * Invoked when the seeds are being loaded and an IO exception is thrown.
+     *
+     * @param exception thrown IO exception.
+     */
+    default void onSeedsFileLoadIOException(IOException exception) {
+        exception.printStackTrace();
+    }
+
 }

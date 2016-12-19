@@ -45,4 +45,9 @@ public class CLIErrorHandler implements ErrorHandler {
                 destinationID, anycastFile));
     }
 
+    @Override
+    public void onSeedsFileLoadIOException(IOException exception) {
+        System.err.println("Can not open the seeds file: " + exception.getMessage());
+    }
+
 }
