@@ -1,5 +1,7 @@
 package core.schedulers;
 
+import java.util.List;
+
 /**
  * Implementation of a scheduler where the delays are randomly uniformly distributed. It is based on the
  * RandomDelayGenerator implementation.
@@ -40,6 +42,20 @@ public class RandomScheduler extends AbstractScheduler {
      */
     public RandomScheduler(int minDelay, int maxDelay, long seed) {
         randomDelayGenerator = new RandomDelayGenerator(minDelay, maxDelay, seed);
+    }
+
+    /**
+     * Constructs a RandomScheduler by assigning it a minimum and maximum delay for the messages.
+     * Forces the scheduler to use a specific set of seeds. The seeds will be used in the same
+     * order as the iterator of the list gives them. Once all seeds are used, the iterator loops
+     * over and starts from the beginning of the list again.
+     *
+     * @param minDelay minimum message delay.
+     * @param maxDelay maximum message delay.
+     * @param seeds    list with the seeds to force the scheduler to use.
+     */
+    public RandomScheduler(int minDelay, int maxDelay, List<Long> seeds) {
+        randomDelayGenerator = new RandomDelayGenerator(minDelay, maxDelay, seeds);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
