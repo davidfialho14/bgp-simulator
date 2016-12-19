@@ -78,8 +78,17 @@ public class SimulatorLauncher {
         //
         Scheduler scheduler;
         if (parameters.hasSeedsFile()) {
-            scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay(),
-                                            loadSeeds(parameters.getSeedFile()));
+            List<Long> seeds = loadSeeds(parameters.getSeedFile());
+            if (seeds == null) return 1;
+
+            if (seeds.size() != parameters.getRepetitionCount()) {
+                errorHandler.onSeedsCountDoesNotMatchRepetitionCount(
+                        seeds.size(), parameters.getRepetitionCount());
+                return 1;
+            }
+
+            scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay(), seeds);
+
         } else if (parameters.hasSeed()) {
             scheduler = new RandomScheduler(parameters.getMinDelay(), parameters.getMaxDelay(),
                                             parameters.getSeed());

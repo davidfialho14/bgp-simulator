@@ -93,4 +93,11 @@ public interface ErrorHandler {
         exception.printStackTrace();
     }
 
+    /**
+     * Invoked when the number of seeds does not match the number of repetitions.
+     *
+     * @param seedCount         number of seeds.
+     * @param repetitionCount   number of repetitions.
+     */
+    default void onSeedsCountDoesNotMatchRepetitionCount(int seedCount, int repetitionCount) {}
 }
