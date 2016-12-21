@@ -78,7 +78,6 @@ public class Engine {
      * @param destination   destination to simulate for.
      */
     public void simulate(Topology topology, Destination destination) {
-        scheduler.reset();
 
         eventNotifier().notifyStartEvent(new StartEvent(0, scheduler));
 
@@ -110,6 +109,8 @@ public class Engine {
                 eventNotifier().notifyTerminateEvent(new TerminateEvent(time));
             }
         }
+
+        scheduler.reset();
 
         eventNotifier().notifyEndEvent(new EndEvent(time));
     }
