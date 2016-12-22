@@ -11,6 +11,6 @@ public interface SimulationEvent {
      *
      * @return the instant of time in which the event was generated.
      */
-    long getTimeInstant();
+    int getTimeInstant();
 
 }
