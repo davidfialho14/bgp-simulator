@@ -1,8 +1,5 @@
 package core.schedulers;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -15,41 +12,13 @@ public class RandomDelayGenerator {
     private int max;
     private long currentSeed;
 
-    private final SeedCircularSequence forcedSeeds;
-
-    /**
-     * Wrapper around a list of seeds. Allows iterating over the seeds in a circular fashion.
-     * Iterates over the seed list and once it reaches the end of the list it returns to the
-     * first seed.
-     */
-    private class SeedCircularSequence {
-
-        private final List<Long> seeds;
-        private Iterator<Long> seedsIterator = null;
-
-        private SeedCircularSequence(List<Long> seeds) {
-            this.seeds = seeds;
-        }
-
-        private long nextSeed() {
-
-            if (seedsIterator == null || !seedsIterator.hasNext()) {
-                seedsIterator = seeds.iterator();
-            }
-
-            return seedsIterator.next();
-        }
-
-    }
-
     /**
      * Creates a generator without any seed of delay limits.
      */
     public RandomDelayGenerator() {
         min = Integer.MIN_VALUE;
         max = Integer.MAX_VALUE;
-        forcedSeeds = null;
-        reset();
+        reset(System.currentTimeMillis());   // get initial seed from system time
     }
 
     /**
@@ -67,36 +36,17 @@ public class RandomDelayGenerator {
 
     /**
      * Creates a generator that generates values between the min and max - 1 (inclusive). If max <= 0 then an
-     * IllegalArgumentException is thrown. Forces the seed of the random object to be the one given in the seed
-     * argument.
+     * IllegalArgumentException is thrown. Forces the initial seed of the random object to be the one given in
+     * the seed argument.
      *
-     * @param min   minimum value.
-     * @param max   maximum value.
-     * @param seed  seed to used with the random object
+     * @param min           minimum value.
+     * @param max               maximum value.
+     * @param initialSeed  seed to used with the random object
      */
-    public RandomDelayGenerator(int min, int max, long seed) {
+    public RandomDelayGenerator(int min, int max, long initialSeed) {
         setMax(max);
         setMin(min);
-        this.forcedSeeds = new SeedCircularSequence(Collections.singletonList(seed));
-        reset();
-    }
-
-    /**
-     * Creates a generator that generates values between the min and max - 1 (inclusive). If max <= 0 then an
-     * IllegalArgumentException is thrown. Forces the seed of the random object to be the one given in the seed
-     * argument. Forces the use of a specific set of seeds. The seeds will be used in the same
-     * order as the iterator of the list gives them. Once all seeds are used, the iterator loops
-     * over and starts from the beginning of the list again.
-     *
-     * @param min   minimum value.
-     * @param max   maximum value.
-     * @param seeds list with the seeds to use.
-     */
-    public RandomDelayGenerator(int min, int max, List<Long> seeds) {
-        setMax(max);
-        setMin(min);
-        this.forcedSeeds = new SeedCircularSequence(seeds);
-        reset();
+        reset(initialSeed);
     }
 
     /**
@@ -170,6 +120,14 @@ public class RandomDelayGenerator {
     }
 
     /**
+     * Starts a new random with a new seed.
+     */
+    public void reset(long initialSeed) {
+        currentSeed = initialSeed;
+        random = new Random(initialSeed);
+    }
+
+    /**
      * Returns the next seed for the random object. The first time it is called it returns the current time in
      * milliseconds. In the following calls return the sim of the next long value in the random object with the
      * current time in milliseconds. If the seed field is defined (not null) than it always returns the seed value.
@@ -177,14 +135,7 @@ public class RandomDelayGenerator {
      * @return next seed for the random object.
      */
     private long nextSeed() {
-
-        if (forcedSeeds != null) {
-            return forcedSeeds.nextSeed();
-        } else if (random == null) {
-            return System.currentTimeMillis();
-        } else {
-            return System.currentTimeMillis() + random.nextLong();
-        }
+        return random.nextLong();
     }
 
 }

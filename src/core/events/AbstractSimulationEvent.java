@@ -17,7 +17,7 @@ public class AbstractSimulationEvent implements SimulationEvent {
      * @return the instant of time in which the event was generated.
      */
     @Override
-    public long getTimeInstant() {
+    public int getTimeInstant() {
         return time;
     }
 

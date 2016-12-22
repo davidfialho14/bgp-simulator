@@ -33,7 +33,6 @@ public class Parameters {
     private final int repetitionCount;
     private final SetupFactory setupFactory;
     private final Long seed;
-    private final File seedFile;
     private final Integer forcedMRAI;
     private final Detection forcedDetection;
     private final int threshold;
@@ -50,7 +49,7 @@ public class Parameters {
     private Parameters(File topologyFile, TopologyReaderFactory readerFactory, File reportDestination,
                        ReporterFactory reporterFactory, File anycastFile, int minDelay, int maxDelay,
                        int destinationId, int repetitionCount, SetupFactory setupFactory, Long seed,
-                       File seedFile, Integer forcedMRAI, Detection forcedDetection, int threshold) {
+                       Integer forcedMRAI, Detection forcedDetection, int threshold) {
 
         this.topologyFile = topologyFile;
         this.readerFactory = readerFactory;
@@ -63,7 +62,6 @@ public class Parameters {
         this.repetitionCount = repetitionCount;
         this.setupFactory = setupFactory;
         this.seed = seed;
-        this.seedFile = seedFile;
         this.forcedMRAI = forcedMRAI;
         this.forcedDetection = forcedDetection;
         this.threshold = threshold;
@@ -123,14 +121,6 @@ public class Parameters {
         return seed != null;
     }
 
-    public File getSeedFile() {
-        return seedFile;
-    }
-
-    public boolean hasSeedsFile() {
-        return seedFile != null;
-    }
-
     public Integer forcedMRAI() {
         return forcedMRAI;
     }
@@ -181,7 +171,6 @@ public class Parameters {
         private int destinationId = 0;
         private int repetitionCount = 1;
         private Long seed = null;
-        private File seedFile = null;
         private Integer forcedMRAI = null;
         private Detection forcedDetection = null;
         private int threshold = Integer.MAX_VALUE;
@@ -242,11 +231,6 @@ public class Parameters {
             return this;
         }
 
-        public Builder seedFile(File seedFile) {
-            this.seedFile = seedFile;
-            return this;
-        }
-
         public Builder forcedMRAI(Integer forcedMRAI) {
             this.forcedMRAI = forcedMRAI;
             return this;
@@ -287,7 +271,7 @@ public class Parameters {
 
             return new Parameters(topologyFile, readerFactory, reportDestination, reporterFactory,
                     anycastFile, minDelay, maxDelay, destinationId, repetitionCount, setupFactory,
-                    seed, seedFile, forcedMRAI, forcedDetection, threshold);
+                    seed, forcedMRAI, forcedDetection, threshold);
         }
 
     }
