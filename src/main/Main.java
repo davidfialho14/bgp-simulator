@@ -10,7 +10,7 @@ import main.cli.CLIApplication;
 
 public class Main {
 
-    private static final String VERSION = "2.1.1";
+    private static final String VERSION = "2.1.2";
 
     public static void main(String[] args) {
 
