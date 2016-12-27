@@ -89,9 +89,8 @@ public class SimulatorLauncher {
 
         // use the simulator factory to get a properly configured simulator
         Simulator simulator = new Simulator(parameters.getSetupFactory().getSetup(engine, topology, destination));
-        simulate(simulator, parameters);
 
-        return 0;
+        return simulate(simulator, parameters);
     }
 
     /**
@@ -183,7 +182,7 @@ public class SimulatorLauncher {
 
     }
 
-    private void simulate(Simulator simulator, Parameters parameters) {
+    private int simulate(Simulator simulator, Parameters parameters) {
 
         progressHandler.onStartExecution();
 
@@ -206,9 +205,11 @@ public class SimulatorLauncher {
 
         } catch (IOException e) {
             errorHandler.onReportingIOException(e);
+            return -1;
         }
 
         progressHandler.onFinishExecution();
+        return 0;
     }
 
 }

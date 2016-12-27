@@ -50,10 +50,12 @@ public class CLIApplication {
         ParametersCommandLineParser commandLineParser = new ParametersCommandLineParser();
 
         try {
-            new CLIApplication(commandLineParser.parse(args)).simulate();
+            CLIApplication cliApplication = new CLIApplication(commandLineParser.parse(args));
 
+            cliApplication.simulate();
         } catch (ParseException e) {
             System.err.println(e.getMessage());
+            System.exit(1);
         }
 
     }
@@ -62,7 +64,11 @@ public class CLIApplication {
      * Starts the simulation with the current parameters.
      */
     private void simulate() {
-        simulatorLauncher.launch(parameters);
+        int exitCode = simulatorLauncher.launch(parameters);
+        
+        if (exitCode != 0) {
+            System.exit(1);
+        }
     }
 
 }

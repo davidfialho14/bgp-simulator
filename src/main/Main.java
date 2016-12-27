@@ -26,7 +26,6 @@ public class Main {
         PolicyTagger.register(new SiblingsPolicy(), "Siblings");
 
         CLIApplication.launch(args);
-
     }
 
 }
