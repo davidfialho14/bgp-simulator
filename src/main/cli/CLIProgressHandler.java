@@ -61,7 +61,14 @@ public class CLIProgressHandler implements ProgressHandler {
      */
     @Override
     public void onStartSimulation(int simulationNumber, Parameters parameters) {
-        printTimedStartMessage("Simulating instance " + simulationNumber + "...");
+        String message = String.format("Simulating instance %d for destination %d, threshold %d",
+                simulationNumber, parameters.getDestinationId(), parameters.getThreshold());
+
+        if (parameters.hasSeed()) {
+            message += "seed " + parameters.getSeed();
+        }
+
+        printTimedStartMessage(message + "...");
     }
 
     /**
