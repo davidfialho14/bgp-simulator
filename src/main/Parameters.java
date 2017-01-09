@@ -5,7 +5,7 @@ import io.reporters.CSVReporterFactory;
 import io.reporters.ReporterFactory;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
-import simulators.BasicSetupFactory;
+import simulators.basic.BasicSetupFactory;
 import simulators.SetupFactory;
 
 import java.io.File;
