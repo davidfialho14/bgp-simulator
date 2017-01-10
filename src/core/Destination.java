@@ -2,12 +2,26 @@ package core;
 
 import java.util.Collection;
 
+import static core.protocols.DummyDetection.dummyDetection;
+
 /**
  * A destination is a tag interface to indicate that a node is the destination of the simulation. A router
  * must implement the destination interface. This interface only includes methods export the initial routes
  * of the simulation from the destination router to all of its in-neighbors.
  */
 public interface Destination {
+
+    /**
+     * Creates a destination object based on a router. The destination is created without any neighbors.
+     *
+     * @param id ID to assign the destination.
+     * @return destination object initialized with the given ID.
+     */
+    static Destination newDestination(int id) {
+        // the MRAI value and the detection method of a destination does not matter
+        // neither of them are used
+        return new Router(id, 0, dummyDetection());
+    }
 
     /**
      * Returns the destination's ID.
