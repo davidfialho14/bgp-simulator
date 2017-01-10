@@ -1,6 +1,7 @@
 package main;
 
 import io.DestinationNotFoundException;
+import io.ParseException;
 import io.topologyreaders.exceptions.TopologyParseException;
 
 import java.io.File;
@@ -99,4 +100,13 @@ public interface ErrorHandler {
      * @param repetitionCount   number of repetitions.
      */
     default void onSeedsCountDoesNotMatchRepetitionCount(int seedCount, int repetitionCount) {}
+
+    /**
+     * Invoked when a ParseException is thrown when parsing the anycast file.
+     *
+     * @param exception thrown parse exception.
+     */
+    default void onAnycastParseException(ParseException exception) {
+        System.out.println("Parse error: " + exception.getMessage());
+    }
 }
