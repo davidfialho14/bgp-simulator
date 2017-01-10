@@ -5,8 +5,7 @@ import core.Destination;
 import core.Topology;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static core.Destination.newDestination;
 
@@ -49,6 +48,41 @@ public class AnycastReader implements Closeable {
                     destinationId, k -> newDestination(destinationId));
 
             destination.addInNeighbor(neighbor, label);
+        });
+
+        parser.parse();
+        return destinations.values().toArray(new Destination[destinations.size()]);
+    }
+
+    /**
+     * Reads all destinations with the given IDs and only this destinations. If one or more of the given IDs
+     * is not found then it will be ignored and not included in the returned array.
+     *
+     * This is a more efficient way of reading a set of destinations without having to load all destinations
+     * into memory.
+     *
+     * @param destinationIds IDs of the destinations to read.
+     * @return array with the destinations read. Input order is not guaranteed.
+     */
+    public Destination[] readThis(Integer... destinationIds) throws IOException, ParseException {
+
+        // map used to keep track of the destinations that have already been found
+        final Map<Integer, Destination> destinations = new HashMap<>();
+
+        final Set<Integer> wantedIds = new HashSet<>();
+        Collections.addAll(wantedIds, destinationIds);
+
+        // Create an anycast parser with an handler that considers only the links for destinations with the
+        // given IDs and keeps the destinations stored in the 'destinations' map
+
+        AnycastParser parser = new AnycastParser(reader, topology, (destinationId, neighbor, label) -> {
+
+            if (wantedIds.contains(destinationId)) {
+                Destination destination = destinations.computeIfAbsent(
+                        destinationId, k -> newDestination(destinationId));
+
+                destination.addInNeighbor(neighbor, label);
+            }
         });
 
         parser.parse();
