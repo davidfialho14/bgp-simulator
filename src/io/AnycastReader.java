@@ -2,10 +2,7 @@ package io;
 
 
 import core.Destination;
-import core.Label;
-import core.Router;
 import core.Topology;
-import io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 import java.io.*;
 import java.util.HashMap;
@@ -19,16 +16,16 @@ import static core.Destination.newDestination;
  */
 public class AnycastReader implements Closeable {
 
-    private final Topology topology;
-    private final BufferedReader reader;
+    private Reader reader;
+    private Topology topology;
 
-    public AnycastReader(Topology topology, Reader reader) {
+    public AnycastReader(Reader reader, Topology topology) {
+        this.reader = reader;
         this.topology = topology;
-        this.reader = new BufferedReader(reader);
     }
 
-    public AnycastReader(Topology topology, File anycastFile) throws FileNotFoundException {
-        this(topology, new FileReader(anycastFile));
+    public AnycastReader(File anycastFile, Topology topology) throws FileNotFoundException {
+        this(new FileReader(anycastFile), topology);
     }
 
     /**
@@ -42,49 +39,19 @@ public class AnycastReader implements Closeable {
     public Destination[] readAll() throws ParseException, IOException {
 
         // map used to keep track of the destinations that have already been found
-        Map<Integer, Destination> destinations = new HashMap<>();
+        final Map<Integer, Destination> destinations = new HashMap<>();
 
-        String line; int lineCount = 0;
-        while ((line = reader.readLine()) != null) {
-            lineCount++;
-            if (line.isEmpty()) continue;   // ignore empty lines
+        // Create an anycast parser with an handler that adds each in-link to the found destinations
+        // and keeps the destinations stored in the 'destinations' map
 
-            // split the line into the destination ID, neighbor ID, and label tag
-            String[] lineArgs = line.split("\\|");
-
-            // parse the line arguments
-            int destinationId, neighborId;
-            Label label;
-            try {
-                destinationId = Integer.parseInt(lineArgs[0]);
-                neighborId = Integer.parseInt(lineArgs[1]);
-                label = topology.getPolicy().createLabel(lineArgs[2]);
-
-                if (destinationId < 0 || neighborId < 0) {
-                    // IDs must be greater than zero - redirect to central catch
-                    throw new NumberFormatException();
-                }
-
-            } catch (NumberFormatException e) {
-                throw new ParseException("IDs must be integer numbers greater then 0", lineCount);
-
-            } catch (InvalidPolicyTagException e) {
-                throw new ParseException("Label tag is not valid", lineCount);
-            }
-
-            Router neighbor = topology.getRouter(neighborId);
-
-            if (neighbor == null) {
-                throw new ParseException("There is no node in the topology with the ID corresponding " +
-                        "to the neighbor ID", lineCount);
-            }
-
+        final AnycastParser parser = new AnycastParser(reader, topology, (destinationId, neighbor, label) -> {
             Destination destination = destinations.computeIfAbsent(
                     destinationId, k -> newDestination(destinationId));
 
             destination.addInNeighbor(neighbor, label);
-        }
+        });
 
+        parser.parse();
         return destinations.values().toArray(new Destination[destinations.size()]);
     }
 

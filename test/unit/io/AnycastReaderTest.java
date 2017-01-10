@@ -190,7 +190,7 @@ public class AnycastReaderTest {
     public void readAll_Successful() throws Exception {
         Reader inputFileReader = new StringReader(fileContent);
 
-        try (AnycastReader reader = new AnycastReader(topology, inputFileReader)) {
+        try (AnycastReader reader = new AnycastReader(inputFileReader, topology)) {
             assertThat(reader.readAll(), isDestinations(expectedDestinations));
         }
     }
