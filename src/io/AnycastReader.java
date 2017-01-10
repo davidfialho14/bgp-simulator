@@ -1,6 +1,7 @@
 package io;
 
 
+import com.google.common.collect.Sets;
 import core.Destination;
 import core.Topology;
 
@@ -56,15 +57,16 @@ public class AnycastReader implements Closeable {
 
     /**
      * Reads all destinations with the given IDs and only this destinations. If one or more of the given IDs
-     * is not found then it will be ignored and not included in the returned array.
+     * is not found then a DestinationNotFoundException is thrown.
      *
      * This is a more efficient way of reading a set of destinations without having to load all destinations
      * into memory.
      *
      * @param destinationIds IDs of the destinations to read.
      * @return array with the destinations read. Input order is not guaranteed.
+     * @throws DestinationNotFoundException if at least one of the indicated destinations is not found.
      */
-    public Destination[] readThis(Integer... destinationIds) throws IOException, ParseException {
+    public Destination[] readThis(Integer... destinationIds) throws IOException, ParseException, DestinationNotFoundException {
         final Set<Integer> wantedIds = new HashSet<>();
         Collections.addAll(wantedIds, destinationIds);
 
@@ -73,22 +75,23 @@ public class AnycastReader implements Closeable {
 
     /**
      * Reads all destinations with the given IDs and only this destinations. If one or more of the given IDs
-     * is not found then it will be ignored and not included in the returned array.
+     * is not found then a DestinationNotFoundException is thrown.
      *
      * This is a more efficient way of reading a set of destinations without having to load all destinations
      * into memory.
      *
      * @param destinationIds IDs of the destinations to read.
      * @return array with the destinations read. Input order is not guaranteed.
+     * @throws DestinationNotFoundException if at least one of the indicated destinations is not found.
      */
-    public Destination[] readThis(Collection<Integer> destinationIds) throws IOException, ParseException {
+    public Destination[] readThis(Collection<Integer> destinationIds) throws IOException, ParseException, DestinationNotFoundException {
         final Set<Integer> wantedIds = new HashSet<>();
         wantedIds.addAll(destinationIds);
 
         return readThis(wantedIds);
     }
 
-    private Destination[] readThis(Set<Integer> wantedIds) throws IOException, ParseException {
+    private Destination[] readThis(Set<Integer> wantedIds) throws IOException, ParseException, DestinationNotFoundException {
 
         // map used to keep track of the destinations that have already been found
         final Map<Integer, Destination> destinations = new HashMap<>();
@@ -107,6 +110,14 @@ public class AnycastReader implements Closeable {
         });
 
         parser.parse();
+
+        // check if all wanted IDs were read
+        Sets.SetView<Integer> missing = Sets.difference(wantedIds, destinations.keySet());
+
+        if (!missing.isEmpty()) {
+            throw new DestinationNotFoundException(missing);
+        }
+
         return destinations.values().toArray(new Destination[destinations.size()]);
     }
 
