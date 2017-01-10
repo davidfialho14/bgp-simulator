@@ -76,12 +76,11 @@ public interface ErrorHandler {
      *
      * @param exception     thrown exception.
      * @param anycastFile   anycast file where there was the failure.
-     * @param destinationID ID of the destination not found.
      */
-    default void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception, File anycastFile,
-                                                    int destinationID) {
-        System.err.println("Failed to find destination " + destinationID + " in anycast file" + anycastFile);
-        exception.printStackTrace();
+    default void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception,
+                                                    File anycastFile) {
+        System.err.println("Failed to find destination '" + exception.getDestinationIDs() +
+                "' in anycast file" + anycastFile);
     }
 
     /**

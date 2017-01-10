@@ -7,6 +7,7 @@ import main.ErrorHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * Implements the handling of errors by the CLI application.
@@ -39,10 +40,14 @@ public class CLIErrorHandler implements ErrorHandler {
     }
 
     @Override
-    public void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception, File anycastFile,
-                                                   int destinationID) {
-        System.err.println(String.format("Did not found destination %d in anycast file '%s'",
-                destinationID, anycastFile));
+    public void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception, File anycastFile) {
+
+        String notFoundDestinations = exception.getDestinationIDs().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+
+        System.err.println(String.format("Did not found destinations %s in anycast file '%s'",
+                notFoundDestinations, anycastFile));
     }
 
     @Override
