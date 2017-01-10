@@ -133,6 +133,22 @@ public class SimulatorLauncher {
         return topology;
     }
 
+//    private Destination[] getDestinations(File anycastFile, Topology topology, List<Integer> destinationIds) {
+//
+//        Destination[] destinations = new Destination[destinationIds.size()];
+//
+//        int i = 0;
+//        for (Integer destinationId : destinationIds) {
+//
+//        }
+//
+//
+//        try (AnycastReader reader = new AnycastReader(anycastFile, topology)) {
+//
+//        }
+//
+//    }
+
     private Destination getDestination(File anycastFile, Topology topology, int destinationID) {
 
         // first try to find destination in the topology

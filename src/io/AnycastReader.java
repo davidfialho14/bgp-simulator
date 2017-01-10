@@ -65,12 +65,33 @@ public class AnycastReader implements Closeable {
      * @return array with the destinations read. Input order is not guaranteed.
      */
     public Destination[] readThis(Integer... destinationIds) throws IOException, ParseException {
+        final Set<Integer> wantedIds = new HashSet<>();
+        Collections.addAll(wantedIds, destinationIds);
+
+        return readThis(wantedIds);
+    }
+
+    /**
+     * Reads all destinations with the given IDs and only this destinations. If one or more of the given IDs
+     * is not found then it will be ignored and not included in the returned array.
+     *
+     * This is a more efficient way of reading a set of destinations without having to load all destinations
+     * into memory.
+     *
+     * @param destinationIds IDs of the destinations to read.
+     * @return array with the destinations read. Input order is not guaranteed.
+     */
+    public Destination[] readThis(Collection<Integer> destinationIds) throws IOException, ParseException {
+        final Set<Integer> wantedIds = new HashSet<>();
+        wantedIds.addAll(destinationIds);
+
+        return readThis(wantedIds);
+    }
+
+    private Destination[] readThis(Set<Integer> wantedIds) throws IOException, ParseException {
 
         // map used to keep track of the destinations that have already been found
         final Map<Integer, Destination> destinations = new HashMap<>();
-
-        final Set<Integer> wantedIds = new HashSet<>();
-        Collections.addAll(wantedIds, destinationIds);
 
         // Create an anycast parser with an handler that considers only the links for destinations with the
         // given IDs and keeps the destinations stored in the 'destinations' map
