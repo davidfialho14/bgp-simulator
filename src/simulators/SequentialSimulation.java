@@ -20,7 +20,12 @@ public class SequentialSimulation {
     }
 
     public void setup(SequentialExperiment experiment, SimulatorNew simulator) {
+        // does nothing!
+    }
 
+    private void setup() {
+        // clear all data from last simulation - ensure collector is clean
+        dataCollector.clear();
     }
 
     public void run(SequentialExperiment experiment, SimulatorNew simulator) throws IOException {
@@ -29,9 +34,7 @@ public class SequentialSimulation {
         Destination[] permutation = experiment.getCurrentSequence();
 
         for (Destination destination : permutation) {
-
-            // clear all data from last simulation - ensure collector is clean
-            dataCollector.clear();
+            setup();
 
             String description = String.format("permutation %d/%d iteration %d/%d",
                     experiment.getCurrentPermutation() + 1, experiment.getPermutationCount(),
@@ -40,6 +43,8 @@ public class SequentialSimulation {
             simulator.simulate(destination, description);
             report(experiment.getCurrentPermutation(), experiment.getCurrentRepetition(),
                     destination.getId(), topologyName);
+
+            cleanup(simulator);
         }
 
     }
@@ -62,9 +67,6 @@ public class SequentialSimulation {
         // reset the routers
         for (Router router : simulator.getTopology().getRouters()) {
 
-            router.getTable().reset();
-            router.getMRAITimer().clear();
-
             // reset router's links
             for (Link link : router.getInLinks()) {
                 link.setTurnedOff(false);
@@ -81,6 +83,15 @@ public class SequentialSimulation {
             }
         }
 
+    }
+
+    private void cleanup(SimulatorNew simulator) {
+
+        for (Router router : simulator.getTopology().getRouters()) {
+
+            router.getTable().reset();
+            router.getMRAITimer().clear();
+        }
     }
 
 }
