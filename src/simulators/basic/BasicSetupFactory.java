@@ -1,8 +1,10 @@
-package simulators;
+package simulators.basic;
 
 import core.Destination;
 import core.Engine;
 import core.Topology;
+import simulators.Setup;
+import simulators.SetupFactory;
 import simulators.basic.BasicSetup;
 
 /**

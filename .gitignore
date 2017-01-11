@@ -66,5 +66,5 @@ crashlytics.properties
 crashlytics-build.properties
 
 # ignore experimental classes
-*/Experiment*.java
-Experiment*.java
+*/Try*.java
+Try*.java

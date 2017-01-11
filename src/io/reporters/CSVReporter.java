@@ -5,7 +5,7 @@ import core.Link;
 import core.Path;
 import core.Router;
 import core.schedulers.Scheduler;
-import main.Parameters;
+import main.cli.Parameters;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang.StringUtils;

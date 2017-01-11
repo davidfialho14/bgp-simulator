@@ -4,7 +4,7 @@ import core.Destination;
 import core.Engine;
 import core.Topology;
 import io.reporters.Reporter;
-import main.Parameters;
+import main.cli.Parameters;
 import simulators.DataCollector;
 import simulators.Setup;
 

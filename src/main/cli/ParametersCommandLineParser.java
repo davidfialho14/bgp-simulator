@@ -2,13 +2,9 @@ package main.cli;
 
 
 import core.protocols.Detection;
-import io.reporters.CSVReporterFactory;
-import io.reporters.LiteCSVReporterFactory;
-import io.reporters.ReporterFactory;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
 import io.topologyreaders.exceptions.TopologyParseException;
-import main.Parameters;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -29,14 +25,15 @@ public class ParametersCommandLineParser {
     private static final String REPORT_DESTINATION = "report";
     private static final String ANYCAST_FILE = "anycast";
     private static final String DESTINATION = "destination";
+    private static final String DESTINATIONS_FILE = "destinations";
     private static final String REPETITION_COUNT = "repetition_count";
+    private static final String PERMUTATION_COUNT = "permutation_count";
     private static final String MIN_DELAY = "min_delay";
     private static final String MAX_DELAY = "max_delay";
     private static final String SEED = "seed";
     private static final String MRAI = "MRAI";
     private static final String DETECTION = "detection";
     private static final String THRESHOLD = "threshold";
-    private static final String LITE_REPORT = "lite";
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *
@@ -53,14 +50,15 @@ public class ParametersCommandLineParser {
         options.addOption("r", REPORT_DESTINATION, true, "destination for the reports");
         options.addOption("any", ANYCAST_FILE, true, "anycast file to be used");
         options.addOption("dst", DESTINATION, true, "ID of the destination router");
+        options.addOption("dsts", DESTINATIONS_FILE, true, "destinations file");
         options.addOption("c", REPETITION_COUNT, true, "number of repetitions");
+        options.addOption("p", PERMUTATION_COUNT, true, "number of permutations");
         options.addOption("min", MIN_DELAY, true, "minimum delay (inclusive)");
         options.addOption("max", MAX_DELAY, true, "maximum delay (inclusive)");
         options.addOption("seed", SEED, true, "forces the initial seed used ofr generating delays");
         options.addOption("MRAI", MRAI, true, "MRAI value to force");
         options.addOption("d", DETECTION, true, "detection method to force (D0 | D1 | D2)");
         options.addOption("th", THRESHOLD, true, "value for the threshold");
-        options.addOption("lite", LITE_REPORT, false, "use the lite version of the reporters");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -86,10 +84,11 @@ public class ParametersCommandLineParser {
 
         return new Parameters.Builder(topologyFile, reportDestination)
                 .readerFactory(getReader(commandLine))
-                .reporterFactory(getReporter(commandLine))
                 .anycastFile(getAnycastFile(commandLine))
                 .destinationId(getDestinationId(commandLine))
+                .destinationsFile(getDestinationsFile(commandLine))
                 .repetitionCount(getRepetitionCount(commandLine))
+                .permutationCount(getPermutationCount(commandLine))
                 .minDelay(getMinDelay(commandLine))
                 .maxDelay(getMaxDelay(commandLine))
                 .seed(getSeed(commandLine))
@@ -149,22 +148,6 @@ public class ParametersCommandLineParser {
     }
 
     /**
-     * Obtains the reporter type from the command line and returns the appropriate reporter factory.
-     * This is an optional argument, by default returns the full CSV Reporter.
-     *
-     * @param commandLine command line containing the parsed options.
-     * @return reader factory instance.
-     */
-    private ReporterFactory getReporter(CommandLine commandLine) throws ParseException {
-
-        if (commandLine.hasOption(LITE_REPORT)) {
-            return new LiteCSVReporterFactory(getTopologyFile(commandLine), getDestinationId(commandLine));
-        } else {
-            return new CSVReporterFactory(getTopologyFile(commandLine), getDestinationId(commandLine));
-        }
-    }
-
-    /**
      * Obtains the anycast file from teh command line. This is an optional argument, in case it is missing null will
      * be returned.
      *
@@ -180,44 +163,52 @@ public class ParametersCommandLineParser {
     }
 
     /**
-     * Obtains the destination ID from the command line. This is not an optional argument, which means that a
-     * ParseException is thrown when the argument is missing.
+     * Obtains the destination ID from the command line. This is an optional argument.
      *
      * @param commandLine command line containing the parsed options.
      * @return destination ID in integer format.
-     * @throws ParseException if the destination option is missing or is not an integer.
+     * @throws ParseException if the destination option is not an integer.
      */
-    private int getDestinationId(CommandLine commandLine) throws ParseException {
-        if (!commandLine.hasOption(DESTINATION)) {
-            throw new ParseException(missingOptionMessage("destination ID"));
-        }
-
-        try {
-            return Integer.parseInt(commandLine.getOptionValue(DESTINATION));
-        } catch (NumberFormatException e){
-            throw new ParseException(expectedIntegerMessage("destination ID"));
-        }
-
+    private Integer getDestinationId(CommandLine commandLine) throws ParseException {
+        return getOptionalIntegerParameter(commandLine, DESTINATION, "destination ID");
     }
 
     /**
-     * Obtains the destination ID from the command line. This is not an optional argument, which means that a
-     * ParseException is thrown when the argument is missing.
+     * Obtains the destination file from the command line. This is an optional argument.
      *
      * @param commandLine command line containing the parsed options.
-     * @return destination ID in integer format.
-     * @throws ParseException if the repetitions count option is missing or is not an integer.
+     * @return destinations file path or null if option not set.
      */
-    private int getRepetitionCount(CommandLine commandLine) throws ParseException {
-        if (!commandLine.hasOption(REPETITION_COUNT)) {
-            throw new ParseException(missingOptionMessage("number of repetitions"));
+    private File getDestinationsFile(CommandLine commandLine) {
+
+        File destinationsFile = null;
+        if (commandLine.hasOption(DESTINATIONS_FILE)) {
+            destinationsFile = new File(commandLine.getOptionValue(DESTINATIONS_FILE));
         }
 
-        try {
-            return Integer.parseInt(commandLine.getOptionValue(REPETITION_COUNT));
-        } catch (NumberFormatException e){
-            throw new ParseException(expectedIntegerMessage("number of repetitions"));
-        }
+        return destinationsFile;
+    }
+
+    /**
+     * Obtains the repetition count from the command line. This is an optional argument.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return repetition count or null if not specified.
+     * @throws ParseException if the repetitions count option is not an integer.
+     */
+    private Integer getRepetitionCount(CommandLine commandLine) throws ParseException {
+        return getOptionalIntegerParameter(commandLine, REPETITION_COUNT, "repetition count");
+    }
+
+    /**
+     * Obtains the permutation count from the command line. This is an optional argument.
+     *
+     * @param commandLine command line containing the parsed options.
+     * @return permutation count or null if not specified.
+     * @throws ParseException if the repetitions count option is not an integer.
+     */
+    private Integer getPermutationCount(CommandLine commandLine) throws ParseException {
+        return getOptionalIntegerParameter(commandLine, PERMUTATION_COUNT, "permutation count");
     }
 
     /**

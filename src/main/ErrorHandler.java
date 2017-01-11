@@ -1,6 +1,7 @@
 package main;
 
 import io.DestinationNotFoundException;
+import io.ParseException;
 import io.topologyreaders.exceptions.TopologyParseException;
 
 import java.io.File;
@@ -76,12 +77,11 @@ public interface ErrorHandler {
      *
      * @param exception     thrown exception.
      * @param anycastFile   anycast file where there was the failure.
-     * @param destinationID ID of the destination not found.
      */
-    default void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception, File anycastFile,
-                                                    int destinationID) {
-        System.err.println("Failed to find destination " + destinationID + " in anycast file" + anycastFile);
-        exception.printStackTrace();
+    default void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception,
+                                                    File anycastFile) {
+        System.err.println("Failed to find destination '" + exception.getDestinationIDs() +
+                "' in anycast file" + anycastFile);
     }
 
     /**
@@ -100,4 +100,17 @@ public interface ErrorHandler {
      * @param repetitionCount   number of repetitions.
      */
     default void onSeedsCountDoesNotMatchRepetitionCount(int seedCount, int repetitionCount) {}
+
+    /**
+     * Invoked when a ParseException is thrown when parsing the anycast file.
+     *
+     * @param exception thrown parse exception.
+     */
+    default void onAnycastParseException(ParseException exception) {
+        System.out.println("Parse error: " + exception.getMessage());
+    }
+
+    default void onDestinationsIOException(IOException exception) {}
+
+    default void onDestinationsParseException(ParseException exception) {}
 }

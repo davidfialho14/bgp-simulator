@@ -2,11 +2,13 @@ package main.cli;
 
 
 import io.DestinationNotFoundException;
+import io.ParseException;
 import io.topologyreaders.exceptions.TopologyParseException;
 import main.ErrorHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * Implements the handling of errors by the CLI application.
@@ -39,10 +41,14 @@ public class CLIErrorHandler implements ErrorHandler {
     }
 
     @Override
-    public void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception, File anycastFile,
-                                                   int destinationID) {
-        System.err.println(String.format("Did not found destination %d in anycast file '%s'",
-                destinationID, anycastFile));
+    public void onDestinationNotFoundOnAnycastFile(DestinationNotFoundException exception, File anycastFile) {
+
+        String notFoundDestinations = exception.getDestinationIDs().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+
+        System.err.println(String.format("Did not found destinations %s in anycast file '%s'",
+                notFoundDestinations, anycastFile));
     }
 
     @Override
@@ -56,4 +62,18 @@ public class CLIErrorHandler implements ErrorHandler {
                 "repetitions (%d) does not match", seedCount, repetitionCount));
     }
 
+    @Override
+    public void onAnycastParseException(ParseException exception) {
+        System.err.println("Failed to parse anycast file: " + exception.getMessage());
+    }
+
+    @Override
+    public void onDestinationsIOException(IOException exception) {
+        System.err.println("Failed to open/read the destinations file: " + exception.getMessage());
+    }
+
+    @Override
+    public void onDestinationsParseException(ParseException exception) {
+        System.err.println("Failed to parse destinations file: " + exception.getMessage());
+    }
 }

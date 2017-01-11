@@ -1,12 +1,9 @@
-package main;
+package main.cli;
 
 import core.protocols.Detection;
-import io.reporters.CSVReporterFactory;
-import io.reporters.ReporterFactory;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
-import simulators.BasicSetupFactory;
-import simulators.SetupFactory;
+import org.apache.commons.cli.ParseException;
 
 import java.io.File;
 
@@ -25,13 +22,13 @@ public class Parameters {
     private final File topologyFile;
     private final TopologyReaderFactory readerFactory;
     private final File reportDestination;
-    private final ReporterFactory reporterFactory;
     private final File anycastFile;
     private final int minDelay;
     private final int maxDelay;
-    private final int destinationId;
-    private final int repetitionCount;
-    private final SetupFactory setupFactory;
+    private final Integer destinationId;
+    private final File destinationsFile;
+    private final Integer repetitionCount;
+    private final Integer permutationCount;
     private final Long seed;
     private final Integer forcedMRAI;
     private final Detection forcedDetection;
@@ -47,20 +44,20 @@ public class Parameters {
      * Creates a new parameters object with all the necessary parameters set.
      */
     private Parameters(File topologyFile, TopologyReaderFactory readerFactory, File reportDestination,
-                       ReporterFactory reporterFactory, File anycastFile, int minDelay, int maxDelay,
-                       int destinationId, int repetitionCount, SetupFactory setupFactory, Long seed,
+                       File anycastFile, int minDelay, int maxDelay,
+                       Integer destinationId, File destinationsFile, Integer repetitionCount, Integer permutationCount, Long seed,
                        Integer forcedMRAI, Detection forcedDetection, int threshold) {
 
         this.topologyFile = topologyFile;
         this.readerFactory = readerFactory;
         this.reportDestination = reportDestination;
-        this.reporterFactory = reporterFactory;
         this.anycastFile = anycastFile;
         this.minDelay = minDelay;
         this.maxDelay = maxDelay;
         this.destinationId = destinationId;
+        this.destinationsFile = destinationsFile;
         this.repetitionCount = repetitionCount;
-        this.setupFactory = setupFactory;
+        this.permutationCount = permutationCount;
         this.seed = seed;
         this.forcedMRAI = forcedMRAI;
         this.forcedDetection = forcedDetection;
@@ -85,10 +82,6 @@ public class Parameters {
         return reportDestination;
     }
 
-    public ReporterFactory getReporterFactory() {
-        return reporterFactory;
-    }
-
     public File getAnycastFile() {
         return anycastFile;
     }
@@ -101,16 +94,20 @@ public class Parameters {
         return maxDelay;
     }
 
-    public int getDestinationId() {
+    public Integer getDestinationId() {
         return destinationId;
     }
 
-    public int getRepetitionCount() {
+    public File getDestinationsFile() {
+        return destinationsFile;
+    }
+
+    public Integer getRepetitionCount() {
         return repetitionCount;
     }
 
-    public SetupFactory getSetupFactory() {
-        return setupFactory;
+    public Integer getPermutationCount() {
+        return permutationCount;
     }
 
     public Long getSeed() {
@@ -164,21 +161,17 @@ public class Parameters {
 
         // optional parameters
         private TopologyReaderFactory readerFactory = new SimpleTopologyReaderFactory();
-        private ReporterFactory reporterFactory = null;
         private File anycastFile = null;
         private int minDelay = 0;
         private int maxDelay = 10;
-        private int destinationId = 0;
-        private int repetitionCount = 1;
+        private Integer destinationId = null;
+        private File destinationsFile = null;
+        private Integer repetitionCount = 1;
+        private Integer permutationCount = 1;
         private Long seed = null;
         private Integer forcedMRAI = null;
         private Detection forcedDetection = null;
         private int threshold = Integer.MAX_VALUE;
-
-        // parameters for the setup
-//        private Integer deployTime = null;
-//        private Integer deployPeriod = null;
-//        private Integer deployPercentage = null;
 
         public Builder(File topologyFile, File reportDestination) {
             this.topologyFile = topologyFile;
@@ -193,11 +186,6 @@ public class Parameters {
 
         public Builder readerFactory(TopologyReaderFactory readerFactory) {
             this.readerFactory = readerFactory;
-            return this;
-        }
-
-        public Builder reporterFactory(ReporterFactory reporterFactory) {
-            this.reporterFactory = reporterFactory;
             return this;
         }
 
@@ -216,13 +204,23 @@ public class Parameters {
             return this;
         }
 
-        public Builder destinationId(int destinationId) {
+        public Builder destinationId(Integer destinationId) {
             this.destinationId = destinationId;
             return this;
         }
 
-        public Builder repetitionCount(int repetitionCount) {
+        public Builder destinationsFile(File destinationsFile) {
+            this.destinationsFile = destinationsFile;
+            return this;
+        }
+
+        public Builder repetitionCount(Integer repetitionCount) {
             this.repetitionCount = repetitionCount;
+            return this;
+        }
+
+        public Builder permutationCount(Integer permutationCount) {
+            this.permutationCount = permutationCount;
             return this;
         }
 
@@ -248,30 +246,15 @@ public class Parameters {
             return this;
         }
 
-        // parameters for the setup
-//
-//        public Builder timedDeployment(Integer deployTime) {
-//            this.deployTime = deployTime;
-//            return this;
-//        }
-//
-//        public Builder gradualDeployment(Integer deployPeriod, Integer deployPercentage) {
-//            this.deployPeriod = deployPeriod;
-//            this.deployPercentage = deployPercentage;
-//            return this;
-//        }
+        public Parameters build() throws ParseException {
 
-        public Parameters build() {
+            if (destinationsFile == null && destinationId == null) {
+                throw new ParseException("Missing both the destinations file and the destination ID");
+            }
 
-            // use by default the CSV reporter
-            if (reporterFactory == null) reporterFactory = new CSVReporterFactory(topologyFile, destinationId);
-
-            // TODO implement the selection of the setup factory
-            SetupFactory setupFactory = new BasicSetupFactory();
-
-            return new Parameters(topologyFile, readerFactory, reportDestination, reporterFactory,
-                    anycastFile, minDelay, maxDelay, destinationId, repetitionCount, setupFactory,
-                    seed, forcedMRAI, forcedDetection, threshold);
+            return new Parameters(topologyFile, readerFactory, reportDestination,
+                    anycastFile, minDelay, maxDelay, destinationId, destinationsFile, repetitionCount,
+                    permutationCount, seed, forcedMRAI, forcedDetection, threshold);
         }
 
     }
