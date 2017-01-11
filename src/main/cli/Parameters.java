@@ -3,6 +3,7 @@ package main.cli;
 import core.protocols.Detection;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
+import org.apache.commons.cli.ParseException;
 
 import java.io.File;
 
@@ -24,8 +25,10 @@ public class Parameters {
     private final File anycastFile;
     private final int minDelay;
     private final int maxDelay;
-    private final int destinationId;
-    private final int repetitionCount;
+    private final Integer destinationId;
+    private final File destinationsFile;
+    private final Integer repetitionCount;
+    private final Integer permutationCount;
     private final Long seed;
     private final Integer forcedMRAI;
     private final Detection forcedDetection;
@@ -42,7 +45,7 @@ public class Parameters {
      */
     private Parameters(File topologyFile, TopologyReaderFactory readerFactory, File reportDestination,
                        File anycastFile, int minDelay, int maxDelay,
-                       int destinationId, int repetitionCount, Long seed,
+                       Integer destinationId, File destinationsFile, Integer repetitionCount, Integer permutationCount, Long seed,
                        Integer forcedMRAI, Detection forcedDetection, int threshold) {
 
         this.topologyFile = topologyFile;
@@ -52,7 +55,9 @@ public class Parameters {
         this.minDelay = minDelay;
         this.maxDelay = maxDelay;
         this.destinationId = destinationId;
+        this.destinationsFile = destinationsFile;
         this.repetitionCount = repetitionCount;
+        this.permutationCount = permutationCount;
         this.seed = seed;
         this.forcedMRAI = forcedMRAI;
         this.forcedDetection = forcedDetection;
@@ -89,12 +94,20 @@ public class Parameters {
         return maxDelay;
     }
 
-    public int getDestinationId() {
+    public Integer getDestinationId() {
         return destinationId;
     }
 
-    public int getRepetitionCount() {
+    public File getDestinationsFile() {
+        return destinationsFile;
+    }
+
+    public Integer getRepetitionCount() {
         return repetitionCount;
+    }
+
+    public Integer getPermutationCount() {
+        return permutationCount;
     }
 
     public Long getSeed() {
@@ -151,8 +164,10 @@ public class Parameters {
         private File anycastFile = null;
         private int minDelay = 0;
         private int maxDelay = 10;
-        private int destinationId = 0;
-        private int repetitionCount = 1;
+        private Integer destinationId = null;
+        private File destinationsFile = null;
+        private Integer repetitionCount = 1;
+        private Integer permutationCount = 1;
         private Long seed = null;
         private Integer forcedMRAI = null;
         private Detection forcedDetection = null;
@@ -189,13 +204,23 @@ public class Parameters {
             return this;
         }
 
-        public Builder destinationId(int destinationId) {
+        public Builder destinationId(Integer destinationId) {
             this.destinationId = destinationId;
             return this;
         }
 
-        public Builder repetitionCount(int repetitionCount) {
+        public Builder destinationsFile(File destinationsFile) {
+            this.destinationsFile = destinationsFile;
+            return this;
+        }
+
+        public Builder repetitionCount(Integer repetitionCount) {
             this.repetitionCount = repetitionCount;
+            return this;
+        }
+
+        public Builder permutationCount(Integer permutationCount) {
+            this.permutationCount = permutationCount;
             return this;
         }
 
@@ -221,11 +246,15 @@ public class Parameters {
             return this;
         }
 
-        public Parameters build() {
+        public Parameters build() throws ParseException {
+
+            if (destinationsFile == null && destinationId == null) {
+                throw new ParseException("Missing both the destinations file and the destination ID");
+            }
 
             return new Parameters(topologyFile, readerFactory, reportDestination,
-                    anycastFile, minDelay, maxDelay, destinationId, repetitionCount,
-                    seed, forcedMRAI, forcedDetection, threshold);
+                    anycastFile, minDelay, maxDelay, destinationId, destinationsFile, repetitionCount,
+                    permutationCount, seed, forcedMRAI, forcedDetection, threshold);
         }
 
     }
