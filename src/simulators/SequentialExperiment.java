@@ -14,7 +14,7 @@ public class SequentialExperiment implements Experiment {
     private int currentRepetition = -1;
     private int currentPermutation = -1;
 
-    private SequentialExperiment(Destination[] destinations, int repetitionCount,
+    public SequentialExperiment(Destination[] destinations, int repetitionCount,
                                  int permutationCount, SequentialSimulation simulation) {
         this.shuffler = new DestinationShuffler(destinations);
         this.repetitionCount = repetitionCount;
