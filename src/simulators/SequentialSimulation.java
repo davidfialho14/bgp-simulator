@@ -3,7 +3,7 @@ package simulators;
 import core.Destination;
 import core.Link;
 import core.Router;
-import io.reporters.SequentialReporter;
+import io.reporters.BasicReporter;
 import org.apache.commons.io.FilenameUtils;
 import simulators.basic.BasicDataCollector;
 import simulators.basic.BasicDataset;
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class SequentialSimulation {
 
     private final BasicDataCollector dataCollector = new BasicDataCollector();
-    private final SequentialReporter reporter = new SequentialReporter();
+    private final BasicReporter reporter = new BasicReporter();
 
     public SequentialSimulation(SimulatorNew simulator) {
         reporter.setReportDirectory(simulator.getReportDestination());
@@ -29,10 +29,6 @@ public class SequentialSimulation {
         String topologyName = FilenameUtils.removeExtension(simulator.getTopologyFile().getName());
         Destination[] permutation = experiment.getCurrentSequence();
 
-        // the permutation ID is the ID assigned to the permutation by the reporter
-        // when reporting use this ID to identify the permutation!
-        int permutationId = reporter.addPermutation(permutation);
-
         for (Destination destination : permutation) {
 
             String description = String.format("permutation %d/%d iteration %d/%d",
@@ -40,7 +36,8 @@ public class SequentialSimulation {
                     experiment.getCurrentRepetition() + 1, experiment.getRepetitionCount());
 
             simulator.simulate(destination, description);
-            report(permutationId, experiment.getCurrentRepetition(), destination.getId(), topologyName);
+            report(experiment.getCurrentPermutation(), experiment.getCurrentRepetition(),
+                    destination.getId(), topologyName);
         }
 
     }
