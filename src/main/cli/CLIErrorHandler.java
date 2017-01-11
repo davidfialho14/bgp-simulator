@@ -2,6 +2,7 @@ package main.cli;
 
 
 import io.DestinationNotFoundException;
+import io.ParseException;
 import io.topologyreaders.exceptions.TopologyParseException;
 import main.ErrorHandler;
 
@@ -61,4 +62,18 @@ public class CLIErrorHandler implements ErrorHandler {
                 "repetitions (%d) does not match", seedCount, repetitionCount));
     }
 
+    @Override
+    public void onAnycastParseException(ParseException exception) {
+        System.err.println("Failed to parse anycast file: " + exception.getMessage());
+    }
+
+    @Override
+    public void onDestinationsIOException(IOException exception) {
+        System.err.println("Failed to open/read the destinations file: " + exception.getMessage());
+    }
+
+    @Override
+    public void onDestinationsParseException(ParseException exception) {
+        System.err.println("Failed to parse destinations file: " + exception.getMessage());
+    }
 }

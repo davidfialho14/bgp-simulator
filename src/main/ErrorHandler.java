@@ -109,4 +109,8 @@ public interface ErrorHandler {
     default void onAnycastParseException(ParseException exception) {
         System.out.println("Parse error: " + exception.getMessage());
     }
+
+    default void onDestinationsIOException(IOException exception) {}
+
+    default void onDestinationsParseException(ParseException exception) {}
 }
