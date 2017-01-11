@@ -20,8 +20,7 @@ public class SequentialSimulation {
     }
 
     public void setup(SequentialExperiment experiment, SimulatorNew simulator) {
-        // clear all data from last simulation - ensure collector is clean
-        dataCollector.clear();
+
     }
 
     public void run(SequentialExperiment experiment, SimulatorNew simulator) throws IOException {
@@ -30,6 +29,9 @@ public class SequentialSimulation {
         Destination[] permutation = experiment.getCurrentSequence();
 
         for (Destination destination : permutation) {
+
+            // clear all data from last simulation - ensure collector is clean
+            dataCollector.clear();
 
             String description = String.format("permutation %d/%d iteration %d/%d",
                     experiment.getCurrentPermutation() + 1, experiment.getPermutationCount(),
