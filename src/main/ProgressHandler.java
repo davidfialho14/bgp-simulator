@@ -1,7 +1,9 @@
 package main;
 
 
+import core.Destination;
 import core.Topology;
+import main.cli.Parameters;
 
 import java.io.File;
 import java.util.List;
@@ -35,17 +37,15 @@ public interface ProgressHandler {
     /**
      * Invoked before starting each simulation instance.
      *
-     * @param simulationNumber number of the simulation instance.
-     * @param parameters parameters of the simulation.
+     * @param destinationId ID of the destination being used for the simulation.
+     * @param description   description elaborating the properties of the simulation.
      */
-    default void onStartSimulation(int simulationNumber, Parameters parameters) {}
+    default void onStartSimulation(int destinationId, String description) {}
 
     /**
      * Invoked after finishing each simulation instance.
-     *
-     * @param simulationNumber number of the simulation instance.
      */
-    default void onFinishSimulation(int simulationNumber) {}
+    default void onFinishSimulation() {}
 
     /**
      * Invoked before starting to report a simulation instance.

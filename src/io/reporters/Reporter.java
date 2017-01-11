@@ -1,6 +1,6 @@
 package io.reporters;
 
-import main.Parameters;
+import main.cli.Parameters;
 import simulators.basic.BasicDataset;
 import simulators.basic.BasicSetup;
 

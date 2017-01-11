@@ -1,8 +1,8 @@
 package main.cli;
 
 
+import core.Destination;
 import core.Topology;
-import main.Parameters;
 import main.ProgressHandler;
 
 import java.io.File;
@@ -56,28 +56,19 @@ public class CLIProgressHandler implements ProgressHandler {
     /**
      * Invoked before starting each simulation instance.
      *
-     * @param simulationNumber number of the simulation instance.
-     * @param parameters       parameters of the simulation.
+     * @param destinationId ID of the destination being used for the simulation.
+     * @param description   description elaborating the properties of the simulation.
      */
     @Override
-    public void onStartSimulation(int simulationNumber, Parameters parameters) {
-        String message = String.format("Simulating instance %d for destination %d, threshold %d",
-                simulationNumber, parameters.getDestinationId(), parameters.getThreshold());
-
-        if (parameters.hasSeed()) {
-            message += "seed " + parameters.getSeed();
-        }
-
-        printTimedStartMessage(message + "...");
+    public void onStartSimulation(int destinationId, String description) {
+        printTimedStartMessage("Simulating for destination " + destinationId + ": " + description + "...");
     }
 
     /**
      * Invoked after finishing each simulation instance.
-     *
-     * @param simulationNumber number of the simulation instance.
      */
     @Override
-    public void onFinishSimulation(int simulationNumber) {
+    public void onFinishSimulation() {
         printTimedFinishMessage("Finished simulation successfully");
     }
 
