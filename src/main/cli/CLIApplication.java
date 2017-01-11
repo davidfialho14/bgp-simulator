@@ -33,9 +33,12 @@ public class CLIApplication {
             application().errorHandler = new CLIErrorHandler();
             application().progressHandler = new CLIProgressHandler();
 
-            // TODO add sequential execution
-            // check if the parameters contain a destinations file or destination ID
-            Execution execution = new BasicExecution(parameters);
+            Execution execution;
+            if (parameters.getDestinationId() != null) {
+                execution = new BasicExecution(parameters);
+            } else {
+                execution = new SequentialExecution(parameters);
+            }
 
             execution.run();
 
