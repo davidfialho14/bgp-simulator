@@ -30,7 +30,7 @@ public class SequentialExperiment implements Experiment {
     }
 
     @Override
-    public void run(SimulatorNew simulator) throws IOException {
+    public void run(Simulator simulator) throws IOException {
 
         for (currentPermutation = 0; currentPermutation < permutationCount; currentPermutation++) {
             shuffler.shuffle(); // get random permutation
@@ -67,7 +67,7 @@ public class SequentialExperiment implements Experiment {
         return shuffler.getDestinations();
     }
 
-    private void savePermutation(SimulatorNew simulator, Destination[] permutation) throws IOException {
+    private void savePermutation(Simulator simulator, Destination[] permutation) throws IOException {
 
         File permutationsFile = new File(simulator.getReportDestination(),
                 getPermutationsFilename(simulator.getTopologyFile().getName()));

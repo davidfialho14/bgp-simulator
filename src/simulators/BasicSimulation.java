@@ -14,16 +14,16 @@ public class BasicSimulation {
     private final BasicDataCollector dataCollector = new BasicDataCollector();
     private final BasicReporter reporter = new BasicReporter();
 
-    public BasicSimulation(SimulatorNew simulator) {
+    public BasicSimulation(Simulator simulator) {
         reporter.setReportDirectory(simulator.getReportDestination());
     }
 
-    public void setup(BasicExperiment experiment, SimulatorNew simulator) {
+    public void setup(BasicExperiment experiment, Simulator simulator) {
         // clear all data from last simulation - ensure collector is clean
         dataCollector.clear();
     }
 
-    public void run(BasicExperiment experiment, SimulatorNew simulator) {
+    public void run(BasicExperiment experiment, Simulator simulator) {
 
         String description = String.format("iteration %d/%d",
                 experiment.getCurrentRepetition() + 1, experiment.getRepetitionCount());
@@ -31,7 +31,7 @@ public class BasicSimulation {
         simulator.simulate(experiment.getDestination(), description);
     }
 
-    public void report(BasicExperiment experiment, SimulatorNew simulator) throws IOException {
+    public void report(BasicExperiment experiment, Simulator simulator) throws IOException {
 
         String topologyName = FilenameUtils.removeExtension(simulator.getTopologyFile().getName());
         String defaultReportFilename = String.format("%s_%d.csv", topologyName,
@@ -44,7 +44,7 @@ public class BasicSimulation {
         );
     }
 
-    public void cleanup(BasicExperiment experiment, SimulatorNew simulator) {
+    public void cleanup(BasicExperiment experiment, Simulator simulator) {
 
         // reset the routers
         for (Router router : simulator.getTopology().getRouters()) {

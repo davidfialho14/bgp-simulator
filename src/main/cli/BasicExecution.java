@@ -8,7 +8,7 @@ import io.ParseException;
 import simulators.BasicExperiment;
 import simulators.BasicSimulation;
 import simulators.Experiment;
-import simulators.SimulatorNew;
+import simulators.Simulator;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ class BasicExecution extends Execution {
     }
 
     @Override
-    protected Experiment setupExperiment(SimulatorNew simulator) {
+    protected Experiment setupExperiment(Simulator simulator) {
 
         Topology topology = simulator.getTopology();
         int destinationId = parameters.getDestinationId();

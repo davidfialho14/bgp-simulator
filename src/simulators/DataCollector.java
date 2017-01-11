@@ -1,9 +1,5 @@
 package simulators;
 
-import io.reporters.Reporter;
-
-import java.io.IOException;
-
 /**
  * Data collector is the class responsible for collecting data during a simulation. Simulation setups delegate
  * on data collectors the data collection logic. To collect data from a simulation a data collector
@@ -30,13 +26,5 @@ public interface DataCollector {
      * Clears all data that has been collected
      */
     void clear();
-
-    /**
-     * Reports the current collected data using the given reporter implementation.
-     *
-     * @param reporter          reporter implementation to be used.
-     * @param simulationNumber  number of the simulation to report.
-     */
-    void report(Reporter reporter, int simulationNumber) throws IOException;
 
 }

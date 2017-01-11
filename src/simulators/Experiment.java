@@ -4,10 +4,10 @@ import java.io.IOException;
 
 public interface Experiment {
 
-    default void setup(SimulatorNew simulator) {}
+    default void setup(Simulator simulator) {}
 
-    void run(SimulatorNew simulator) throws IOException;
+    void run(Simulator simulator) throws IOException;
 
-    default void cleanup(SimulatorNew simulator) {}
+    default void cleanup(Simulator simulator) {}
 
 }

@@ -20,7 +20,7 @@ public class BasicExperiment implements Experiment {
     }
 
     @Override
-    public void run(SimulatorNew simulator) throws IOException {
+    public void run(Simulator simulator) throws IOException {
 
         for (currentRepetition = 0; currentRepetition < repetitionCount; currentRepetition++) {
             simulation.setup(this, simulator);

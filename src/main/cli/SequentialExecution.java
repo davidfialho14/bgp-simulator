@@ -10,7 +10,7 @@ import io.ParseException;
 import simulators.Experiment;
 import simulators.SequentialExperiment;
 import simulators.SequentialSimulation;
-import simulators.SimulatorNew;
+import simulators.Simulator;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ class SequentialExecution extends Execution {
     }
 
     @Override
-    protected Experiment setupExperiment(SimulatorNew simulator) {
+    protected Experiment setupExperiment(Simulator simulator) {
 
         File destinationsFile = parameters.getDestinationsFile();
 

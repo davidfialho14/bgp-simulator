@@ -4,12 +4,10 @@ import core.Attribute;
 import core.Link;
 import core.Path;
 import core.events.*;
-import io.reporters.Reporter;
 import simulators.DataCollector;
 import simulators.Dataset;
 import simulators.DetectionData;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -81,17 +79,6 @@ public class BasicDataCollector implements DataCollector, ExportListener, Detect
     @Override
     public void clear() {
         dataset.clear();
-    }
-
-    /**
-     * Reports the current collected data using the given reporter implementation.
-     *
-     * @param reporter          reporter implementation to be used.
-     * @param simulationNumber  number of the simulation being reported.
-     */
-    @Override
-    public void report(Reporter reporter, int simulationNumber) throws IOException {
-        reporter.report(simulationNumber, dataset);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

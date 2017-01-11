@@ -2,7 +2,7 @@ package main.cli;
 
 import io.topologyreaders.exceptions.TopologyParseException;
 import simulators.Experiment;
-import simulators.SimulatorNew;
+import simulators.Simulator;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ abstract class Execution {
 
     public void run() {
 
-        SimulatorNew simulator = setupSimulator();
+        Simulator simulator = setupSimulator();
         Experiment experiment = setupExperiment(simulator);
 
         try {
@@ -31,14 +31,14 @@ abstract class Execution {
 
     }
 
-    protected abstract Experiment setupExperiment(SimulatorNew simulator);
+    protected abstract Experiment setupExperiment(Simulator simulator);
 
-    protected SimulatorNew setupSimulator() {
+    protected Simulator setupSimulator() {
 
-        SimulatorNew simulator = null;
+        Simulator simulator = null;
 
         try {
-            simulator = new SimulatorNew(
+            simulator = new Simulator(
                     parameters.getReaderFactory(),
                     parameters.getTopologyFile(),
                     parameters.getMinDelay(),

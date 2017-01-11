@@ -15,11 +15,11 @@ public class SequentialSimulation {
     private final BasicDataCollector dataCollector = new BasicDataCollector();
     private final BasicReporter reporter = new BasicReporter();
 
-    public SequentialSimulation(SimulatorNew simulator) {
+    public SequentialSimulation(Simulator simulator) {
         reporter.setReportDirectory(simulator.getReportDestination());
     }
 
-    public void setup(SequentialExperiment experiment, SimulatorNew simulator) {
+    public void setup(SequentialExperiment experiment, Simulator simulator) {
         // does nothing!
     }
 
@@ -28,7 +28,7 @@ public class SequentialSimulation {
         dataCollector.clear();
     }
 
-    public void run(SequentialExperiment experiment, SimulatorNew simulator) throws IOException {
+    public void run(SequentialExperiment experiment, Simulator simulator) throws IOException {
 
         String topologyName = FilenameUtils.removeExtension(simulator.getTopologyFile().getName());
         Destination[] permutation = experiment.getCurrentSequence();
@@ -49,7 +49,7 @@ public class SequentialSimulation {
 
     }
 
-    public void report(SequentialExperiment experiment, SimulatorNew simulator) throws IOException {
+    public void report(SequentialExperiment experiment, Simulator simulator) throws IOException {
         // does nothing! The reporting is done for each destination!
     }
 
@@ -62,7 +62,7 @@ public class SequentialSimulation {
         reporter.report(defaultReportFilename, repetitionNumber, (BasicDataset) dataCollector.getDataset());
     }
 
-    public void cleanup(SequentialExperiment experiment, SimulatorNew simulator) {
+    public void cleanup(SequentialExperiment experiment, Simulator simulator) {
 
         // reset the routers
         for (Router router : simulator.getTopology().getRouters()) {
@@ -85,7 +85,7 @@ public class SequentialSimulation {
 
     }
 
-    private void cleanup(SimulatorNew simulator) {
+    private void cleanup(Simulator simulator) {
 
         for (Router router : simulator.getTopology().getRouters()) {
 
