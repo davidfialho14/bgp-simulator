@@ -34,25 +34,26 @@ class BasicExecution extends Execution {
             // destination does not exist in the topology
             // but might be an anycast destination
 
-            if (anycastFile != null) { // check if we have an anycast file
-
-                try (AnycastReader reader = new AnycastReader(anycastFile, topology)) {
-                    destination = reader.read(destinationId);
-
-                } catch (DestinationNotFoundException e) {
-                    application().errorHandler.onDestinationNotFoundOnAnycastFile(e, anycastFile);
-                    application().exitWithError();
-
-                } catch (ParseException e) {
-                    application().errorHandler.onAnycastParseException(e);
-                    application().exitWithError();
-
-                } catch (IOException e) {
-                    application().errorHandler.onAnycastLoadIOException(e);
-                    application().exitWithError();
-                }
+            if (anycastFile == null) { // check if we have an anycast file
+                application().errorHandler.onUnknownDestination(destinationId);
+                application().exitWithError();
             }
 
+            try (AnycastReader reader = new AnycastReader(anycastFile, topology)) {
+                destination = reader.read(destinationId);
+
+            } catch (DestinationNotFoundException e) {
+                application().errorHandler.onDestinationNotFoundOnAnycastFile(e, anycastFile);
+                application().exitWithError();
+
+            } catch (ParseException e) {
+                application().errorHandler.onAnycastParseException(e);
+                application().exitWithError();
+
+            } catch (IOException e) {
+                application().errorHandler.onAnycastLoadIOException(e);
+                application().exitWithError();
+            }
 
         }
 
