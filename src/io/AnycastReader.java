@@ -66,7 +66,9 @@ public class AnycastReader implements Closeable {
      * @return array with the destinations read. Input order is not guaranteed.
      * @throws DestinationNotFoundException if at least one of the indicated destinations is not found.
      */
-    public Destination[] readThis(Integer... destinationIds) throws IOException, ParseException, DestinationNotFoundException {
+    public Destination[] readThis(Integer... destinationIds)
+            throws IOException, ParseException, DestinationNotFoundException {
+
         final Set<Integer> wantedIds = new HashSet<>();
         Collections.addAll(wantedIds, destinationIds);
 
@@ -84,11 +86,29 @@ public class AnycastReader implements Closeable {
      * @return array with the destinations read. Input order is not guaranteed.
      * @throws DestinationNotFoundException if at least one of the indicated destinations is not found.
      */
-    public Destination[] readThis(Collection<Integer> destinationIds) throws IOException, ParseException, DestinationNotFoundException {
+    public Destination[] readThis(Collection<Integer> destinationIds)
+            throws IOException, ParseException, DestinationNotFoundException {
+
         final Set<Integer> wantedIds = new HashSet<>();
         wantedIds.addAll(destinationIds);
 
         return readThis(wantedIds);
+    }
+
+    /**
+     * Reads a single destination with the given ID and only this destination. If given ID is not found
+     * then a DestinationNotFoundException is thrown.
+     *
+     * @param destinationId ID of the destination to read.
+     * @return destination to read
+     * @throws DestinationNotFoundException if at least one of the indicated destination is not found.
+     */
+    public Destination read(int destinationId)
+            throws DestinationNotFoundException, IOException, ParseException {
+
+        // we can access the first position of the returned array without checking because we are sure
+        // the array has one destination, otherwise readThis() would throw DestinationNotFoundException
+        return readThis(destinationId)[0];
     }
 
     private Destination[] readThis(Set<Integer> wantedIds) throws IOException, ParseException, DestinationNotFoundException {
