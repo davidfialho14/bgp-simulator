@@ -8,7 +8,6 @@ import io.reporters.ReporterFactory;
 import io.topologyreaders.SimpleTopologyReaderFactory;
 import io.topologyreaders.TopologyReaderFactory;
 import io.topologyreaders.exceptions.TopologyParseException;
-import main.Parameters;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -86,7 +85,6 @@ public class ParametersCommandLineParser {
 
         return new Parameters.Builder(topologyFile, reportDestination)
                 .readerFactory(getReader(commandLine))
-                .reporterFactory(getReporter(commandLine))
                 .anycastFile(getAnycastFile(commandLine))
                 .destinationId(getDestinationId(commandLine))
                 .repetitionCount(getRepetitionCount(commandLine))
