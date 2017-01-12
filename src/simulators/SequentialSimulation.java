@@ -44,7 +44,7 @@ public class SequentialSimulation {
             report(experiment.getCurrentPermutation(), experiment.getCurrentRepetition(),
                     destination.getId(), topologyName);
 
-            cleanup(simulator);
+            cleanup(simulator, destination);
         }
 
     }
@@ -75,22 +75,24 @@ public class SequentialSimulation {
 
         }
 
-        // guarantee the arrival times of the destination's in-links are reset to 0
-        // do this for all destinations in the sequence
-        for (Destination destination : experiment.getCurrentSequence()) {
-            for (Link link : destination.getInLinks()) {
-                link.setLastArrivalTime(0);
-            }
-        }
-
     }
 
-    private void cleanup(Simulator simulator) {
+    private void cleanup(Simulator simulator, Destination destination) {
 
         for (Router router : simulator.getTopology().getRouters()) {
 
+            // reset router's links
+            for (Link link : router.getInLinks()) {
+                link.setLastArrivalTime(0);
+            }
+
             router.getTable().reset();
             router.getMRAITimer().clear();
+        }
+
+        // guarantee the arrival times of the destination's in-links are reset to 0
+        for (Link link : destination.getInLinks()) {
+            link.setLastArrivalTime(0);
         }
     }
 
