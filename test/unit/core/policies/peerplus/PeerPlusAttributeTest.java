@@ -3,15 +3,11 @@ package core.policies.peerplus;
 import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.peerplus.CustomerAttribute.customer;
-import static core.policies.peerplus.PeerAttribute.peer;
-import static core.policies.peerplus.PeerPlusAttribute.peerplus;
-import static core.policies.peerplus.ProviderAttribute.provider;
-import static core.policies.peerplus.SelfAttribute.self;
+import static core.policies.peerplus.PeerPlusAttribute.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class PeerPlusAbstractAttributeTest {
+public class PeerPlusAttributeTest {
 
     @Test
     public void compareTo_CustomerToCustomer_Equal() throws Exception {

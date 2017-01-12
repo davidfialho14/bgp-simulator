@@ -3,12 +3,12 @@ package core.policies.peerplus;
 import core.Attribute;
 import core.Label;
 import core.Link;
-import core.policies.peerplus.PeerPlusAttr.*;
+import core.policies.peerplus.PeerPlusAttribute.*;
 
 import java.util.EnumMap;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.peerplus.PeerPlusAttr.*;
+import static core.policies.peerplus.PeerPlusAttribute.*;
 
 public enum PeerPlusLab implements Label {
 
@@ -49,7 +49,7 @@ public enum PeerPlusLab implements Label {
     public Attribute extend(Link link, Attribute attribute) {
         if (attribute == invalidAttr()) return invalidAttr();
 
-        PeerPlusAttr peerplusAttribute = (PeerPlusAttr) attribute;
+        PeerPlusAttribute peerplusAttribute = (PeerPlusAttribute) attribute;
         return map.get(peerplusAttribute.value);
     }
 
