@@ -2,6 +2,7 @@ package simulators;
 
 
 import core.Destination;
+import io.IntegerLineReader;
 import orestes.bloomfilter.BloomFilter;
 import orestes.bloomfilter.FilterBuilder;
 import org.apache.commons.math3.util.CombinatoricsUtils;
@@ -114,7 +115,8 @@ public class DestinationShuffler {
      * IDs.
      */
     private void reset() {
-        int expectedElements = (int) CombinatoricsUtils.factorial(destinations.length);
+        long combinationCount = CombinatoricsUtils.factorial(destinations.length);
+        int expectedElements = (int) Math.min(combinationCount, Integer.MAX_VALUE);
 
         bloomFilter = new FilterBuilder(expectedElements, 0.1)
                 .buildBloomFilter();
