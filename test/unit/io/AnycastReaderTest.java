@@ -1,7 +1,6 @@
 package io;
 
 import core.*;
-import core.policies.gaorexford.CustomerLabel;
 import core.policies.gaorexford.GaoRexfordPolicy;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
@@ -19,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static core.Destination.newDestination;
+import static core.policies.gaorexford.GRLabel.customerLabel;
 import static io.AnycastReaderTest.IsDestinations.isDestinations;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -164,24 +164,24 @@ public class AnycastReaderTest {
                 {file(), destinations()},  // empty file
                 {file(""), destinations()},
                 {file("0|10|C"), destinations(
-                        destination(0, neighbor(10, new CustomerLabel()))
+                        destination(0, neighbor(10, customerLabel()))
                 )},
                 {file("0|10|C", "0|11|C"), destinations(
                         destination(0,
-                                neighbor(10, new CustomerLabel()),
-                                neighbor(11, new CustomerLabel())
+                                neighbor(10, customerLabel()),
+                                neighbor(11, customerLabel())
                         )
                 )},
                 {file("0|10|C", "1|10|C"), destinations(
-                        destination(0, neighbor(10, new CustomerLabel())),
-                        destination(1, neighbor(10, new CustomerLabel()))
+                        destination(0, neighbor(10, customerLabel())),
+                        destination(1, neighbor(10, customerLabel()))
                 )},
                 {file("0|10|C", "1|10|C", "0|11|C"), destinations(
                         destination(0,
-                                neighbor(10, new CustomerLabel()),
-                                neighbor(11, new CustomerLabel())
+                                neighbor(10, customerLabel()),
+                                neighbor(11, customerLabel())
                         ),
-                        destination(1, neighbor(10, new CustomerLabel()))
+                        destination(1, neighbor(10, customerLabel()))
                 )},
         });
     }

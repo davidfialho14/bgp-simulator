@@ -3,14 +3,14 @@ package core.policies.gaorexford;
 import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.gaorexford.CustomerAttribute.customer;
-import static core.policies.gaorexford.PeerAttribute.peer;
-import static core.policies.gaorexford.ProviderAttribute.provider;
-import static core.policies.gaorexford.SelfAttribute.self;
+import static core.policies.gaorexford.GRAttribute.customer;
+import static core.policies.gaorexford.GRAttribute.peer;
+import static core.policies.gaorexford.GRAttribute.provider;
+import static core.policies.gaorexford.GRAttribute.self;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class GaoRexfordAttributeTest {
+public class GRAttributeTest {
 
     @Test
     public void compareTo_CustomerToCustomer_Equal() throws Exception {

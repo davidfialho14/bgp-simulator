@@ -5,22 +5,27 @@ import core.Label;
 import core.Policy;
 import io.topologyreaders.exceptions.InvalidPolicyTagException;
 
+import static core.policies.gaorexford.GRAttribute.self;
+import static core.policies.gaorexford.GRLabel.customerLabel;
+import static core.policies.gaorexford.GRLabel.peerLabel;
+import static core.policies.gaorexford.GRLabel.providerLabel;
+
 public class GaoRexfordPolicy implements Policy {
 
     @Override
     public Attribute createSelf() {
-        return SelfAttribute.self();
+        return self();
     }
 
     @Override
     public Label createLabel(String tag) throws InvalidPolicyTagException {
         switch (tag) {
             case "C":
-                return new CustomerLabel();
+                return customerLabel();
             case "R":
-                return new PeerLabel();
+                return peerLabel();
             case "P":
-                return new ProviderLabel();
+                return providerLabel();
             default:
                 throw new InvalidPolicyTagException(tag, "not a valid tag for a Gao Rexford label");
         }
