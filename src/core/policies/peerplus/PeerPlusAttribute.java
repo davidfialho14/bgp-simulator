@@ -5,7 +5,7 @@ import core.Attribute;
 import static core.InvalidAttribute.invalidAttr;
 
 /**
- * The Peer+ attribute implements the attributes for the Gao-Rexford routing policy.
+ * The Peer+ attribute implements the attributes for the Peer+ routing policy.
  * Each attribute is implemented as using a single instance.
  *
  * Implementation note: PeerPlusAttribute was suppose to be an enum, however, due to the type conflict between
@@ -32,7 +32,7 @@ public class PeerPlusAttribute implements Attribute {
     // Attribute instances - For each attribute (self, customer, peer, provider) an unique instance is
     // created and assigned the respective value
     private static final Attribute SELF = new PeerPlusAttribute(Value.Self);
-    private static final Attribute PEERPLUS = new PeerPlusAttribute(Value.Customer);
+    private static final Attribute PEERPLUS = new PeerPlusAttribute(Value.PeerPlus);
     private static final Attribute CUSTOMER = new PeerPlusAttribute(Value.Customer);
     private static final Attribute PEER = new PeerPlusAttribute(Value.Peer);
     private static final Attribute PROVIDER = new PeerPlusAttribute(Value.Provider);

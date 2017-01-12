@@ -6,7 +6,7 @@ import core.Policy;
 import io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 import static core.policies.peerplus.PeerPlusAttribute.self;
-import static core.policies.peerplus.PeerPlusLab.*;
+import static core.policies.peerplus.PeerPlusLabel.*;
 
 public class PeerPlusPolicy implements Policy {
 

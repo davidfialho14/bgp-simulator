@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
 import static core.policies.peerplus.PeerPlusAttribute.*;
-import static core.policies.peerplus.PeerPlusLab.customerLabel;
+import static core.policies.peerplus.PeerPlusLabel.customerLabel;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

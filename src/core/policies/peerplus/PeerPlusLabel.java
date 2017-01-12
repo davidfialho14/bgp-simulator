@@ -10,7 +10,7 @@ import java.util.EnumMap;
 import static core.InvalidAttribute.invalidAttr;
 import static core.policies.peerplus.PeerPlusAttribute.*;
 
-public enum PeerPlusLab implements Label {
+public enum PeerPlusLabel implements Label {
 
     PeerPlus(peerplus(), peerplus(), peerplus(), invalidAttr(), invalidAttr()),
     Customer(customer(), customer(), customer(), invalidAttr(), invalidAttr()),
@@ -19,13 +19,13 @@ public enum PeerPlusLab implements Label {
 
     private final EnumMap<Value, Attribute> map = new EnumMap<>(Value.class);
 
-    PeerPlusLab(Attribute selfMapValue, Attribute peerplusMapValue, Attribute customerMapValue,
-                Attribute peerMapValue, Attribute providerValue) {
+    PeerPlusLabel(Attribute selfMapValue, Attribute peerplusMapValue, Attribute customerMapValue,
+                  Attribute peerMapValue, Attribute providerValue) {
 
         map.put(Value.Self, selfMapValue);
+        map.put(Value.PeerPlus, peerplusMapValue);
         map.put(Value.Customer, customerMapValue);
         map.put(Value.Peer, peerMapValue);
-        map.put(Value.Provider, providerValue);
         map.put(Value.Provider, providerValue);
     }
 
