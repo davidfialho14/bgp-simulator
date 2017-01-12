@@ -215,12 +215,16 @@ public class Parameters {
         }
 
         public Builder repetitionCount(Integer repetitionCount) {
-            this.repetitionCount = repetitionCount;
+            if (repetitionCount != null)
+                this.repetitionCount = repetitionCount;
+
             return this;
         }
 
         public Builder permutationCount(Integer permutationCount) {
-            this.permutationCount = permutationCount;
+            if (permutationCount != null)
+                this.permutationCount = permutationCount;
+
             return this;
         }
 
