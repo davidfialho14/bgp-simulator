@@ -4,12 +4,15 @@ package core;
 /**
  * Represents an invalid attribute. This attribute can be used with any policy implementation and must always be the
  * least preferable attribute. It is implemented as a singleton meaning it has only one instance every time.
+ *
+ * Invalid attribute can not be implemented as an enum type because there is a conflict between the enum
+ * comparable interface and the comparable interface of an attribute.
  */
 public class InvalidAttribute implements Attribute {
 
     // It exists only one unique Invalid Attribute instance that can be accessed through the
     // static method invalidAttr().
-    private static final InvalidAttribute invalid = new InvalidAttribute();
+    private static final InvalidAttribute INSTANCE = new InvalidAttribute();
 
     private InvalidAttribute() {
     } // not be instantiated directly
@@ -21,7 +24,7 @@ public class InvalidAttribute implements Attribute {
      * @return invalid attribute instance.
      */
     public static InvalidAttribute invalidAttr() {
-        return invalid;
+        return INSTANCE;
     }
 
     /**
