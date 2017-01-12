@@ -6,11 +6,14 @@ import core.Policy;
 import io.topologyreaders.exceptions.InvalidPolicyTagException;
 
 import static core.policies.gaorexford.GRAttribute.self;
-import static core.policies.gaorexford.GRLabel.customerLabel;
-import static core.policies.gaorexford.GRLabel.peerLabel;
-import static core.policies.gaorexford.GRLabel.providerLabel;
+import static core.policies.gaorexford.GRLabel.*;
 
-public class GaoRexfordPolicy implements Policy {
+public enum GRPolicy implements Policy {
+    INSTANCE;
+
+    public static GRPolicy gaoRexfordPolicy() {
+        return INSTANCE;
+    }
 
     @Override
     public Attribute createSelf() {

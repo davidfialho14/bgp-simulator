@@ -1,7 +1,6 @@
 package io;
 
 import core.*;
-import core.policies.gaorexford.GaoRexfordPolicy;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -19,6 +18,7 @@ import java.util.List;
 
 import static core.Destination.newDestination;
 import static core.policies.gaorexford.GRLabel.customerLabel;
+import static core.policies.gaorexford.GRPolicy.gaoRexfordPolicy;
 import static io.AnycastReaderTest.IsDestinations.isDestinations;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -28,7 +28,7 @@ public class AnycastReaderTest {
 
     // NOTE: for the tests we are using the Gao-Rexford policy. Therefore, the valid labels are C, R, and P
     //       for customer, peer, and provider relationships, respectively.
-    private static Topology topology = new Topology(new GaoRexfordPolicy(), null);
+    private static Topology topology = new Topology(gaoRexfordPolicy(), null);
 
     static {
         // IDs that are in the topology: 10 and 11
