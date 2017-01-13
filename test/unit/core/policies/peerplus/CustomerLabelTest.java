@@ -6,11 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.peerplus.CustomerAttribute.customer;
-import static core.policies.peerplus.PeerAttribute.peer;
-import static core.policies.peerplus.PeerPlusAttribute.peerplus;
-import static core.policies.peerplus.ProviderAttribute.provider;
-import static core.policies.peerplus.SelfAttribute.self;
+import static core.policies.peerplus.PeerPlusAttribute.*;
+import static core.policies.peerplus.PeerPlusLabel.customerLabel;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -20,7 +17,7 @@ public class CustomerLabelTest {
 
     @Before
     public void setUp() throws Exception {
-        label = new CustomerLabel();
+        label = customerLabel();
     }
 
     @Test

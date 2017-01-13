@@ -1,8 +1,6 @@
 package io;
 
 import core.*;
-import core.policies.gaorexford.CustomerLabel;
-import core.policies.gaorexford.GaoRexfordPolicy;
 import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -19,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 
 import static core.Destination.newDestination;
+import static core.policies.gaorexford.GRLabel.customerLabel;
+import static core.policies.gaorexford.GRPolicy.gaoRexfordPolicy;
 import static io.AnycastReaderTest.IsDestinations.isDestinations;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -28,7 +28,7 @@ public class AnycastReaderTest {
 
     // NOTE: for the tests we are using the Gao-Rexford policy. Therefore, the valid labels are C, R, and P
     //       for customer, peer, and provider relationships, respectively.
-    private static Topology topology = new Topology(new GaoRexfordPolicy(), null);
+    private static Topology topology = new Topology(gaoRexfordPolicy(), null);
 
     static {
         // IDs that are in the topology: 10 and 11
@@ -164,24 +164,24 @@ public class AnycastReaderTest {
                 {file(), destinations()},  // empty file
                 {file(""), destinations()},
                 {file("0|10|C"), destinations(
-                        destination(0, neighbor(10, new CustomerLabel()))
+                        destination(0, neighbor(10, customerLabel()))
                 )},
                 {file("0|10|C", "0|11|C"), destinations(
                         destination(0,
-                                neighbor(10, new CustomerLabel()),
-                                neighbor(11, new CustomerLabel())
+                                neighbor(10, customerLabel()),
+                                neighbor(11, customerLabel())
                         )
                 )},
                 {file("0|10|C", "1|10|C"), destinations(
-                        destination(0, neighbor(10, new CustomerLabel())),
-                        destination(1, neighbor(10, new CustomerLabel()))
+                        destination(0, neighbor(10, customerLabel())),
+                        destination(1, neighbor(10, customerLabel()))
                 )},
                 {file("0|10|C", "1|10|C", "0|11|C"), destinations(
                         destination(0,
-                                neighbor(10, new CustomerLabel()),
-                                neighbor(11, new CustomerLabel())
+                                neighbor(10, customerLabel()),
+                                neighbor(11, customerLabel())
                         ),
-                        destination(1, neighbor(10, new CustomerLabel()))
+                        destination(1, neighbor(10, customerLabel()))
                 )},
         });
     }

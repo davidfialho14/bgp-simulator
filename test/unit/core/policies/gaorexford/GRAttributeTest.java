@@ -1,17 +1,16 @@
-package core.policies.peerplus;
+package core.policies.gaorexford;
 
 import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.peerplus.CustomerAttribute.customer;
-import static core.policies.peerplus.PeerAttribute.peer;
-import static core.policies.peerplus.PeerPlusAttribute.peerplus;
-import static core.policies.peerplus.ProviderAttribute.provider;
-import static core.policies.peerplus.SelfAttribute.self;
+import static core.policies.gaorexford.GRAttribute.customer;
+import static core.policies.gaorexford.GRAttribute.peer;
+import static core.policies.gaorexford.GRAttribute.provider;
+import static core.policies.gaorexford.GRAttribute.self;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class PeerPlusAbstractAttributeTest {
+public class GRAttributeTest {
 
     @Test
     public void compareTo_CustomerToCustomer_Equal() throws Exception {
@@ -74,11 +73,6 @@ public class PeerPlusAbstractAttributeTest {
     }
 
     @Test
-    public void compareTo_SelfToPeerPlus_Less() throws Exception {
-        assertThat(self().compareTo(peerplus()), is(lessThan(0)));
-    }
-
-    @Test
     public void compareTo_SelfToCustomer_Less() throws Exception {
         assertThat(self().compareTo(customer()), is(lessThan(0)));
     }
@@ -96,31 +90,6 @@ public class PeerPlusAbstractAttributeTest {
     @Test
     public void compareTo_SelfToInvalid_Less() throws Exception {
         assertThat(self().compareTo(invalidAttr()), is(lessThan(0)));
-    }
-
-    @Test
-    public void compareTo_PeerPlusToPeerPlus_Equal() throws Exception {
-        assertThat(peerplus().compareTo(peerplus()), is(equalTo(0)));
-    }
-
-    @Test
-    public void compareTo_PeerPlusToCustomer_Less() throws Exception {
-        assertThat(peerplus().compareTo(customer()), is(lessThan(0)));
-    }
-
-    @Test
-    public void compareTo_PeerPlusToPeer_Less() throws Exception {
-        assertThat(peerplus().compareTo(peer()), is(lessThan(0)));
-    }
-
-    @Test
-    public void compareTo_PeerPlusToProvider_Less() throws Exception {
-        assertThat(peerplus().compareTo(provider()), is(lessThan(0)));
-    }
-
-    @Test
-    public void compareTo_PeerPlusToInvalid_Less() throws Exception {
-        assertThat(peerplus().compareTo(invalidAttr()), is(lessThan(0)));
     }
 
 }

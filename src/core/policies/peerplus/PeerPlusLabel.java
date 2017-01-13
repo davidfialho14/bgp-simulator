@@ -1,54 +1,56 @@
 package core.policies.peerplus;
 
 import core.Attribute;
-import core.InvalidAttribute;
 import core.Label;
 import core.Link;
+import core.policies.peerplus.PeerPlusAttribute.*;
 
 import java.util.EnumMap;
-import java.util.Map;
 
-import static core.policies.peerplus.PeerPlusAbstractAttribute.Type.*;
+import static core.InvalidAttribute.invalidAttr;
+import static core.policies.peerplus.PeerPlusAttribute.*;
 
-/**
- * Implements the peer+ label.
- */
-public class PeerPlusLabel implements Label {
+public enum PeerPlusLabel implements Label {
 
-    /**
-     * Table gives the result of extending each type of attribute.
-     */
-    private static final Map<PeerPlusAbstractAttribute.Type, Attribute> extendTable =
-            new EnumMap<>(PeerPlusAbstractAttribute.Type.class);
+    PeerPlus(peerplus(), peerplus(), peerplus(), invalidAttr(), invalidAttr()),
+    Customer(customer(), customer(), customer(), invalidAttr(), invalidAttr()),
+    Peer(peer(), peer(), peer(), invalidAttr(), invalidAttr()),
+    Provider(provider(), provider(), provider(), provider(), provider());
 
-    static {
-        extendTable.put(SELF, PeerPlusAttribute.peerplus());
-        extendTable.put(PEER_PLUS, PeerPlusAttribute.peerplus());
-        extendTable.put(CUSTOMER, PeerPlusAttribute.peerplus());
-        extendTable.put(PEER, InvalidAttribute.invalidAttr());
-        extendTable.put(PROVIDER, InvalidAttribute.invalidAttr());
+    private final EnumMap<Value, Attribute> map = new EnumMap<>(Value.class);
+
+    PeerPlusLabel(Attribute selfMapValue, Attribute peerplusMapValue, Attribute customerMapValue,
+                  Attribute peerMapValue, Attribute providerValue) {
+
+        map.put(Value.Self, selfMapValue);
+        map.put(Value.PeerPlus, peerplusMapValue);
+        map.put(Value.Customer, customerMapValue);
+        map.put(Value.Peer, peerMapValue);
+        map.put(Value.Provider, providerValue);
+    }
+
+    public static Label peerplusLabel() {
+        return PeerPlus;
+    }
+
+    public static Label customerLabel() {
+        return Customer;
+    }
+
+    public static Label peerLabel() {
+        return Peer;
+    }
+
+    public static Label providerLabel() {
+        return Provider;
     }
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute == InvalidAttribute.invalidAttr()) return InvalidAttribute.invalidAttr();
+        if (attribute == invalidAttr()) return invalidAttr();
 
-        PeerPlusAbstractAttribute rocAttribute = (PeerPlusAbstractAttribute) attribute;
-        return extendTable.get(rocAttribute.getType());
+        PeerPlusAttribute peerplusAttribute = (PeerPlusAttribute) attribute;
+        return map.get(peerplusAttribute.value);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof PeerPlusLabel;
-    }
-
-    @Override
-    public int hashCode() {
-        return 34;  // must be different from all RoC labels
-    }
-
-    @Override
-    public String toString() {
-        return "R+";
-    }
 }

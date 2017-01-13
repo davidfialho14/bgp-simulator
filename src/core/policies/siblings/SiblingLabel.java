@@ -2,34 +2,35 @@ package core.policies.siblings;
 
 
 import core.Attribute;
-import core.InvalidAttribute;
 import core.Label;
 import core.Link;
+
+import static core.InvalidAttribute.invalidAttr;
+import static core.policies.gaorexford.GRAttribute.self;
+import static core.policies.siblings.SiblingsAttribute.customer;
 
 /**
  * Implements the provider label.
  */
-public class SiblingLabel implements Label {
+public enum SiblingLabel implements Label {
+    INSTANCE;
+
+    public static Label siblingLabel() {
+        return INSTANCE;
+    }
 
     @Override
     public Attribute extend(Link link, Attribute attribute) {
-        if (attribute == InvalidAttribute.invalidAttr()) return InvalidAttribute.invalidAttr();
-        if (attribute instanceof SelfAttribute) {
-            return CustomerAttribute.customer(1);
+        if (attribute == invalidAttr()) return invalidAttr();
+
+        SiblingsAttribute siblingAttribute = (SiblingsAttribute) attribute;
+
+        if (siblingAttribute.getBaseAttribute() == self()) {
+            return customer(1);
         }
 
-        SiblingAttribute siblingAttribute = (SiblingAttribute) attribute;
-        return siblingAttribute.newInstance(siblingAttribute.getHopCount() + 1);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof SiblingLabel;
-    }
-
-    @Override
-    public int hashCode() {
-        return 34;  // must be different from all Sibling labels
+        return new SiblingsAttribute(siblingAttribute.getBaseAttribute(),
+                siblingAttribute.getHopCount() + 1);
     }
 
     @Override

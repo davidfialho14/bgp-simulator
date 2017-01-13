@@ -1,27 +1,25 @@
-package core.policies.peerplus;
+package core.policies.gaorexford;
 
 import core.Attribute;
 
 import static core.InvalidAttribute.invalidAttr;
 
 /**
- * The Peer+ attribute implements the attributes for the Peer+ routing policy.
+ * The GR attribute implements the attributes for the Gao-Rexford routing policy.
  * Each attribute is implemented as using a single instance.
  *
- * Implementation note: PeerPlusAttribute was suppose to be an enum, however, due to the type conflict between
- * the
+ * Implementation note: GRAttribute was suppose to be an enum, however, due to the type conflict between the
  * Comparable interface implemented by the enum type and the attribute interface.
  */
-public class PeerPlusAttribute implements Attribute {
+public class GRAttribute implements Attribute {
 
     /**
      * This dictates the possible values of each attribute. The order with which the values are defined
      * defines the comparison order of the attribute values. For instance, a peer attribute is greater than
      * a customer attribute, therefore, it it defined after customer.
      */
-    enum Value {
+    public enum Value {
         Self,
-        PeerPlus,
         Customer,
         Peer,
         Provider
@@ -31,14 +29,13 @@ public class PeerPlusAttribute implements Attribute {
 
     // Attribute instances - For each attribute (self, customer, peer, provider) an unique instance is
     // created and assigned the respective value
-    private static final Attribute SELF = new PeerPlusAttribute(Value.Self);
-    private static final Attribute PEERPLUS = new PeerPlusAttribute(Value.PeerPlus);
-    private static final Attribute CUSTOMER = new PeerPlusAttribute(Value.Customer);
-    private static final Attribute PEER = new PeerPlusAttribute(Value.Peer);
-    private static final Attribute PROVIDER = new PeerPlusAttribute(Value.Provider);
+    private static final Attribute SELF = new GRAttribute(Value.Self);
+    private static final Attribute CUSTOMER = new GRAttribute(Value.Customer);
+    private static final Attribute PEER = new GRAttribute(Value.Peer);
+    private static final Attribute PROVIDER = new GRAttribute(Value.Provider);
 
     // use the factory methods to create each attribute instance
-    private PeerPlusAttribute(Value value) {
+    private GRAttribute(Value value) {
         this.value = value;
     }
 
@@ -48,14 +45,6 @@ public class PeerPlusAttribute implements Attribute {
      */
     public static Attribute self() {
         return SELF;
-    }
-
-    /**
-     * Returns THE peerplus attribute instance.
-     * @return the peerplus attribute instance.
-     */
-    public static Attribute peerplus() {
-        return PEERPLUS;
     }
 
     /**
@@ -95,15 +84,15 @@ public class PeerPlusAttribute implements Attribute {
     public int compareTo(Attribute attribute) {
         if (attribute == invalidAttr()) return -1;
 
-        PeerPlusAttribute other = (PeerPlusAttribute) attribute;
+        GRAttribute other = (GRAttribute) attribute;
         return value.compareTo(other.value);
     }
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof PeerPlusAttribute)) return false;
+        if (!(other instanceof GRAttribute)) return false;
 
-        PeerPlusAttribute otherAttribute = (PeerPlusAttribute) other;
+        GRAttribute otherAttribute = (GRAttribute) other;
         return other != invalidAttr() && value.equals(otherAttribute.value);
     }
 

@@ -5,9 +5,16 @@ import core.Label;
 import core.Policy;
 import io.topologyreaders.exceptions.InvalidPolicyTagException;
 
-import static core.policies.siblings.SelfAttribute.self;
+import static core.policies.siblings.SiblingLabel.siblingLabel;
+import static core.policies.siblings.SiblingsAttribute.self;
+import static core.policies.siblings.SiblingsLabel.*;
 
-public class SiblingsPolicy implements Policy {
+public enum SiblingsPolicy implements Policy {
+    INSTANCE;
+
+    public static SiblingsPolicy siblingsPolicy() {
+        return INSTANCE;
+    }
 
     @Override
     public Attribute createSelf() {
@@ -18,13 +25,13 @@ public class SiblingsPolicy implements Policy {
     public Label createLabel(String tag) throws InvalidPolicyTagException {
         switch (tag) {
             case "C":
-                return new CustomerLabel();
+                return customerLabel();
             case "R":
-                return new PeerLabel();
+                return peerLabel();
             case "P":
-                return new ProviderLabel();
+                return providerLabel();
             case "S":
-                return new SiblingLabel();
+                return siblingLabel();
             default:
                 throw new InvalidPolicyTagException(tag, "not a valid tag for a Sibling label");
         }
