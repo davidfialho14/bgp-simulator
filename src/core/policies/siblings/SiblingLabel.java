@@ -6,6 +6,7 @@ import core.Label;
 import core.Link;
 
 import static core.InvalidAttribute.invalidAttr;
+import static core.policies.gaorexford.GRAttribute.self;
 import static core.policies.siblings.SiblingsAttribute.customer;
 
 /**
@@ -22,12 +23,14 @@ public enum SiblingLabel implements Label {
     public Attribute extend(Link link, Attribute attribute) {
         if (attribute == invalidAttr()) return invalidAttr();
 
-        if (attribute instanceof SelfAttribute) {
+        SiblingsAttribute siblingAttribute = (SiblingsAttribute) attribute;
+
+        if (siblingAttribute.getBaseAttribute() == self()) {
             return customer(1);
         }
 
-        SiblingAttribute siblingAttribute = (SiblingAttribute) attribute;
-        return siblingAttribute.newInstance(siblingAttribute.getHopCount() + 1);
+        return new SiblingsAttribute(siblingAttribute.getBaseAttribute(),
+                siblingAttribute.getHopCount() + 1);
     }
 
     @Override

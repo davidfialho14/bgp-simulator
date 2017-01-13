@@ -5,10 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.siblings.CustomerAttribute.customer;
-import static core.policies.siblings.PeerAttribute.peer;
-import static core.policies.siblings.ProviderAttribute.provider;
-import static core.policies.siblings.SelfAttribute.self;
+import static core.policies.siblings.SiblingLabel.siblingLabel;
+import static core.policies.siblings.SiblingsAttribute.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -18,7 +16,7 @@ public class SiblingLabelTest {
 
     @Before
     public void setUp() throws Exception {
-        label = new SiblingLabel();
+        label = siblingLabel();
     }
 
     @Test

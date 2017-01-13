@@ -9,9 +9,13 @@ public class SiblingsAttribute implements Attribute {
     final Attribute attribute;
     final int hopCount;   // number of sibling hops
 
-    private SiblingsAttribute(Attribute attribute, int hopCount) {
+    protected SiblingsAttribute(Attribute attribute, int hopCount) {
         this.attribute = attribute;
         this.hopCount = hopCount;
+    }
+
+    public static Attribute self() {
+        return new SiblingsAttribute(GRAttribute.self(), 0);
     }
 
     public static Attribute customer(int hops) {

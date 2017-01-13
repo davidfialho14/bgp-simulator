@@ -3,10 +3,7 @@ package core.policies.siblings;
 import org.junit.Test;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.siblings.CustomerAttribute.customer;
-import static core.policies.siblings.PeerAttribute.peer;
-import static core.policies.siblings.ProviderAttribute.provider;
-import static core.policies.siblings.SelfAttribute.self;
+import static core.policies.siblings.SiblingsAttribute.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
