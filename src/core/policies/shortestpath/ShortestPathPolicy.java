@@ -6,7 +6,12 @@ import core.Label;
 import core.Policy;
 import io.topologyreaders.exceptions.InvalidPolicyTagException;
 
-public class ShortestPathPolicy implements Policy {
+public enum ShortestPathPolicy implements Policy {
+    INSTANCE;
+
+    public static ShortestPathPolicy shortestPathPolicy() {
+        return INSTANCE;
+    }
 
     @Override
     public Attribute createSelf() {
@@ -21,16 +26,6 @@ public class ShortestPathPolicy implements Policy {
             // tag is not an integer
             throw new InvalidPolicyTagException(tag, "the ShortestPath policy's label tags must be integers");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof ShortestPathPolicy;
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
     }
 
     /**

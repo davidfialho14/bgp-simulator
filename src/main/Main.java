@@ -1,13 +1,13 @@
 package main;
 
 
-import core.policies.peerplus.PeerPlusPolicy;
-import core.policies.shortestpath.ShortestPathPolicy;
-import core.policies.siblings.SiblingsPolicy;
 import io.topologyreaders.PolicyTagger;
 import main.cli.CLIApplication;
 
 import static core.policies.gaorexford.GRPolicy.gaoRexfordPolicy;
+import static core.policies.peerplus.PeerPlusPolicy.peerplusPolicy;
+import static core.policies.shortestpath.ShortestPathPolicy.shortestPathPolicy;
+import static core.policies.siblings.SiblingsPolicy.siblingsPolicy;
 
 public class Main {
 
@@ -20,11 +20,11 @@ public class Main {
             System.exit(1);
         }
 
-        PolicyTagger.register(new ShortestPathPolicy(), "ShortestPath");
-        PolicyTagger.register(new PeerPlusPolicy(), "RoC");
-        PolicyTagger.register(new PeerPlusPolicy(), "Peer+");
+        PolicyTagger.register(shortestPathPolicy(), "ShortestPath");
+        PolicyTagger.register(peerplusPolicy(), "RoC");
+        PolicyTagger.register(peerplusPolicy(), "Peer+");
         PolicyTagger.register(gaoRexfordPolicy(), "GaoRexford");
-        PolicyTagger.register(new SiblingsPolicy(), "Siblings");
+        PolicyTagger.register(siblingsPolicy(), "Siblings");
 
         CLIApplication.launch(args);
     }
