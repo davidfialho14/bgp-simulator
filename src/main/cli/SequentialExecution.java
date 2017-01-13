@@ -88,12 +88,24 @@ class SequentialExecution extends Execution {
 
 
         // create sequential experiment
-        return new SequentialExperiment(
-                destinations.toArray(new Destination[destinations.size()]),
-                parameters.getRepetitionCount(),
-                parameters.getPermutationCount(),
-                new SequentialSimulation(simulator)
-        );
+
+        if (parameters.hasPermutationSeed()) {
+            return new SequentialExperiment(
+                    destinations.toArray(new Destination[destinations.size()]),
+                    parameters.getRepetitionCount(),
+                    parameters.getPermutationCount(),
+                    parameters.getPermutationSeed(),
+                    new SequentialSimulation(simulator)
+            );
+
+        } else {
+            return new SequentialExperiment(
+                    destinations.toArray(new Destination[destinations.size()]),
+                    parameters.getRepetitionCount(),
+                    parameters.getPermutationCount(),
+                    new SequentialSimulation(simulator)
+            );
+        }
 
     }
 
