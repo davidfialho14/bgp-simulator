@@ -30,7 +30,7 @@ public class ParametersCommandLineParser {
     private static final String PERMUTATION_COUNT = "permutation_count";
     private static final String MIN_DELAY = "min_delay";
     private static final String MAX_DELAY = "max_delay";
-    private static final String SEED = "seed";
+    private static final String DELAY_SEED = "seed";
     private static final String MRAI = "MRAI";
     private static final String DETECTION = "detection";
     private static final String THRESHOLD = "threshold";
@@ -55,7 +55,7 @@ public class ParametersCommandLineParser {
         options.addOption("p", PERMUTATION_COUNT, true, "number of permutations");
         options.addOption("min", MIN_DELAY, true, "minimum delay (inclusive)");
         options.addOption("max", MAX_DELAY, true, "maximum delay (inclusive)");
-        options.addOption("seed", SEED, true, "forces the initial seed used ofr generating delays");
+        options.addOption("seed", DELAY_SEED, true, "forces the initial seed used ofr generating delays");
         options.addOption("MRAI", MRAI, true, "MRAI value to force");
         options.addOption("d", DETECTION, true, "detection method to force (D0 | D1 | D2)");
         options.addOption("th", THRESHOLD, true, "value for the threshold");
@@ -262,14 +262,14 @@ public class ParametersCommandLineParser {
      * @param commandLine command line containing the parsed options.
      * @return the parsed anycast file or null if the argument does not exist.
      * @throws ParseException if the option is available but the argument value is not a signed
-     * long or if both the "SEED" and "SEEDS" options are enabled.
+     * long or if both the "DELAY_SEED" and "SEEDS" options are enabled.
      */
     private Long getSeed(CommandLine commandLine) throws ParseException {
 
-        if (commandLine.hasOption(SEED)) {
+        if (commandLine.hasOption(DELAY_SEED)) {
 
             try {
-                return Long.parseLong(commandLine.getOptionValue(SEED));
+                return Long.parseLong(commandLine.getOptionValue(DELAY_SEED));
             } catch (NumberFormatException e) {
                 throw new ParseException(expectedIntegerMessage("seed"));
             }
