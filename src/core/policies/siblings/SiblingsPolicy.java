@@ -9,7 +9,12 @@ import static core.policies.siblings.SiblingLabel.siblingLabel;
 import static core.policies.siblings.SiblingsAttribute.self;
 import static core.policies.siblings.SiblingsLabel.*;
 
-public class SiblingsPolicy implements Policy {
+public enum SiblingsPolicy implements Policy {
+    INSTANCE;
+
+    public static SiblingsPolicy siblingsPolicy() {
+        return INSTANCE;
+    }
 
     @Override
     public Attribute createSelf() {

@@ -8,7 +8,12 @@ import io.topologyreaders.exceptions.InvalidPolicyTagException;
 import static core.policies.peerplus.PeerPlusAttribute.self;
 import static core.policies.peerplus.PeerPlusLabel.*;
 
-public class PeerPlusPolicy implements Policy {
+public enum PeerPlusPolicy implements Policy {
+    INSTANCE;
+
+    public static PeerPlusPolicy peerplusPolicy() {
+        return INSTANCE;
+    }
 
     @Override
     public Attribute createSelf() {
