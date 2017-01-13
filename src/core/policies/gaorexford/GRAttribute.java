@@ -18,7 +18,7 @@ public class GRAttribute implements Attribute {
      * defines the comparison order of the attribute values. For instance, a peer attribute is greater than
      * a customer attribute, therefore, it it defined after customer.
      */
-    enum Value {
+    public enum Value {
         Self,
         Customer,
         Peer,

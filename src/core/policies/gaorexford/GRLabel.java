@@ -3,14 +3,12 @@ package core.policies.gaorexford;
 import core.Attribute;
 import core.Label;
 import core.Link;
-import core.policies.gaorexford.GRAttribute.Value;
+import core.policies.gaorexford.GRAttribute.*;
 
 import java.util.EnumMap;
 
 import static core.InvalidAttribute.invalidAttr;
-import static core.policies.gaorexford.GRAttribute.customer;
-import static core.policies.gaorexford.GRAttribute.peer;
-import static core.policies.gaorexford.GRAttribute.provider;
+import static core.policies.gaorexford.GRAttribute.*;
 
 public enum GRLabel implements Label {
 
@@ -26,7 +24,6 @@ public enum GRLabel implements Label {
         map.put(Value.Self, selfMapValue);
         map.put(Value.Customer, customerMapValue);
         map.put(Value.Peer, peerMapValue);
-        map.put(Value.Provider, providerValue);
         map.put(Value.Provider, providerValue);
     }
 
