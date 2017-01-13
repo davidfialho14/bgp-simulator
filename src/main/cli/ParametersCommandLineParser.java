@@ -94,6 +94,7 @@ public class ParametersCommandLineParser {
                 .minDelay(getMinDelay(commandLine))
                 .maxDelay(getMaxDelay(commandLine))
                 .seed(getSeed(commandLine))
+                .permutationSeed(getPermutationSeed(commandLine))
                 .forcedMRAI(getForcedMRAI(commandLine))
                 .forcedDetection(getForcedDetection(commandLine))
                 .threshold(getThreshold(commandLine))

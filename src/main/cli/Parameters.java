@@ -30,6 +30,7 @@ public class Parameters {
     private final Integer repetitionCount;
     private final Integer permutationCount;
     private final Long seed;
+    private Long permutationSeed;
     private final Integer forcedMRAI;
     private final Detection forcedDetection;
     private final int threshold;
@@ -46,7 +47,7 @@ public class Parameters {
     private Parameters(File topologyFile, TopologyReaderFactory readerFactory, File reportDestination,
                        File anycastFile, int minDelay, int maxDelay,
                        Integer destinationId, File destinationsFile, Integer repetitionCount, Integer permutationCount, Long seed,
-                       Integer forcedMRAI, Detection forcedDetection, int threshold) {
+                       Long permutationSeed, Integer forcedMRAI, Detection forcedDetection, int threshold) {
 
         this.topologyFile = topologyFile;
         this.readerFactory = readerFactory;
@@ -59,6 +60,7 @@ public class Parameters {
         this.repetitionCount = repetitionCount;
         this.permutationCount = permutationCount;
         this.seed = seed;
+        this.permutationSeed = permutationSeed;
         this.forcedMRAI = forcedMRAI;
         this.forcedDetection = forcedDetection;
         this.threshold = threshold;
@@ -118,6 +120,14 @@ public class Parameters {
         return seed != null;
     }
 
+    public Long getPermutationSeed() {
+        return permutationSeed;
+    }
+
+    public boolean hasPermutationSeed() {
+        return permutationSeed != null;
+    }
+
     public Integer forcedMRAI() {
         return forcedMRAI;
     }
@@ -169,6 +179,7 @@ public class Parameters {
         private Integer repetitionCount = 1;
         private Integer permutationCount = 1;
         private Long seed = null;
+        private Long permutationSeed = null;
         private Integer forcedMRAI = null;
         private Detection forcedDetection = null;
         private int threshold = Integer.MAX_VALUE;
@@ -233,6 +244,11 @@ public class Parameters {
             return this;
         }
 
+        public Builder permutationSeed(Long seed) {
+            this.permutationSeed = seed;
+            return this;
+        }
+
         public Builder forcedMRAI(Integer forcedMRAI) {
             this.forcedMRAI = forcedMRAI;
             return this;
@@ -258,7 +274,7 @@ public class Parameters {
 
             return new Parameters(topologyFile, readerFactory, reportDestination,
                     anycastFile, minDelay, maxDelay, destinationId, destinationsFile, repetitionCount,
-                    permutationCount, seed, forcedMRAI, forcedDetection, threshold);
+                    permutationCount, seed, permutationSeed, forcedMRAI, forcedDetection, threshold);
         }
 
     }
