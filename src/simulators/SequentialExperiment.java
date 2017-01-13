@@ -29,6 +29,14 @@ public class SequentialExperiment implements Experiment {
         this.simulation = simulation;
     }
 
+    public SequentialExperiment(Destination[] destinations, int repetitionCount,
+                                int permutationCount, long permutationsSeed, SequentialSimulation simulation) {
+        this.shuffler = new DestinationShuffler(destinations, permutationsSeed);
+        this.repetitionCount = repetitionCount;
+        this.permutationCount = permutationCount;
+        this.simulation = simulation;
+    }
+
     @Override
     public void run(Simulator simulator) throws IOException {
 
