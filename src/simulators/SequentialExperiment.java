@@ -23,7 +23,7 @@ public class SequentialExperiment implements Experiment {
 
     public SequentialExperiment(Destination[] destinations, int repetitionCount,
                                  int permutationCount, SequentialSimulation simulation) {
-        this.shuffler = new DestinationShuffler(destinations);
+        this.shuffler = new DestinationShuffler(destinations, permutationCount);
         this.repetitionCount = repetitionCount;
         this.permutationCount = permutationCount;
         this.simulation = simulation;
@@ -31,7 +31,7 @@ public class SequentialExperiment implements Experiment {
 
     public SequentialExperiment(Destination[] destinations, int repetitionCount,
                                 int permutationCount, long permutationsSeed, SequentialSimulation simulation) {
-        this.shuffler = new DestinationShuffler(destinations, permutationsSeed);
+        this.shuffler = new DestinationShuffler(destinations, permutationCount, permutationsSeed);
         this.repetitionCount = repetitionCount;
         this.permutationCount = permutationCount;
         this.simulation = simulation;

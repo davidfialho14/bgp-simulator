@@ -2,7 +2,6 @@ package simulators;
 
 
 import core.Destination;
-import io.IntegerLineReader;
 import orestes.bloomfilter.BloomFilter;
 import orestes.bloomfilter.FilterBuilder;
 import org.apache.commons.math3.util.CombinatoricsUtils;
@@ -28,6 +27,7 @@ import java.util.Random;
 public class DestinationShuffler {
 
     private Destination[] destinations;
+    private final int permutationCount;
     private final Random random;    // will generate the random values required
 
     private BloomFilter<String> bloomFilter;    // keeps record of the permutations that have been used
@@ -39,8 +39,14 @@ public class DestinationShuffler {
      *
      * @param destinations  destination array to shuffle.
      */
-    public DestinationShuffler(Destination[] destinations) {
+    public DestinationShuffler(Destination[] destinations, int permutationCount) {
+
+        if (permutationCount <= 0) {
+            throw new IllegalArgumentException("Permutation count must be a positive value");
+        }
+
         this.destinations = destinations;
+        this.permutationCount = permutationCount;
         this.random = new Random();
         reset();
     }
@@ -50,11 +56,18 @@ public class DestinationShuffler {
      * immediately after the shuffler is created. Forces the seed to be used to generate the
      * random permutations.
      *
-     * @param destinations  destination array to shuffle.
-     * @param seed          seed to use to generate the random permutations.
+     * @param destinations      destination array to shuffle.
+     * @param permutationCount  number of permutations to generate.
+     * @param seed              seed to use to generate the random permutations.
      */
-    public DestinationShuffler(Destination[] destinations, long seed) {
+    public DestinationShuffler(Destination[] destinations, int permutationCount, long seed) {
+
+        if (permutationCount <= 0) {
+            throw new IllegalArgumentException("Permutation count must be a positive value");
+        }
+
         this.destinations = destinations;
+        this.permutationCount = permutationCount;
         this.random = new Random(seed);
         reset();
     }
@@ -115,10 +128,7 @@ public class DestinationShuffler {
      * IDs.
      */
     private void reset() {
-        long combinationCount = CombinatoricsUtils.factorial(destinations.length);
-        int expectedElements = (int) Math.min(combinationCount, Integer.MAX_VALUE);
-
-        bloomFilter = new FilterBuilder(expectedElements, 0.1)
+        bloomFilter = new FilterBuilder(permutationCount, 0.1)
                 .buildBloomFilter();
 
         // Sort the sequence!
