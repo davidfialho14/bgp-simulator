@@ -11,7 +11,7 @@ import static core.policies.siblings.SiblingsPolicy.siblingsPolicy;
 
 public class Main {
 
-    private static final String VERSION = "2.2.2";
+    private static final String VERSION = "2.2.3";
 
     public static void main(String[] args) {
 
