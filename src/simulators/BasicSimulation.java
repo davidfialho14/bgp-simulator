@@ -65,6 +65,8 @@ public class BasicSimulation {
             link.setLastArrivalTime(0);
         }
 
+        experiment.getDestination().getMRAITimer().clear();
+
     }
 
 }

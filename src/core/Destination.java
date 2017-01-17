@@ -61,4 +61,11 @@ public interface Destination {
      */
     void setSelfRoute(Route selfRoute);
 
+    /**
+     * Returns the MRAI timer associated with the destination.
+     *
+     * @return the MRAI timer associated with the destination.
+     */
+    MRAITimer getMRAITimer();
+
 }

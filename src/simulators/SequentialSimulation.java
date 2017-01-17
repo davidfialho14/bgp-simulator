@@ -94,6 +94,9 @@ public class SequentialSimulation {
         for (Link link : destination.getInLinks()) {
             link.setLastArrivalTime(0);
         }
+
+        destination.getMRAITimer().clear();
+
     }
 
 }
