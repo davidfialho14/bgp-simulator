@@ -1,15 +1,23 @@
 package io.reporters;
 
+import core.Link;
+import core.Path;
 import core.Router;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import simulators.DetectionData;
 import simulators.basic.BasicDataset;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BasicReporter implements Reporter {
 
@@ -72,6 +80,59 @@ public class BasicReporter implements Reporter {
             printer.println();
         }
 
+        String extension = FilenameUtils.getExtension(filename);
+        filename = FilenameUtils.removeExtension(filename) + ".detections." + extension;
+
+        try (CSVPrinter printer = getDataFilePrinter(new File(reportDirectory, filename))) {
+
+            if (simulationNumber == 0) {    // check if it is first simulation
+
+                final String[] detectionsHeaders = {
+                        "Simulation", "Detections", "Detecting Routers",
+                        "Cut-Off Links", "Cycles", "Initial Attribute", "False Positive"
+                };
+
+                printer.printRecord((Object[]) detectionsHeaders);
+            }
+
+            int detectionNumber = 1;
+            for (DetectionData detection : dataset.getDetections()) {
+
+                printer.printRecord(
+                        simulationNumber,
+                        detectionNumber++,
+                        pretty(detection.getDetectingRouter()),
+                        pretty(detection.getCutOffLink()),
+                        pretty(detection.getCycle()),
+                        detection.getInitialAttribute(),
+                        detection.isFalsePositive() ? "Yes" : "No"
+                );
+            }
+        }
+
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *
+     *  Set of helper methods to display any element like Routers, Links, Paths, etc in a prettier
+     *  format then its standard toString() result.
+     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    private static String pretty(Router router) {
+        return String.valueOf(router.getId());
+    }
+
+    private static String pretty(Link link) {
+        return pretty(link.getSource()) + " → " + pretty(link.getTarget());
+    }
+
+    private static String pretty(Path path) {
+        List<String> pathRoutersIds = path.stream()
+                .map(BasicReporter::pretty)
+                .collect(Collectors.toList());
+
+        return StringUtils.join(pathRoutersIds.iterator(), " → ");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -94,6 +155,11 @@ public class BasicReporter implements Reporter {
         printer.print(dataSet.getCutOffLinksCount());
         printer.print(dataSet.getFalsePositiveCount());
         printer.print(dataSet.didProtocolTerminate() ? "Yes" : "No");
+    }
+
+    private void printDetections(int simulationNumber, BasicDataset dataSet) throws IOException {
+
+
     }
 
     private double averageLastTimes(Map<Router, Long> lastMessageTimes) {
