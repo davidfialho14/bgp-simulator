@@ -20,11 +20,36 @@ public class PeerPlusAttribute implements Attribute {
      * a customer attribute, therefore, it it defined after customer.
      */
     enum Value {
-        Self,
-        PeerPlus,
-        Customer,
-        Peer,
-        Provider
+        Self {
+            @Override
+            public String toString() {
+                return "○";
+            }
+        },
+        PeerPlus {
+            @Override
+            public String toString() {
+                return "r+";
+            }
+        },
+        Customer {
+            @Override
+            public String toString() {
+                return "c";
+            }
+        },
+        Peer {
+            @Override
+            public String toString() {
+                return "r";
+            }
+        },
+        Provider {
+            @Override
+            public String toString() {
+                return "p";
+            }
+        }
     }
 
     final Value value;  // value assigned to the attribute
@@ -110,6 +135,11 @@ public class PeerPlusAttribute implements Attribute {
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 
 }
